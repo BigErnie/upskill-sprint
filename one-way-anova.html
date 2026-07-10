@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One-Way ANOVA: Comparing Group Means Using the F-Test | UpSkill Sprint Consulting</title>
+<meta name="description" content="An interactive lesson on one-way ANOVA, the F-statistic, and p-value interpretation, with a live calculator and F-distribution graph.">
+<link rel="canonical" href="https://upskillsprint.com/lessons/one-way-anova.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="One-Way ANOVA: Comparing Group Means Using the F-Test | UpSkill Sprint Consulting">
+<meta property="og:description" content="An interactive lesson on one-way ANOVA, the F-statistic, and p-value interpretation, with a live calculator and F-distribution graph.">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<meta property="og:url" content="https://upskillsprint.com/lessons/one-way-anova.html">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../lessons-theme.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+
+:root {
+  --lsn-primary: #0f2a43;
+  --lsn-secondary: #0e7490;
+  --lsn-accent: #d97706;
+  --lsn-light: #f5f7fa;
+  --lsn-border: #e3e7ee;
+  --lsn-text: #101828;
+  --lsn-muted: #667085;
+  --lsn-success: #ecfdf5;
+  --lsn-warning: #fffbeb;
+  --lsn-danger: #fef2f2;
+  --lsn-white: #ffffff;
+  --lsn-canvas-bg: #ffffff;
+  --lsn-soft-blue: #ecfeff;
+}
+
+.lesson-wrapper * {
+  box-sizing: border-box;
+}
+
+.lesson-wrapper {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  font-family: 'Work Sans', Arial, sans-serif;
+  color: var(--lsn-text);
+  line-height: 1.6;
+}
+
+.lesson-wrapper .hero {
+  background: linear-gradient(135deg, var(--lsn-primary), var(--lsn-secondary));
+  color: white;
+  padding: 40px 32px;
+  border-radius: 14px;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 24px rgba(15, 42, 67, 0.18);
+}
+
+.lesson-wrapper .hero .eyebrow {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  text-transform: none;
+  color: white;
+}
+
+.lesson-wrapper .hero h1 {
+  margin: 0 0 12px;
+  font-size: 2.15rem;
+  line-height: 1.15;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+}
+
+.lesson-wrapper .hero p {
+  max-width: 900px;
+  font-size: 1.05rem;
+  margin: 0;
+  color: #e0f2fe;
+}
+
+.lesson-wrapper .lesson-card {
+  background: var(--lsn-white);
+  border: 1px solid var(--lsn-border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 14px rgba(15, 42, 67, 0.06);
+}
+
+.lesson-wrapper .interactive-card {
+  border: 2px solid #bcd9e6;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbfc 100%);
+}
+
+.lesson-wrapper h2 {
+  color: var(--lsn-primary);
+  margin-top: 0;
+  border-bottom: 3px solid var(--lsn-accent);
+  padding-bottom: 8px;
+  line-height: 1.25;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  font-size: 22px;
+}
+
+.lesson-wrapper h3 {
+  color: var(--lsn-secondary);
+  margin-top: 24px;
+  line-height: 1.3;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.lesson-wrapper p {
+  margin: 12px 0;
+  font-size: 15.5px;
+}
+
+.lesson-wrapper ul, .lesson-wrapper ol {
+  padding-left: 24px;
+  font-size: 15.5px;
+}
+
+.lesson-wrapper .formula-box {
+  background: var(--lsn-soft-blue);
+  border-left: 6px solid var(--lsn-secondary);
+  padding: 16px 18px;
+  margin: 18px 0;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+.lesson-wrapper .note,
+.lesson-wrapper .success,
+.lesson-wrapper .danger,
+.lesson-wrapper .quiz-feedback {
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin: 18px 0;
+  font-size: 15px;
+}
+
+.lesson-wrapper .note {
+  background: var(--lsn-warning);
+  border-left: 6px solid #f59e0b;
+}
+
+.lesson-wrapper .success {
+  background: var(--lsn-success);
+  border-left: 6px solid #16a34a;
+}
+
+.lesson-wrapper .danger {
+  background: var(--lsn-danger);
+  border-left: 6px solid #dc2626;
+}
+
+.lesson-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  background: white;
+  font-size: 0.95rem;
+}
+
+.lesson-wrapper th {
+  background: var(--lsn-primary);
+  color: white;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid var(--lsn-primary);
+  vertical-align: top;
+}
+
+.lesson-wrapper td {
+  padding: 10px;
+  border: 1px solid var(--lsn-border);
+  vertical-align: top;
+}
+
+.lesson-wrapper tr:nth-child(even) td {
+  background: #f9fafb;
+}
+
+.lesson-wrapper .memory-phrase {
+  font-weight: 700;
+  color: var(--lsn-primary);
+  background: var(--lsn-soft-blue);
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-top: 14px;
+  font-size: 15px;
+}
+
+.lesson-wrapper .nav-box {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 24px;
+}
+
+.lesson-wrapper .nav-box a {
+  background: white;
+  color: var(--lsn-primary);
+  border: 1px solid var(--lsn-border);
+  border-radius: 999px;
+  padding: 9px 14px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(15, 42, 67, 0.06);
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.lesson-wrapper .nav-box a:hover {
+  background: var(--lsn-soft-blue);
+  color: var(--lsn-secondary);
+}
+
+.lesson-wrapper .controls-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.lesson-wrapper .control-group label {
+  display: block;
+  font-weight: 700;
+  color: var(--lsn-primary);
+  margin-bottom: 5px;
+  font-size: 13.5px;
+}
+
+.lesson-wrapper input,
+.lesson-wrapper textarea,
+.lesson-wrapper select,
+.lesson-wrapper button {
+  font-family: 'Work Sans', Arial, sans-serif;
+  font-size: 1rem;
+}
+
+.lesson-wrapper input,
+.lesson-wrapper textarea,
+.lesson-wrapper select {
+  width: 100%;
+  border: 1px solid var(--lsn-border);
+  border-radius: 8px;
+  padding: 9px 10px;
+  background: white;
+  color: var(--lsn-text);
+}
+
+.lesson-wrapper textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.lesson-wrapper button {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: var(--lsn-secondary);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 9px rgba(15, 42, 67, 0.16);
+}
+
+.lesson-wrapper button:hover {
+  background: var(--lsn-primary);
+}
+
+.lesson-wrapper button.secondary {
+  background: var(--lsn-muted);
+}
+
+.lesson-wrapper button.secondary:hover {
+  background: #4b5563;
+}
+
+.lesson-wrapper .button-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+.lesson-wrapper .canvas-wrap {
+  background: var(--lsn-canvas-bg);
+  border: 1px solid var(--lsn-border);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 18px 0;
+  overflow-x: auto;
+}
+
+.lesson-wrapper canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 280px;
+}
+
+.lesson-wrapper .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.lesson-wrapper .stat-box {
+  background: #ffffff;
+  border: 1px solid var(--lsn-border);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(15, 42, 67, 0.05);
+}
+
+.lesson-wrapper .stat-box .label {
+  color: var(--lsn-muted);
+  font-size: 0.85rem;
+}
+
+.lesson-wrapper .stat-box .value {
+  color: var(--lsn-primary);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.lesson-wrapper .two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.lesson-wrapper .three-column {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.lesson-wrapper .result-panel {
+  background: #ffffff;
+  border: 1px solid var(--lsn-border);
+  border-radius: 12px;
+  padding: 18px;
+  margin: 18px 0;
+}
+
+.lesson-wrapper .quiz-question {
+  border: 1px solid var(--lsn-border);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+  background: #ffffff;
+}
+
+.lesson-wrapper .quiz-question p {
+  margin-top: 0;
+  font-weight: 700;
+  color: var(--lsn-primary);
+}
+
+.lesson-wrapper .quiz-question label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+  cursor: pointer;
+  font-size: 14.5px;
+}
+
+.lesson-wrapper .quiz-question input[type="radio"] {
+  width: auto;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.lesson-wrapper .quiz-feedback {
+  display: none;
+  background: var(--lsn-soft-blue);
+  border-left: 6px solid var(--lsn-secondary);
+}
+
+.lesson-wrapper .hidden {
+  display: none;
+}
+
+.lesson-wrapper .footer-box {
+  background: var(--lsn-primary);
+  color: white;
+  padding: 24px;
+  border-radius: 14px;
+  margin-top: 30px;
+}
+
+.lesson-wrapper .footer-box h2 {
+  color: white;
+  border-bottom: 3px solid var(--lsn-accent);
+}
+
+.lesson-wrapper .small {
+  color: var(--lsn-muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .lesson-wrapper .controls-grid,
+  .lesson-wrapper .stats-grid,
+  .lesson-wrapper .two-column,
+  .lesson-wrapper .three-column {
+    grid-template-columns: 1fr;
+  }
+  .lesson-wrapper .hero h1 {
+    font-size: 1.7rem;
+  }
+  .lesson-wrapper .lesson-card {
+    padding: 20px;
+  }
+  .lesson-wrapper table {
+    font-size: 0.88rem;
+  }
+}
+</style>
+</head>
+<body>
+  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+  <header class="site">
+    <a href="../index.html" class="brand">
+      <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+      <span>UpSkill Sprint Consulting</span>
+    </a>
+    <nav class="desktop-nav">
+      <a href="../start-here.html">Start Here</a>
+      <a href="../lessons.html" aria-current="page">Lessons</a>
+      <a href="../services.html">Services</a>
+      <a href="../request-topic.html">Request a Topic</a>
+      <a href="../about.html">About</a>
+      <a href="../faq.html">FAQ</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1f26" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <a href="../lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+  </header>
+  <nav class="mobile-nav">
+    <a href="../start-here.html">Start Here</a>
+    <a href="../lessons.html">Lessons</a>
+    <a href="../services.html">Services</a>
+    <a href="../request-topic.html">Request a Topic</a>
+    <a href="../about.html">About</a>
+    <a href="../faq.html">FAQ</a>
+    <a href="../contact.html">Contact</a>
+  </nav>
+
+  <main class="lesson-wrapper">
+
+    <section class="hero">
+      <h1>One-Way ANOVA: Comparing Group Means Using the F-Test</h1>
+      <p>
+        One-way ANOVA is used when you want to compare the mean response across three or more groups.
+        This lesson explains what ANOVA is, what the F-statistic means, how to calculate it,
+        how to interpret the p-value, and how to use the interactive calculator.
+      </p>
+      <div class="badge-row">
+        <span class="badge badge-stats">Statistics</span>
+      </div>
+    </section>
+
+    <nav class="nav-box" aria-label="Lesson navigation">
+      <a href="#intro">What ANOVA Is</a>
+      <a href="#fstat">F-Statistic</a>
+      <a href="#fdist">Interactive F-Distribution</a>
+      <a href="#calculator">Live Calculator</a>
+      <a href="#pvalue">p-Value</a>
+      <a href="#quiz">Quick Quiz</a>
+    </nav>
+
+    <section class="lesson-card" id="intro">
+      <h2>1. What Is ANOVA?</h2>
+
+      <p>
+        <strong>ANOVA</strong> stands for <strong>Analysis of Variance</strong>.
+        It is used to test whether the means of different groups are significantly different.
+      </p>
+
+      <p>
+        In this lesson, the response is <strong>tensile strength</strong>.
+        The factor is <strong>material type</strong>.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Term</th>
+            <th>Meaning in This Lesson</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Factor</td>
+            <td>Material type</td>
+          </tr>
+          <tr>
+            <td>Levels</td>
+            <td>Material A, Material B, Material C</td>
+          </tr>
+          <tr>
+            <td>Response</td>
+            <td>Tensile strength</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        ANOVA compares two types of variation:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Type of Variation</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Between-group variation</strong></td>
+            <td>How far the group means are from the grand mean.</td>
+          </tr>
+          <tr>
+            <td><strong>Within-group variation</strong></td>
+            <td>How much the individual values vary inside each group.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="memory-phrase">
+        Memory phrase: ANOVA asks, "Are the group means different enough compared to the noise inside the groups?"
+      </div>
+    </section>
+
+    <section class="lesson-card" id="fstat">
+      <h2>2. What the F-Statistic Means</h2>
+
+      <p>
+        The F-statistic is the main test statistic in ANOVA.
+      </p>
+
+      <div class="formula-box">
+        \[
+        F = \frac{MS_{\text{Between}}}{MS_{\text{Within}}}
+        \]
+      </div>
+
+      <p>
+        Another way to think about it is:
+      </p>
+
+      <div class="formula-box">
+        \[
+        F = \frac{\text{Signal}}{\text{Noise}}
+        \]
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>F-Statistic Size</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Small F</td>
+            <td>The group means are not far apart compared to the within-group noise.</td>
+          </tr>
+          <tr>
+            <td>Large F</td>
+            <td>The group means are far apart compared to the within-group noise.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Formula Details</h3>
+
+      <div class="formula-box">
+        \[
+        MS_{\text{Between}} = \frac{SS_{\text{Between}}}{df_{\text{Between}}}
+        \]
+        \[
+        MS_{\text{Within}} = \frac{SS_{\text{Within}}}{df_{\text{Within}}}
+        \]
+      </div>
+
+      <div class="formula-box">
+        \[
+        SS_{\text{Between}} = \sum n_i(\bar{x}_i - \bar{x}_{..})^2
+        \]
+        \[
+        SS_{\text{Within}} = \sum \sum (x_{ij} - \bar{x}_i)^2
+        \]
+      </div>
+
+      <div class="formula-box">
+        \[
+        df_{\text{Between}} = k - 1
+        \]
+        \[
+        df_{\text{Within}} = N - k
+        \]
+        \[
+        df_{\text{Total}} = N - 1
+        \]
+      </div>
+
+      <div class="note">
+        ANOVA is a right-tailed F-test because only large F-values provide evidence that group means are different.
+      </div>
+    </section>
+
+    <section class="lesson-card interactive-card" id="fdist">
+      <h2>3. Interactive F-Distribution Graph</h2>
+
+      <p>
+        Adjust the degrees of freedom, alpha level, and observed F-statistic.
+        The graph shows the F-distribution, the critical F-value, the rejection region, and the observed F-statistic.
+      </p>
+
+      <div class="controls-grid">
+        <div class="control-group">
+          <label for="fd-d1">Numerator df</label>
+          <input id="fd-d1" type="number" min="1" step="1" value="2" oninput="drawFDistribution()" />
+        </div>
+
+        <div class="control-group">
+          <label for="fd-d2">Denominator df</label>
+          <input id="fd-d2" type="number" min="1" step="1" value="9" oninput="drawFDistribution()" />
+        </div>
+
+        <div class="control-group">
+          <label for="fd-alpha">Alpha</label>
+          <select id="fd-alpha" onchange="drawFDistribution()">
+            <option value="0.10">0.10</option>
+            <option value="0.05" selected>0.05</option>
+            <option value="0.01">0.01</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="fd-fstat">Observed F</label>
+          <input id="fd-fstat" type="number" min="0" step="0.01" value="0.09" oninput="drawFDistribution()" />
+        </div>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="fCanvas" height="330"></canvas>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="label">Critical F</div>
+          <div class="value" id="fd-critical">&mdash;</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Right-tail p-value</div>
+          <div class="value" id="fd-pvalue">&mdash;</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Decision</div>
+          <div class="value" id="fd-decision" style="font-size:1rem;">&mdash;</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Rule</div>
+          <div class="value" style="font-size:1rem;">Reject if F &gt; Critical F</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-card interactive-card" id="calculator">
+      <h2>4. Live One-Way ANOVA Calculator</h2>
+
+      <p>
+        Enter strength values for each material. Use commas, spaces, or line breaks between numbers.
+        The calculator updates the group means, sums of squares, degrees of freedom, F-statistic, p-value, and decision.
+      </p>
+
+      <div class="three-column">
+        <div class="control-group">
+          <label for="groupA">Material A Values</label>
+          <textarea id="groupA">100, 102, 88, 90</textarea>
+        </div>
+        <div class="control-group">
+          <label for="groupB">Material B Values</label>
+          <textarea id="groupB">95, 97, 96, 98</textarea>
+        </div>
+        <div class="control-group">
+          <label for="groupC">Material C Values</label>
+          <textarea id="groupC">88, 90, 104, 106</textarea>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button onclick="calculateOneWay()">Calculate One-Way ANOVA</button>
+        <button class="secondary" onclick="resetOneWay()">Reset Example</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="label">Grand Mean</div>
+          <div class="value" id="ow-grand">&mdash;</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">SS Between</div>
+          <div class="value" id="ow-ssb">&mdash;</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">SS Within</div>
+          <div class="value" id="ow-ssw">&mdash;</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">F-Statistic</div>
+          <div class="value" id="ow-f">&mdash;</div>
+        </div>
+      </div>
+
+      <div id="ow-table"></div>
+
+      <div class="result-panel">
+        <h3>Result</h3>
+        <p><strong>p-value:</strong> <span id="ow-p">&mdash;</span></p>
+        <p><strong>Decision:</strong> <span id="ow-decision">&mdash;</span></p>
+        <p class="small">
+          The calculator also sends the calculated degrees of freedom and F-statistic to the F-distribution graph above.
+        </p>
+      </div>
+    </section>
+
+    <section class="lesson-card" id="pvalue">
+      <h2>5. p-Value Interpretation</h2>
+
+      <p>
+        The null hypothesis for one-way ANOVA is:
+      </p>
+
+      <div class="formula-box">
+        \[
+        H_0: \mu_A = \mu_B = \mu_C
+        \]
+      </div>
+
+      <p>
+        The alternative hypothesis is:
+      </p>
+
+      <div class="formula-box">
+        \[
+        H_a: \text{At least one group mean is different}
+        \]
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>p-Value Result</th>
+            <th>Decision</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>p-value &lt; 0.05</td>
+            <td>Reject \(H_0\)</td>
+            <td>At least one group mean is significantly different.</td>
+          </tr>
+          <tr>
+            <td>p-value &gt; 0.05</td>
+            <td>Fail to reject \(H_0\)</td>
+            <td>There is not enough evidence to say the group means are different.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        If p-value is greater than 0.05, do not say the group means are exactly the same.
+        Say there is not enough statistical evidence to conclude that the means are different.
+      </div>
+    </section>
+
+    <section class="lesson-card interactive-card" id="quiz">
+      <h2>6. End-of-Lesson Quiz</h2>
+
+      <div class="quiz-question">
+        <p>1. What does a large F-statistic usually mean?</p>
+        <label><input type="radio" name="q1" value="a"> The group means are close compared to the within-group variation.</label>
+        <label><input type="radio" name="q1" value="b"> The group means are far apart compared to the within-group variation.</label>
+        <label><input type="radio" name="q1" value="c"> The test is always two-tailed.</label>
+      </div>
+
+      <div class="quiz-question">
+        <p>2. ANOVA is best described as what type of test?</p>
+        <label><input type="radio" name="q2" value="a"> Left-tailed F-test</label>
+        <label><input type="radio" name="q2" value="b"> Right-tailed F-test</label>
+        <label><input type="radio" name="q2" value="c"> Two-tailed z-test</label>
+      </div>
+
+      <div class="quiz-question">
+        <p>3. If p-value = 0.18 at alpha = 0.05, what should you conclude?</p>
+        <label><input type="radio" name="q3" value="a"> Reject \(H_0\).</label>
+        <label><input type="radio" name="q3" value="b"> Fail to reject \(H_0\).</label>
+        <label><input type="radio" name="q3" value="c"> The group means are proven equal.</label>
+      </div>
+
+      <button onclick="gradeQuiz('oneway')">Check Answers</button>
+      <div id="quiz-feedback" class="quiz-feedback"></div>
+    </section>
+
+    <section class="footer-box">
+      <h2>Lesson Takeaway</h2>
+      <p>
+        One-way ANOVA compares the mean response across one factor with multiple levels.
+        It uses the F-statistic to compare between-group signal to within-group noise.
+      </p>
+    </section>
+
+    <section style="margin-top:24px;">
+      <a href="../lessons.html#statistics" style="font-family:'Source Serif 4',Georgia,serif;font-size:19px;font-weight:600;color:var(--lsn-secondary);">&larr; Back to the Statistics lessons</a>
+    </section>
+
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom:14px;">
+            <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+            <span>UpSkill Sprint Consulting</span>
+          </div>
+          <p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, process improvement, and business problem-solving.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="../index.html">Home</a>
+          <a href="../start-here.html">Start Here</a>
+          <a href="../lessons.html">Lessons</a>
+          <a href="../services.html">Services</a>
+          <a href="../request-topic.html">Request a Topic</a>
+          <a href="../about.html">About</a>
+          <a href="../faq.html">FAQ</a>
+          <a href="../contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Topics</h4>
+          <a href="../lessons.html#data-analytics">Data Analytics</a>
+          <a href="../lessons.html#quality-engineering">Quality Engineering</a>
+          <a href="../lessons.html#lean-six-sigma">Lean Six Sigma</a>
+          <a href="../lessons.html#power-bi-excel-sql">Power BI, Excel &amp; SQL</a>
+          <a href="../lessons.html#business-decision-making">Business Decision-Making</a>
+          <a href="../lessons.html#ai-for-work">AI for Work</a>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <a href="/cdn-cgi/l/email-protection#e99a828085859a999b80879d8a86879a9c859d80878ea98e84888085c78a8684"><span class="__cf_email__" data-cfemail="9eedf5f7f2f2edeeecf7f0eafdf1f0edebf2eaf7f0f9def9f3fff7f2b0fdf1f3">[email&#160;protected]</span></a>
+          <p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 UpSkill Sprint Consulting</span>
+      <div><a href="../privacy.html">Privacy Policy</a><a href="../terms.html">Terms of Use</a></div>
+    </div>
+  </footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function logGamma(z) {
+  const g = 7;
+  const p = [
+    0.99999999999980993,
+    676.5203681218851,
+    -1259.1392167224028,
+    771.32342877765313,
+    -176.61502916214059,
+    12.507343278686905,
+    -0.13857109526572012,
+    9.9843695780195716e-6,
+    1.5056327351493116e-7
+  ];
+  if (z < 0.5) {
+    return Math.log(Math.PI) - Math.log(Math.sin(Math.PI * z)) - logGamma(1 - z);
+  }
+  z -= 1;
+  let x = p[0];
+  for (let i = 1; i < p.length; i++) x += p[i] / (z + i);
+  const t = z + g + 0.5;
+  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+}
+
+function betaContinuedFraction(x, a, b) {
+  const MAXIT = 120;
+  const EPS = 3e-12;
+  const FPMIN = 1e-30;
+  let qab = a + b;
+  let qap = a + 1;
+  let qam = a - 1;
+  let c = 1;
+  let d = 1 - qab * x / qap;
+  if (Math.abs(d) < FPMIN) d = FPMIN;
+  d = 1 / d;
+  let h = d;
+
+  for (let m = 1; m <= MAXIT; m++) {
+    let m2 = 2 * m;
+    let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d;
+    if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c;
+    if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d;
+    h *= d * c;
+
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d;
+    if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c;
+    if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d;
+    const del = d * c;
+    h *= del;
+
+    if (Math.abs(del - 1) < EPS) break;
+  }
+  return h;
+}
+
+function regularizedIncompleteBeta(x, a, b) {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const bt = Math.exp(logGamma(a + b) - logGamma(a) - logGamma(b) +
+                      a * Math.log(x) + b * Math.log(1 - x));
+  if (x < (a + 1) / (a + b + 2)) {
+    return bt * betaContinuedFraction(x, a, b) / a;
+  }
+  return 1 - bt * betaContinuedFraction(1 - x, b, a) / b;
+}
+
+function fCDF(x, d1, d2) {
+  if (x <= 0) return 0;
+  const y = (d1 * x) / (d1 * x + d2);
+  return regularizedIncompleteBeta(y, d1 / 2, d2 / 2);
+}
+
+function fRightTailP(x, d1, d2) {
+  return Math.max(0, Math.min(1, 1 - fCDF(x, d1, d2)));
+}
+
+function fCritical(alpha, d1, d2) {
+  let lo = 0;
+  let hi = 1;
+  while (fRightTailP(hi, d1, d2) > alpha && hi < 100000) {
+    hi *= 2;
+  }
+  for (let i = 0; i < 90; i++) {
+    const mid = (lo + hi) / 2;
+    if (fRightTailP(mid, d1, d2) > alpha) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+function fDensity(x, d1, d2) {
+  if (x <= 0) return 0;
+  const a = d1 / 2;
+  const b = d2 / 2;
+  const logBeta = logGamma(a) + logGamma(b) - logGamma(a + b);
+  const logPdf = a * Math.log(d1 / d2) + (a - 1) * Math.log(x) -
+                 logBeta - (a + b) * Math.log(1 + (d1 / d2) * x);
+  return Math.exp(logPdf);
+}
+
+function fmt(x, digits = 3) {
+  if (!Number.isFinite(x)) return "—";
+  if (Math.abs(x) < 0.001 && x !== 0) return "<0.001";
+  return x.toFixed(digits);
+}
+
+function resizeCanvasForDisplay(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const width = Math.max(720, Math.floor(rect.width || 900));
+  const height = 330;
+  const scale = window.devicePixelRatio || 1;
+  canvas.width = width * scale;
+  canvas.height = height * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
+  return { ctx, width, height };
+}
+
+function drawFDistribution(canvasId = "fCanvas") {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  const d1 = Math.max(1, parseFloat(document.getElementById("fd-d1").value));
+  const d2 = Math.max(1, parseFloat(document.getElementById("fd-d2").value));
+  const alpha = Math.min(0.25, Math.max(0.001, parseFloat(document.getElementById("fd-alpha").value)));
+  const fStat = Math.max(0, parseFloat(document.getElementById("fd-fstat").value));
+
+  const fCrit = fCritical(alpha, d1, d2);
+  const pValue = fRightTailP(fStat, d1, d2);
+
+  const { ctx, width, height } = resizeCanvasForDisplay(canvas);
+  const left = 58;
+  const right = 24;
+  const top = 24;
+  const bottom = 48;
+  const plotW = width - left - right;
+  const plotH = height - top - bottom;
+
+  const xMax = Math.max(5, fCrit * 1.7, fStat * 1.35);
+  let yMax = 0;
+  for (let i = 1; i <= 500; i++) {
+    const x = (xMax * i) / 500;
+    yMax = Math.max(yMax, fDensity(x, d1, d2));
+  }
+  yMax *= 1.15;
+
+  const xToPx = x => left + (x / xMax) * plotW;
+  const yToPx = y => top + plotH - (y / yMax) * plotH;
+
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, width, height);
+
+  // Shaded rejection region
+  ctx.beginPath();
+  ctx.moveTo(xToPx(fCrit), yToPx(0));
+  for (let i = 0; i <= 320; i++) {
+    const x = fCrit + ((xMax - fCrit) * i) / 320;
+    ctx.lineTo(xToPx(x), yToPx(fDensity(x, d1, d2)));
+  }
+  ctx.lineTo(xToPx(xMax), yToPx(0));
+  ctx.closePath();
+  ctx.fillStyle = "rgba(217, 119, 6, 0.28)";
+  ctx.fill();
+
+  // Distribution curve
+  ctx.beginPath();
+  for (let i = 1; i <= 600; i++) {
+    const x = (xMax * i) / 600;
+    const px = xToPx(x);
+    const py = yToPx(fDensity(x, d1, d2));
+    if (i === 1) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = "#0f2a43";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Axes
+  ctx.strokeStyle = "#667085";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(left, top + plotH);
+  ctx.lineTo(left + plotW, top + plotH);
+  ctx.moveTo(left, top);
+  ctx.lineTo(left, top + plotH);
+  ctx.stroke();
+
+  // Tick marks
+  ctx.fillStyle = "#101828";
+  ctx.font = "14px 'Work Sans', Arial, sans-serif";
+  ctx.textAlign = "center";
+  for (let t = 0; t <= 5; t++) {
+    const x = (xMax * t) / 5;
+    const px = xToPx(x);
+    ctx.beginPath();
+    ctx.moveTo(px, top + plotH);
+    ctx.lineTo(px, top + plotH + 6);
+    ctx.stroke();
+    ctx.fillText(x.toFixed(1), px, top + plotH + 24);
+  }
+  ctx.fillText("F value", left + plotW / 2, height - 8);
+
+  // Critical line
+  const critX = xToPx(fCrit);
+  ctx.strokeStyle = "#d97706";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(critX, top);
+  ctx.lineTo(critX, top + plotH);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#d97706";
+  ctx.textAlign = "left";
+  ctx.fillText("Critical F = " + fmt(fCrit), Math.min(critX + 8, width - 170), top + 18);
+
+  // Observed F line
+  const obsX = xToPx(Math.min(fStat, xMax));
+  ctx.strokeStyle = "#0e7490";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(obsX, top);
+  ctx.lineTo(obsX, top + plotH);
+  ctx.stroke();
+  ctx.fillStyle = "#0e7490";
+  ctx.fillText("Observed F = " + fmt(fStat), Math.min(obsX + 8, width - 170), top + 40);
+
+  // Labels
+  ctx.fillStyle = "#101828";
+  ctx.textAlign = "left";
+  ctx.font = "15px 'Work Sans', Arial, sans-serif";
+  ctx.fillText("Right-tail rejection region", left + plotW - 185, top + plotH - 18);
+
+  document.getElementById("fd-critical").textContent = fmt(fCrit, 3);
+  document.getElementById("fd-pvalue").textContent = fmt(pValue, 4);
+  document.getElementById("fd-decision").textContent =
+    fStat > fCrit ? "Reject H₀: F is in the rejection region." :
+                    "Fail to reject H₀: F is not in the rejection region.";
+}
+</script>
+
+<script>
+  function parseValues(text) {
+    return text
+      .split(/[\s,;]+/)
+      .map(v => parseFloat(v))
+      .filter(v => Number.isFinite(v));
+  }
+
+  function mean(arr) {
+    return arr.reduce((a, b) => a + b, 0) / arr.length;
+  }
+
+  function sumSquares(arr, center) {
+    return arr.reduce((s, x) => s + Math.pow(x - center, 2), 0);
+  }
+
+  function calculateOneWay() {
+    const groups = [
+      { name: "Material A", values: parseValues(document.getElementById("groupA").value) },
+      { name: "Material B", values: parseValues(document.getElementById("groupB").value) },
+      { name: "Material C", values: parseValues(document.getElementById("groupC").value) }
+    ].filter(g => g.values.length > 0);
+
+    if (groups.length < 2) {
+      alert("Enter values for at least two groups.");
+      return;
+    }
+
+    const all = groups.flatMap(g => g.values);
+    const N = all.length;
+    const k = groups.length;
+    const grand = mean(all);
+
+    let ssBetween = 0;
+    let ssWithin = 0;
+    let rows = "";
+
+    groups.forEach(g => {
+      const m = mean(g.values);
+      const ssw = sumSquares(g.values, m);
+      ssBetween += g.values.length * Math.pow(m - grand, 2);
+      ssWithin += ssw;
+      rows += `<tr>
+        <td>${g.name}</td>
+        <td>${g.values.length}</td>
+        <td>${fmt(m, 2)}</td>
+        <td>${fmt(ssw, 2)}</td>
+      </tr>`;
+    });
+
+    const dfBetween = k - 1;
+    const dfWithin = N - k;
+    const dfTotal = N - 1;
+    const msBetween = ssBetween / dfBetween;
+    const msWithin = ssWithin / dfWithin;
+    const f = msBetween / msWithin;
+    const p = fRightTailP(f, dfBetween, dfWithin);
+
+    document.getElementById("ow-grand").textContent = fmt(grand, 2);
+    document.getElementById("ow-ssb").textContent = fmt(ssBetween, 2);
+    document.getElementById("ow-ssw").textContent = fmt(ssWithin, 2);
+    document.getElementById("ow-f").textContent = fmt(f, 3);
+    document.getElementById("ow-p").textContent = fmt(p, 4);
+    document.getElementById("ow-decision").textContent =
+      p < 0.05
+        ? "Reject H₀. At least one group mean is significantly different."
+        : "Fail to reject H₀. There is not enough evidence that the group means are different.";
+
+    document.getElementById("ow-table").innerHTML = `
+      <h3>Calculation Table</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Group</th>
+            <th>n</th>
+            <th>Mean</th>
+            <th>Within-Group SS</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>SS</th>
+            <th>df</th>
+            <th>MS</th>
+            <th>F</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Between Groups</td>
+            <td>${fmt(ssBetween, 2)}</td>
+            <td>${dfBetween}</td>
+            <td>${fmt(msBetween, 2)}</td>
+            <td>${fmt(f, 3)}</td>
+          </tr>
+          <tr>
+            <td>Within Groups</td>
+            <td>${fmt(ssWithin, 2)}</td>
+            <td>${dfWithin}</td>
+            <td>${fmt(msWithin, 2)}</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Total</td>
+            <td>${fmt(ssBetween + ssWithin, 2)}</td>
+            <td>${dfTotal}</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+
+    document.getElementById("fd-d1").value = dfBetween;
+    document.getElementById("fd-d2").value = dfWithin;
+    document.getElementById("fd-fstat").value = fmt(f, 3);
+    drawFDistribution();
+
+    if (window.MathJax) MathJax.typesetPromise();
+  }
+
+  function resetOneWay() {
+    document.getElementById("groupA").value = "100, 102, 88, 90";
+    document.getElementById("groupB").value = "95, 97, 96, 98";
+    document.getElementById("groupC").value = "88, 90, 104, 106";
+    calculateOneWay();
+  }
+
+  function gradeQuiz(type) {
+    const answers = { q1: "b", q2: "b", q3: "b" };
+    let score = 0;
+    let total = Object.keys(answers).length;
+    let details = [];
+
+    Object.keys(answers).forEach(q => {
+      const selected = document.querySelector(`input[name="${q}"]:checked`);
+      if (selected && selected.value === answers[q]) score++;
+    });
+
+    details.push(`You scored ${score} out of ${total}.`);
+    if (score === total) {
+      details.push("Excellent. You understand the core one-way ANOVA interpretation.");
+    } else {
+      details.push("Review the F-statistic, right-tail test, and p-value decision rule.");
+    }
+
+    const box = document.getElementById("quiz-feedback");
+    box.style.display = "block";
+    box.innerHTML = `<strong>${details[0]}</strong><br>${details[1]}`;
+  }
+
+  window.addEventListener("load", () => {
+    calculateOneWay();
+    drawFDistribution();
+  });
+
+  window.addEventListener("resize", () => drawFDistribution());
+</script>
+</body>
+</html>

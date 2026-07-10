@@ -20,31 +20,33 @@
 </template>
 <x-import component-from-global-scope="doc-page" from="./doc-page.js" size="letter" margin="0.85in" hint-size="100%,100%">
 
-<h1 style="font-family: Georgia, serif; font-size: 30px; margin: 0 0 6px;">Adding a New Lesson to UpSkill Sprint</h1>
-<p style="font-size: 14px; color: #666; margin: 0 0 32px;">A simple guide for future you.</p>
+<p style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#0e7490;font-weight:700;margin:0 0 6px;">UpSkill Sprint Consulting &mdash; Internal Guide</p>
+<h1 style="font-family: 'Source Serif 4', Georgia, serif; font-size: 30px; margin: 0 0 6px;">Adding a New Lesson to UpSkill Sprint</h1>
+<p style="font-size: 13.5px; color: #5b6472; margin: 0 0 32px;">The site is plain HTML/CSS hosted on Netlify via GitHub &mdash; no build step, no framework.</p>
 
-<p style="font-size: 15.5px; line-height: 1.65;">You don't need to know how to code to add a lesson. Every lesson follows the same simple format, and there are two ways to write one. Once it's written, just tell your design assistant (Claude) the details below and it will build the page and add it to the site for you.</p>
+<p style="font-size: 15.5px; line-height: 1.65;">You don't need to know how to code to add a lesson. Write it once, tag it, and tell your design assistant (Claude) the details below &mdash; it will build the page and add it to the site for you.</p>
 
-<h2 style="font-size: 21px; margin: 36px 0 12px;">Step 1 — Write the lesson</h2>
-<p style="font-size: 15.5px; line-height: 1.65;">Use this format every time, so lessons stay consistent:</p>
+<h2 style="font-size: 21px; margin: 36px 0 12px;">Step 1 &mdash; Write the lesson</h2>
+<p style="font-size: 15.5px; line-height: 1.65;">Every lesson follows the same design and structure, built from <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">lesson-template.html</code> and <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">lessons-theme.css</code>:</p>
 <ul style="font-size: 15.5px; line-height: 1.8;">
-  <li><strong>Title</strong> — short and clear, e.g. "How to Use the 5 Whys"</li>
-  <li><strong>What you will learn</strong> — one sentence</li>
-  <li><strong>Why this matters at work</strong> — 2–3 sentences on the real value</li>
-  <li><strong>Simple explanation</strong> — teach the idea in plain language</li>
-  <li><strong>Real workplace example</strong> — how it shows up on the job</li>
-  <li><strong>Try it yourself</strong> — a small practice activity</li>
-  <li><strong>Download</strong> (optional) — a template, checklist, or dataset</li>
+  <li><strong>Eyebrow + title</strong> &mdash; level and read time, e.g. "Beginner &middot; 10 min read"</li>
+  <li><strong>Topic badge</strong> &mdash; a colored pill under the intro showing the Skill Track (e.g. <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">badge-lss</code>, <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">badge-quality</code>)</li>
+  <li><strong>By the end, you should be able to</strong> &mdash; 2&ndash;3 checklist objectives</li>
+  <li><strong>Why this matters at work</strong> &mdash; 2&ndash;3 sentences on the real value</li>
+  <li><strong>Simple explanation</strong> &mdash; plain-language teaching, with a highlighted formula/rule callout</li>
+  <li><strong>Real workplace example</strong> &mdash; a numbered step-by-step walkthrough in an example box</li>
+  <li><strong>Common mistake</strong> &mdash; a warning callout on what learners often get wrong</li>
+  <li><strong>Try it yourself</strong> &mdash; a small practice activity in a green callout</li>
+  <li><strong>Check your understanding</strong> &mdash; a one-question click-to-check quiz</li>
 </ul>
-<p style="font-size: 15.5px; line-height: 1.65;">You can write this in <strong>any format that's easiest for you</strong>:</p>
-<ul style="font-size: 15.5px; line-height: 1.8;">
-  <li>A Word document or Google Doc, following the sections above</li>
-  <li>Plain notes or bullet points — Claude can turn these into a finished lesson page</li>
-  <li>A ready-made HTML file, if you start from the <strong>Lesson Template</strong> file already in the project</li>
-</ul>
+<p style="font-size: 15.5px; line-height: 1.65;">You can send this content in <strong>any format that's easiest for you</strong> &mdash; a doc, plain notes, or bullet points &mdash; and Claude will build the page in this structure. <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">lesson-template.html</code> in the project root is a ready-to-copy blank version.</p>
+<div style="margin:20px 0;padding:16px 20px;background:#f6f5f2;border-left:3px solid #0e7490;border-radius:4px;">
+  <p style="font-size:14px;font-weight:700;margin:0 0 8px;color:#0e7490;">Design reference</p>
+  <p style="font-size:14.5px;line-height:1.6;margin:0;">The full color system, badge colors per track, and copy-ready component markup (callouts, step-list, quiz, objectives) live in <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">upskillsprint_lesson_theme_reference.html</code>. Every new lesson should reuse these components rather than introducing new ones.</p>
+</div>
 
-<h2 style="font-size: 21px; margin: 36px 0 12px;">Step 2 — Tag it</h2>
-<p style="font-size: 15.5px; line-height: 1.65;">Every lesson gets three tags. These decide where it shows up on the site and let visitors filter later.</p>
+<h2 style="font-size: 21px; margin: 36px 0 12px;">Step 2 &mdash; Tag it</h2>
+<p style="font-size: 15.5px; line-height: 1.65;">Every lesson gets three tags. These decide where it shows up on the site.</p>
 
 <table style="width: 100%; border-collapse: collapse; font-size: 14.5px; margin: 16px 0;">
   <thead>
@@ -56,7 +58,7 @@
   <tbody>
     <tr>
       <td style="padding: 8px 12px 8px 0; border-bottom: 1px solid #eee; vertical-align: top;">Skill Track</td>
-      <td style="padding: 8px 0; border-bottom: 1px solid #eee; vertical-align: top;">Lean Six Sigma, Data Analysis, Machine Learning, Quality Engineering, Project Management</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid #eee; vertical-align: top;">Lean Six Sigma, Quality Tools, Statistics, Excel, Power BI, SQL, Process Improvement, Project Management, Business Analysis</td>
     </tr>
     <tr>
       <td style="padding: 8px 12px 8px 0; border-bottom: 1px solid #eee; vertical-align: top;">Level</td>
@@ -64,26 +66,33 @@
     </tr>
     <tr>
       <td style="padding: 8px 12px 8px 0; vertical-align: top;">Estimated Time</td>
-      <td style="padding: 8px 0; vertical-align: top;">e.g. 12 min, 15 min, 25 min</td>
+      <td style="padding: 8px 0; vertical-align: top;">e.g. 8 min, 12 min, 15 min</td>
     </tr>
   </tbody>
 </table>
 
-<h2 style="font-size: 21px; margin: 36px 0 12px;">Step 3 — Ask Claude to add it</h2>
+<h2 style="font-size: 21px; margin: 36px 0 12px;">Step 3 &mdash; Ask Claude to add it</h2>
 <p style="font-size: 15.5px; line-height: 1.65;">Send your lesson content (doc, notes, or file) and say something like:</p>
 <blockquote style="margin: 16px 0; padding: 14px 20px; background: #f6f5f2; border-left: 3px solid #999; font-size: 15px; line-height: 1.6;">
-  "Here's a new lesson called '[Title]'. It's [Beginner/Intermediate/Advanced], about [X] minutes, and belongs in the [Skill Track] track. Please create the lesson page from the Lesson Template and add a card for it to the Lessons section on the homepage."
+  "Here's a new lesson called '[Title]'. It's [Beginner/Intermediate/Advanced], about [X] minutes, and belongs in the [Skill Track] track. Please create the lesson page from the template and add a card for it to the Lessons page."
 </blockquote>
-<p style="font-size: 15.5px; line-height: 1.65;">Claude will duplicate the Lesson Template, fill it in with your content, save it as its own file, and add a matching card to the Lessons section so visitors can find it.</p>
+<p style="font-size: 15.5px; line-height: 1.65;">Claude will duplicate <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">lesson-template.html</code> into the <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">lessons/</code> folder, fill it in with your content, and add a matching card to the right track section on <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">lessons.html</code> (each track section has an id matching a chip at the top, e.g. <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">id="quality-tools"</code>).</p>
+<p style="font-size: 15.5px; line-height: 1.65;">If it's a strong beginner lesson, Claude can also feature it in the "Featured Lessons" section of <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">index.html</code>.</p>
+
+<h2 style="font-size: 21px; margin: 36px 0 12px;">Step 4 &mdash; Publish</h2>
+<ol style="font-size: 15.5px; line-height: 1.8;">
+  <li>Commit the new lesson file &mdash; plus <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">lessons-theme.css</code> if it's new to your repo &mdash; along with the edited <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">lessons.html</code> (and <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">index.html</code> if featured), to the GitHub repo.</li>
+  <li>Netlify redeploys automatically within a minute or two.</li>
+  <li>Add the new page's URL to <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">sitemap.xml</code> so search engines find it faster.</li>
+</ol>
 
 <h2 style="font-size: 21px; margin: 36px 0 12px;">Adding a tool, dataset, or case study instead</h2>
-<p style="font-size: 15.5px; line-height: 1.65;">Same idea — send the file or description and ask Claude to add it to the Tools &amp; Templates or Case Studies section, with a short title and description. No special format required for these.</p>
+<p style="font-size: 15.5px; line-height: 1.65;">Same idea &mdash; send the file or description and ask Claude to add it to the relevant section, with a short title and description. No special format required.</p>
 
 <h2 style="font-size: 21px; margin: 36px 0 12px;">The short version</h2>
-<p style="font-size: 15.5px; line-height: 1.65;"><strong>Write once, tag once, send it over.</strong> You handle the content — Claude handles the page and the placement.</p>
+<p style="font-size: 15.5px; line-height: 1.65;"><strong>Write once, tag once, send it over.</strong> You handle the content &mdash; Claude handles the page and the placement.</p>
 
 </x-import>
-
 </x-dc>
 </body>
 </html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Power BI Dashboard Basics | UpSkill Sprint Consulting</title>
+<meta name="description" content="Turn a data table into a dashboard your team will actually check.">
+<link rel="canonical" href="https://upskillsprint.com/lessons/power-bi-dashboard-basics.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Power BI Dashboard Basics | UpSkill Sprint Consulting">
+<meta property="og:description" content="Turn a data table into a dashboard your team will actually check.">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<meta property="og:url" content="https://upskillsprint.com/lessons/power-bi-dashboard-basics.html">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../lessons-theme.css">
+</head>
+<body>
+  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+  <header class="site">
+    <a href="../index.html" class="brand">
+      <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+      <span>UpSkill Sprint Consulting</span>
+    </a>
+    <nav class="desktop-nav">
+      <a href="../start-here.html">Start Here</a>
+      <a href="../lessons.html" aria-current="page">Lessons</a>
+      <a href="../services.html">Services</a>
+      <a href="../request-topic.html">Request a Topic</a>
+      <a href="../about.html">About</a>
+      <a href="../faq.html">FAQ</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1f26" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <a href="../lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+  </header>
+  <nav class="mobile-nav">
+    <a href="../start-here.html">Start Here</a>
+    <a href="../lessons.html">Lessons</a>
+    <a href="../services.html">Services</a>
+    <a href="../request-topic.html">Request a Topic</a>
+    <a href="../about.html">About</a>
+    <a href="../faq.html">FAQ</a>
+    <a href="../contact.html">Contact</a>
+  </nav>
+
+  <section class="section" style="padding-bottom:8px;">
+    <div class="wrap" style="max-width:760px;">
+      <p class="eyebrow">Beginner &middot; 12 min read</p>
+      <h1 style="font-size:32px;margin:0 0 16px;">Power BI Dashboard Basics</h1>
+      <p style="font-size:16px;line-height:1.65;color:var(--ink-soft);margin:0;"><strong>What you will learn:</strong> how to turn a raw data table into a dashboard people will actually look at.</p>
+      <div class="badge-row">
+        <span class="badge badge-tools">Power BI</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding:24px 0 0;">
+    <div class="wrap" style="max-width:760px;">
+      <h2 style="font-size:20px;margin:0 0 14px;">By the end, you should be able to</h2>
+      <div class="card">
+        <ul class="lesson-objectives">
+          <li>Pick one clear question for a dashboard to answer.</li>
+          <li>Build a single, focused visual before adding more.</li>
+          <li>Avoid the "wall of charts" trap.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding:32px 0 0;">
+    <div class="wrap" style="max-width:760px;">
+      <h2 style="font-size:20px;margin:0 0 12px;">Why this matters at work</h2>
+      <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);">A good dashboard answers a question at a glance. A bad one is a wall of charts nobody opens twice. Learning the basics saves you from building reports that get ignored.</p>
+
+      <h2 style="font-size:20px;margin:32px 0 12px;">Simple explanation</h2>
+      <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);">Start with the question, not the data.</p>
+      <div class="callout callout-formula">
+        <strong>Rule of thumb:</strong> pick one question (e.g. "Are we hitting our monthly target?"), build one clear visual that answers it first, then add supporting detail. Fewer, clearer visuals beat more, busier ones.
+      </div>
+
+      <h2 style="font-size:20px;margin:32px 0 12px;">Real workplace example</h2>
+      <div class="example-box">
+        <h3 style="font-size:17px;margin:0 0 10px;">A weekly defect report nobody reads</h3>
+        <p style="font-size:15px;line-height:1.65;color:var(--ink-soft);margin:0 0 16px;">A supervisor tracks weekly defect counts by shift in a spreadsheet no one checks.</p>
+        <ol class="step-list">
+          <li><div><strong>Step 1:</strong> Decide the question the dashboard needs to answer: "Are defects trending up or down?"</div></li>
+          <li><div><strong>Step 2:</strong> Build one trend line with a target line overlaid &mdash; nothing else, yet.</div></li>
+          <li><div><strong>Step 3:</strong> The same data now gets checked every Monday because the answer is visible in two seconds.</div></li>
+        </ol>
+      </div>
+
+      <h2 style="font-size:20px;margin:32px 0 12px;">Common mistake</h2>
+      <div class="callout callout-warning">
+        <strong>Watch out for:</strong> adding every available chart "just in case." A dashboard with 12 visuals and no clear question usually gets opened once and ignored.
+      </div>
+
+      <h2 style="font-size:20px;margin:32px 0 12px;">Try it yourself</h2>
+      <div class="callout callout-practice">
+        Take one metric you track today. Sketch, on paper, the single chart that would answer "how are we doing?" without any extra clutter.
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding:32px 0 0;">
+    <div class="wrap" style="max-width:760px;">
+      <h2 style="font-size:20px;margin:0 0 14px;">Check your understanding</h2>
+      <div class="quiz">
+        <h3>What should you decide before building any visuals?</h3>
+        <button class="quiz-option" onclick="checkQuiz(this, false)">Which chart colors to use</button>
+        <button class="quiz-option" onclick="checkQuiz(this, true)">The one question the dashboard should answer</button>
+        <button class="quiz-option" onclick="checkQuiz(this, false)">How many tabs to include</button>
+        <div class="quiz-feedback"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tint" style="margin-top:48px;">
+    <div class="wrap" style="max-width:760px;">
+      <h2 style="font-size:20px;margin:0 0 12px;">Next lesson</h2>
+      <a href="../lessons.html#power-bi-excel-sql" style="font-family:'Source Serif 4',serif;font-size:19px;font-weight:600;">Back to the Power BI, Excel &amp; SQL lessons &rarr;</a>
+    </div>
+  </section>
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom:14px;">
+            <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+            <span>UpSkill Sprint Consulting</span>
+          </div>
+          <p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, process improvement, and business problem-solving.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="../index.html">Home</a>
+          <a href="../start-here.html">Start Here</a>
+          <a href="../lessons.html">Lessons</a>
+          <a href="../services.html">Services</a>
+          <a href="../request-topic.html">Request a Topic</a>
+          <a href="../about.html">About</a>
+          <a href="../faq.html">FAQ</a>
+          <a href="../contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Topics</h4>
+          <a href="../lessons.html#data-analytics">Data Analytics</a>
+          <a href="../lessons.html#quality-engineering">Quality Engineering</a>
+          <a href="../lessons.html#lean-six-sigma">Lean Six Sigma</a>
+          <a href="../lessons.html#power-bi-excel-sql">Power BI, Excel &amp; SQL</a>
+          <a href="../lessons.html#business-decision-making">Business Decision-Making</a>
+          <a href="../lessons.html#ai-for-work">AI for Work</a>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <a href="/cdn-cgi/l/email-protection#89fae2e0e5e5faf9fbe0e7fdeae6e7fafce5fde0e7eec9eee4e8e0e5a7eae6e4"><span class="__cf_email__" data-cfemail="5221393b3e3e2122203b3c26313d3c21273e263b3c3512353f333b3e7c313d3f">[email&#160;protected]</span></a>
+          <p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 UpSkill Sprint Consulting</span>
+      <div><a href="../privacy.html">Privacy Policy</a><a href="../terms.html">Terms of Use</a></div>
+    </div>
+  </footer>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    function checkQuiz(button, isCorrect) {
+      const quiz = button.closest('.quiz');
+      const feedback = quiz.querySelector('.quiz-feedback');
+      feedback.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
+      feedback.textContent = isCorrect
+        ? 'Correct. That matches the logic from the lesson.'
+        : 'Not quite — review the section above and try again.';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+/* Lesson page components — extends style.css. Load after style.css. */
+
+:root {
+  --accent-data: #2563eb;
+  --accent-quality: #0e7490;
+  --accent-lss: #16a34a;
+  --accent-stats: #7c3aed;
+  --accent-tools: #0284c7;
+  --accent-pm: #d97706;
+  --accent-business: #4f46e5;
+  --accent-ai: #0891b2;
+
+  --formula-bg: #ecfeff;
+  --practice-bg: #ecfdf5;
+  --warning-bg: #fffbeb;
+  --danger-bg: #fef2f2;
+  --info-bg: #eff6ff;
+  --warning-line: #f59e0b;
+  --danger-line: #dc2626;
+  --info-line: #0284c7;
+}
+
+.badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 0; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: 999px; color: #fff;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
+}
+.badge-data { background: var(--accent-data); }
+.badge-quality { background: var(--accent-quality); }
+.badge-lss { background: var(--accent-lss); }
+.badge-stats { background: var(--accent-stats); }
+.badge-tools { background: var(--accent-tools); }
+.badge-pm { background: var(--accent-pm); }
+.badge-business { background: var(--accent-business); }
+.badge-ai { background: var(--accent-ai); }
+
+.lesson-objectives { list-style: none; padding: 0; margin: 0; }
+.lesson-objectives li { position: relative; padding-left: 32px; margin-bottom: 12px; font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+.lesson-objectives li::before {
+  content: "\2713"; position: absolute; left: 0; top: 1px;
+  width: 22px; height: 22px; border-radius: 999px;
+  background: var(--teal); color: #fff; font-size: 12px; font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+
+.callout { padding: 18px 20px; border-radius: var(--radius); border: 1px solid var(--line); margin: 20px 0; background: #fff; font-size: 15px; line-height: 1.65; color: var(--ink-soft); }
+.callout strong { color: var(--ink); }
+.callout-info { background: var(--info-bg); border-left: 5px solid var(--info-line); border-color: transparent; }
+.callout-formula { background: var(--formula-bg); border-left: 5px solid var(--teal); border-color: transparent; font-family: 'Courier New', monospace; }
+.callout-practice { background: var(--practice-bg); border-left: 5px solid #16a34a; border-color: transparent; }
+.callout-warning { background: var(--warning-bg); border-left: 5px solid var(--warning-line); border-color: transparent; }
+.callout-danger { background: var(--danger-bg); border-left: 5px solid var(--danger-line); border-color: transparent; }
+
+.example-box { border-radius: 14px; background: #fff; border: 1px solid var(--line); padding: 28px; box-shadow: 0 10px 30px rgba(15,23,42,0.08); }
+
+.step-list { counter-reset: step-counter; list-style: none; padding: 0; margin: 0; }
+.step-list li { counter-increment: step-counter; display: grid; grid-template-columns: 36px 1fr; gap: 14px; margin-bottom: 16px; align-items: start; }
+.step-list li::before {
+  content: counter(step-counter); width: 30px; height: 30px; border-radius: 50%;
+  background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13.5px;
+}
+.step-list li div { font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+.step-list li strong { color: var(--ink); }
+
+.quiz { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 26px; }
+.quiz h3 { font-size: 16.5px; margin: 0 0 14px; }
+.quiz-option {
+  display: block; width: 100%; text-align: left; border: 1px solid var(--line); background: #fff;
+  border-radius: 8px; padding: 12px 16px; margin: 10px 0; cursor: pointer; font-size: 14.5px; color: var(--ink);
+  font-family: inherit; transition: border-color .15s, background .15s;
+}
+.quiz-option:hover { border-color: var(--teal); background: var(--formula-bg); }
+.quiz-feedback { display: none; margin-top: 14px; padding: 14px 16px; border-radius: 8px; font-weight: 600; font-size: 14.5px; }
+.quiz-feedback.correct { display: block; background: var(--practice-bg); color: #065f46; border: 1px solid #bbf7d0; }
+.quiz-feedback.incorrect { display: block; background: var(--danger-bg); color: #991b1b; border: 1px solid #fecaca; }

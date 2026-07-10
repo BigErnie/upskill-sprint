@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two-Way ANOVA: Main Effects, Interaction, and Treatment Combinations | UpSkill Sprint Consulting</title>
+<meta name="description" content="An interactive lesson on two-way ANOVA, main effects, interaction plots, and treatment combinations.">
+<link rel="canonical" href="https://upskillsprint.com/lessons/two-way-anova.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Two-Way ANOVA: Main Effects, Interaction, and Treatment Combinations | UpSkill Sprint Consulting">
+<meta property="og:description" content="An interactive lesson on two-way ANOVA, main effects, interaction plots, and treatment combinations.">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<meta property="og:url" content="https://upskillsprint.com/lessons/two-way-anova.html">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../lessons-theme.css">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+
+:root {
+  --lsn-primary: #0f2a43;
+  --lsn-secondary: #0e7490;
+  --lsn-accent: #d97706;
+  --lsn-light: #f5f7fa;
+  --lsn-border: #e3e7ee;
+  --lsn-text: #101828;
+  --lsn-muted: #667085;
+  --lsn-success: #ecfdf5;
+  --lsn-warning: #fffbeb;
+  --lsn-danger: #fef2f2;
+  --lsn-white: #ffffff;
+  --lsn-canvas-bg: #ffffff;
+  --lsn-soft-blue: #ecfeff;
+}
+
+.lesson-wrapper * {
+  box-sizing: border-box;
+}
+
+.lesson-wrapper {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  font-family: 'Work Sans', Arial, sans-serif;
+  color: var(--lsn-text);
+  line-height: 1.6;
+}
+
+.lesson-wrapper .hero {
+  background: linear-gradient(135deg, var(--lsn-primary), var(--lsn-secondary));
+  color: white;
+  padding: 40px 32px;
+  border-radius: 14px;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 24px rgba(15, 42, 67, 0.18);
+}
+
+.lesson-wrapper .hero .eyebrow {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  color: white;
+}
+
+.lesson-wrapper .hero h1 {
+  margin: 0 0 12px;
+  font-size: 2.1rem;
+  line-height: 1.15;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+}
+
+.lesson-wrapper .hero p {
+  max-width: 900px;
+  font-size: 1.05rem;
+  margin: 0;
+  color: #e0f2fe;
+}
+
+.lesson-wrapper .lesson-card {
+  background: var(--lsn-white);
+  border: 1px solid var(--lsn-border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 14px rgba(15, 42, 67, 0.06);
+}
+
+.lesson-wrapper .interactive-card {
+  border: 2px solid #bcd9e6;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbfc 100%);
+}
+
+.lesson-wrapper h2 {
+  color: var(--lsn-primary);
+  margin-top: 0;
+  border-bottom: 3px solid var(--lsn-accent);
+  padding-bottom: 8px;
+  line-height: 1.25;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  font-size: 22px;
+}
+
+.lesson-wrapper h3 {
+  color: var(--lsn-secondary);
+  margin-top: 24px;
+  line-height: 1.3;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.lesson-wrapper p {
+  margin: 12px 0;
+  font-size: 15.5px;
+}
+
+.lesson-wrapper ul, .lesson-wrapper ol {
+  padding-left: 24px;
+  font-size: 15.5px;
+}
+
+.lesson-wrapper .formula-box {
+  background: var(--lsn-soft-blue);
+  border-left: 6px solid var(--lsn-secondary);
+  padding: 16px 18px;
+  margin: 18px 0;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+.lesson-wrapper .note,
+.lesson-wrapper .success,
+.lesson-wrapper .danger,
+.lesson-wrapper .quiz-feedback {
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin: 18px 0;
+  font-size: 15px;
+}
+
+.lesson-wrapper .note {
+  background: var(--lsn-warning);
+  border-left: 6px solid #f59e0b;
+}
+
+.lesson-wrapper .success {
+  background: var(--lsn-success);
+  border-left: 6px solid #16a34a;
+}
+
+.lesson-wrapper .danger {
+  background: var(--lsn-danger);
+  border-left: 6px solid #dc2626;
+}
+
+.lesson-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  background: white;
+  font-size: 0.95rem;
+}
+
+.lesson-wrapper th {
+  background: var(--lsn-primary);
+  color: white;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid var(--lsn-primary);
+  vertical-align: top;
+}
+
+.lesson-wrapper td {
+  padding: 10px;
+  border: 1px solid var(--lsn-border);
+  vertical-align: top;
+}
+
+.lesson-wrapper tr:nth-child(even) td {
+  background: #f9fafb;
+}
+
+.lesson-wrapper .memory-phrase {
+  font-weight: 700;
+  color: var(--lsn-primary);
+  background: var(--lsn-soft-blue);
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-top: 14px;
+  font-size: 15px;
+}
+
+.lesson-wrapper .nav-box {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 24px;
+}
+
+.lesson-wrapper .nav-box a {
+  background: white;
+  color: var(--lsn-primary);
+  border: 1px solid var(--lsn-border);
+  border-radius: 999px;
+  padding: 9px 14px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(15, 42, 67, 0.06);
+  font-weight: 600;
+  font-size: 13.5px;
+}
+
+.lesson-wrapper .nav-box a:hover {
+  background: var(--lsn-soft-blue);
+  color: var(--lsn-secondary);
+}
+
+.lesson-wrapper .controls-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(130px, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.lesson-wrapper .control-group label {
+  display: block;
+  font-weight: 700;
+  color: var(--lsn-primary);
+  margin-bottom: 5px;
+  font-size: 13.5px;
+}
+
+.lesson-wrapper input,
+.lesson-wrapper textarea,
+.lesson-wrapper select,
+.lesson-wrapper button {
+  font-family: 'Work Sans', Arial, sans-serif;
+  font-size: 1rem;
+}
+
+.lesson-wrapper input,
+.lesson-wrapper textarea,
+.lesson-wrapper select {
+  width: 100%;
+  border: 1px solid var(--lsn-border);
+  border-radius: 8px;
+  padding: 9px 10px;
+  background: white;
+  color: var(--lsn-text);
+}
+
+.lesson-wrapper input[type="radio"],
+.lesson-wrapper input[type="checkbox"] {
+  width: auto;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.lesson-wrapper textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.lesson-wrapper button {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: var(--lsn-secondary);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 9px rgba(15, 42, 67, 0.16);
+}
+
+.lesson-wrapper button:hover {
+  background: var(--lsn-primary);
+}
+
+.lesson-wrapper button.secondary {
+  background: var(--lsn-muted);
+}
+
+.lesson-wrapper button.secondary:hover {
+  background: #4b5563;
+}
+
+.lesson-wrapper .button-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+.lesson-wrapper .canvas-wrap {
+  background: var(--lsn-canvas-bg);
+  border: 1px solid var(--lsn-border);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 18px 0;
+  overflow-x: auto;
+}
+
+.lesson-wrapper canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 280px;
+}
+
+.lesson-wrapper .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.lesson-wrapper .stat-box {
+  background: #ffffff;
+  border: 1px solid var(--lsn-border);
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(15, 42, 67, 0.05);
+}
+
+.lesson-wrapper .stat-box .label {
+  color: var(--lsn-muted);
+  font-size: 0.85rem;
+}
+
+.lesson-wrapper .stat-box .value {
+  color: var(--lsn-primary);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.lesson-wrapper .two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.lesson-wrapper .three-column {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.lesson-wrapper .result-panel {
+  background: #ffffff;
+  border: 1px solid var(--lsn-border);
+  border-radius: 12px;
+  padding: 18px;
+  margin: 18px 0;
+}
+
+.lesson-wrapper .quiz-question {
+  border: 1px solid var(--lsn-border);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+  background: #ffffff;
+}
+
+.lesson-wrapper .quiz-question p {
+  margin-top: 0;
+  font-weight: 700;
+  color: var(--lsn-primary);
+}
+
+.lesson-wrapper .quiz-question label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+  cursor: pointer;
+  font-size: 14.5px;
+}
+
+.lesson-wrapper .quiz-feedback {
+  display: none;
+  background: var(--lsn-soft-blue);
+  border-left: 6px solid var(--lsn-secondary);
+}
+
+.lesson-wrapper .hidden {
+  display: none;
+}
+
+.lesson-wrapper .reveal-box {
+  border: 2px dashed #bcd9e6;
+  border-radius: 12px;
+  padding: 18px;
+  background: #ffffff;
+  margin-top: 16px;
+}
+
+.lesson-wrapper .toggle-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+.lesson-wrapper .toggle-tabs button.active {
+  background: var(--lsn-accent);
+}
+
+.lesson-wrapper .checkbox-row {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.lesson-wrapper .checkbox-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--lsn-primary);
+  font-size: 14.5px;
+}
+
+.lesson-wrapper .combo-grid {
+  display: grid;
+  grid-template-columns: 90px repeat(3, minmax(90px, 1fr));
+  border: 1px solid var(--lsn-border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 18px 0;
+}
+
+.lesson-wrapper .combo-grid div {
+  padding: 12px;
+  border-right: 1px solid var(--lsn-border);
+  border-bottom: 1px solid var(--lsn-border);
+  background: white;
+  text-align: center;
+}
+
+.lesson-wrapper .combo-grid .header {
+  background: var(--lsn-primary);
+  color: white;
+  font-weight: 700;
+}
+
+.lesson-wrapper .combo-grid .row-header {
+  background: var(--lsn-soft-blue);
+  color: var(--lsn-primary);
+  font-weight: 700;
+}
+
+.lesson-wrapper .combo-grid button {
+  width: 100%;
+  border-radius: 8px;
+  background: white;
+  color: var(--lsn-primary);
+  border: 1px solid #bcd9e6;
+  box-shadow: none;
+}
+
+.lesson-wrapper .combo-grid button:hover,
+.lesson-wrapper .combo-grid button.selected {
+  background: var(--lsn-accent);
+  color: white;
+}
+
+.lesson-wrapper .footer-box {
+  background: var(--lsn-primary);
+  color: white;
+  padding: 24px;
+  border-radius: 14px;
+  margin-top: 30px;
+}
+
+.lesson-wrapper .footer-box h2 {
+  color: white;
+  border-bottom: 3px solid var(--lsn-accent);
+}
+
+.lesson-wrapper .small {
+  color: var(--lsn-muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .lesson-wrapper .controls-grid,
+  .lesson-wrapper .stats-grid,
+  .lesson-wrapper .two-column,
+  .lesson-wrapper .three-column {
+    grid-template-columns: 1fr;
+  }
+  .lesson-wrapper .hero h1 {
+    font-size: 1.7rem;
+  }
+  .lesson-wrapper .lesson-card {
+    padding: 20px;
+  }
+  .lesson-wrapper table {
+    font-size: 0.88rem;
+  }
+  .lesson-wrapper .combo-grid {
+    grid-template-columns: 70px repeat(3, minmax(70px, 1fr));
+    font-size: 0.92rem;
+  }
+}
+</style>
+</head>
+<body>
+  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+  <header class="site">
+    <a href="../index.html" class="brand">
+      <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+      <span>UpSkill Sprint Consulting</span>
+    </a>
+    <nav class="desktop-nav">
+      <a href="../start-here.html">Start Here</a>
+      <a href="../lessons.html" aria-current="page">Lessons</a>
+      <a href="../services.html">Services</a>
+      <a href="../request-topic.html">Request a Topic</a>
+      <a href="../about.html">About</a>
+      <a href="../faq.html">FAQ</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1f26" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <a href="../lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+  </header>
+  <nav class="mobile-nav">
+    <a href="../start-here.html">Start Here</a>
+    <a href="../lessons.html">Lessons</a>
+    <a href="../services.html">Services</a>
+    <a href="../request-topic.html">Request a Topic</a>
+    <a href="../about.html">About</a>
+    <a href="../faq.html">FAQ</a>
+    <a href="../contact.html">Contact</a>
+  </nav>
+
+  <main class="lesson-wrapper">
+
+    <section class="hero">
+      <h1>Two-Way ANOVA: Main Effects, Interaction, and Treatment Combinations</h1>
+      <p>
+        This lesson builds on the one-way ANOVA material-strength example.
+        We keep Material Type as Factor A and add Temperature as Factor B.
+        You will see how interaction can reveal a pattern that one-way ANOVA may hide.
+      </p>
+      <div class="badge-row">
+        <span class="badge badge-stats">Statistics</span>
+      </div>
+    </section>
+
+    <nav class="nav-box" aria-label="Lesson navigation">
+      <a href="#build">Build From Lesson 1</a>
+      <a href="#reveal">Reveal Factor B</a>
+      <a href="#fdist">F-Distribution</a>
+      <a href="#plot">Interaction Plot</a>
+      <a href="#toggle">Main Effect vs Interaction</a>
+      <a href="#combo">Combination Explorer</a>
+      <a href="#quiz">Quick Quiz</a>
+    </nav>
+
+    <section class="lesson-card" id="build">
+      <h2>1. Build From the One-Way ANOVA Example</h2>
+
+      <p>
+        In the previous lesson, we tested whether material type affected tensile strength.
+      </p>
+
+      <ul>
+        <li><strong>Factor A:</strong> Material Type</li>
+        <li><strong>Levels of A:</strong> Material A, Material B, Material C</li>
+        <li><strong>Response:</strong> Tensile Strength</li>
+      </ul>
+
+      <p>
+        The material averages looked close:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Average Strength</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Material A</td>
+            <td>95.00</td>
+          </tr>
+          <tr>
+            <td>Material B</td>
+            <td>96.50</td>
+          </tr>
+          <tr>
+            <td>Material C</td>
+            <td>97.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note">
+        From the one-way view, Material Type did not look very important.
+        But that analysis ignored temperature.
+      </div>
+    </section>
+
+    <section class="lesson-card interactive-card" id="reveal">
+      <h2>2. One-Way to Two-Way Reveal Button</h2>
+
+      <p>
+        Click the button to reveal the second factor: <strong>Temperature</strong>.
+      </p>
+
+      <div class="button-row">
+        <button onclick="revealTemperature()">Reveal Temperature Factor</button>
+        <button class="secondary" onclick="hideTemperature()">Hide Temperature Factor</button>
+      </div>
+
+      <div id="temperatureReveal" class="reveal-box hidden">
+        <h3>Now the Same Material Data Is Split by Temperature</h3>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Low Temperature Mean</th>
+              <th>High Temperature Mean</th>
+              <th>Material Average</th>
+              <th>Pattern</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Material A</td>
+              <td>101</td>
+              <td>89</td>
+              <td>95.00</td>
+              <td>Drops at high temperature</td>
+            </tr>
+            <tr>
+              <td>Material B</td>
+              <td>96</td>
+              <td>97</td>
+              <td>96.50</td>
+              <td>Stable</td>
+            </tr>
+            <tr>
+              <td>Material C</td>
+              <td>89</td>
+              <td>105</td>
+              <td>97.00</td>
+              <td>Increases at high temperature</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="danger">
+          The material averages are close, but the temperature-specific patterns are very different.
+          This is the interaction.
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-card">
+      <h2>3. What Two-Way ANOVA Tests</h2>
+
+      <p>
+        Two-way ANOVA tests three things:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Effect</th>
+            <th>Question It Answers</th>
+            <th>F-Statistic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Factor A: Material</td>
+            <td>Does material type affect strength on average?</td>
+            <td>\(F_A = MS_A / MS_E\)</td>
+          </tr>
+          <tr>
+            <td>Factor B: Temperature</td>
+            <td>Does temperature affect strength on average?</td>
+            <td>\(F_B = MS_B / MS_E\)</td>
+          </tr>
+          <tr>
+            <td>A &times; B Interaction</td>
+            <td>Does the effect of material depend on temperature?</td>
+            <td>\(F_{AB} = MS_{AB} / MS_E\)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Degrees of Freedom</h3>
+
+      <div class="formula-box">
+        \[
+        df_A = a - 1
+        \]
+        \[
+        df_B = b - 1
+        \]
+        \[
+        df_{AB} = (a - 1)(b - 1)
+        \]
+        \[
+        df_E = ab(n - 1)
+        \]
+        \[
+        df_{\text{Total}} = N - 1 = abn - 1
+        \]
+      </div>
+
+      <div class="note">
+        For this example, \(a = 3\), \(b = 2\), \(n = 2\), and \(N = 12\).
+      </div>
+    </section>
+
+    <section class="lesson-card interactive-card" id="fdist">
+      <h2>4. Interactive F-Distribution Graph</h2>
+
+      <p>
+        Use this graph to test any of the three two-way ANOVA F-statistics.
+        The default values show the interaction test.
+      </p>
+
+      <div class="button-row">
+        <button onclick="loadFTest('A')">Load Material F-Test</button>
+        <button onclick="loadFTest('B')">Load Temperature F-Test</button>
+        <button onclick="loadFTest('AB')">Load Interaction F-Test</button>
+      </div>
+
+      <div class="controls-grid">
+        <div class="control-group">
+          <label for="fd-d1">Numerator df</label>
+          <input id="fd-d1" type="number" min="1" step="1" value="2" oninput="drawFDistribution()" />
+        </div>
+
+        <div class="control-group">
+          <label for="fd-d2">Denominator df</label>
+          <input id="fd-d2" type="number" min="1" step="1" value="6" oninput="drawFDistribution()" />
+        </div>
+
+        <div class="control-group">
+          <label for="fd-alpha">Alpha</label>
+          <select id="fd-alpha" onchange="drawFDistribution()">
+            <option value="0.10">0.10</option>
+            <option value="0.05" selected>0.05</option>
+            <option value="0.01">0.01</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="fd-fstat">Observed F</label>
+          <input id="fd-fstat" type="number" min="0" step="0.01" value="98.17" oninput="drawFDistribution()" />
+        </div>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="fCanvas" height="330"></canvas>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="label">Critical F</div>
+          <div class="value" id="fd-critical">&mdash;</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Right-tail p-value</div>
+          <div class="value" id="fd-pvalue">&mdash;</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Decision</div>
+          <div class="value" id="fd-decision" style="font-size:1rem;">&mdash;</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Rule</div>
+          <div class="value" style="font-size:1rem;">Reject if F &gt; Critical F</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-card">
+      <h2>5. Two-Way ANOVA Table for This Example</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>SS</th>
+            <th>df</th>
+            <th>MS</th>
+            <th>F</th>
+            <th>p-value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Material Type, A</td>
+            <td>8.67</td>
+            <td>2</td>
+            <td>4.33</td>
+            <td>2.17</td>
+            <td>0.196</td>
+          </tr>
+          <tr>
+            <td>Temperature, B</td>
+            <td>8.33</td>
+            <td>1</td>
+            <td>8.33</td>
+            <td>4.17</td>
+            <td>0.087</td>
+          </tr>
+          <tr>
+            <td>A &times; B Interaction</td>
+            <td>392.67</td>
+            <td>2</td>
+            <td>196.33</td>
+            <td>98.17</td>
+            <td>&lt; 0.001</td>
+          </tr>
+          <tr>
+            <td>Error</td>
+            <td>12.00</td>
+            <td>6</td>
+            <td>2.00</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td>Total</td>
+            <td>421.67</td>
+            <td>11</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+            <td>&mdash;</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="formula-box">
+        \[
+        F_A = \frac{4.33}{2.00} = 2.17
+        \]
+        \[
+        F_B = \frac{8.33}{2.00} = 4.17
+        \]
+        \[
+        F_{AB} = \frac{196.33}{2.00} = 98.17
+        \]
+      </div>
+
+      <div class="success">
+        Material Type is not significant as an average main effect, but the Material &times; Temperature interaction is significant.
+      </div>
+    </section>
+
+    <section class="lesson-card interactive-card" id="plot">
+      <h2>6. Interactive Interaction Plot</h2>
+
+      <p>
+        Toggle the material lines on and off. If the lines are not parallel, that is evidence of interaction.
+      </p>
+
+      <div class="checkbox-row">
+        <label><input type="checkbox" id="showA" checked onchange="drawInteractionPlot()"> Material A</label>
+        <label><input type="checkbox" id="showB" checked onchange="drawInteractionPlot()"> Material B</label>
+        <label><input type="checkbox" id="showC" checked onchange="drawInteractionPlot()"> Material C</label>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="interactionCanvas" height="340"></canvas>
+      </div>
+
+      <div class="note">
+        Material A drops from low to high temperature. Material B stays stable.
+        Material C rises from low to high temperature. The lines are not parallel, so there is a strong interaction.
+      </div>
+    </section>
+
+    <section class="lesson-card interactive-card" id="toggle">
+      <h2>7. Main Effect vs Interaction Toggle</h2>
+
+      <p>
+        Use the buttons below to compare the averaged main-effect view against the interaction view.
+      </p>
+
+      <div class="toggle-tabs">
+        <button id="mainBtn" class="active" onclick="showView('main')">Main Effects Only</button>
+        <button id="interBtn" onclick="showView('interaction')">Interaction View</button>
+      </div>
+
+      <div id="mainView">
+        <h3>Main Effect View: Material Averages</h3>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Average Strength</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Material A</td>
+              <td>95.00</td>
+            </tr>
+            <tr>
+              <td>Material B</td>
+              <td>96.50</td>
+            </tr>
+            <tr>
+              <td>Material C</td>
+              <td>97.00</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="note">
+          In the main-effect view, the material means look close.
+          This is why Factor A has p-value greater than 0.05.
+        </div>
+      </div>
+
+      <div id="interactionView" class="hidden">
+        <h3>Interaction View: Material by Temperature</h3>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Low Temperature</th>
+              <th>High Temperature</th>
+              <th>Pattern</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Material A</td>
+              <td>101</td>
+              <td>89</td>
+              <td>Falls sharply</td>
+            </tr>
+            <tr>
+              <td>Material B</td>
+              <td>96</td>
+              <td>97</td>
+              <td>Almost flat</td>
+            </tr>
+            <tr>
+              <td>Material C</td>
+              <td>89</td>
+              <td>105</td>
+              <td>Rises sharply</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="danger">
+          The interaction view shows that the effect of material depends on temperature.
+          This is why a non-significant Factor A main effect can still have a significant interaction.
+        </div>
+      </div>
+
+      <div class="memory-phrase">
+        Memory phrase: Averaging can hide the effect; interaction reveals the pattern.
+      </div>
+    </section>
+
+    <section class="lesson-card interactive-card" id="combo">
+      <h2>8. Treatment Combination Explorer</h2>
+
+      <p>
+        This section answers the question:
+        <strong>If Factor A has 4 levels and Factor B has 3 levels, how do we know which combination has the most effect?</strong>
+      </p>
+
+      <p>
+        Click any cell in the 4 &times; 3 grid.
+        The tool will show the cell mean, row mean, column mean, grand mean, and interaction effect.
+      </p>
+
+      <div class="combo-grid" id="comboGrid">
+        <div class="header"></div>
+        <div class="header">B1</div>
+        <div class="header">B2</div>
+        <div class="header">B3</div>
+
+        <div class="row-header">A1</div>
+        <div><button data-a="A1" data-b="B1">75</button></div>
+        <div><button data-a="A1" data-b="B2">80</button></div>
+        <div><button data-a="A1" data-b="B3">78</button></div>
+
+        <div class="row-header">A2</div>
+        <div><button data-a="A2" data-b="B1">76</button></div>
+        <div><button data-a="A2" data-b="B2">82</button></div>
+        <div><button data-a="A2" data-b="B3">79</button></div>
+
+        <div class="row-header">A3</div>
+        <div><button data-a="A3" data-b="B1">74</button></div>
+        <div><button data-a="A3" data-b="B2">81</button></div>
+        <div><button data-a="A3" data-b="B3">77</button></div>
+
+        <div class="row-header">A4</div>
+        <div><button data-a="A4" data-b="B1">90</button></div>
+        <div><button data-a="A4" data-b="B2">70</button></div>
+        <div><button data-a="A4" data-b="B3">95</button></div>
+      </div>
+
+      <div class="button-row">
+        <button onclick="findLargestDifference()">Find Largest Practical Difference</button>
+        <button class="secondary" onclick="selectCombo('A4', 'B2')">Show Strongest Interaction Cell</button>
+      </div>
+
+      <div id="comboResult" class="result-panel">
+        <h3>Selected Combination</h3>
+        <p>Click a cell to see the details.</p>
+      </div>
+
+      <div class="formula-box">
+        \[
+        \text{Interaction Effect}_{ij}
+        =
+        \bar{x}_{ij} - \bar{x}_{i.} - \bar{x}_{.j} + \bar{x}_{..}
+        \]
+      </div>
+
+      <div class="note">
+        The highest cell mean is not always the cell that drives the interaction most.
+        The interaction effect shows how far the cell is from what would be expected based on row and column means.
+      </div>
+    </section>
+
+    <section class="lesson-card">
+      <h2>9. How to Find the Strongest Combination</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>What to Check</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Which combination gives the highest response?</td>
+            <td>Cell means</td>
+          </tr>
+          <tr>
+            <td>Which combinations are statistically different?</td>
+            <td>Tukey pairwise comparisons</td>
+          </tr>
+          <tr>
+            <td>Which combination drives the interaction most?</td>
+            <td>Interaction effects</td>
+          </tr>
+          <tr>
+            <td>How much is the practical difference?</td>
+            <td>Difference in means</td>
+          </tr>
+          <tr>
+            <td>How strong is the interaction overall?</td>
+            <td>Interaction p-value, \(SS_{AB}\), or partial eta-squared</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Effect Size for Interaction</h3>
+
+      <div class="formula-box">
+        \[
+        \eta_p^2 =
+        \frac{SS_{AB}}{SS_{AB} + SS_E}
+        \]
+      </div>
+
+      <p>
+        For the two-way ANOVA example:
+      </p>
+
+      <div class="formula-box">
+        \[
+        \eta_p^2 =
+        \frac{392.67}{392.67 + 12.00} = 0.970
+        \]
+      </div>
+
+      <div class="success">
+        This means the interaction explains a very large share of the explainable variation in this example.
+      </div>
+    </section>
+
+    <section class="lesson-card interactive-card" id="quiz">
+      <h2>10. End-of-Lesson Quiz</h2>
+
+      <div class="quiz-question">
+        <p>1. If Factor A has p-value greater than 0.05 but the interaction has p-value less than 0.05, what should you do?</p>
+        <label><input type="radio" name="q1" value="a"> Ignore Factor A completely.</label>
+        <label><input type="radio" name="q1" value="b"> Interpret Factor A through the interaction.</label>
+        <label><input type="radio" name="q1" value="c"> Conclude that the ANOVA failed.</label>
+      </div>
+
+      <div class="quiz-question">
+        <p>2. If Factor A has 4 levels and Factor B has 3 levels, how many treatment combinations are there?</p>
+        <label><input type="radio" name="q2" value="a"> 7</label>
+        <label><input type="radio" name="q2" value="b"> 12</label>
+        <label><input type="radio" name="q2" value="c"> 43</label>
+      </div>
+
+      <div class="quiz-question">
+        <p>3. What does a significant interaction mean?</p>
+        <label><input type="radio" name="q3" value="a"> The effect of one factor depends on the level of another factor.</label>
+        <label><input type="radio" name="q3" value="b"> The two factors must have equal averages.</label>
+        <label><input type="radio" name="q3" value="c"> The test is two-tailed.</label>
+      </div>
+
+      <button onclick="gradeQuiz()">Check Answers</button>
+      <div id="quiz-feedback" class="quiz-feedback"></div>
+    </section>
+
+    <section class="footer-box">
+      <h2>Lesson Takeaway</h2>
+      <p>
+        Two-way ANOVA helps you see what one-way ANOVA can miss.
+        In this example, material type did not look significant when averaged across temperature.
+        But the interaction showed that material performance changes strongly depending on temperature.
+      </p>
+    </section>
+
+    <section style="margin-top:24px;">
+      <a href="../lessons.html#statistics" style="font-family:'Source Serif 4',Georgia,serif;font-size:19px;font-weight:600;color:var(--lsn-secondary);">&larr; Back to the Statistics lessons</a>
+    </section>
+
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom:14px;">
+            <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+            <span>UpSkill Sprint Consulting</span>
+          </div>
+          <p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, process improvement, and business problem-solving.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="../index.html">Home</a>
+          <a href="../start-here.html">Start Here</a>
+          <a href="../lessons.html">Lessons</a>
+          <a href="../services.html">Services</a>
+          <a href="../request-topic.html">Request a Topic</a>
+          <a href="../about.html">About</a>
+          <a href="../faq.html">FAQ</a>
+          <a href="../contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Topics</h4>
+          <a href="../lessons.html#data-analytics">Data Analytics</a>
+          <a href="../lessons.html#quality-engineering">Quality Engineering</a>
+          <a href="../lessons.html#lean-six-sigma">Lean Six Sigma</a>
+          <a href="../lessons.html#power-bi-excel-sql">Power BI, Excel &amp; SQL</a>
+          <a href="../lessons.html#business-decision-making">Business Decision-Making</a>
+          <a href="../lessons.html#ai-for-work">AI for Work</a>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <a href="/cdn-cgi/l/email-protection#e291898b8e8e9192908b8c96818d8c91978e968b8c85a2858f838b8ecc818d8f"><span class="__cf_email__" data-cfemail="0271696b6e6e7172706b6c76616d6c71776e766b6c6542656f636b6e2c616d6f">[email&#160;protected]</span></a>
+          <p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 UpSkill Sprint Consulting</span>
+      <div><a href="../privacy.html">Privacy Policy</a><a href="../terms.html">Terms of Use</a></div>
+    </div>
+  </footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function logGamma(z) {
+  const g = 7;
+  const p = [
+    0.99999999999980993,
+    676.5203681218851,
+    -1259.1392167224028,
+    771.32342877765313,
+    -176.61502916214059,
+    12.507343278686905,
+    -0.13857109526572012,
+    9.9843695780195716e-6,
+    1.5056327351493116e-7
+  ];
+  if (z < 0.5) {
+    return Math.log(Math.PI) - Math.log(Math.sin(Math.PI * z)) - logGamma(1 - z);
+  }
+  z -= 1;
+  let x = p[0];
+  for (let i = 1; i < p.length; i++) x += p[i] / (z + i);
+  const t = z + g + 0.5;
+  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+}
+
+function betaContinuedFraction(x, a, b) {
+  const MAXIT = 120;
+  const EPS = 3e-12;
+  const FPMIN = 1e-30;
+  let qab = a + b;
+  let qap = a + 1;
+  let qam = a - 1;
+  let c = 1;
+  let d = 1 - qab * x / qap;
+  if (Math.abs(d) < FPMIN) d = FPMIN;
+  d = 1 / d;
+  let h = d;
+
+  for (let m = 1; m <= MAXIT; m++) {
+    let m2 = 2 * m;
+    let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+    d = 1 + aa * d;
+    if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c;
+    if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d;
+    h *= d * c;
+
+    aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+    d = 1 + aa * d;
+    if (Math.abs(d) < FPMIN) d = FPMIN;
+    c = 1 + aa / c;
+    if (Math.abs(c) < FPMIN) c = FPMIN;
+    d = 1 / d;
+    const del = d * c;
+    h *= del;
+
+    if (Math.abs(del - 1) < EPS) break;
+  }
+  return h;
+}
+
+function regularizedIncompleteBeta(x, a, b) {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+  const bt = Math.exp(logGamma(a + b) - logGamma(a) - logGamma(b) +
+                      a * Math.log(x) + b * Math.log(1 - x));
+  if (x < (a + 1) / (a + b + 2)) {
+    return bt * betaContinuedFraction(x, a, b) / a;
+  }
+  return 1 - bt * betaContinuedFraction(1 - x, b, a) / b;
+}
+
+function fCDF(x, d1, d2) {
+  if (x <= 0) return 0;
+  const y = (d1 * x) / (d1 * x + d2);
+  return regularizedIncompleteBeta(y, d1 / 2, d2 / 2);
+}
+
+function fRightTailP(x, d1, d2) {
+  return Math.max(0, Math.min(1, 1 - fCDF(x, d1, d2)));
+}
+
+function fCritical(alpha, d1, d2) {
+  let lo = 0;
+  let hi = 1;
+  while (fRightTailP(hi, d1, d2) > alpha && hi < 100000) {
+    hi *= 2;
+  }
+  for (let i = 0; i < 90; i++) {
+    const mid = (lo + hi) / 2;
+    if (fRightTailP(mid, d1, d2) > alpha) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+function fDensity(x, d1, d2) {
+  if (x <= 0) return 0;
+  const a = d1 / 2;
+  const b = d2 / 2;
+  const logBeta = logGamma(a) + logGamma(b) - logGamma(a + b);
+  const logPdf = a * Math.log(d1 / d2) + (a - 1) * Math.log(x) -
+                 logBeta - (a + b) * Math.log(1 + (d1 / d2) * x);
+  return Math.exp(logPdf);
+}
+
+function fmt(x, digits = 3) {
+  if (!Number.isFinite(x)) return "—";
+  if (Math.abs(x) < 0.001 && x !== 0) return "<0.001";
+  return x.toFixed(digits);
+}
+
+function resizeCanvasForDisplay(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const width = Math.max(720, Math.floor(rect.width || 900));
+  const height = 330;
+  const scale = window.devicePixelRatio || 1;
+  canvas.width = width * scale;
+  canvas.height = height * scale;
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
+  return { ctx, width, height };
+}
+
+function drawFDistribution(canvasId = "fCanvas") {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  const d1 = Math.max(1, parseFloat(document.getElementById("fd-d1").value));
+  const d2 = Math.max(1, parseFloat(document.getElementById("fd-d2").value));
+  const alpha = Math.min(0.25, Math.max(0.001, parseFloat(document.getElementById("fd-alpha").value)));
+  const fStat = Math.max(0, parseFloat(document.getElementById("fd-fstat").value));
+
+  const fCrit = fCritical(alpha, d1, d2);
+  const pValue = fRightTailP(fStat, d1, d2);
+
+  const { ctx, width, height } = resizeCanvasForDisplay(canvas);
+  const left = 58;
+  const right = 24;
+  const top = 24;
+  const bottom = 48;
+  const plotW = width - left - right;
+  const plotH = height - top - bottom;
+
+  const xMax = Math.max(5, fCrit * 1.7, fStat * 1.35);
+  let yMax = 0;
+  for (let i = 1; i <= 500; i++) {
+    const x = (xMax * i) / 500;
+    yMax = Math.max(yMax, fDensity(x, d1, d2));
+  }
+  yMax *= 1.15;
+
+  const xToPx = x => left + (x / xMax) * plotW;
+  const yToPx = y => top + plotH - (y / yMax) * plotH;
+
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, width, height);
+
+  // Shaded rejection region
+  ctx.beginPath();
+  ctx.moveTo(xToPx(fCrit), yToPx(0));
+  for (let i = 0; i <= 320; i++) {
+    const x = fCrit + ((xMax - fCrit) * i) / 320;
+    ctx.lineTo(xToPx(x), yToPx(fDensity(x, d1, d2)));
+  }
+  ctx.lineTo(xToPx(xMax), yToPx(0));
+  ctx.closePath();
+  ctx.fillStyle = "rgba(217, 119, 6, 0.28)";
+  ctx.fill();
+
+  // Distribution curve
+  ctx.beginPath();
+  for (let i = 1; i <= 600; i++) {
+    const x = (xMax * i) / 600;
+    const px = xToPx(x);
+    const py = yToPx(fDensity(x, d1, d2));
+    if (i === 1) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = "#0f2a43";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Axes
+  ctx.strokeStyle = "#667085";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(left, top + plotH);
+  ctx.lineTo(left + plotW, top + plotH);
+  ctx.moveTo(left, top);
+  ctx.lineTo(left, top + plotH);
+  ctx.stroke();
+
+  // Tick marks
+  ctx.fillStyle = "#101828";
+  ctx.font = "14px 'Work Sans', Arial, sans-serif";
+  ctx.textAlign = "center";
+  for (let t = 0; t <= 5; t++) {
+    const x = (xMax * t) / 5;
+    const px = xToPx(x);
+    ctx.beginPath();
+    ctx.moveTo(px, top + plotH);
+    ctx.lineTo(px, top + plotH + 6);
+    ctx.stroke();
+    ctx.fillText(x.toFixed(1), px, top + plotH + 24);
+  }
+  ctx.fillText("F value", left + plotW / 2, height - 8);
+
+  // Critical line
+  const critX = xToPx(fCrit);
+  ctx.strokeStyle = "#d97706";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(critX, top);
+  ctx.lineTo(critX, top + plotH);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#d97706";
+  ctx.textAlign = "left";
+  ctx.fillText("Critical F = " + fmt(fCrit), Math.min(critX + 8, width - 170), top + 18);
+
+  // Observed F line
+  const obsX = xToPx(Math.min(fStat, xMax));
+  ctx.strokeStyle = "#0e7490";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(obsX, top);
+  ctx.lineTo(obsX, top + plotH);
+  ctx.stroke();
+  ctx.fillStyle = "#0e7490";
+  ctx.fillText("Observed F = " + fmt(fStat), Math.min(obsX + 8, width - 170), top + 40);
+
+  // Labels
+  ctx.fillStyle = "#101828";
+  ctx.textAlign = "left";
+  ctx.font = "15px 'Work Sans', Arial, sans-serif";
+  ctx.fillText("Right-tail rejection region", left + plotW - 185, top + plotH - 18);
+
+  document.getElementById("fd-critical").textContent = fmt(fCrit, 3);
+  document.getElementById("fd-pvalue").textContent = fmt(pValue, 4);
+  document.getElementById("fd-decision").textContent =
+    fStat > fCrit ? "Reject H₀: F is in the rejection region." :
+                    "Fail to reject H₀: F is not in the rejection region.";
+}
+</script>
+
+<script>
+  const interactionData = {
+    A: { label: "Material A", low: 101, high: 89 },
+    B: { label: "Material B", low: 96, high: 97 },
+    C: { label: "Material C", low: 89, high: 105 }
+  };
+
+  const comboData = {
+    A1: { B1: 75, B2: 80, B3: 78 },
+    A2: { B1: 76, B2: 82, B3: 79 },
+    A3: { B1: 74, B2: 81, B3: 77 },
+    A4: { B1: 90, B2: 70, B3: 95 }
+  };
+
+  function revealTemperature() {
+    document.getElementById("temperatureReveal").classList.remove("hidden");
+    if (window.MathJax) MathJax.typesetPromise();
+  }
+
+  function hideTemperature() {
+    document.getElementById("temperatureReveal").classList.add("hidden");
+  }
+
+  function loadFTest(type) {
+    if (type === "A") {
+      document.getElementById("fd-d1").value = 2;
+      document.getElementById("fd-d2").value = 6;
+      document.getElementById("fd-fstat").value = 2.17;
+    } else if (type === "B") {
+      document.getElementById("fd-d1").value = 1;
+      document.getElementById("fd-d2").value = 6;
+      document.getElementById("fd-fstat").value = 4.17;
+    } else {
+      document.getElementById("fd-d1").value = 2;
+      document.getElementById("fd-d2").value = 6;
+      document.getElementById("fd-fstat").value = 98.17;
+    }
+    drawFDistribution();
+  }
+
+  function drawInteractionPlot() {
+    const canvas = document.getElementById("interactionCanvas");
+    if (!canvas) return;
+
+    const { ctx, width, height } = resizeCanvasForDisplay(canvas);
+    const left = 70;
+    const right = 35;
+    const top = 28;
+    const bottom = 55;
+    const plotW = width - left - right;
+    const plotH = height - top - bottom;
+
+    const minY = 84;
+    const maxY = 108;
+    const yToPx = y => top + plotH - ((y - minY) / (maxY - minY)) * plotH;
+    const xLow = left + plotW * 0.25;
+    const xHigh = left + plotW * 0.75;
+
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
+    // Axes
+    ctx.strokeStyle = "#667085";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(left, top);
+    ctx.lineTo(left, top + plotH);
+    ctx.lineTo(left + plotW, top + plotH);
+    ctx.stroke();
+
+    // Y ticks
+    ctx.fillStyle = "#101828";
+    ctx.font = "14px 'Work Sans', Arial, sans-serif";
+    ctx.textAlign = "right";
+    for (let y = minY; y <= maxY; y += 4) {
+      const py = yToPx(y);
+      ctx.strokeStyle = "#e3e7ee";
+      ctx.beginPath();
+      ctx.moveTo(left, py);
+      ctx.lineTo(left + plotW, py);
+      ctx.stroke();
+      ctx.fillStyle = "#101828";
+      ctx.fillText(String(y), left - 8, py + 4);
+    }
+
+    ctx.textAlign = "center";
+    ctx.fillText("Low Temperature", xLow, top + plotH + 28);
+    ctx.fillText("High Temperature", xHigh, top + plotH + 28);
+    ctx.save();
+    ctx.translate(18, top + plotH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText("Mean Tensile Strength", 0, 0);
+    ctx.restore();
+
+    const series = [
+      { key: "A", show: document.getElementById("showA").checked, dash: [], marker: "A" },
+      { key: "B", show: document.getElementById("showB").checked, dash: [6, 4], marker: "B" },
+      { key: "C", show: document.getElementById("showC").checked, dash: [2, 4], marker: "C" }
+    ];
+
+    series.forEach((s, index) => {
+      if (!s.show) return;
+      const d = interactionData[s.key];
+      const y1 = yToPx(d.low);
+      const y2 = yToPx(d.high);
+
+      ctx.setLineDash(s.dash);
+      ctx.strokeStyle = ["#0f2a43", "#d97706", "#16a34a"][index];
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(xLow, y1);
+      ctx.lineTo(xHigh, y2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = ["#0f2a43", "#d97706", "#16a34a"][index];
+      [ [xLow, y1, d.low], [xHigh, y2, d.high] ].forEach(pt => {
+        ctx.beginPath();
+        ctx.arc(pt[0], pt[1], 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillText(String(pt[2]), pt[0], pt[1] - 10);
+      });
+
+      ctx.textAlign = "left";
+      ctx.fillText(d.label, xHigh + 12, y2 + 4);
+    });
+  }
+
+  function showView(view) {
+    const main = document.getElementById("mainView");
+    const interaction = document.getElementById("interactionView");
+    const mainBtn = document.getElementById("mainBtn");
+    const interBtn = document.getElementById("interBtn");
+
+    if (view === "main") {
+      main.classList.remove("hidden");
+      interaction.classList.add("hidden");
+      mainBtn.classList.add("active");
+      interBtn.classList.remove("active");
+    } else {
+      main.classList.add("hidden");
+      interaction.classList.remove("hidden");
+      mainBtn.classList.remove("active");
+      interBtn.classList.add("active");
+    }
+  }
+
+  function rowMean(a) {
+    const vals = Object.values(comboData[a]);
+    return vals.reduce((s, x) => s + x, 0) / vals.length;
+  }
+
+  function colMean(b) {
+    const vals = Object.keys(comboData).map(a => comboData[a][b]);
+    return vals.reduce((s, x) => s + x, 0) / vals.length;
+  }
+
+  function grandMeanCombo() {
+    const vals = Object.keys(comboData).flatMap(a => Object.values(comboData[a]));
+    return vals.reduce((s, x) => s + x, 0) / vals.length;
+  }
+
+  function interactionEffect(a, b) {
+    return comboData[a][b] - rowMean(a) - colMean(b) + grandMeanCombo();
+  }
+
+  function selectCombo(a, b) {
+    document.querySelectorAll("#comboGrid button").forEach(btn => {
+      btn.classList.toggle("selected", btn.dataset.a === a && btn.dataset.b === b);
+    });
+
+    const value = comboData[a][b];
+    const rMean = rowMean(a);
+    const cMean = colMean(b);
+    const gMean = grandMeanCombo();
+    const effect = interactionEffect(a, b);
+    const direction = effect > 0 ? "above" : "below";
+
+    document.getElementById("comboResult").innerHTML = `
+      <h3>Selected Combination: ${a}${b}</h3>
+      <table>
+        <tbody>
+          <tr><td>Cell mean</td><td>${fmt(value, 2)}</td></tr>
+          <tr><td>Row mean for ${a}</td><td>${fmt(rMean, 2)}</td></tr>
+          <tr><td>Column mean for ${b}</td><td>${fmt(cMean, 2)}</td></tr>
+          <tr><td>Grand mean</td><td>${fmt(gMean, 2)}</td></tr>
+          <tr><td>Interaction effect</td><td>${fmt(effect, 2)}</td></tr>
+        </tbody>
+      </table>
+      <div class="${Math.abs(effect) >= 10 ? "danger" : "note"}">
+        ${a}${b} is ${fmt(Math.abs(effect), 2)} units ${direction} what would be expected from the row and column averages.
+      </div>
+      <div class="formula-box">
+        \\[
+        ${fmt(value, 2)} - ${fmt(rMean, 2)} - ${fmt(cMean, 2)} + ${fmt(gMean, 2)} = ${fmt(effect, 2)}
+        \\]
+      </div>
+    `;
+
+    if (window.MathJax) MathJax.typesetPromise();
+  }
+
+  function findLargestDifference() {
+    let highest = { a: "", b: "", value: -Infinity };
+    let lowest = { a: "", b: "", value: Infinity };
+
+    Object.keys(comboData).forEach(a => {
+      Object.keys(comboData[a]).forEach(b => {
+        const value = comboData[a][b];
+        if (value > highest.value) highest = { a, b, value };
+        if (value < lowest.value) lowest = { a, b, value };
+      });
+    });
+
+    const diff = highest.value - lowest.value;
+
+    document.querySelectorAll("#comboGrid button").forEach(btn => {
+      const isHigh = btn.dataset.a === highest.a && btn.dataset.b === highest.b;
+      const isLow = btn.dataset.a === lowest.a && btn.dataset.b === lowest.b;
+      btn.classList.toggle("selected", isHigh || isLow);
+    });
+
+    document.getElementById("comboResult").innerHTML = `
+      <h3>Largest Practical Difference</h3>
+      <p><strong>Highest combination:</strong> ${highest.a}${highest.b} = ${highest.value}</p>
+      <p><strong>Lowest combination:</strong> ${lowest.a}${lowest.b} = ${lowest.value}</p>
+      <div class="formula-box">
+        \\[
+        ${highest.a}${highest.b} - ${lowest.a}${lowest.b} = ${highest.value} - ${lowest.value} = ${diff}
+        \\]
+      </div>
+      <div class="success">
+        The largest practical difference is ${diff} units.
+        Use Tukey pairwise comparisons to confirm whether this difference is statistically significant.
+      </div>
+    `;
+
+    if (window.MathJax) MathJax.typesetPromise();
+  }
+
+  function setupComboGrid() {
+    document.querySelectorAll("#comboGrid button").forEach(btn => {
+      btn.addEventListener("click", () => selectCombo(btn.dataset.a, btn.dataset.b));
+    });
+  }
+
+  function gradeQuiz() {
+    const answers = { q1: "b", q2: "b", q3: "a" };
+    let score = 0;
+    let total = Object.keys(answers).length;
+
+    Object.keys(answers).forEach(q => {
+      const selected = document.querySelector(`input[name="${q}"]:checked`);
+      if (selected && selected.value === answers[q]) score++;
+    });
+
+    const box = document.getElementById("quiz-feedback");
+    box.style.display = "block";
+    box.innerHTML = `<strong>You scored ${score} out of ${total}.</strong><br>` +
+      (score === total
+        ? "Excellent. You understand main effects, interactions, and treatment combinations."
+        : "Review the sections on significant interaction and treatment-combination interpretation.");
+  }
+
+  window.addEventListener("load", () => {
+    drawFDistribution();
+    drawInteractionPlot();
+    setupComboGrid();
+    selectCombo("A4", "B2");
+  });
+
+  window.addEventListener("resize", () => {
+    drawFDistribution();
+    drawInteractionPlot();
+  });
+</script>
+</body>
+</html>

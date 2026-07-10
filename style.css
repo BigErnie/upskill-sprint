@@ -1,15 +1,16 @@
 
 :root {
-  --ink: #1c1f26;
-  --ink-soft: #3a4150;
-  --muted: #5b6472;
-  --line: #e3ded4;
-  --paper: #faf8f3;
+  --ink: #101828;
+  --ink-soft: #344054;
+  --muted: #667085;
+  --line: #e3e7ee;
+  --paper: #ffffff;
   --card: #ffffff;
-  --tint: #f1ede3;
+  --tint: #f5f7fa;
+  --navy: #0f2a43;
   --teal: #0e7490;
   --teal-dark: #0a5a70;
-  --amber: #b5762a;
+  --amber: #667085;
   --radius: 6px;
   --maxw: 1120px;
   --pad: 56px;
@@ -39,11 +40,11 @@ img { max-width: 100%; display: block; }
 .section.tint { background: var(--tint); }
 .btn { display: inline-block; padding: 14px 26px; border-radius: var(--radius); font-size: 15px; font-weight: 600; text-decoration: none; white-space: nowrap; transition: transform .15s, box-shadow .15s, background .15s; border: none; cursor: pointer; font-family: inherit; }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.14); }
-.btn-primary { background: var(--ink); color: #fff; }
+.btn-primary { background: var(--navy); color: #fff; }
 .btn-primary:hover { color: #fff; }
 .btn-teal { background: var(--teal); color: #fff; }
 .btn-teal:hover { color: #fff; background: var(--teal-dark); }
-.btn-outline { background: transparent; border: 1px solid #c9c2b3; color: var(--ink); }
+.btn-outline { background: transparent; border: 1px solid #cfd4dc; color: var(--ink); }
 .btn-outline:hover { color: var(--ink); background: var(--tint); }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; transition: transform .15s, box-shadow .15s; }
 .card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
@@ -58,7 +59,7 @@ header.site {
   display: flex; align-items: center; justify-content: space-between;
   padding: 18px 20px; gap: 10px;
   border-bottom: 1px solid var(--line);
-  background: rgba(250,248,243,0.94);
+  background: rgba(255,255,255,0.94);
   backdrop-filter: blur(8px);
 }
 .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; color: var(--ink); }
@@ -72,7 +73,7 @@ nav.desktop-nav a:hover, nav.desktop-nav a[aria-current="page"] { border-bottom-
 .mnav-check { display: none; }
 label.mobile-menu-btn {
   display: none; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border: 1px solid #ccc4b2; border-radius: 4px; background: #fff; cursor: pointer; flex-shrink: 0;
+  width: 36px; height: 36px; border: 1px solid #cfd4dc; border-radius: 4px; background: #fff; cursor: pointer; flex-shrink: 0;
 }
 nav.mobile-nav { display: none; flex-direction: column; border-bottom: 1px solid var(--line); background: #fff; }
 nav.mobile-nav a { padding: 14px 20px; font-size: 14.5px; font-weight: 600; border-bottom: 1px solid var(--line); color: var(--ink); }
@@ -83,7 +84,13 @@ nav.mobile-nav a { padding: 14px 20px; font-size: 14.5px; font-weight: 600; bord
 }
 
 /* footer */
-footer.site { padding: 56px 0 32px; border-top: 1px solid var(--line); background: var(--tint); }
+footer.site { padding: 56px 0 32px; border-top: 1px solid var(--line); background: var(--navy); color: #cbd5e1; }
+footer.site .brand, footer.site .brand span, footer.site h4 { color: #ffffff; }
+footer.site .footer-grid a, footer.site p { color: #cbd5e1; }
+footer.site .footer-grid a:hover { color: #ffffff; }
+footer.site .footer-bottom { color: #94a3b8; border-top-color: rgba(255,255,255,0.15); }
+footer.site .footer-bottom a { color: #94a3b8; }
+footer.site .footer-bottom a:hover { color: #ffffff; }
 .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; }
 @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr; } }
@@ -95,7 +102,7 @@ footer.site { padding: 56px 0 32px; border-top: 1px solid var(--line); backgroun
 /* forms */
 label.field { display: flex; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 600; margin-bottom: 18px; }
 .field input, .field select, .field textarea {
-  padding: 13px 14px; border-radius: var(--radius); border: 1px solid #cfc8b8; background: #fff;
+  padding: 13px 14px; border-radius: var(--radius); border: 1px solid #cfd4dc; background: #fff;
   font-size: 15px; font-family: inherit; font-weight: 400; color: var(--ink);
 }
 .field textarea { resize: vertical; }

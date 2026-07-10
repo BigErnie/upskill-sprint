@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ANOVA in Plain English | UpSkill Sprint Consulting</title>
+<meta name="description" content="Learn how to compare more than two groups without statistical jargon, with a live calculator and quiz.">
+<link rel="canonical" href="https://upskillsprint.com/lessons/anova-plain-english.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ANOVA in Plain English | UpSkill Sprint Consulting">
+<meta property="og:description" content="Learn how to compare more than two groups without statistical jargon, with a live calculator and quiz.">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<meta property="og:url" content="https://upskillsprint.com/lessons/anova-plain-english.html">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<style>
+  :root {
+    --lp-navy: #0f2a43;
+    --lp-teal: #0e7490;
+    --lp-teal-dark: #0a5a70;
+    --lp-steel: #2563eb;
+    --lp-bg: #f5f7fa;
+    --lp-surface: #ffffff;
+    --lp-surface-soft: #f5f7fa;
+    --lp-text: #101828;
+    --lp-muted: #667085;
+    --lp-border: #e3e7ee;
+    --lp-success: #16a34a;
+    --lp-warning: #f59e0b;
+    --lp-danger: #dc2626;
+    --lp-info: #0284c7;
+    --lp-formula-bg: #ecfeff;
+    --lp-practice-bg: #ecfdf5;
+    --lp-warning-bg: #fffbeb;
+    --lp-danger-bg: #fef2f2;
+    --lp-info-bg: #eff6ff;
+    --lp-accent-data: #2563eb;
+    --lp-accent-quality: #0e7490;
+    --lp-accent-lss: #16a34a;
+    --lp-accent-stats: #7c3aed;
+    --lp-radius-sm: 8px;
+    --lp-radius-md: 12px;
+    --lp-radius-lg: 16px;
+    --lp-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+    --lp-shadow-md: 0 10px 30px rgba(15, 23, 42, 0.10);
+    --lp-max-width: 1120px;
+  }
+
+  .lesson-wrapper * { box-sizing: border-box; }
+
+  .lesson-wrapper {
+    font-family: 'Work Sans', Arial, sans-serif;
+    background: var(--lp-bg);
+    color: var(--lp-text);
+    line-height: 1.65;
+  }
+
+  .lesson-wrapper a { color: var(--lp-teal); text-decoration: none; font-weight: 700; }
+  .lesson-wrapper a:hover { text-decoration: underline; }
+
+  .lesson-wrapper .hero {
+    background:
+      linear-gradient(135deg, rgba(15, 42, 67, 0.97), rgba(14, 116, 144, 0.92)),
+      radial-gradient(circle at top right, rgba(94, 234, 212, 0.25), transparent 34%);
+    color: white;
+    padding: 56px 24px 50px;
+  }
+
+  .lesson-wrapper .hero-inner { max-width: var(--lp-max-width); margin: 0 auto; }
+
+  .lesson-wrapper .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 18px;
+  }
+
+  .lesson-wrapper .hero h1 {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(1.9rem, 4.4vw, 3rem);
+    line-height: 1.12;
+    margin: 0 0 16px;
+    max-width: 900px;
+  }
+
+  .lesson-wrapper .hero p {
+    font-size: 1.05rem;
+    max-width: 780px;
+    margin: 0 0 20px;
+    color: #e0f2fe;
+  }
+
+  .lesson-wrapper .hero-actions, .lesson-wrapper .button-row {
+    display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;
+  }
+
+  .lesson-wrapper .button, .lesson-wrapper button {
+    display: inline-flex; align-items: center; justify-content: center;
+    border: none; border-radius: 999px; padding: 11px 17px; font-weight: 700;
+    cursor: pointer; transition: transform .15s, box-shadow .15s, background .15s;
+    text-decoration: none; font-size: 0.92rem; font-family: 'Work Sans', Arial, sans-serif;
+  }
+  .lesson-wrapper .button:hover, .lesson-wrapper button:hover { transform: translateY(-1px); text-decoration: none; }
+  .lesson-wrapper .button-primary, .lesson-wrapper button.primary { background: var(--lp-teal); color: white; box-shadow: 0 8px 20px rgba(14, 116, 144, 0.28); }
+  .lesson-wrapper .button-primary:hover, .lesson-wrapper button.primary:hover { background: var(--lp-teal-dark); }
+  .lesson-wrapper .button-secondary, .lesson-wrapper button.secondary { background: white; color: var(--lp-navy); border: 1px solid var(--lp-border); box-shadow: var(--lp-shadow-sm); }
+
+  .lesson-wrapper .page { max-width: var(--lp-max-width); margin: 0 auto; padding: 36px 20px 70px; }
+
+  .lesson-wrapper .nav-box { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 28px; }
+  .lesson-wrapper .nav-box a {
+    background: var(--lp-surface); color: var(--lp-navy); border: 1px solid var(--lp-border);
+    border-radius: 999px; padding: 9px 13px; box-shadow: var(--lp-shadow-sm); font-size: 0.88rem; font-weight: 600;
+  }
+  .lesson-wrapper .nav-box a:hover { background: var(--lp-surface-soft); text-decoration: none; color: var(--lp-teal); }
+
+  .lesson-wrapper .section { margin: 44px 0; }
+  .lesson-wrapper .section-header { margin-bottom: 20px; }
+  .lesson-wrapper .section-kicker { color: var(--lp-teal); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78rem; margin-bottom: 8px; }
+
+  .lesson-wrapper h2 {
+    color: var(--lp-navy); font-family: 'Source Serif 4', Georgia, serif; font-weight: 600;
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.2; margin: 0 0 10px;
+  }
+  .lesson-wrapper h3 {
+    color: var(--lp-navy); font-family: 'Source Serif 4', Georgia, serif; font-weight: 600;
+    font-size: 1.1rem; line-height: 1.3; margin: 0 0 8px;
+  }
+  .lesson-wrapper p { margin: 0 0 14px; font-size: 15.5px; }
+  .lesson-wrapper .lead { font-size: 1rem; color: var(--lp-muted); max-width: 820px; }
+
+  .lesson-wrapper .grid { display: grid; gap: 18px; }
+  .lesson-wrapper .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lesson-wrapper .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  .lesson-wrapper .card {
+    background: var(--lp-surface); border: 1px solid var(--lp-border); border-radius: var(--lp-radius-md);
+    padding: 22px; box-shadow: var(--lp-shadow-sm);
+  }
+  .lesson-wrapper .card-highlight { border-top: 5px solid var(--lp-teal); }
+  .lesson-wrapper .card-stats { border-top: 5px solid var(--lp-accent-stats); }
+  .lesson-wrapper .card-quality { border-top: 5px solid var(--lp-accent-quality); }
+  .lesson-wrapper .card-data { border-top: 5px solid var(--lp-accent-data); }
+
+  .lesson-wrapper .callout { padding: 16px 20px; border-radius: var(--lp-radius-md); border: 1px solid var(--lp-border); margin: 18px 0; background: var(--lp-surface); font-size: 15px; }
+  .lesson-wrapper .callout strong { color: var(--lp-navy); }
+  .lesson-wrapper .callout-info { background: var(--lp-info-bg); border-left: 6px solid var(--lp-info); border-color: transparent; }
+  .lesson-wrapper .callout-formula { background: var(--lp-formula-bg); border-left: 6px solid var(--lp-teal); border-color: transparent; }
+  .lesson-wrapper .callout-practice { background: var(--lp-practice-bg); border-left: 6px solid var(--lp-success); border-color: transparent; }
+  .lesson-wrapper .callout-warning { background: var(--lp-warning-bg); border-left: 6px solid var(--lp-warning); border-color: transparent; }
+  .lesson-wrapper .callout-danger { background: var(--lp-danger-bg); border-left: 6px solid var(--lp-danger); border-color: transparent; }
+
+  .lesson-wrapper .plain-rule { font-size: 1.05rem; font-weight: 700; color: var(--lp-navy); }
+
+  .lesson-wrapper .badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .lesson-wrapper .badge { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 999px; color: white; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.02em; }
+  .lesson-wrapper .badge-data { background: var(--lp-accent-data); }
+  .lesson-wrapper .badge-quality { background: var(--lp-accent-quality); }
+  .lesson-wrapper .badge-lss { background: var(--lp-accent-lss); }
+  .lesson-wrapper .badge-stats { background: var(--lp-accent-stats); }
+
+  .lesson-wrapper .lesson-objectives { list-style: none; padding: 0; margin: 0; }
+  .lesson-wrapper .lesson-objectives li { position: relative; padding-left: 30px; margin-bottom: 12px; }
+  .lesson-wrapper .lesson-objectives li::before {
+    content: "\2713"; position: absolute; left: 0; top: 0; width: 22px; height: 22px; border-radius: 999px;
+    background: var(--lp-teal); color: white; font-size: 0.75rem; display: inline-flex; align-items: center; justify-content: center; font-weight: 700;
+  }
+
+  .lesson-wrapper table { width: 100%; border-collapse: collapse; background: var(--lp-surface); border-radius: var(--lp-radius-md); overflow: hidden; box-shadow: var(--lp-shadow-sm); margin: 18px 0; font-size: 0.92rem; }
+  .lesson-wrapper th { background: var(--lp-navy); color: white; text-align: left; padding: 12px 14px; font-weight: 700; }
+  .lesson-wrapper td { padding: 12px 14px; border-bottom: 1px solid var(--lp-border); vertical-align: top; }
+  .lesson-wrapper tr:last-child td { border-bottom: none; }
+
+  .lesson-wrapper .example-box { border-radius: var(--lp-radius-lg); background: white; border: 1px solid var(--lp-border); padding: 26px; box-shadow: var(--lp-shadow-md); }
+
+  .lesson-wrapper .step-list { counter-reset: step-counter; list-style: none; padding: 0; margin: 0; }
+  .lesson-wrapper .step-list li { counter-increment: step-counter; display: grid; grid-template-columns: 38px 1fr; gap: 12px; margin-bottom: 16px; align-items: start; }
+  .lesson-wrapper .step-list li::before {
+    content: counter(step-counter); width: 30px; height: 30px; border-radius: 999px; background: var(--lp-navy);
+    color: white; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13.5px;
+  }
+
+  .lesson-wrapper .comparison-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 18px 0; }
+  .lesson-wrapper .mini-stat { background: var(--lp-surface-soft); border: 1px solid var(--lp-border); border-radius: var(--lp-radius-md); padding: 16px; }
+  .lesson-wrapper .mini-stat span { display: block; color: var(--lp-muted); font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+  .lesson-wrapper .mini-stat strong { display: block; color: var(--lp-navy); font-size: 1.4rem; margin-top: 4px; }
+
+  .lesson-wrapper .calculator { background: linear-gradient(180deg, #ffffff 0%, #f7fbfc 100%); border: 2px solid #bcd9e6; border-radius: var(--lp-radius-lg); padding: 24px; box-shadow: var(--lp-shadow-md); }
+  .lesson-wrapper .controls-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 18px 0; }
+  .lesson-wrapper label { display: block; color: var(--lp-navy); font-weight: 700; margin-bottom: 6px; font-size: 14px; }
+  .lesson-wrapper input, .lesson-wrapper textarea, .lesson-wrapper select {
+    width: 100%; border: 1px solid var(--lp-border); border-radius: 10px; padding: 10px 12px;
+    background: white; color: var(--lp-text); font-family: 'Work Sans', Arial, sans-serif; font-size: 0.95rem;
+  }
+  .lesson-wrapper textarea { min-height: 112px; resize: vertical; }
+  .lesson-wrapper .helper-text { color: var(--lp-muted); font-size: 0.85rem; margin-top: 5px; }
+
+  .lesson-wrapper .canvas-wrap { background: var(--lp-surface); border: 1px solid var(--lp-border); border-radius: var(--lp-radius-md); padding: 14px; margin: 18px 0; overflow-x: auto; }
+  .lesson-wrapper canvas { display: block; width: 100%; min-height: 280px; }
+
+  .lesson-wrapper .result-panel { background: var(--lp-surface); border: 1px solid var(--lp-border); border-radius: var(--lp-radius-md); padding: 18px; margin-top: 18px; }
+  .lesson-wrapper .result-panel.good { border-left: 6px solid var(--lp-success); }
+  .lesson-wrapper .result-panel.caution { border-left: 6px solid var(--lp-warning); }
+  .lesson-wrapper .result-panel.danger { border-left: 6px solid var(--lp-danger); }
+
+  .lesson-wrapper .pill-list { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+  .lesson-wrapper .pill { background: var(--lp-surface-soft); color: var(--lp-navy); border: 1px solid var(--lp-border); border-radius: 999px; padding: 8px 12px; font-weight: 700; font-size: 0.88rem; }
+
+  .lesson-wrapper .quiz-question { background: white; border: 1px solid var(--lp-border); border-radius: var(--lp-radius-md); padding: 18px; margin: 16px 0; }
+  .lesson-wrapper .quiz-question p { color: var(--lp-navy); font-weight: 700; margin-top: 0; }
+  .lesson-wrapper .quiz-question label {
+    display: flex; align-items: center; gap: 10px; font-weight: 400; color: var(--lp-text); margin: 8px 0; cursor: pointer;
+  }
+  .lesson-wrapper .quiz-question input { width: auto; flex-shrink: 0; margin: 0; }
+
+  .lesson-wrapper .quiz-feedback { display: none; border-radius: var(--lp-radius-md); padding: 16px 18px; margin: 18px 0; background: var(--lp-info-bg); border-left: 6px solid var(--lp-info); font-weight: 700; }
+
+  .lesson-wrapper .footer-box { background: var(--lp-navy); color: white; padding: 26px; border-radius: var(--lp-radius-lg); margin-top: 40px; box-shadow: var(--lp-shadow-md); }
+  .lesson-wrapper .footer-box h2 { color: white; }
+  .lesson-wrapper .footer-box p { color: #e0f2fe; }
+
+  .lesson-wrapper .small { color: var(--lp-muted); font-size: 0.9rem; }
+  .lesson-wrapper .hidden { display: none; }
+
+  @media (max-width: 900px) {
+    .lesson-wrapper .grid-2, .lesson-wrapper .grid-3, .lesson-wrapper .controls-grid, .lesson-wrapper .comparison-strip { grid-template-columns: 1fr; }
+    .lesson-wrapper .hero { padding: 44px 20px 40px; }
+    .lesson-wrapper .page { padding: 28px 16px 60px; }
+    .lesson-wrapper .example-box, .lesson-wrapper .calculator { padding: 20px; }
+    .lesson-wrapper table { font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+  <header class="site">
+    <a href="../index.html" class="brand">
+      <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+      <span>UpSkill Sprint Consulting</span>
+    </a>
+    <nav class="desktop-nav">
+      <a href="../start-here.html">Start Here</a>
+      <a href="../lessons.html" aria-current="page">Lessons</a>
+      <a href="../services.html">Services</a>
+      <a href="../request-topic.html">Request a Topic</a>
+      <a href="../about.html">About</a>
+      <a href="../faq.html">FAQ</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1f26" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <a href="../lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+  </header>
+  <nav class="mobile-nav">
+    <a href="../start-here.html">Start Here</a>
+    <a href="../lessons.html">Lessons</a>
+    <a href="../services.html">Services</a>
+    <a href="../request-topic.html">Request a Topic</a>
+    <a href="../about.html">About</a>
+    <a href="../faq.html">FAQ</a>
+    <a href="../contact.html">Contact</a>
+  </nav>
+
+  <div class="lesson-wrapper">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="eyebrow">Plain-English Statistics Lesson</div>
+        <h1>ANOVA in Plain English</h1>
+        <p>
+          Learn how to compare more than two groups without getting buried in statistical jargon.
+          The main question is simple: are the group averages truly different, or could the difference be normal noise?
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#calculator">Try the Live Example</a>
+          <a class="button button-secondary" href="#summary">Jump to Summary</a>
+        </div>
+        <div class="badge-row" aria-label="Lesson categories">
+          <span class="badge badge-stats">Statistics</span>
+          <span class="badge badge-quality">Quality Engineering</span>
+          <span class="badge badge-lss">Lean Six Sigma</span>
+          <span class="badge badge-data">Data Analysis</span>
+        </div>
+      </div>
+    </section>
+
+    <main class="page">
+      <nav class="nav-box" aria-label="Lesson navigation">
+        <a href="#goals">Learning Goals</a>
+        <a href="#plain-meaning">What ANOVA Means</a>
+        <a href="#problem">Why Not Many t-Tests?</a>
+        <a href="#when-to-use">When to Use It</a>
+        <a href="#example">Worked Example</a>
+        <a href="#calculator">Live Calculator</a>
+        <a href="#software-output">Read the Output</a>
+        <a href="#mistakes">Common Mistakes</a>
+        <a href="#quiz">Quiz</a>
+      </nav>
+
+      <section id="goals" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Learning Goals</div>
+          <h2>By the End, You Should Be Able To</h2>
+          <p class="lead">
+            This lesson keeps the math light. The goal is to understand what ANOVA is doing and how to explain the result at work.
+          </p>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card card-highlight">
+            <ul class="lesson-objectives">
+              <li>Explain ANOVA using plain workplace language.</li>
+              <li>Know when ANOVA is better than comparing groups two at a time.</li>
+              <li>Read an ANOVA result without overcomplicating it.</li>
+              <li>Use a simple live calculator to compare three groups.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>The One-Sentence Meaning</h3>
+            <p class="plain-rule">
+              ANOVA checks whether the gaps between group averages are large compared with the normal variation inside the groups.
+            </p>
+            <div class="callout callout-info">
+              <strong>Memory phrase:</strong> ANOVA compares the gap between groups to the noise inside groups.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="plain-meaning" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Concept</div>
+          <h2>What ANOVA Means Without the Jargon</h2>
+          <p class="lead">
+            ANOVA stands for Analysis of Variance, but you do not need to start there. Start with the business question.
+          </p>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card card-quality">
+            <h3>1. You have groups</h3>
+            <p>Examples: three suppliers, four machines, three shifts, or five training methods.</p>
+          </div>
+          <div class="card card-data">
+            <h3>2. Each group has numbers</h3>
+            <p>Examples: strength, cycle time, yield, thickness, cost, defect rate, or test score.</p>
+          </div>
+          <div class="card card-stats">
+            <h3>3. You compare the averages</h3>
+            <p>ANOVA checks whether the average differences are bigger than the normal up-and-down variation in the data.</p>
+          </div>
+        </div>
+
+        <div class="callout callout-formula">
+          <strong>Plain-English rule:</strong><br>
+          Big gap between group averages + small noise inside groups = strong reason to believe the groups are different.
+        </div>
+      </section>
+
+      <section id="problem" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Why This Matters</div>
+          <h2>Why Not Just Compare Every Pair of Groups?</h2>
+          <p class="lead">
+            When you have more than two groups, comparing them two at a time can make the analysis messy and risky.
+          </p>
+        </div>
+
+        <div class="example-box">
+          <h3>Imagine comparing four suppliers</h3>
+          <p>With four suppliers, you do not have one comparison. You have six pair-by-pair comparisons.</p>
+          <table>
+            <thead>
+              <tr><th>Number of Groups</th><th>Number of Pair-by-Pair Comparisons</th><th>Plain-English Problem</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>2 groups</td><td>1 comparison</td><td>Simple. A two-group test may be enough.</td></tr>
+              <tr><td>3 groups</td><td>3 comparisons</td><td>Now the risk of a false alarm starts to grow.</td></tr>
+              <tr><td>4 groups</td><td>6 comparisons</td><td>The analysis can become confusing fast.</td></tr>
+              <tr><td>5 groups</td><td>10 comparisons</td><td>Too many separate tests can create misleading confidence.</td></tr>
+            </tbody>
+          </table>
+          <div class="callout callout-warning">
+            <strong>Simple point:</strong> ANOVA gives you one clean first check: are any of these group averages different enough to investigate?
+          </div>
+        </div>
+      </section>
+
+      <section id="when-to-use" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Decision Guide</div>
+          <h2>When Should You Use ANOVA?</h2>
+          <p class="lead">Use ANOVA when your question is about comparing average performance across three or more groups.</p>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card card-highlight">
+            <h3>Use ANOVA when...</h3>
+            <ul>
+              <li>You have three or more groups.</li>
+              <li>The result you measure is a number.</li>
+              <li>You want to compare group averages.</li>
+              <li>The data from each group is collected fairly and independently.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Do not use ANOVA as your first choice when...</h3>
+            <ul>
+              <li>You only have two groups.</li>
+              <li>Your result is pass/fail, yes/no, or category-only.</li>
+              <li>You only want to compare counts, not averages.</li>
+              <li>The same item was measured repeatedly and needs a special repeated-measure approach.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout callout-practice">
+          <strong>Workplace examples:</strong>
+          Compare average pipe wall thickness across three mills, average cycle time across shifts, average test score across training methods,
+          or average defect rate across suppliers.
+        </div>
+      </section>
+
+      <section id="example" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Worked Example</div>
+          <h2>Example: Which Shift Has a Different Average Cycle Time?</h2>
+          <p class="lead">A supervisor wants to compare average cycle time across three shifts. Lower cycle time is better.</p>
+        </div>
+
+        <div class="example-box">
+          <h3>The Data</h3>
+          <table>
+            <thead><tr><th>Shift A</th><th>Shift B</th><th>Shift C</th></tr></thead>
+            <tbody><tr><td>47, 49, 50, 48, 51</td><td>55, 56, 54, 57, 58</td><td>48, 50, 49, 51, 47</td></tr></tbody>
+          </table>
+
+          <ol class="step-list">
+            <li><div><strong>Find each group average.</strong><br>Shift A averages 49.0, Shift B averages 56.0, and Shift C averages 49.0.</div></li>
+            <li><div><strong>Look at the gap between the averages.</strong><br>Shift B is about 7 units higher than the other two shifts.</div></li>
+            <li><div><strong>Check whether the gap is bigger than normal data noise.</strong><br>The values inside each shift are fairly tight, so the Shift B gap looks meaningful.</div></li>
+            <li><div><strong>Make the practical conclusion.</strong><br>Shift B appears to have a higher average cycle time. The next step is to investigate why, not to blame the shift.</div></li>
+          </ol>
+
+          <div class="comparison-strip">
+            <div class="mini-stat"><span>Shift A Average</span><strong>49.0</strong></div>
+            <div class="mini-stat"><span>Shift B Average</span><strong>56.0</strong></div>
+            <div class="mini-stat"><span>Shift C Average</span><strong>49.0</strong></div>
+          </div>
+
+          <div class="callout callout-info">
+            <strong>Plain-English conclusion:</strong>
+            The differences are not just small wiggles. Shift B is meaningfully higher than the other shifts in this sample.
+          </div>
+        </div>
+      </section>
+
+      <section id="calculator" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Interactive Practice</div>
+          <h2>Try It: Live ANOVA Calculator Without the Jargon</h2>
+          <p class="lead">Enter numbers for three groups. The calculator shows the group averages, the inside-group noise, and a plain-English conclusion.</p>
+        </div>
+
+        <div class="calculator">
+          <div class="button-row" style="margin-top: 0;">
+            <button class="primary" onclick="loadExample('shift')">Load Shift Example</button>
+            <button class="secondary" onclick="loadExample('machines')">Load Machine Example</button>
+            <button class="secondary" onclick="loadExample('close')">Load Close Groups</button>
+            <button class="secondary" onclick="clearData()">Clear</button>
+          </div>
+
+          <div class="controls-grid">
+            <div>
+              <label for="groupA">Group A values</label>
+              <textarea id="groupA" oninput="runPlainAnova()">47, 49, 50, 48, 51</textarea>
+              <div class="helper-text">Separate values with commas, spaces, or line breaks.</div>
+            </div>
+            <div>
+              <label for="groupB">Group B values</label>
+              <textarea id="groupB" oninput="runPlainAnova()">55, 56, 54, 57, 58</textarea>
+              <div class="helper-text">Use the same unit for all groups.</div>
+            </div>
+            <div>
+              <label for="groupC">Group C values</label>
+              <textarea id="groupC" oninput="runPlainAnova()">48, 50, 49, 51, 47</textarea>
+              <div class="helper-text">At least two values per group works best.</div>
+            </div>
+          </div>
+
+          <div class="canvas-wrap">
+            <canvas id="anovaCanvas" height="330" aria-label="Group comparison chart"></canvas>
+          </div>
+
+          <div id="anovaResult" class="result-panel">Results will appear here.</div>
+        </div>
+      </section>
+
+      <section id="software-output" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Reading Software Output</div>
+          <h2>How to Read ANOVA Output in Plain English</h2>
+          <p class="lead">Software may show technical labels. You can translate them into simple decision language.</p>
+        </div>
+
+        <table>
+          <thead><tr><th>Software Term</th><th>Plain-English Meaning</th><th>How to Explain It at Work</th></tr></thead>
+          <tbody>
+            <tr><td>Groups / Factor Levels</td><td>The categories you are comparing.</td><td>&ldquo;We compared three shifts.&rdquo;</td></tr>
+            <tr><td>Mean</td><td>The average result for each group.</td><td>&ldquo;Shift B had the highest average cycle time.&rdquo;</td></tr>
+            <tr><td>Within-group variation</td><td>The normal noise inside each group.</td><td>&ldquo;The readings inside each shift were not spread out much.&rdquo;</td></tr>
+            <tr><td>p-value</td><td>A confidence check for whether the pattern may be random noise.</td><td>&ldquo;The evidence is strong enough to investigate a real shift difference.&rdquo;</td></tr>
+            <tr><td>Post-hoc test / Tukey test</td><td>A follow-up check to find which groups are different from each other.</td><td>&ldquo;ANOVA says a difference exists; the follow-up test tells us where.&rdquo;</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-warning">
+          <strong>Important:</strong>
+          ANOVA can tell you that a difference likely exists. It does not tell you the business cause. You still need process knowledge.
+        </div>
+      </section>
+
+      <section id="mistakes" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Common Mistakes</div>
+          <h2>What Learners Often Get Wrong</h2>
+          <p class="lead">These mistakes are common in real analysis work. Avoid them and your explanation will be much stronger.</p>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="callout callout-danger"><strong>Mistake 1: Saying all groups are different.</strong><br>ANOVA first tells you whether at least one group average is different. It does not automatically mean every group is different from every other group.</div>
+          <div class="callout callout-danger"><strong>Mistake 2: Stopping at the p-value.</strong><br>A result can be statistically flagged but still be too small to matter in practice. Always check the size of the difference.</div>
+          <div class="callout callout-danger"><strong>Mistake 3: Ignoring the chart.</strong><br>Always plot the data. A chart can reveal outliers, strange patterns, or one group with much wider variation.</div>
+          <div class="callout callout-danger"><strong>Mistake 4: Treating ANOVA as root cause.</strong><br>ANOVA points to where a difference may exist. It does not prove why the difference exists.</div>
+        </div>
+      </section>
+
+      <section id="practice" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Practice Case</div>
+          <h2>Apply the Thinking</h2>
+          <p class="lead">Read the case and decide what ANOVA would help you answer.</p>
+        </div>
+
+        <div class="card card-highlight">
+          <h3>Case: Three Training Methods</h3>
+          <p>A company tests three training methods for new operators. Each trainee takes the same final skills test. Management wants to know whether one training method leads to a better average score.</p>
+          <div class="pill-list">
+            <span class="pill">Group A: Classroom</span>
+            <span class="pill">Group B: Video</span>
+            <span class="pill">Group C: Hands-on</span>
+            <span class="pill">Result: Test score</span>
+          </div>
+          <div class="callout callout-practice">
+            <strong>Correct use:</strong>
+            ANOVA can check whether the average test scores are different enough to justify a follow-up comparison between training methods.
+          </div>
+        </div>
+      </section>
+
+      <section id="summary" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Quick Summary</div>
+          <h2>ANOVA in One Page</h2>
+        </div>
+
+        <table>
+          <thead><tr><th>Question</th><th>Plain-English Answer</th></tr></thead>
+          <tbody>
+            <tr><td>What is ANOVA?</td><td>A method for comparing the averages of three or more groups.</td></tr>
+            <tr><td>What is it really checking?</td><td>Whether the gaps between group averages are large compared with the normal noise inside the groups.</td></tr>
+            <tr><td>When should I use it?</td><td>When you have three or more groups and a numeric result.</td></tr>
+            <tr><td>What does a flagged result mean?</td><td>At least one group average likely differs from the others.</td></tr>
+            <tr><td>What comes next?</td><td>Use a follow-up comparison and process knowledge to find where and why the difference exists.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-formula">
+          <strong>Final memory phrase:</strong><br>
+          ANOVA asks: are the group-average gaps bigger than the normal noise?
+        </div>
+      </section>
+
+      <section id="quiz" class="section">
+        <div class="section-header">
+          <div class="section-kicker">Knowledge Check</div>
+          <h2>Quick Quiz</h2>
+          <p class="lead">Check your understanding before moving to software practice in Excel, Minitab, Power BI, or Python.</p>
+        </div>
+
+        <div class="card">
+          <div class="quiz-question">
+            <p>1. What is the main purpose of ANOVA?</p>
+            <label><input type="radio" name="q1" value="a"> To compare two percentages.</label>
+            <label><input type="radio" name="q1" value="b"> To compare the averages of three or more groups.</label>
+            <label><input type="radio" name="q1" value="c"> To make a chart look more professional.</label>
+          </div>
+
+          <div class="quiz-question">
+            <p>2. What does ANOVA compare in plain English?</p>
+            <label><input type="radio" name="q2" value="a"> The group-average gaps against the normal noise inside the groups.</label>
+            <label><input type="radio" name="q2" value="b"> The number of rows against the number of columns.</label>
+            <label><input type="radio" name="q2" value="c"> The largest value against zero.</label>
+          </div>
+
+          <div class="quiz-question">
+            <p>3. If ANOVA says a difference likely exists, what should you do next?</p>
+            <label><input type="radio" name="q3" value="a"> Say every group is different from every other group.</label>
+            <label><input type="radio" name="q3" value="b"> Use a follow-up comparison and investigate the process reason.</label>
+            <label><input type="radio" name="q3" value="c"> Delete the group with the lowest average.</label>
+          </div>
+
+          <button class="primary" onclick="gradeQuiz()">Check Answers</button>
+          <div id="quizFeedback" class="quiz-feedback"></div>
+        </div>
+      </section>
+
+      <section class="footer-box">
+        <h2>Lesson Takeaway</h2>
+        <p>
+          ANOVA is not meant to make statistics sound complicated. It is a practical decision tool.
+          Use it when you need to compare more than two group averages and decide whether the observed differences deserve investigation.
+        </p>
+      </section>
+
+      <section style="margin-top:24px;">
+        <a href="../lessons.html#statistics" style="font-family:'Source Serif 4',Georgia,serif;font-size:19px;font-weight:600;color:var(--lp-teal);">&larr; Back to the Statistics lessons</a>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom:14px;">
+            <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+            <span>UpSkill Sprint Consulting</span>
+          </div>
+          <p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, process improvement, and business problem-solving.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="../index.html">Home</a>
+          <a href="../start-here.html">Start Here</a>
+          <a href="../lessons.html">Lessons</a>
+          <a href="../services.html">Services</a>
+          <a href="../request-topic.html">Request a Topic</a>
+          <a href="../about.html">About</a>
+          <a href="../faq.html">FAQ</a>
+          <a href="../contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Topics</h4>
+          <a href="../lessons.html#data-analytics">Data Analytics</a>
+          <a href="../lessons.html#quality-engineering">Quality Engineering</a>
+          <a href="../lessons.html#lean-six-sigma">Lean Six Sigma</a>
+          <a href="../lessons.html#power-bi-excel-sql">Power BI, Excel &amp; SQL</a>
+          <a href="../lessons.html#business-decision-making">Business Decision-Making</a>
+          <a href="../lessons.html#ai-for-work">AI for Work</a>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <a href="/cdn-cgi/l/email-protection#8ffce4e6e3e3fcfffde6e1fbece0e1fcfae3fbe6e1e8cfe8e2eee6e3a1ece0e2"><span class="__cf_email__" data-cfemail="addec6c4c1c1dedddfc4c3d9cec2c3ded8c1d9c4c3caedcac0ccc4c183cec2c0">[email&#160;protected]</span></a>
+          <p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 UpSkill Sprint Consulting</span>
+      <div><a href="../privacy.html">Privacy Policy</a><a href="../terms.html">Terms of Use</a></div>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    function parseValues(text) {
+      return text
+        .split(/[\s,;]+/)
+        .map(v => Number(v.trim()))
+        .filter(v => Number.isFinite(v));
+    }
+
+    function mean(values) {
+      if (!values.length) return NaN;
+      return values.reduce((sum, v) => sum + v, 0) / values.length;
+    }
+
+    function sampleVariance(values) {
+      if (values.length < 2) return NaN;
+      const avg = mean(values);
+      return values.reduce((sum, v) => sum + Math.pow(v - avg, 2), 0) / (values.length - 1);
+    }
+
+    function logGamma(z) {
+      const g = 7;
+      const p = [
+        0.99999999999980993,
+        676.5203681218851,
+        -1259.1392167224028,
+        771.32342877765313,
+        -176.61502916214059,
+        12.507343278686905,
+        -0.13857109526572012,
+        9.9843695780195716e-6,
+        1.5056327351493116e-7
+      ];
+
+      if (z < 0.5) {
+        return Math.log(Math.PI) - Math.log(Math.sin(Math.PI * z)) - logGamma(1 - z);
+      }
+
+      z -= 1;
+      let x = p[0];
+      for (let i = 1; i < p.length; i++) x += p[i] / (z + i);
+      const t = z + g + 0.5;
+      return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+    }
+
+    function betaContinuedFraction(x, a, b) {
+      const MAXIT = 120;
+      const EPS = 3e-12;
+      const FPMIN = 1e-30;
+      let qab = a + b;
+      let qap = a + 1;
+      let qam = a - 1;
+      let c = 1;
+      let d = 1 - qab * x / qap;
+      if (Math.abs(d) < FPMIN) d = FPMIN;
+      d = 1 / d;
+      let h = d;
+
+      for (let m = 1; m <= MAXIT; m++) {
+        const m2 = 2 * m;
+        let aa = m * (b - m) * x / ((qam + m2) * (a + m2));
+        d = 1 + aa * d;
+        if (Math.abs(d) < FPMIN) d = FPMIN;
+        c = 1 + aa / c;
+        if (Math.abs(c) < FPMIN) c = FPMIN;
+        d = 1 / d;
+        h *= d * c;
+
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2));
+        d = 1 + aa * d;
+        if (Math.abs(d) < FPMIN) d = FPMIN;
+        c = 1 + aa / c;
+        if (Math.abs(c) < FPMIN) c = FPMIN;
+        d = 1 / d;
+        const del = d * c;
+        h *= del;
+
+        if (Math.abs(del - 1) < EPS) break;
+      }
+      return h;
+    }
+
+    function regularizedBeta(x, a, b) {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+
+      const bt = Math.exp(
+        logGamma(a + b) - logGamma(a) - logGamma(b) +
+        a * Math.log(x) + b * Math.log(1 - x)
+      );
+
+      if (x < (a + 1) / (a + b + 2)) {
+        return bt * betaContinuedFraction(x, a, b) / a;
+      }
+      return 1 - bt * betaContinuedFraction(1 - x, b, a) / b;
+    }
+
+    function fCdf(f, df1, df2) {
+      if (f <= 0) return 0;
+      const x = (df1 * f) / (df1 * f + df2);
+      return regularizedBeta(x, df1 / 2, df2 / 2);
+    }
+
+    function oneWayAnova(groups) {
+      const validGroups = groups.filter(g => g.length >= 2);
+      const k = validGroups.length;
+      const all = validGroups.flat();
+      const n = all.length;
+      if (k < 2 || n <= k) return null;
+
+      const grandMean = mean(all);
+      let ssBetween = 0;
+      let ssWithin = 0;
+
+      validGroups.forEach(g => {
+        const groupMean = mean(g);
+        ssBetween += g.length * Math.pow(groupMean - grandMean, 2);
+        g.forEach(v => ssWithin += Math.pow(v - groupMean, 2));
+      });
+
+      const dfBetween = k - 1;
+      const dfWithin = n - k;
+      const msBetween = ssBetween / dfBetween;
+      const msWithin = ssWithin / dfWithin;
+      const f = msWithin === 0 ? Infinity : msBetween / msWithin;
+      const pValue = Number.isFinite(f) ? 1 - fCdf(f, dfBetween, dfWithin) : 0;
+
+      return { k, n, grandMean, ssBetween, ssWithin, dfBetween, dfWithin, msBetween, msWithin, f, pValue };
+    }
+
+    function formatNumber(value, digits = 2) {
+      if (!Number.isFinite(value)) return "—";
+      return value.toFixed(digits);
+    }
+
+    function drawChart(groups, labels, means) {
+      const canvas = document.getElementById("anovaCanvas");
+      const ctx = canvas.getContext("2d");
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.max(720, Math.floor(rect.width * dpr));
+      canvas.height = 330 * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const width = canvas.width / dpr;
+      const height = canvas.height / dpr;
+      ctx.clearRect(0, 0, width, height);
+
+      const all = groups.flat();
+      if (!all.length) {
+        ctx.fillStyle = "#667085";
+        ctx.font = "16px 'Work Sans', Arial, sans-serif";
+        ctx.fillText("Enter values above to draw the comparison chart.", 24, 40);
+        return;
+      }
+
+      const min = Math.min(...all);
+      const max = Math.max(...all);
+      const pad = Math.max((max - min) * 0.18, 1);
+      const yMin = min - pad;
+      const yMax = max + pad;
+      const plotLeft = 64;
+      const plotRight = width - 28;
+      const plotTop = 24;
+      const plotBottom = height - 58;
+      const plotHeight = plotBottom - plotTop;
+      const groupWidth = (plotRight - plotLeft) / groups.length;
+
+      function yScale(v) {
+        return plotBottom - ((v - yMin) / (yMax - yMin)) * plotHeight;
+      }
+
+      ctx.strokeStyle = "#e3e7ee";
+      ctx.lineWidth = 1;
+      ctx.fillStyle = "#667085";
+      ctx.font = "12px 'Work Sans', Arial, sans-serif";
+
+      for (let i = 0; i <= 5; i++) {
+        const value = yMin + ((yMax - yMin) * i / 5);
+        const y = yScale(value);
+        ctx.beginPath();
+        ctx.moveTo(plotLeft, y);
+        ctx.lineTo(plotRight, y);
+        ctx.stroke();
+        ctx.fillText(formatNumber(value, 1), 12, y + 4);
+      }
+
+      const colors = ["#0e7490", "#2563eb", "#7c3aed"];
+
+      groups.forEach((group, index) => {
+        const centerX = plotLeft + groupWidth * index + groupWidth / 2;
+        const jitterStep = Math.min(18, groupWidth / Math.max(group.length + 1, 4));
+
+        ctx.fillStyle = "#0f2a43";
+        ctx.font = "bold 13px 'Work Sans', Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(labels[index], centerX, height - 24);
+
+        group.forEach((value, j) => {
+          const offset = (j - (group.length - 1) / 2) * jitterStep;
+          ctx.beginPath();
+          ctx.arc(centerX + offset, yScale(value), 5, 0, Math.PI * 2);
+          ctx.fillStyle = colors[index % colors.length];
+          ctx.fill();
+          ctx.strokeStyle = "white";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        });
+
+        if (Number.isFinite(means[index])) {
+          const y = yScale(means[index]);
+          ctx.strokeStyle = "#d97706";
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(centerX - groupWidth * 0.28, y);
+          ctx.lineTo(centerX + groupWidth * 0.28, y);
+          ctx.stroke();
+
+          ctx.fillStyle = "#0f2a43";
+          ctx.font = "bold 12px 'Work Sans', Arial, sans-serif";
+          ctx.fillText("avg " + formatNumber(means[index], 1), centerX, y - 10);
+        }
+      });
+
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#667085";
+      ctx.font = "12px 'Work Sans', Arial, sans-serif";
+      ctx.fillText("Dots = actual values. Gold bars = group averages.", plotLeft, height - 6);
+    }
+
+    function runPlainAnova() {
+      const groups = [
+        parseValues(document.getElementById("groupA").value),
+        parseValues(document.getElementById("groupB").value),
+        parseValues(document.getElementById("groupC").value)
+      ];
+      const labels = ["Group A", "Group B", "Group C"];
+      const means = groups.map(mean);
+      drawChart(groups, labels, means);
+
+      const result = document.getElementById("anovaResult");
+      const model = oneWayAnova(groups);
+
+      if (!model) {
+        result.className = "result-panel caution";
+        result.innerHTML = "<h3>Need more data</h3><p>Enter at least two values in at least two groups. Three groups are best for this lesson.</p>";
+        return;
+      }
+
+      const validMeans = means.filter(Number.isFinite);
+      const highMean = Math.max(...validMeans);
+      const lowMean = Math.min(...validMeans);
+      const gap = highMean - lowMean;
+      const avgInsideSpread = groups
+        .filter(g => g.length >= 2)
+        .map(g => Math.sqrt(sampleVariance(g)))
+        .reduce((sum, v, _, arr) => sum + v / arr.length, 0);
+
+      let conclusionClass = "caution";
+      let headline = "The groups may not be clearly different.";
+      let explanation = "The average gaps are not large enough compared with the normal spread inside the groups. More data or a stronger pattern may be needed.";
+
+      if (model.pValue < 0.05) {
+        conclusionClass = "good";
+        headline = "The groups look meaningfully different.";
+        explanation = "The gap between group averages is large compared with the normal spread inside the groups. At least one group deserves follow-up investigation.";
+      } else if (model.pValue < 0.10) {
+        conclusionClass = "caution";
+        headline = "There may be a difference, but the evidence is not strong.";
+        explanation = "The pattern is worth watching, but this sample does not give strong confidence yet.";
+      }
+
+      result.className = "result-panel " + conclusionClass;
+      result.innerHTML = `
+        <h3>${headline}</h3>
+        <p>${explanation}</p>
+        <div class="comparison-strip">
+          <div class="mini-stat"><span>Largest average gap</span><strong>${formatNumber(gap, 2)}</strong></div>
+          <div class="mini-stat"><span>Typical inside-group spread</span><strong>${formatNumber(avgInsideSpread, 2)}</strong></div>
+          <div class="mini-stat"><span>Software confidence check</span><strong>${model.pValue < 0.001 ? "<0.001" : formatNumber(model.pValue, 3)}</strong></div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Group</th><th>Count</th><th>Average</th><th>Inside Spread</th></tr>
+          </thead>
+          <tbody>
+            ${groups.map((g, i) => `
+              <tr>
+                <td>${labels[i]}</td>
+                <td>${g.length}</td>
+                <td>${formatNumber(mean(g), 2)}</td>
+                <td>${formatNumber(Math.sqrt(sampleVariance(g)), 2)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+        <div class="callout callout-info">
+          <strong>How to say it:</strong>
+          ${model.pValue < 0.05
+            ? "The data suggests at least one group average is different. We should run a follow-up comparison and investigate the process reason."
+            : "The data does not give strong evidence that the group averages are different. Do not claim the groups are proven equal; say the evidence is not strong enough."}
+        </div>
+      `;
+    }
+
+    function loadExample(type) {
+      const examples = {
+        shift: [
+          "47, 49, 50, 48, 51",
+          "55, 56, 54, 57, 58",
+          "48, 50, 49, 51, 47"
+        ],
+        machines: [
+          "101, 100, 102, 99, 101, 100",
+          "108, 110, 109, 111, 107, 110",
+          "103, 102, 104, 101, 103, 105"
+        ],
+        close: [
+          "50, 52, 49, 51, 50, 53",
+          "51, 50, 52, 49, 53, 50",
+          "50, 51, 49, 52, 50, 51"
+        ]
+      };
+
+      document.getElementById("groupA").value = examples[type][0];
+      document.getElementById("groupB").value = examples[type][1];
+      document.getElementById("groupC").value = examples[type][2];
+      runPlainAnova();
+    }
+
+    function clearData() {
+      document.getElementById("groupA").value = "";
+      document.getElementById("groupB").value = "";
+      document.getElementById("groupC").value = "";
+      runPlainAnova();
+    }
+
+    function gradeQuiz() {
+      const answers = { q1: "b", q2: "a", q3: "b" };
+      let score = 0;
+      let total = Object.keys(answers).length;
+
+      Object.keys(answers).forEach(name => {
+        const selected = document.querySelector(`input[name="${name}"]:checked`);
+        if (selected && selected.value === answers[name]) score++;
+      });
+
+      const feedback = document.getElementById("quizFeedback");
+      feedback.style.display = "block";
+      feedback.innerHTML = `Score: ${score} out of ${total}. ${
+        score === total
+          ? "Excellent. You understand the plain-English ANOVA idea."
+          : "Review the summary: ANOVA compares group-average gaps against normal inside-group noise."
+      }`;
+    }
+
+    window.addEventListener("resize", runPlainAnova);
+    document.addEventListener("DOMContentLoaded", runPlainAnova);
+  </script>
+</body>
+</html>

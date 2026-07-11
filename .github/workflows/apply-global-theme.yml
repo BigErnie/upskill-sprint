@@ -1,4 +1,4 @@
-name: Apply global colour theme
+name: Apply shared site controllers
 
 on:
   workflow_dispatch:
@@ -8,6 +8,7 @@ on:
     paths:
       - '**/*.html'
       - theme.js
+      - site-sections.js
       - .github/workflows/apply-global-theme.yml
 
 permissions:
@@ -22,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Add the shared theme controller to every HTML page
+      - name: Add shared controllers to every HTML page
         shell: bash
         run: |
           python - <<'PY'
@@ -30,7 +31,10 @@ jobs:
           import re
 
           repo = Path('.')
-          script_tag = '<script src="/theme.js"></script>'
+          script_tags = [
+              '<script src="/theme.js"></script>',
+              '<script src="/site-sections.js"></script>',
+          ]
           changed = []
 
           inline_theme_pattern = re.compile(
@@ -46,14 +50,17 @@ jobs:
               original = text
 
               # Remove the older homepage-only inline theme scripts so the
-              # shared controller is the single source of truth.
+              # shared controller remains the single source of truth.
               text = inline_theme_pattern.sub('', text)
 
-              if script_tag not in text:
-                  if '</head>' not in text:
-                      print(f'Skipping {path}: no closing head tag')
-                      continue
-                  text = text.replace('</head>', f'  {script_tag}\n</head>', 1)
+              if '</head>' not in text:
+                  print(f'Skipping {path}: no closing head tag')
+                  continue
+
+              missing_tags = [tag for tag in script_tags if tag not in text]
+              if missing_tags:
+                  insertion = ''.join(f'  {tag}\n' for tag in missing_tags)
+                  text = text.replace('</head>', insertion + '</head>', 1)
 
               if text != original:
                   path.write_text(text, encoding='utf-8')
@@ -68,12 +75,12 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All HTML pages already use the shared theme controller."
+            echo "All HTML pages already use the shared site controllers."
             exit 0
           fi
 
-          git config user.name "UpSkill Sprint Theme Bot"
+          git config user.name "UpSkill Sprint Site Bot"
           git config user.email "actions@users.noreply.github.com"
           git add -- '*.html'
-          git commit -m "Enable dark and light mode across all site pages"
+          git commit -m "Load shared theme and site navigation on every page"
           git push

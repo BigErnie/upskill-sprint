@@ -3,10 +3,15 @@
 
   const TOOLS_PATH = '/engineering-tools.html';
   const MATERIAL_CHECKER_PATH = '/tools/material-specification-compliance-checker.html';
+  const CALCULATOR_PATH = '/tools/engineering-statistics-calculator.html';
   const UNIT_CONVERTER_PATH = '/tools/unit-converter.html';
 
+  function pathEndsWith(path) {
+    return window.location.pathname === path || window.location.pathname.endsWith(path);
+  }
+
   function isEngineeringToolsPage() {
-    return window.location.pathname.endsWith('/engineering-tools.html');
+    return pathEndsWith(TOOLS_PATH);
   }
 
   function isHomePage() {
@@ -23,7 +28,9 @@
   }
 
   function insertAfter(reference, node) {
-    if (reference.parentNode) reference.parentNode.insertBefore(node, reference.nextSibling);
+    if (reference && reference.parentNode) {
+      reference.parentNode.insertBefore(node, reference.nextSibling);
+    }
   }
 
   function addToolsLinkToNav(nav) {
@@ -65,7 +72,7 @@
       <div class="wrap">
         <p class="eyebrow">Engineering tools</p>
         <h2 style="font-size:28px;margin:0 0 12px;max-width:700px;">Calculators, converters, and technical checkers.</h2>
-        <p style="font-size:15.5px;line-height:1.7;color:var(--muted);margin:0 0 32px;max-width:760px;">A growing tools area for materials, quality, engineering calculations, statistics, and unit conversion.</p>
+        <p style="font-size:15.5px;line-height:1.7;color:var(--muted);margin:0 0 32px;max-width:760px;">Practical tools for materials, quality, engineering calculations, statistics, and unit conversion.</p>
         <div class="grid-3">
           <a href="${MATERIAL_CHECKER_PATH}" class="card" style="color:var(--ink);">
             <div style="width:36px;height:36px;border-radius:8px;background:var(--teal);margin-bottom:18px;"></div>
@@ -74,12 +81,12 @@
             <p style="font-size:14px;color:var(--muted);margin:0 0 16px;">Compare chemistry and mechanical test results against selected CSA or ASTM requirements.</p>
             <span style="font-size:13.5px;font-weight:600;">Open checker &rarr;</span>
           </a>
-          <a href="/engineering-tools.html#engineering-calculators" class="card" style="color:var(--ink);">
+          <a href="${CALCULATOR_PATH}" class="card" style="color:var(--ink);">
             <div style="width:36px;height:36px;border-radius:8px;background:var(--navy);margin-bottom:18px;"></div>
-            <p style="font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;">Planned</p>
-            <h3 style="font-size:17px;margin:0 0 10px;">Engineering Calculator</h3>
-            <p style="font-size:14px;color:var(--muted);margin:0 0 16px;">Quick calculations for geometry, mass, pressure, flow, and process work.</p>
-            <span style="font-size:13.5px;font-weight:600;">Explore calculators &rarr;</span>
+            <p style="font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;">Available</p>
+            <h3 style="font-size:17px;margin:0 0 10px;">Engineering &amp; Statistics Calculator</h3>
+            <p style="font-size:14px;color:var(--muted);margin:0 0 16px;">Use a scientific calculator, descriptive statistics, probability distributions, reliability metrics, and hypothesis tests.</p>
+            <span style="font-size:13.5px;font-weight:600;">Open calculator &rarr;</span>
           </a>
           <a href="${UNIT_CONVERTER_PATH}" class="card" style="color:var(--ink);">
             <div style="width:36px;height:36px;border-radius:8px;background:var(--teal);margin-bottom:18px;"></div>
@@ -105,7 +112,7 @@
       card.href = TOOLS_PATH;
       card.className = 'card';
       card.style.cssText = 'color:var(--ink);grid-column:1/-1;';
-      card.innerHTML = '<h3 style="font-size:17px;margin:0 0 8px;">I need an engineering tool</h3><p style="font-size:14.5px;color:var(--muted);margin:0;">Explore material checkers, engineering calculators, and unit converters.</p>';
+      card.innerHTML = '<h3 style="font-size:17px;margin:0 0 8px;">I need an engineering or statistics tool</h3><p style="font-size:14.5px;color:var(--muted);margin:0;">Explore material checkers, scientific and statistical calculations, and unit converters.</p>';
       chooseGrid.appendChild(card);
     }
 
@@ -136,7 +143,7 @@
   }
 
   function ensureLessonsLibraryLink() {
-    if (!window.location.pathname.endsWith('/lessons.html')) return;
+    if (!pathEndsWith('/lessons.html')) return;
     const jumpArea = document.querySelector('section .wrap div[style*="flex-wrap"]');
     if (!jumpArea || jumpArea.querySelector('a[href*="engineering-tools.html"]')) return;
     const link = document.createElement('a');
@@ -146,42 +153,58 @@
     jumpArea.appendChild(link);
   }
 
-  function activateToolCard(cardId, path, statusText, actionText, ariaLabel) {
+  function activateToolCard(options) {
     if (!isEngineeringToolsPage()) return;
-    const card = document.getElementById(cardId);
+    const card = document.getElementById(options.cardId);
     if (!card) return;
 
-    card.href = path;
+    card.href = options.path;
     card.classList.remove('is-planned');
     const status = card.querySelector('.tool-status');
     const action = card.querySelector('.tool-link');
+    const heading = card.querySelector('.tool-content h2');
+    const description = card.querySelector('.tool-content p');
+
+    if (heading && options.title) heading.innerHTML = options.title;
+    if (description && options.description) description.textContent = options.description;
     if (status) {
-      status.textContent = statusText;
+      status.textContent = 'Available';
       status.classList.add('available');
     }
     if (action) {
-      action.innerHTML = actionText;
+      action.innerHTML = options.actionText;
       action.classList.remove('secondary');
       action.classList.add('primary');
     }
-    card.setAttribute('aria-label', ariaLabel);
+    card.setAttribute('aria-label', options.ariaLabel);
   }
 
   function activateAvailableTools() {
-    activateToolCard(
-      'materials-quality',
-      MATERIAL_CHECKER_PATH,
-      'Available',
-      'Open checker &rarr;',
-      'Open Material Specification Compliance Checker'
-    );
-    activateToolCard(
-      'converters',
-      UNIT_CONVERTER_PATH,
-      'Available',
-      'Open converter &rarr;',
-      'Open Engineering Unit Converter'
-    );
+    activateToolCard({
+      cardId: 'materials-quality',
+      path: MATERIAL_CHECKER_PATH,
+      actionText: 'Open checker &rarr;',
+      ariaLabel: 'Open Material Specification Compliance Checker'
+    });
+    activateToolCard({
+      cardId: 'engineering-calculators',
+      path: CALCULATOR_PATH,
+      title: 'Engineering &amp; Statistics Calculator',
+      description: 'Scientific calculations, descriptive statistics and regression, 16 probability distributions, reliability metrics, and nine hypothesis-test workflows.',
+      actionText: 'Open calculator &rarr;',
+      ariaLabel: 'Open Engineering and Statistics Calculator'
+    });
+    activateToolCard({
+      cardId: 'converters',
+      path: UNIT_CONVERTER_PATH,
+      actionText: 'Open converter &rarr;',
+      ariaLabel: 'Open Engineering Unit Converter'
+    });
+
+    if (isEngineeringToolsPage()) {
+      const note = document.querySelector('.directory-note');
+      if (note) note.textContent = 'Select any available tool to open it. Each tool explains its assumptions and keeps the calculation method visible.';
+    }
   }
 
   function enhanceLeadMagnetCapture() {
@@ -215,11 +238,9 @@
 
     const row = document.createElement('div');
     row.className = 'lead-capture-row';
-
     const field = document.createElement('label');
     field.className = 'lead-capture-field';
     field.htmlFor = input.id;
-
     const labelText = document.createElement('span');
     labelText.textContent = 'Email address';
 
@@ -238,78 +259,14 @@
       const style = document.createElement('style');
       style.id = 'lead-capture-styles';
       style.textContent = `
-        .lead-capture {
-          width: min(100%, 680px);
-          margin: 0 auto;
-          padding: 18px;
-          border: 1px solid var(--line);
-          border-radius: 10px;
-          background: var(--card);
-          box-shadow: 0 10px 28px rgba(15,42,67,.08);
-          text-align: left;
-        }
-        .lead-capture-row {
-          display: grid;
-          grid-template-columns: minmax(0,1fr) auto;
-          gap: 12px;
-          align-items: end;
-        }
-        .lead-capture-field {
-          display: flex;
-          min-width: 0;
-          flex-direction: column;
-          gap: 7px;
-          color: var(--ink);
-          font-size: 13px;
-          font-weight: 600;
-        }
-        .lead-capture .lead-email {
-          display: block;
-          width: 100%;
-          min-width: 0;
-          height: 50px;
-          margin: 0;
-          padding: 0 15px;
-          appearance: none;
-          border: 1px solid #cfd4dc;
-          border-radius: var(--radius);
-          background: var(--paper) !important;
-          color: var(--ink);
-          font: 400 15px/1 'Work Sans',Arial,sans-serif;
-          box-shadow: inset 0 1px 2px rgba(16,24,40,.04);
-        }
-        .lead-capture .lead-email::placeholder { color: #8792a2; }
-        .lead-capture .lead-email:focus {
-          border-color: var(--teal);
-          box-shadow: 0 0 0 3px rgba(14,116,144,.14);
-          outline: none;
-        }
-        .lead-capture-submit {
-          min-width: 168px;
-          height: 50px;
-          padding-top: 0;
-          padding-bottom: 0;
-        }
-        .lead-capture-note {
-          margin: 10px 0 0;
-          color: var(--muted);
-          font-size: 12px;
-          line-height: 1.45;
-          text-align: center;
-        }
-        .lead-capture-row > *:not(.lead-capture-field):not(.lead-capture-submit),
-        .lead-capture-field > *:not(span):not(input) { display: none !important; }
-        html[data-theme="dark"] .lead-capture {
-          box-shadow: 0 12px 30px rgba(0,0,0,.24);
-        }
-        html[data-theme="dark"] .lead-capture .lead-email {
-          border-color: var(--line) !important;
-        }
-        @media (max-width:600px) {
-          .lead-capture { padding: 16px; }
-          .lead-capture-row { grid-template-columns: 1fr; }
-          .lead-capture-submit { width: 100%; min-width: 0; }
-        }
+        .lead-capture{width:min(100%,680px);margin:0 auto;padding:18px;border:1px solid var(--line);border-radius:10px;background:var(--card);box-shadow:0 10px 28px rgba(15,42,67,.08);text-align:left}
+        .lead-capture-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}
+        .lead-capture-field{display:flex;min-width:0;flex-direction:column;gap:7px;color:var(--ink);font-size:13px;font-weight:600}
+        .lead-capture .lead-email{display:block;width:100%;min-width:0;height:50px;margin:0;padding:0 15px;appearance:none;border:1px solid #cfd4dc;border-radius:var(--radius);background:var(--paper)!important;color:var(--ink);font:400 15px/1 'Work Sans',Arial,sans-serif;box-shadow:inset 0 1px 2px rgba(16,24,40,.04)}
+        .lead-capture .lead-email::placeholder{color:#8792a2}.lead-capture .lead-email:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,116,144,.14);outline:none}
+        .lead-capture-submit{min-width:168px;height:50px;padding-top:0;padding-bottom:0}.lead-capture-note{margin:10px 0 0;color:var(--muted);font-size:12px;line-height:1.45;text-align:center}
+        html[data-theme="dark"] .lead-capture{box-shadow:0 12px 30px rgba(0,0,0,.24)}html[data-theme="dark"] .lead-capture .lead-email{border-color:var(--line)!important}
+        @media(max-width:600px){.lead-capture{padding:16px}.lead-capture-row{grid-template-columns:1fr}.lead-capture-submit{width:100%;min-width:0}}
       `;
       document.head.appendChild(style);
     }

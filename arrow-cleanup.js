@@ -8,6 +8,7 @@
   const AFTER_CLASS = 'upskill-remove-after-arrow';
   const BEFORE_CLASS = 'upskill-remove-before-arrow';
   const HTML_EXTENSION = /\.html$/i;
+  const MATERIAL_CHECKER_ROUTE = '/tools/material-specification-compliance-checker';
   let scanScheduled = false;
 
   function ensureStyles() {
@@ -18,6 +19,58 @@
     style.textContent = `
       .${AFTER_CLASS}::after { content: none !important; display: none !important; }
       .${BEFORE_CLASS}::before { content: none !important; display: none !important; }
+
+      .upskill-checker-brand-link {
+        display: inline-flex !important;
+        align-items: center !important;
+        color: inherit !important;
+        font-weight: 700 !important;
+        text-decoration: none !important;
+        text-underline-offset: 0 !important;
+      }
+      .upskill-checker-brand-link:hover,
+      .upskill-checker-brand-link:focus,
+      .upskill-checker-brand-link:visited {
+        color: inherit !important;
+        text-decoration: none !important;
+      }
+      .upskill-checker-logo-slot {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+      }
+      .upskill-checker-logo-slot img {
+        display: block !important;
+        width: 38px !important;
+        height: 38px !important;
+        object-fit: contain !important;
+      }
+      .upskill-checker-brand-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
+        width: min(100%, 1200px) !important;
+        margin: 0 auto !important;
+      }
+      .upskill-checker-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        width: 100% !important;
+        min-height: 76px !important;
+        padding: 17px clamp(18px, 4vw, 40px) !important;
+        box-sizing: border-box !important;
+      }
     `;
     document.head.appendChild(style);
   }
@@ -93,6 +146,10 @@
     return pathname.replace(HTML_EXTENSION, '');
   }
 
+  function normalizedCurrentPath() {
+    return cleanPathname(window.location.pathname).replace(/\/$/, '') || '/';
+  }
+
   function cleanInternalLink(anchor) {
     if (!(anchor instanceof HTMLAnchorElement) || anchor.hasAttribute('download')) return;
 
@@ -163,8 +220,63 @@
     }
   }
 
+  function findCheckerBrandLink() {
+    return Array.from(document.querySelectorAll('header a, nav a, [class*="header"] a, [class*="brand"] a')).find(function (link) {
+      return /UpSkill\s+Sprint\s+Consulting/i.test(link.textContent || '');
+    }) || null;
+  }
+
+  function findCheckerInitialsBadge(brandLink, header) {
+    const searchRoot = header || brandLink.parentElement || document.body;
+    const elements = Array.from(searchRoot.querySelectorAll('span, div, strong, b, a'));
+
+    return elements.find(function (element) {
+      if (!element || element === brandLink || brandLink.contains(element)) return false;
+      if (element.children.length > 0 || (element.textContent || '').trim().toUpperCase() !== 'US') return false;
+
+      const rect = element.getBoundingClientRect();
+      return rect.top < 190 && rect.width <= 90 && rect.height <= 90;
+    }) || null;
+  }
+
+  function alignMaterialCheckerHeader() {
+    if (normalizedCurrentPath() !== MATERIAL_CHECKER_ROUTE) return;
+
+    const brandLink = findCheckerBrandLink();
+    if (!brandLink) return;
+
+    brandLink.classList.add('upskill-checker-brand-link');
+    brandLink.setAttribute('href', '/');
+    brandLink.style.textDecoration = 'none';
+
+    const header = brandLink.closest('header') || brandLink.closest('[class*="header"]');
+    if (header) header.classList.add('upskill-checker-header');
+
+    const brandRow = brandLink.parentElement;
+    if (brandRow) brandRow.classList.add('upskill-checker-brand-row');
+
+    let badge = findCheckerInitialsBadge(brandLink, header);
+    if (!badge && brandRow) {
+      badge = Array.from(brandRow.children).find(function (element) {
+        return element !== brandLink && (element.textContent || '').trim().toUpperCase() === 'US';
+      }) || null;
+    }
+
+    if (!badge) return;
+
+    const logo = document.createElement('img');
+    logo.src = '/assets/logo-icon.png';
+    logo.alt = 'UpSkill Sprint Consulting logo';
+    logo.width = 38;
+    logo.height = 38;
+
+    badge.replaceChildren(logo);
+    badge.classList.add('upskill-checker-logo-slot');
+    badge.setAttribute('aria-label', 'UpSkill Sprint Consulting logo');
+  }
+
   function repairEngineeringToolsCleanRoute() {
-    const pathname = cleanPathname(window.location.pathname);
+    const pathname = normalizedCurrentPath();
     if (pathname !== '/engineering-tools') return;
 
     const tools = [
@@ -232,6 +344,7 @@
       scanScheduled = false;
       scan(document);
       cleanCanonicalAndSocialUrls();
+      alignMaterialCheckerHeader();
       repairEngineeringToolsCleanRoute();
     });
   }
@@ -241,6 +354,7 @@
     cleanBrowserAddress();
     cleanCanonicalAndSocialUrls();
     scan(document);
+    alignMaterialCheckerHeader();
     repairEngineeringToolsCleanRoute();
 
     const observer = new MutationObserver(function (mutations) {

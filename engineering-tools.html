@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<title>Engineering Tools | UpSkill Sprint Consulting</title>
+<meta name="description" content="Practical engineering calculators, material compliance checkers, and unit conversion tools for technical and quality work.">
+<link rel="canonical" href="https://upskillsprint.com/engineering-tools.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Engineering Tools | UpSkill Sprint Consulting">
+<meta property="og:description" content="Practical engineering calculators, material compliance checkers, and unit conversion tools.">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<meta property="og:url" content="https://upskillsprint.com/engineering-tools.html">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .tools-hero { padding-bottom: 44px; }
+  .tools-lead { max-width: 720px; font-size: 16px; line-height: 1.7; color: var(--ink-soft); margin: 0; }
+  .tool-card { position: relative; display: flex; flex-direction: column; min-height: 260px; color: var(--ink); }
+  .tool-card:hover { color: var(--ink); }
+  .tool-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 10px; margin-bottom: 20px; background: rgba(14,116,144,.12); color: var(--teal); }
+  .tool-icon svg { width: 24px; height: 24px; }
+  .tool-status { display: inline-flex; align-items: center; width: fit-content; padding: 6px 10px; border-radius: 999px; margin-bottom: 14px; background: var(--tint); border: 1px solid var(--line); color: var(--muted); font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .tool-card h3 { font-size: 19px; margin: 0 0 10px; }
+  .tool-card p { font-size: 14.5px; line-height: 1.65; color: var(--muted); margin: 0 0 20px; }
+  .tool-link { margin-top: auto; font-size: 14px; font-weight: 700; color: var(--teal); }
+  .category-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
+  .category-card { border: 1px solid var(--line); border-radius: 10px; background: var(--card); overflow: hidden; }
+  .category-card summary { list-style: none; cursor: pointer; padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--ink); font-family: 'Source Serif 4', Georgia, serif; font-size: 18px; font-weight: 600; }
+  .category-card summary::-webkit-details-marker { display: none; }
+  .category-card summary::after { content: '+'; color: var(--teal); font-family: 'Work Sans', Arial, sans-serif; font-size: 24px; font-weight: 500; }
+  .category-card[open] summary::after { content: '\2212'; }
+  .category-body { padding: 0 24px 22px; }
+  .category-body p { color: var(--muted); font-size: 14.5px; line-height: 1.65; margin: 0 0 12px; }
+  .category-body ul { margin: 0; padding-left: 20px; color: var(--ink-soft); font-size: 14px; line-height: 1.7; }
+  .tools-note { margin-top: 28px; padding: 22px 24px; border-left: 5px solid var(--teal); border-radius: 8px; background: var(--tint); }
+  .tools-note p { margin: 0; color: var(--ink-soft); font-size: 14.5px; line-height: 1.65; }
+  @media (max-width: 760px) { .category-grid { grid-template-columns: 1fr; } }
+</style>
+<script src="/theme.js"></script>
+</head>
+<body>
+  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+  <header class="site">
+    <a href="index.html" class="brand">
+      <img src="assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+      <span>UpSkill Sprint Consulting</span>
+    </a>
+    <nav class="desktop-nav">
+      <a href="start-here.html">Start Here</a>
+      <a href="lessons.html">Lessons</a>
+      <a href="engineering-tools.html" aria-current="page">Engineering Tools</a>
+      <a href="services.html">Services</a>
+      <a href="request-topic.html">Request a Topic</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <a href="lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+  </header>
+  <nav class="mobile-nav">
+    <a href="start-here.html">Start Here</a>
+    <a href="lessons.html">Lessons</a>
+    <a href="engineering-tools.html" aria-current="page">Engineering Tools</a>
+    <a href="services.html">Services</a>
+    <a href="request-topic.html">Request a Topic</a>
+    <a href="about.html">About</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <main>
+    <section class="section tools-hero">
+      <div class="wrap">
+        <p class="eyebrow">Engineering Tools</p>
+        <h1 style="font-size:34px;line-height:1.2;margin:0 0 16px;max-width:760px;">Practical tools for technical decisions</h1>
+        <p class="tools-lead">A growing collection of focused calculators, converters, and compliance checkers for engineering, quality, and process-improvement work.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:24px;">
+      <div class="wrap">
+        <div class="grid-3">
+          <a id="materials-quality" href="request-topic.html" class="card tool-card">
+            <div class="tool-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM8 9h8M8 13h5M8 17h3"/></svg>
+            </div>
+            <span class="tool-status">In development</span>
+            <h3>Material Specification Compliance Checker</h3>
+            <p>Compare chemistry, tensile, Charpy, and other test results against selected CSA or ASTM material requirements.</p>
+            <span class="tool-link">Request early access &rarr;</span>
+          </a>
+
+          <a id="engineering-calculators" href="request-topic.html" class="card tool-card">
+            <div class="tool-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></svg>
+            </div>
+            <span class="tool-status">Planned</span>
+            <h3>Engineering Calculator</h3>
+            <p>Quick calculations for common engineering quantities, geometry, mass, pressure, flow, and process work.</p>
+            <span class="tool-link">Suggest a calculation &rarr;</span>
+          </a>
+
+          <a id="converters" href="request-topic.html" class="card tool-card">
+            <div class="tool-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h11l-3-3M17 17H6l3 3M18 7l-3 3M6 17l3-3"/></svg>
+            </div>
+            <span class="tool-status">Planned</span>
+            <h3>Unit Converter</h3>
+            <p>Convert engineering units for length, mass, pressure, temperature, energy, flow, and other technical quantities.</p>
+            <span class="tool-link">Suggest a conversion &rarr;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section tint">
+      <div class="wrap">
+        <p class="eyebrow">Expandable tool library</p>
+        <h2 style="font-size:28px;margin:0 0 12px;max-width:720px;">Organized around real engineering work</h2>
+        <p style="font-size:15.5px;line-height:1.7;color:var(--muted);margin:0 0 28px;max-width:760px;">The library will expand by category so each tool remains focused and easy to find.</p>
+
+        <div class="category-grid">
+          <details class="category-card" open>
+            <summary>Materials &amp; Quality</summary>
+            <div class="category-body">
+              <p>Tools for checking material data and supporting quality decisions.</p>
+              <ul>
+                <li>CSA and ASTM material compliance checks</li>
+                <li>Chemistry and mechanical-property comparisons</li>
+                <li>Plate, coil, and pipe reference calculations</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="category-card">
+            <summary>Engineering Calculators</summary>
+            <div class="category-body">
+              <p>Focused calculators for recurring technical calculations.</p>
+              <ul>
+                <li>Geometry, area, volume, and mass</li>
+                <li>Pressure, force, flow, and velocity</li>
+                <li>Production and process calculations</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="category-card">
+            <summary>Statistics &amp; Lean Six Sigma</summary>
+            <div class="category-body">
+              <p>Decision-support tools that connect analysis to improvement work.</p>
+              <ul>
+                <li>Sample-size and confidence calculations</li>
+                <li>Process capability and performance metrics</li>
+                <li>Takt time, cycle time, and improvement metrics</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="category-card">
+            <summary>Converters</summary>
+            <div class="category-body">
+              <p>Fast conversions for common SI, Imperial, and industry units.</p>
+              <ul>
+                <li>Length, area, volume, and mass</li>
+                <li>Pressure, temperature, energy, and power</li>
+                <li>Flow, density, speed, and force</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+
+        <div class="tools-note">
+          <p><strong>Tool-development rule:</strong> each tool will explain the equation, show the units, and make its assumptions visible so the result can be checked.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="text-align:center;">
+      <div class="wrap" style="max-width:720px;">
+        <p class="eyebrow">Help shape the library</p>
+        <h2 style="font-size:28px;margin:0 0 14px;">Which engineering tool should be built next?</h2>
+        <p style="font-size:15.5px;line-height:1.7;color:var(--muted);margin:0 0 26px;">Submit the calculation, standard check, or converter you use repeatedly at work.</p>
+        <a href="request-topic.html" class="btn btn-teal">Request an engineering tool</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom:14px;">
+            <img src="assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+            <span>UpSkill Sprint Consulting</span>
+          </div>
+          <p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, engineering, process improvement, and business problem-solving.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="start-here.html">Start Here</a>
+          <a href="lessons.html">Lessons</a>
+          <a href="engineering-tools.html">Engineering Tools</a>
+          <a href="services.html">Services</a>
+          <a href="request-topic.html">Request a Topic</a>
+          <a href="about.html">About</a>
+          <a href="faq.html">FAQ</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Tool Categories</h4>
+          <a href="#materials-quality">Materials &amp; Quality</a>
+          <a href="#engineering-calculators">Engineering Calculators</a>
+          <a href="#converters">Unit Converters</a>
+          <a href="lessons.html#statistics">Statistics</a>
+          <a href="lessons.html#lean-six-sigma">Lean Six Sigma</a>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <a href="mailto:skillsprintconsulting@gmail.com">skillsprintconsulting@gmail.com</a>
+          <p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 UpSkill Sprint Consulting</span>
+      <div><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></div>
+    </div>
+  </footer>
+</body>
+</html>

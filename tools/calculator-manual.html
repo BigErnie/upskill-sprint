@@ -33,7 +33,8 @@
     const bytes=Uint8Array.from(atob(payload),c=>c.charCodeAt(0));
     const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
     const html=await new Response(stream).text();
-    document.open();document.write(html);document.close();
+    document.open();document.write(html.replace('<script src="/contrast-fix.js"></script>
+</body>', '<script src="/contrast-fix.js"><\/script></body>'));document.close();
   }catch(error){
     document.getElementById('loader').innerHTML='<h1>Unable to open the manual</h1><p>'+String(error.message||error)+'<br><br><a href="/tools/engineering-statistics-calculator.html">Return to Calculator</a></p>';
   }

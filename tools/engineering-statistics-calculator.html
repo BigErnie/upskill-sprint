@@ -42,7 +42,8 @@
       .replace(/Engineering & Statistical Calculator/g,'Engineering & Statistics Calculator')
       .replace(/15 probability distributions/g,'16 probability distributions')
       .replace(/15 distributions/g,'16 distributions');
-    document.open();document.write(finalHtml);document.close();
+    document.open();document.write(finalHtml.replace('<script src="/contrast-fix.js"></script>
+</body>', '<script src="/contrast-fix.js"><\/script></body>'));document.close();
   }catch(error){
     document.getElementById('loader').innerHTML='<h1>Unable to open the tool</h1><p>'+String(error.message||error)+'<br><br><a href="/engineering-tools.html">Return to Engineering Tools</a></p>';
   }

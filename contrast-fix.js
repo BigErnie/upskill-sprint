@@ -9,9 +9,13 @@
 
   const LIGHT_CLASS = 'upskill-contrast-on-light';
   const DARK_CLASS = 'upskill-contrast-on-dark';
+  const REPAIR_SELECTOR = '.' + LIGHT_CLASS + ', .' + DARK_CLASS;
   const SKIP_SELECTOR = 'script,style,noscript,template,svg,canvas,[data-contrast-ignore]';
   const DMAIC_LESSON_PATH = '/lessons/lean-six-sigma/dmaic-formula-encyclopedia';
+
   let scanQueued = false;
+  let themeRefreshFrame = 0;
+  let suppressObserver = false;
 
   function isLessonsPage() {
     const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
@@ -114,6 +118,7 @@
       }
       .${DARK_CLASS} {
         color: #f4f7fb !important;
+        text-shadow: none !important;
       }
       input.${LIGHT_CLASS}::placeholder,
       textarea.${LIGHT_CLASS}::placeholder {
@@ -240,6 +245,20 @@
     if (hasDark) element.classList.remove(DARK_CLASS);
   }
 
+  function removeRepairClasses(rootNode) {
+    const root = rootNode || document;
+
+    if (root instanceof Element && root.matches(REPAIR_SELECTOR)) {
+      root.classList.remove(LIGHT_CLASS, DARK_CLASS);
+    }
+
+    if (root.querySelectorAll) {
+      root.querySelectorAll(REPAIR_SELECTOR).forEach(function (element) {
+        element.classList.remove(LIGHT_CLASS, DARK_CLASS);
+      });
+    }
+  }
+
   function repairElement(element) {
     if (!(element instanceof Element) || element.matches(SKIP_SELECTOR) || element.closest(SKIP_SELECTOR)) return;
     if (!hasVisibleText(element)) return;
@@ -247,43 +266,62 @@
     const rect = element.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) return;
 
+    const hadRepairClass = element.classList.contains(LIGHT_CLASS) || element.classList.contains(DARK_CLASS);
+    if (hadRepairClass) element.classList.remove(LIGHT_CLASS, DARK_CLASS);
+
     const styles = getComputedStyle(element);
     if (styles.visibility === 'hidden' || styles.display === 'none' || Number(styles.opacity) === 0) return;
-
-    const background = effectiveBackground(element);
-    const backgroundIsLight = luminance(background) >= 0.5;
-    const existingRepair = element.classList.contains(LIGHT_CLASS) || element.classList.contains(DARK_CLASS);
-
-    // Once an element has been repaired, keep the appropriate class unless its
-    // background switches between light and dark. This prevents observer loops.
-    if (existingRepair) {
-      setRepairClass(element, backgroundIsLight ? LIGHT_CLASS : DARK_CLASS);
-      return;
-    }
 
     const textColour = parseColour(styles.color);
     if (!textColour) return;
 
+    const background = effectiveBackground(element);
     const ratio = contrastRatio(textColour, background);
-    if (ratio >= minimumContrast(styles)) return;
 
-    setRepairClass(element, backgroundIsLight ? LIGHT_CLASS : DARK_CLASS);
+    if (ratio < minimumContrast(styles)) {
+      setRepairClass(element, luminance(background) >= 0.5 ? LIGHT_CLASS : DARK_CLASS);
+    }
   }
 
-  function scan(root) {
+  function scan(rootNode) {
     ensureStyles();
-    const scope = root && root.querySelectorAll ? root : document;
+    const root = rootNode || document;
 
-    if (root instanceof Element && root.matches(TEXT_SELECTOR)) repairElement(root);
-    scope.querySelectorAll(TEXT_SELECTOR).forEach(repairElement);
+    suppressObserver = true;
+    try {
+      if (root instanceof Element && root.matches(TEXT_SELECTOR)) repairElement(root);
+      if (root.querySelectorAll) root.querySelectorAll(TEXT_SELECTOR).forEach(repairElement);
+    } finally {
+      window.setTimeout(function () {
+        suppressObserver = false;
+      }, 0);
+    }
   }
 
-  function queueScan(root) {
+  function queueScan(rootNode) {
     if (scanQueued) return;
     scanQueued = true;
+
     requestAnimationFrame(function () {
       scanQueued = false;
-      scan(root || document);
+      scan(rootNode || document);
+    });
+  }
+
+  function refreshForTheme() {
+    if (themeRefreshFrame) cancelAnimationFrame(themeRefreshFrame);
+
+    suppressObserver = true;
+    removeRepairClasses(document);
+
+    // Force the browser to resolve the new CSS variables and theme selectors now.
+    void document.documentElement.offsetWidth;
+    scan(document);
+
+    // Recheck once more after layout and dynamically styled components settle.
+    themeRefreshFrame = requestAnimationFrame(function () {
+      themeRefreshFrame = 0;
+      scan(document);
     });
   }
 
@@ -292,8 +330,23 @@
     scan(document);
 
     const observer = new MutationObserver(function (mutations) {
+      if (suppressObserver) return;
+
+      const themeChanged = mutations.some(function (mutation) {
+        return mutation.type === 'attributes' &&
+          mutation.attributeName === 'data-theme' &&
+          mutation.target === document.documentElement;
+      });
+
+      if (themeChanged) {
+        refreshForTheme();
+        return;
+      }
+
       const changed = mutations.some(function (mutation) {
-        return mutation.type === 'characterData' || mutation.type === 'attributes' || mutation.addedNodes.length > 0;
+        return mutation.type === 'characterData' ||
+          mutation.type === 'attributes' ||
+          mutation.addedNodes.length > 0;
       });
       if (changed) queueScan(document);
     });
@@ -306,9 +359,14 @@
       attributeFilter: ['class', 'style', 'hidden', 'disabled', 'data-theme']
     });
 
-    window.addEventListener('upskill:themechange', function () { queueScan(document); });
+    window.UpSkillContrast = Object.assign(window.UpSkillContrast || {}, {
+      refresh: refreshForTheme,
+      scan: function () { scan(document); }
+    });
+
+    window.addEventListener('upskill:themechange', refreshForTheme);
     window.addEventListener('resize', function () { queueScan(document); }, { passive: true });
-    window.addEventListener('load', function () { queueScan(document); }, { once: true });
+    window.addEventListener('load', function () { refreshForTheme(); }, { once: true });
   }
 
   if (document.readyState === 'loading') {

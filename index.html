@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
 <title>UpSkill Sprint Consulting | Practical Skills for Data, Quality &amp; Improvement</title>
 <meta name="description" content="Free, practical lessons in data analytics, quality engineering, Lean Six Sigma, and business improvement, plus training, coaching, and consulting for teams.">
 <link rel="canonical" href="https://upskillsprint.com/index.html">
@@ -12,6 +14,18 @@
 <meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
 <meta property="og:url" content="https://upskillsprint.com/index.html">
 <meta name="twitter:card" content="summary">
+<script>
+  (function () {
+    const storageKey = 'upskill-theme';
+    try {
+      const savedTheme = localStorage.getItem(storageKey);
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = savedTheme || systemTheme;
+    } catch (error) {
+      document.documentElement.dataset.theme = 'light';
+    }
+  }());
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -35,10 +49,24 @@
       <a href="faq.html">FAQ</a>
       <a href="contact.html">Contact</a>
     </nav>
-    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1f26" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-    </label>
-    <a href="lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+    <div class="header-actions">
+      <div class="theme-control" aria-label="Colour theme">
+        <svg class="theme-icon theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+        </svg>
+        <button type="button" id="theme-toggle" class="theme-toggle" role="switch" aria-checked="false" aria-label="Switch to dark mode" title="Switch to dark mode">
+          <span class="sr-only">Toggle dark and light mode</span>
+        </button>
+        <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </div>
+      <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </label>
+      <a href="lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+    </div>
   </header>
   <nav class="mobile-nav">
     <a href="start-here.html">Start Here</a>
@@ -51,7 +79,7 @@
   </nav>
 
   <section class="section" style="position:relative;padding-top:100px;padding-bottom:380px;text-align:center;overflow:hidden;">
-    <svg viewBox="0 0 1400 380" preserveAspectRatio="xMidYMid meet" style="position:absolute;left:0;right:0;bottom:40px;width:100%;height:340px;opacity:0.4;pointer-events:none;">
+    <svg class="hero-visual" viewBox="0 0 1400 380" preserveAspectRatio="xMidYMid meet" style="position:absolute;left:0;right:0;bottom:40px;width:100%;height:340px;opacity:0.4;pointer-events:none;">
       <path d="M 30,300 C 90,300 105,60 175,60 C 245,60 260,300 320,300" fill="none" stroke="#0e7490" stroke-width="4">
         <animate attributeName="stroke-width" values="4;5.5;4" dur="3.5s" repeatCount="indefinite"></animate>
       </path>
@@ -217,7 +245,7 @@
       <form name="lead-magnet" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thank-you-kit.html" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
         <input type="hidden" name="form-name" value="lead-magnet">
         <div class="honeypot" aria-hidden="true"><label>Don't fill this out<input tabindex="-1" autocomplete="off" name="bot-field"></label></div>
-        <input type="email" name="email" required placeholder="you@email.com" style="padding:13px 16px;border-radius:6px;border:1px solid #cfc8b8;font-size:14.5px;width:100%;max-width:260px;">
+        <input class="lead-email" type="email" name="email" required placeholder="you@email.com" style="padding:13px 16px;border-radius:6px;border:1px solid #cfc8b8;font-size:14.5px;width:100%;max-width:260px;">
         <button type="submit" class="btn btn-teal">Send me the kit</button>
       </form>
     </div>
@@ -281,5 +309,47 @@
       <span>&copy; 2026 UpSkill Sprint Consulting</span>
       <div><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></div>
     </div>
-  </footer><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+  </footer>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+  <script>
+    (function () {
+      const storageKey = 'upskill-theme';
+      const root = document.documentElement;
+      const toggle = document.getElementById('theme-toggle');
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+      function applyTheme(theme, savePreference) {
+        const isDark = theme === 'dark';
+        root.dataset.theme = isDark ? 'dark' : 'light';
+        toggle.setAttribute('aria-checked', String(isDark));
+        toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        toggle.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+        if (themeMeta) themeMeta.setAttribute('content', isDark ? '#0b1220' : '#ffffff');
+        if (savePreference) {
+          try {
+            localStorage.setItem(storageKey, isDark ? 'dark' : 'light');
+          } catch (error) {
+            // The theme still works for this visit if storage is unavailable.
+          }
+        }
+      }
+
+      applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light', false);
+
+      toggle.addEventListener('click', function () {
+        applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', true);
+      });
+
+      systemTheme.addEventListener('change', function (event) {
+        try {
+          if (localStorage.getItem(storageKey)) return;
+        } catch (error) {
+          // Follow the system theme when storage is unavailable.
+        }
+        applyTheme(event.matches ? 'dark' : 'light', false);
+      });
+    }());
+  </script>
+</body>
 </html>

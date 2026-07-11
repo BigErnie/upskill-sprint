@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<!-- ============================================================
+  UpSkill Sprint — Engineering Unit Converter
+  ------------------------------------------------------------
+  Purpose : World-class bidirectional unit converter for
+            engineering & Lean Six Sigma practitioners.
+            Imperial / US customary / metric / SI, plus a
+            hardness correlation module (ASTM E140, approx.).
+  Stack   : Single-file HTML + CSS + vanilla JS (no dependencies)
+  Author  : Built for upskillsprint.com
+  Notes   : - Conversion factors are exact NIST-defined values
+            - Type in ANY field; all other units update live
+            - Full-precision value on hover; Copy copies full precision
+            - Temperature supports Absolute and Interval (Δ) modes
+  ============================================================ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0A1118">
+<title>Engineering Unit Converter | UpSkill Sprint</title>
+<meta name="description" content="Free engineering unit converter: pressure and stress (MPa, ksi, psi), Charpy energy (J, ft·lbf), temperature, force, torque, density, flow, hardness correlation and more. Exact NIST factors, live bidirectional conversion.">
+<link rel="canonical" href="https://upskillsprint.com/tools/unit-converter.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ================= Design tokens ================= */
+:root{
+  --bg:        #0A1118;   /* deep blue-black */
+  --panel:     #101B26;
+  --panel-2:   #15222E;
+  --line:      #21384C;
+  --line-soft: #182A3A;
+  --text:      #E8EEF4;
+  --muted:     #7E93A6;
+  --faint:     #55697B;
+  --accent:    #F0A64B;   /* molten amber — overridden per category */
+  --accent-dim: rgba(240,166,75,.14);
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --disp: "Barlow Condensed", "Arial Narrow", var(--sans);
+  --radius: 10px;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.5;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--accent); color:#0A1118; }
+
+/* ================= Header / command bar ================= */
+header{
+  border-bottom:1px solid var(--line-soft);
+  background:linear-gradient(180deg, #0D1620 0%, var(--bg) 100%);
+  padding:20px clamp(16px,4vw,40px) 16px;
+}
+.hd-row{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; max-width:1200px; margin:0 auto; }
+h1{
+  font-family:var(--disp);
+  font-weight:700;
+  font-size:clamp(24px,3.4vw,34px);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+h1 .amp{ color:var(--accent); }
+.tagline{ color:var(--muted); font-size:12.5px; letter-spacing:.02em; width:100%; max-width:1200px; margin:6px auto 0; }
+.searchwrap{ position:relative; flex:1 1 260px; min-width:230px; }
+#search{
+  width:100%;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  color:var(--text);
+  font-family:var(--mono);
+  font-size:14px;
+  padding:10px 14px 10px 38px;
+  outline:none;
+  transition:border-color .15s;
+}
+#search:focus{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+#search::placeholder{ color:var(--faint); }
+.searchwrap .glyph{
+  position:absolute; left:13px; top:50%; transform:translateY(-50%);
+  color:var(--faint); font-size:14px; pointer-events:none;
+}
+.kbd-hint{
+  position:absolute; right:11px; top:50%; transform:translateY(-50%);
+  font-family:var(--mono); font-size:11px; color:var(--faint);
+  border:1px solid var(--line); border-radius:5px; padding:1px 7px;
+  pointer-events:none;
+}
+#suggest{
+  position:absolute; z-index:40; top:calc(100% + 6px); left:0; right:0;
+  background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius);
+  overflow:hidden; display:none;
+  box-shadow:0 14px 34px rgba(0,0,0,.5);
+}
+#suggest.open{ display:block; }
+.sg{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:9px 14px; cursor:pointer; font-size:13.5px;
+}
+.sg .u{ font-family:var(--mono); }
+.sg .c{ color:var(--muted); font-size:12px; }
+.sg:hover, .sg.sel{ background:var(--accent-dim); }
+.sg:hover .u, .sg.sel .u{ color:var(--accent); }
+
+/* ================= Layout ================= */
+.wrap{
+  max-width:1200px; margin:0 auto;
+  display:grid; grid-template-columns:225px 1fr; gap:26px;
+  padding:24px clamp(16px,4vw,40px) 60px;
+}
+nav{ position:sticky; top:16px; align-self:start; }
+.navlabel{
+  font-family:var(--disp); text-transform:uppercase; letter-spacing:.14em;
+  font-size:13px; color:var(--faint); margin:14px 0 6px 12px;
+}
+.cat{
+  display:flex; align-items:center; gap:10px;
+  width:100%; text-align:left;
+  background:none; border:none; cursor:pointer;
+  color:var(--muted); font-family:var(--sans); font-size:14px;
+  padding:7px 12px; border-radius:8px;
+  border-left:3px solid transparent;
+  transition:background .12s, color .12s;
+}
+.cat:hover{ background:var(--panel); color:var(--text); }
+.cat.active{
+  background:var(--panel-2); color:var(--text);
+  border-left-color:var(--accent); font-weight:600;
+}
+.cat .dot{ width:8px; height:8px; border-radius:50%; background:var(--catdot,#456); flex:none; }
+
+/* ================= Converter panel ================= */
+main{ min-width:0; }
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line-soft);
+  border-radius:14px;
+  overflow:hidden;
+}
+.panel-hd{
+  display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  padding:18px 22px 14px;
+  border-bottom:1px solid var(--line-soft);
+}
+.panel-hd h2{
+  font-family:var(--disp); font-weight:600; font-size:24px;
+  letter-spacing:.05em; text-transform:uppercase;
+  color:var(--accent);
+}
+.panel-hd .sub{ color:var(--muted); font-size:12.5px; margin-top:2px; }
+.controls{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.ctl-label{ color:var(--muted); font-size:12px; letter-spacing:.04em; }
+select, .modebtn{
+  background:var(--panel-2); color:var(--text);
+  border:1px solid var(--line); border-radius:8px;
+  font-family:var(--sans); font-size:13px; padding:6px 10px;
+  cursor:pointer; outline:none;
+}
+select:focus, .modebtn:focus-visible{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+.modebtn.on{ background:var(--accent-dim); border-color:var(--accent); color:var(--accent); font-weight:600; }
+.clearbtn{
+  background:none; border:1px solid var(--line); color:var(--muted);
+  border-radius:8px; font-size:13px; padding:6px 12px; cursor:pointer;
+}
+.clearbtn:hover{ color:var(--text); border-color:var(--muted); }
+
+/* unit rows */
+#rows{ padding:10px 12px 14px; }
+.row{
+  display:grid;
+  grid-template-columns:minmax(120px,220px) 1fr 42px;
+  align-items:center; gap:12px;
+  padding:7px 10px; border-radius:10px;
+  border:1px solid transparent;
+}
+.row + .row{ margin-top:2px; }
+.row:hover{ background:var(--panel-2); }
+.row.edited{ background:var(--accent-dim); border-color:var(--accent); }
+.row.readonly{ opacity:.92; }
+.ulabel{ display:flex; flex-direction:column; min-width:0; }
+.usym{ font-family:var(--mono); font-size:14.5px; font-weight:500; }
+.row.edited .usym{ color:var(--accent); }
+.uname{ color:var(--faint); font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.uval{
+  width:100%;
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-radius:8px;
+  color:var(--text);
+  font-family:var(--mono); font-size:15px;
+  padding:8px 12px;
+  text-align:right;
+  outline:none;
+  transition:border-color .12s;
+}
+.uval:focus{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+.uval[readonly]{ color:var(--muted); background:var(--panel-2); cursor:default; }
+.uval.oor{ color:#E36060; }
+.copy{
+  background:none; border:1px solid var(--line); border-radius:8px;
+  color:var(--faint); cursor:pointer; font-size:13px;
+  height:34px; width:42px;
+  display:flex; align-items:center; justify-content:center;
+  transition:color .12s, border-color .12s;
+}
+.copy:hover{ color:var(--accent); border-color:var(--accent); }
+.copy.done{ color:#5DC98B; border-color:#5DC98B; }
+
+/* formula footer */
+.formula{
+  border-top:1px solid var(--line-soft);
+  background:var(--panel-2);
+  padding:12px 22px;
+  font-family:var(--mono); font-size:13px;
+  color:var(--muted);
+  min-height:44px;
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.formula b{ color:var(--accent); font-weight:500; }
+.note{
+  padding:10px 22px 16px; color:var(--faint); font-size:12px; line-height:1.55;
+  background:var(--panel-2);
+}
+.note strong{ color:var(--muted); }
+
+footer.page{
+  max-width:1200px; margin:0 auto; padding:0 clamp(16px,4vw,40px) 40px;
+  color:var(--faint); font-size:12px;
+}
+footer.page a{ color:var(--muted); }
+
+/* focus visibility & motion */
+:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none !important; animation:none !important; }
+  html{ scroll-behavior:auto; }
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 860px){
+  .wrap{ grid-template-columns:1fr; gap:14px; padding-top:14px; }
+  nav{ position:static; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .navlabel{ display:none; }
+  .navscroll{ display:flex; gap:6px; padding-bottom:6px; }
+  .cat{ white-space:nowrap; border-left:none; border:1px solid var(--line); flex:none; }
+  .cat.active{ border-color:var(--accent); }
+  .row{ grid-template-columns:minmax(90px,130px) 1fr 40px; gap:8px; }
+  .uname{ display:none; }
+}
+
+/* ================= Shared light / dark preference ================= */
+html[data-theme="light"]{
+  --bg:#F5F7FA;
+  --panel:#FFFFFF;
+  --panel-2:#EEF3F7;
+  --line:#C9D5E1;
+  --line-soft:#DDE5ED;
+  --text:#132238;
+  --muted:#52657A;
+  --faint:#718398;
+}
+html[data-theme="light"] body{ background:var(--bg); color:var(--text); }
+html[data-theme="light"] header{
+  background:linear-gradient(180deg,#FFFFFF 0%,#F5F7FA 100%);
+  border-bottom-color:var(--line-soft);
+}
+html[data-theme="light"] #search,
+html[data-theme="light"] .uval{ background:#FFFFFF; }
+html[data-theme="light"] .uval[readonly]{ background:var(--panel-2); }
+html[data-theme="light"] #suggest{ box-shadow:0 14px 34px rgba(15,35,55,.16); }
+html[data-theme="light"] ::selection{ color:#FFFFFF; }
+
+.tool-top-actions{ display:flex; align-items:center; gap:14px; }
+.theme-control{ display:inline-flex; align-items:center; gap:7px; }
+.theme-icon{ color:var(--muted); }
+.theme-icon-sun{ color:#D99028; }
+html[data-theme="dark"] .theme-icon-sun{ color:#617488; }
+html[data-theme="dark"] .theme-icon-moon{ color:#7DD3FC; }
+.theme-toggle{
+  position:relative; width:46px; height:25px; padding:0;
+  border:1px solid var(--line); border-radius:999px;
+  background:var(--panel-2); cursor:pointer;
+}
+.theme-toggle::after{
+  content:""; position:absolute; top:3px; left:3px;
+  width:17px; height:17px; border-radius:50%;
+  background:#FFFFFF; box-shadow:0 1px 4px rgba(0,0,0,.28);
+  transition:transform .2s ease;
+}
+html[data-theme="dark"] .theme-toggle{ background:var(--accent); border-color:var(--accent); }
+html[data-theme="dark"] .theme-toggle::after{ transform:translateX(21px); }
+html[data-theme="light"] .theme-toggle::after{ background:#132238; }
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+@media (max-width:620px){
+  .tool-top-actions{ gap:9px; }
+  .theme-control .theme-icon{ display:none; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-row" style="justify-content:space-between;width:100%;max-width:none;margin:0;">
+    <a href="/index.html" style="display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;font-family:var(--sans);font-weight:600;font-size:14.5px;white-space:nowrap;">
+      <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo" style="height:26px;width:auto;">
+      UpSkill Sprint Consulting
+    </a>
+    <div class="tool-top-actions">
+      <div class="theme-control" aria-label="Colour theme">
+        <svg class="theme-icon theme-icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+        </svg>
+        <button type="button" id="theme-toggle" class="theme-toggle" role="switch" aria-checked="false" aria-label="Switch to dark mode">
+          <span class="sr-only">Toggle dark and light mode</span>
+        </button>
+        <svg class="theme-icon theme-icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </div>
+      <a href="/engineering-tools.html" style="color:var(--muted);text-decoration:none;font-family:var(--sans);font-size:13.5px;font-weight:600;white-space:nowrap;">&larr; Back to Engineering Tools</a>
+    </div>
+  </div>
+  <div class="hd-row">
+    <h1>Unit <span class="amp">Converter</span></h1>
+    <div class="searchwrap">
+      <span class="glyph">&#8981;</span>
+      <input id="search" type="text" autocomplete="off" spellcheck="false"
+             placeholder="Jump to any unit &mdash; try  ksi,  MPa,  ft-lbf,  HRC &hellip;"
+             aria-label="Search units">
+      <span class="kbd-hint">/</span>
+      <div id="suggest" role="listbox"></div>
+    </div>
+  </div>
+  <p class="tagline">Live bidirectional conversion &middot; exact NIST factors &middot; Imperial / US customary / metric / SI &middot; type in any field and every unit updates</p>
+</header>
+
+<div class="wrap">
+  <nav aria-label="Unit categories">
+    <div class="navlabel">Categories</div>
+    <div class="navscroll" id="nav"></div>
+  </nav>
+
+  <main>
+    <div class="panel">
+      <div class="panel-hd">
+        <div>
+          <h2 id="cat-title">Pressure / Stress</h2>
+          <div class="sub" id="cat-sub"></div>
+        </div>
+        <div class="controls">
+          <button class="modebtn" id="tempmode" hidden aria-pressed="false"
+                  title="Toggle between absolute temperatures and temperature differences (&Delta;)">Interval (&Delta;) mode</button>
+          <span class="ctl-label" id="prec-label">Precision</span>
+          <select id="prec" aria-labelledby="prec-label">
+            <option value="4">4 sig figs</option>
+            <option value="5">5 sig figs</option>
+            <option value="6" selected>6 sig figs</option>
+            <option value="7">7 sig figs</option>
+            <option value="8">8 sig figs</option>
+            <option value="9">9 sig figs</option>
+            <option value="full">Full precision</option>
+          </select>
+          <button class="clearbtn" id="clear" title="Clear all values (Esc)">Clear</button>
+        </div>
+      </div>
+
+      <div id="rows"></div>
+
+      <div class="formula" id="formula">Type a value in any field to begin.</div>
+      <div class="note" id="cat-note" hidden></div>
+    </div>
+  </main>
+</div>
+
+<footer class="page">
+  <p><strong>Accuracy:</strong> conversion factors are exact values as defined by NIST SP&nbsp;811 / the International System of Units (e.g. 1&nbsp;in = 25.4&nbsp;mm exactly, 1&nbsp;lbf = 4.448&nbsp;221&nbsp;615&nbsp;260&nbsp;5&nbsp;N exactly). Displayed values are rounded to the selected precision; hover any field or use Copy to get the full-precision value. Hardness conversion is an empirical correlation (ASTM&nbsp;E140, non-austenitic steel) and is approximate by nature.</p>
+  <p style="margin-top:6px">UpSkill Sprint Consulting &mdash; practical tools for quality &amp; continuous-improvement professionals.</p>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  const key="upskill-theme";
+  const root=document.documentElement;
+  const media=window.matchMedia("(prefers-color-scheme: dark)");
+  function saved(){ try{ const v=localStorage.getItem(key); return v==="dark"||v==="light"?v:null; }catch(e){ return null; } }
+  function apply(theme,save){
+    const dark=theme==="dark";
+    root.dataset.theme=dark?"dark":"light";
+    const toggle=document.getElementById("theme-toggle");
+    if(toggle){
+      toggle.setAttribute("aria-checked",String(dark));
+      toggle.setAttribute("aria-label",dark?"Switch to light mode":"Switch to dark mode");
+      toggle.title=dark?"Switch to light mode":"Switch to dark mode";
+    }
+    const meta=document.querySelector('meta[name="theme-color"]');
+    if(meta) meta.content=dark?"#0A1118":"#F5F7FA";
+    if(save){ try{ localStorage.setItem(key,dark?"dark":"light"); }catch(e){} }
+  }
+  apply(saved()||(media.matches?"dark":"light"),false);
+  document.addEventListener("DOMContentLoaded",function(){
+    const toggle=document.getElementById("theme-toggle");
+    if(toggle) toggle.addEventListener("click",function(){
+      apply(root.dataset.theme==="dark"?"light":"dark",true);
+    });
+  },{once:true});
+  media.addEventListener("change",function(e){ if(!saved()) apply(e.matches?"dark":"light",false); });
+}());
+</script>
+
+<script>
+"use strict";
+/* ============================================================
+   DATA MODEL
+   Every linear unit is defined by an exact factor to the SI
+   base unit of its category (value_SI = value_unit * factor).
+   Temperature and Hardness are handled as special categories.
+   ============================================================ */
+
+const CATS = [
+{ id:"pressure", name:"Pressure / Stress", accent:"#F0A64B", base:"Pa",
+  sub:"Yield, tensile, hydrotest, mill pressure — the MPa ↔ ksi workhorse",
+  units:[
+    ["MPa","megapascal (= N/mm²)",1e6,["mpa","n/mm2","nmm2","n/mm²","newton per mm2"]],
+    ["ksi","kip per square inch",6894757.293168,["ksi","kips"]],
+    ["psi","pound-force per square inch",6894.757293168,["psi","lb/in2","pounds per square inch"]],
+    ["kPa","kilopascal",1e3,["kpa"]],
+    ["GPa","gigapascal (elastic moduli)",1e9,["gpa"]],
+    ["bar","bar",1e5,["bar"]],
+    ["kgf/cm²","kilogram-force per cm²",98066.5,["kgf/cm2","kg/cm2","kgfcm2"]],
+    ["atm","standard atmosphere",101325,["atm","atmosphere"]],
+    ["Pa","pascal (SI base)",1,["pa","pascal"]],
+    ["torr","torr (mmHg)",101325/760,["torr","mmhg"]],
+    ["inHg","inch of mercury",3386.389,["inhg","in hg"]]
+  ]},
+{ id:"energy", name:"Energy / Impact", accent:"#ED7A45", base:"J",
+  sub:"Charpy impact energy, heat input, absorbed energy",
+  units:[
+    ["J","joule (SI base) — Charpy",1,["j","joule","charpy"]],
+    ["ft·lbf","foot pound-force — Charpy",1.3558179483314004,["ftlb","ft-lb","ftlbf","ft-lbf","foot pound"]],
+    ["kJ","kilojoule",1e3,["kj"]],
+    ["in·lbf","inch pound-force",0.1129848290276167,["inlb","in-lb","inlbf"]],
+    ["cal","calorie (thermochemical)",4.184,["cal","calorie"]],
+    ["kcal","kilocalorie",4184,["kcal"]],
+    ["BTU","British thermal unit (IT)",1055.05585262,["btu"]],
+    ["W·h","watt-hour",3600,["wh","watt hour"]],
+    ["kW·h","kilowatt-hour",3.6e6,["kwh"]]
+  ]},
+{ id:"temperature", name:"Temperature", accent:"#E36060", base:"K", special:"temp",
+  sub:"Absolute values or interval (Δ) differences — DBTT, cooling rates, heat treat",
+  units:[
+    ["°C","degree Celsius",null,["c","celsius","degc","°c"]],
+    ["°F","degree Fahrenheit",null,["f","fahrenheit","degf","°f"]],
+    ["K","kelvin (SI base)",null,["k","kelvin"]],
+    ["°R","degree Rankine",null,["r","rankine"]]
+  ]},
+{ id:"force", name:"Force", accent:"#46C2AE", base:"N",
+  sub:"Tensile machine loads, jack forces",
+  units:[
+    ["N","newton (SI base)",1,["n","newton"]],
+    ["kN","kilonewton",1e3,["kn"]],
+    ["lbf","pound-force",4.4482216152605,["lbf","pound force"]],
+    ["kip","kip (1000 lbf)",4448.2216152605,["kip"]],
+    ["kgf","kilogram-force",9.80665,["kgf","kilopond","kp"]],
+    ["tf","tonne-force (metric)",9806.65,["tf","tonne force","tonf"]],
+    ["MN","meganewton",1e6,["mn"]],
+    ["ozf","ounce-force",4.4482216152605/16,["ozf"]]
+  ]},
+{ id:"torque", name:"Torque", accent:"#6FA3E8", base:"N·m",
+  sub:"Bolting, coupling make-up, drive torque",
+  units:[
+    ["N·m","newton metre (SI base)",1,["nm","n-m","newton metre","newton meter"]],
+    ["ft·lbf","foot pound-force",1.3558179483314004,["ftlb torque"]],
+    ["in·lbf","inch pound-force",0.1129848290276167,["inlb torque"]],
+    ["kN·m","kilonewton metre",1e3,["knm"]],
+    ["kgf·m","kilogram-force metre",9.80665,["kgfm"]],
+    ["kgf·cm","kilogram-force centimetre",0.0980665,["kgfcm"]]
+  ]},
+{ id:"length", name:"Length / Thickness", accent:"#7CC46B", base:"m",
+  sub:"Wall thickness, OD, coating — mm, mil, µm and friends",
+  units:[
+    ["mm","millimetre",1e-3,["mm","millimetre","millimeter"]],
+    ["in","inch (= 25.4 mm exactly)",0.0254,["in","inch","\""]],
+    ["mil","mil / thou (0.001 in)",2.54e-5,["mil","thou"]],
+    ["µm","micrometre (micron)",1e-6,["um","micron","micrometre","µm"]],
+    ["m","metre (SI base)",1,["m","metre","meter"]],
+    ["cm","centimetre",1e-2,["cm"]],
+    ["ft","foot",0.3048,["ft","foot","feet","'"]],
+    ["yd","yard",0.9144,["yd","yard"]],
+    ["km","kilometre",1e3,["km"]],
+    ["mi","mile",1609.344,["mi","mile"]]
+  ]},
+{ id:"mass", name:"Mass", accent:"#A98BE0", base:"kg",
+  sub:"Heat weight, coil weight, charge materials",
+  units:[
+    ["kg","kilogram (SI base)",1,["kg","kilogram"]],
+    ["t","tonne (metric ton)",1000,["t","tonne","metric ton","mt"]],
+    ["lb","pound (avoirdupois)",0.45359237,["lb","lbs","pound"]],
+    ["short ton","US short ton (2000 lb)",907.18474,["short ton","us ton","ton us"]],
+    ["long ton","UK long ton (2240 lb)",1016.0469088,["long ton","uk ton"]],
+    ["g","gram",1e-3,["g","gram"]],
+    ["oz","ounce",0.028349523125,["oz","ounce"]],
+    ["mg","milligram",1e-6,["mg"]]
+  ]},
+{ id:"lineardensity", name:"Linear Density", accent:"#C9A15A", base:"kg/m",
+  sub:"Pipe weight per unit length — kg/m ↔ lb/ft",
+  units:[
+    ["kg/m","kilogram per metre (SI)",1,["kg/m","kgm"]],
+    ["lb/ft","pound per foot",0.45359237/0.3048,["lb/ft","lbft","plf","pounds per foot"]],
+    ["lb/yd","pound per yard",0.45359237/0.9144,["lb/yd"]],
+    ["lb/in","pound per inch",0.45359237/0.0254,["lb/in"]],
+    ["g/m","gram per metre",1e-3,["g/m"]]
+  ]},
+{ id:"density", name:"Density", accent:"#D877B0", base:"kg/m³",
+  sub:"Steel ≈ 7850 kg/m³ = 0.284 lb/in³",
+  units:[
+    ["kg/m³","kilogram per cubic metre (SI)",1,["kg/m3","kgm3"]],
+    ["g/cm³","gram per cubic centimetre",1000,["g/cm3","gcc","g/cc"]],
+    ["t/m³","tonne per cubic metre",1000,["t/m3"]],
+    ["lb/ft³","pound per cubic foot",0.45359237/Math.pow(0.3048,3),["lb/ft3","pcf"]],
+    ["lb/in³","pound per cubic inch",0.45359237/Math.pow(0.0254,3),["lb/in3","pci"]]
+  ]},
+{ id:"area", name:"Area", accent:"#B9C24F", base:"m²",
+  sub:"Cross-sections, plate area",
+  units:[
+    ["mm²","square millimetre",1e-6,["mm2","sq mm"]],
+    ["in²","square inch",0.00064516,["in2","sq in"]],
+    ["cm²","square centimetre",1e-4,["cm2"]],
+    ["m²","square metre (SI base)",1,["m2","sq m"]],
+    ["ft²","square foot",0.09290304,["ft2","sq ft"]],
+    ["yd²","square yard",0.83612736,["yd2"]],
+    ["ha","hectare",1e4,["ha","hectare"]],
+    ["acre","acre",4046.8564224,["acre"]]
+  ]},
+{ id:"volume", name:"Volume", accent:"#4FB8D6", base:"m³",
+  sub:"Tank volumes, fluids, ladle capacity",
+  units:[
+    ["L","litre",1e-3,["l","litre","liter"]],
+    ["m³","cubic metre (SI base)",1,["m3","cubic metre","cubic meter"]],
+    ["mL","millilitre (= cm³)",1e-6,["ml","cc","cm3"]],
+    ["in³","cubic inch",1.6387064e-5,["in3"]],
+    ["ft³","cubic foot",0.028316846592,["ft3","cubic foot"]],
+    ["gal (US)","US gallon",0.003785411784,["gal","gallon","us gal"]],
+    ["gal (Imp)","Imperial gallon",0.00454609,["imp gal","imperial gallon"]],
+    ["bbl","oil barrel (42 US gal)",0.158987294928,["bbl","barrel"]]
+  ]},
+{ id:"flow", name:"Flow Rate", accent:"#58B0C9", base:"m³/s",
+  sub:"Cooling water, gas flow, spray zones",
+  units:[
+    ["m³/h","cubic metre per hour",1/3600,["m3/h","m3h"]],
+    ["L/min","litre per minute",1e-3/60,["l/min","lpm"]],
+    ["L/s","litre per second",1e-3,["l/s","lps"]],
+    ["gpm (US)","US gallon per minute",0.003785411784/60,["gpm","gallons per minute"]],
+    ["cfm","cubic foot per minute",0.028316846592/60,["cfm"]],
+    ["m³/s","cubic metre per second (SI)",1,["m3/s"]]
+  ]},
+{ id:"speed", name:"Speed", accent:"#8FD0A0", base:"m/s",
+  sub:"Line speed, cast speed, rolling speed",
+  units:[
+    ["m/min","metre per minute — cast/line speed",1/60,["m/min","mpm"]],
+    ["m/s","metre per second (SI base)",1,["m/s","ms"]],
+    ["ft/min","foot per minute (fpm)",0.00508,["fpm","ft/min","feet per minute"]],
+    ["ft/s","foot per second",0.3048,["ft/s","fps"]],
+    ["km/h","kilometre per hour",1/3.6,["km/h","kmh","kph"]],
+    ["mph","mile per hour",0.44704,["mph"]],
+    ["in/s","inch per second",0.0254,["in/s","ips"]]
+  ]},
+{ id:"hardness", name:"Hardness (≈)", accent:"#D9A441", base:"HV", special:"hard",
+  sub:"Empirical correlation — ASTM E140, non-austenitic steel. Approximate.",
+  units:[
+    ["HV","Vickers hardness",null,["hv","vickers"]],
+    ["HRC","Rockwell C",null,["hrc","rockwell c","rockwell"]],
+    ["HB","Brinell (3000 kgf, 10 mm ball)",null,["hb","hbw","brinell"]],
+    ["≈ UTS (MPa)","estimated tensile strength",null,["uts","tensile estimate"]],
+    ["≈ UTS (ksi)","estimated tensile strength",null,[]]
+  ]}
+];
+
+/* ---- Temperature conversion (absolute) ---- */
+const TEMP = {
+  toK:   { "°C": c=>c+273.15, "°F": f=>(f+459.67)*5/9, "K": k=>k, "°R": r=>r*5/9 },
+  fromK: { "°C": k=>k-273.15, "°F": k=>k*9/5-459.67,   "K": k=>k, "°R": k=>k*9/5 },
+  // Interval (delta) mode: pure scale factors to kelvin
+  dFactor: { "°C":1, "K":1, "°F":5/9, "°R":5/9 }
+};
+
+/* ---- Hardness correlation table: [HRC, HV, HB] ----
+   ASTM E140 (non-austenitic steel). HB omitted above ~HRC 58
+   (beyond the valid range of the standard Brinell test).     */
+const HARD = [
+[68,940,null],[67,900,null],[66,865,null],[65,832,null],[64,800,null],[63,772,null],
+[62,746,null],[61,720,null],[60,697,null],[59,674,null],[58,653,615],[57,633,595],
+[56,613,577],[55,595,560],[54,577,543],[53,560,525],[52,544,512],[51,528,496],
+[50,513,482],[49,498,468],[48,484,455],[47,471,442],[46,458,432],[45,446,421],
+[44,434,409],[43,423,400],[42,412,390],[41,402,381],[40,392,371],[39,382,362],
+[38,372,353],[37,363,344],[36,354,336],[35,345,327],[34,336,319],[33,327,311],
+[32,318,301],[31,310,294],[30,302,286],[29,294,279],[28,286,271],[27,279,264],
+[26,272,258],[25,266,253],[24,260,247],[23,254,243],[22,248,237],[21,243,231],
+[20,238,226]
+];
+
+/* ============================================================
+   STATE & HELPERS
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const store = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+};
+let state = {
+  cat: CATS[0],
+  precision: store.get("uc-prec") || "6",
+  tempInterval: false,
+  editedUnit: null,   // unit symbol last typed in
+  baseValue: null     // current value in SI base units (or K / HV)
+};
+
+function parseNum(s){
+  if(s == null) return NaN;
+  s = String(s).trim().replace(/,/g,"").replace(/−/g,"-");
+  if(s === "" || s === "-" || s === "." || s === "-.") return NaN;
+  return Number(s);
+}
+
+function fmt(v, sig){
+  if(v == null || !isFinite(v)) return "";
+  if(v === 0) return "0";
+  if(sig === "full"){
+    const a = Math.abs(v);
+    return (a >= 1e15 || a < 1e-9) ? v.toExponential() : String(v);
+  }
+  const n = parseInt(sig,10);
+  const a = Math.abs(v);
+  if(a >= 1e12 || a < 1e-6) return v.toExponential(n-1);
+  let s = Number(v.toPrecision(n)).toString();
+  return s;
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function buildNav(){
+  const nav = $("#nav");
+  nav.innerHTML = "";
+  CATS.forEach(c=>{
+    const b = document.createElement("button");
+    b.className = "cat" + (c === state.cat ? " active" : "");
+    b.style.setProperty("--catdot", c.accent);
+    b.innerHTML = '<span class="dot"></span>' + c.name;
+    b.onclick = ()=> selectCat(c);
+    nav.appendChild(b);
+  });
+}
+
+function selectCat(c, focusUnit){
+  state.cat = c;
+  state.editedUnit = null;
+  state.baseValue = null;
+  document.documentElement.style.setProperty("--accent", c.accent);
+  document.documentElement.style.setProperty("--accent-dim", hexDim(c.accent));
+  $("#cat-title").textContent = c.name;
+  $("#cat-sub").textContent = c.sub || "";
+  $("#tempmode").hidden = c.special !== "temp";
+  const note = $("#cat-note");
+  if(c.special === "hard"){
+    note.hidden = false;
+    note.innerHTML = "<strong>Read before using:</strong> hardness scales measure different physical responses, so scale-to-scale conversion is an empirical correlation, not an exact unit conversion. Values here follow ASTM&nbsp;E140 for <strong>non-austenitic steel</strong> and are interpolated between table points. Valid range ≈ HRC&nbsp;20–68 (HV&nbsp;238–940). Brinell is not shown above ~HRC&nbsp;58 (outside the valid range of the standard 3000&nbsp;kgf test). The UTS estimate uses the common steel rule of thumb UTS&nbsp;≈&nbsp;3.45&nbsp;×&nbsp;HB&nbsp;(MPa) and is a rough screening figure only — never a substitute for a tensile test.";
+  } else { note.hidden = true; }
+  buildNav();
+  buildRows();
+  setFormula(null);
+  if(focusUnit){
+    const el = document.querySelector('.uval[data-unit="'+ CSS.escape(focusUnit) +'"]');
+    if(el && !el.readOnly){ el.focus(); el.select(); }
+  }
+}
+
+function hexDim(hex){
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return "rgba("+r+","+g+","+b+",.14)";
+}
+
+function buildRows(){
+  const wrap = $("#rows");
+  wrap.innerHTML = "";
+  state.cat.units.forEach(u=>{
+    const [sym, name] = u;
+    const ro = sym.indexOf("UTS") !== -1;
+    const row = document.createElement("div");
+    row.className = "row" + (ro ? " readonly" : "");
+    row.dataset.unit = sym;
+    row.innerHTML =
+      '<div class="ulabel"><span class="usym">'+sym+'</span><span class="uname">'+name+'</span></div>' +
+      '<input class="uval" data-unit="'+sym+'" inputmode="decimal" autocomplete="off" spellcheck="false"' +
+        (ro ? " readonly tabindex='-1'" : "") + ' aria-label="'+sym+'">' +
+      '<button class="copy" data-unit="'+sym+'" title="Copy full-precision value" aria-label="Copy '+sym+' value">⧉</button>';
+    wrap.appendChild(row);
+  });
+  wrap.querySelectorAll(".uval:not([readonly])").forEach(inp=>{
+    inp.addEventListener("input", onType);
+    inp.addEventListener("keydown", onRowKeys);
+    inp.addEventListener("focus", e=> e.target.select());
+  });
+  wrap.querySelectorAll(".copy").forEach(btn=> btn.addEventListener("click", onCopy));
+}
+
+/* ============================================================
+   CONVERSION CORE
+   ============================================================ */
+function unitDef(sym){ return state.cat.units.find(u=>u[0]===sym); }
+
+function toBase(sym, v){
+  const c = state.cat;
+  if(c.special === "temp")
+    return state.tempInterval ? v * TEMP.dFactor[sym] : TEMP.toK[sym](v);
+  if(c.special === "hard") return hardToHV(sym, v);
+  return v * unitDef(sym)[2];
+}
+function fromBase(sym, base){
+  const c = state.cat;
+  if(c.special === "temp")
+    return state.tempInterval ? base / TEMP.dFactor[sym] : TEMP.fromK[sym](base);
+  if(c.special === "hard") return hardFromHV(sym, base);
+  return base / unitDef(sym)[2];
+}
+
+/* piecewise-linear interpolation on the E140 table (HV as spine) */
+function interp(x, xs, ys){
+  // xs must be monotonic (either direction); nulls in ys break validity
+  const asc = xs[0] < xs[xs.length-1];
+  let lo = asc ? xs[0] : xs[xs.length-1], hi = asc ? xs[xs.length-1] : xs[0];
+  if(x < lo || x > hi) return NaN;
+  for(let i=0;i<xs.length-1;i++){
+    const a = xs[i], b = xs[i+1];
+    if((x>=Math.min(a,b) && x<=Math.max(a,b))){
+      if(ys[i]==null || ys[i+1]==null) return NaN;
+      const t = (x-a)/(b-a);
+      return ys[i] + t*(ys[i+1]-ys[i]);
+    }
+  }
+  return NaN;
+}
+const H_HRC = HARD.map(r=>r[0]), H_HV = HARD.map(r=>r[1]), H_HB = HARD.map(r=>r[2]);
+
+function hardToHV(sym, v){
+  if(sym==="HV")  return v;
+  if(sym==="HRC") return interp(v, H_HRC, H_HV);
+  if(sym==="HB")  return interp(v, H_HB.map(x=>x==null?NaN:x).filter(isFinite),
+                                   H_HV.filter((_,i)=>H_HB[i]!=null));
+  return NaN;
+}
+function hardFromHV(sym, hv){
+  if(sym==="HV")  return hv;
+  if(sym==="HRC") return interp(hv, H_HV, H_HRC);
+  if(sym==="HB")  return interp(hv, H_HV, H_HB);
+  if(sym==="≈ UTS (MPa)"){ const hb=interp(hv,H_HV,H_HB); return isFinite(hb)? 3.45*hb : NaN; }
+  if(sym==="≈ UTS (ksi)"){ const hb=interp(hv,H_HV,H_HB); return isFinite(hb)? 3.45*hb*1e6/6894757.293168 : NaN; }
+  return NaN;
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+function onType(e){
+  const inp = e.target, sym = inp.dataset.unit;
+  const v = parseNum(inp.value);
+  state.editedUnit = sym;
+  if(!isFinite(v)){ state.baseValue = null; updateRows(sym, true); setFormula(null); return; }
+  state.baseValue = toBase(sym, v);
+  updateRows(sym, false);
+  setFormula(sym);
+}
+
+function updateRows(skipSym, clearOthers){
+  document.querySelectorAll("#rows .row").forEach(row=>{
+    const sym = row.dataset.unit;
+    const inp = row.querySelector(".uval");
+    row.classList.toggle("edited", sym === state.editedUnit && !clearOthers);
+    if(sym === skipSym) { inp.classList.remove("oor"); if(clearOthers) inp.title=""; return; }
+    if(clearOthers || state.baseValue == null){ inp.value=""; inp.title=""; inp.classList.remove("oor"); return; }
+    const out = fromBase(sym, state.baseValue);
+    if(!isFinite(out)){
+      inp.value = state.cat.special==="hard" ? "out of range" : "";
+      inp.classList.add("oor"); inp.title="";
+    } else {
+      inp.classList.remove("oor");
+      inp.value = fmt(out, state.precision);
+      inp.title = "Full precision: " + fmt(out, "full");
+    }
+  });
+}
+
+function setFormula(sym){
+  const f = $("#formula"), c = state.cat;
+  if(!sym){ 
+    f.innerHTML = c.special==="temp" 
+      ? "°F = °C × 9/5 + 32 &nbsp;·&nbsp; K = °C + 273.15 &nbsp;·&nbsp; Δ: 1 °C = 1.8 °F"
+      : "Type a value in any field to begin.";
+    return;
+  }
+  if(c.special === "temp"){
+    f.innerHTML = state.tempInterval
+      ? "<b>Interval (Δ) mode:</b> converting temperature <i>differences</i> — Δ1 °C = Δ1 K = Δ1.8 °F. No offsets applied."
+      : "°F = °C × 9/5 + 32 &nbsp;·&nbsp; K = °C + 273.15 &nbsp;·&nbsp; °R = °F + 459.67";
+    return;
+  }
+  if(c.special === "hard"){
+    f.innerHTML = "Correlation per <b>ASTM E140</b> (non-austenitic steel), linear interpolation between table points. UTS ≈ 3.45 × HB (MPa) — rough estimate.";
+    return;
+  }
+  const d = unitDef(sym);
+  if(!d) return;
+  const factor = d[2];
+  f.innerHTML = "1 <b>"+sym+"</b> = "+fmt(factor,"full")+" "+c.base+" (exact)";
+}
+
+function onCopy(e){
+  const sym = e.currentTarget.dataset.unit;
+  const inp = document.querySelector('.uval[data-unit="'+CSS.escape(sym)+'"]');
+  let text = inp.value;
+  if(state.baseValue != null && sym !== state.editedUnit){
+    const out = fromBase(sym, state.baseValue);
+    if(isFinite(out)) text = fmt(out, "full");
+  }
+  if(!text) return;
+  const done = ()=>{ e.currentTarget && flashCopy(e.currentTarget); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text, done));
+  } else fallbackCopy(text, done);
+}
+function fallbackCopy(text, cb){
+  const ta = document.createElement("textarea");
+  ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  document.body.removeChild(ta); cb();
+}
+function flashCopy(btn){
+  btn.classList.add("done"); btn.textContent = "✓";
+  setTimeout(()=>{ btn.classList.remove("done"); btn.textContent="⧉"; }, 900);
+}
+
+function onRowKeys(e){
+  const inputs = Array.from(document.querySelectorAll("#rows .uval:not([readonly])"));
+  const i = inputs.indexOf(e.target);
+  if(e.key === "ArrowDown" && i < inputs.length-1){ e.preventDefault(); inputs[i+1].focus(); }
+  if(e.key === "ArrowUp"   && i > 0){ e.preventDefault(); inputs[i-1].focus(); }
+  if(e.key === "Enter"){
+    const btn = e.target.closest(".row").querySelector(".copy");
+    btn.click();
+  }
+}
+
+/* ---- Clear / precision / temp mode ---- */
+$("#clear").onclick = ()=>{ state.editedUnit=null; state.baseValue=null; updateRows(null,true); setFormula(null); };
+$("#prec").value = state.precision;
+$("#prec").onchange = e=>{
+  state.precision = e.target.value;
+  store.set("uc-prec", state.precision);
+  if(state.baseValue != null) updateRows(state.editedUnit, false);
+};
+$("#tempmode").onclick = e=>{
+  state.tempInterval = !state.tempInterval;
+  e.currentTarget.classList.toggle("on", state.tempInterval);
+  e.currentTarget.setAttribute("aria-pressed", state.tempInterval);
+  // re-derive from the edited field's current text
+  if(state.editedUnit){
+    const inp = document.querySelector('.uval[data-unit="'+CSS.escape(state.editedUnit)+'"]');
+    const v = parseNum(inp.value);
+    state.baseValue = isFinite(v) ? toBase(state.editedUnit, v) : null;
+    updateRows(state.editedUnit, state.baseValue==null);
+  }
+  setFormula(state.editedUnit);
+};
+
+/* ============================================================
+   SEARCH — jump to any unit by symbol, name, or alias
+   ============================================================ */
+const INDEX = [];
+CATS.forEach(c=> c.units.forEach(u=>{
+  const [sym,name,,aliases] = u;
+  const keys = new Set([sym.toLowerCase(), ...(aliases||[]), ...name.toLowerCase().split(/[\s,()—]+/)]);
+  INDEX.push({ cat:c, sym, name, keys:[...keys].filter(Boolean) });
+}));
+
+const searchEl = $("#search"), sugEl = $("#suggest");
+let sugItems = [], sugSel = -1;
+
+function doSearch(q){
+  q = q.trim().toLowerCase().replace(/\s+/g," ");
+  if(!q){ closeSuggest(); return; }
+  const scored = [];
+  INDEX.forEach(it=>{
+    let best = 0;
+    it.keys.forEach(k=>{
+      if(k === q) best = Math.max(best, 3);
+      else if(k.startsWith(q)) best = Math.max(best, 2);
+      else if(k.includes(q)) best = Math.max(best, 1);
+    });
+    if(it.name.toLowerCase().includes(q)) best = Math.max(best, 1);
+    if(it.cat.name.toLowerCase().includes(q)) best = Math.max(best, 1);
+    if(best) scored.push([best, it]);
+  });
+  scored.sort((a,b)=> b[0]-a[0]);
+  sugItems = scored.slice(0,8).map(s=>s[1]);
+  renderSuggest();
+}
+function renderSuggest(){
+  if(!sugItems.length){ closeSuggest(); return; }
+  sugSel = 0;
+  sugEl.innerHTML = sugItems.map((it,i)=>
+    '<div class="sg'+(i===0?" sel":"")+'" data-i="'+i+'" role="option">'+
+    '<span class="u">'+it.sym+' <span style="color:var(--faint)">&mdash; '+it.name+'</span></span>'+
+    '<span class="c">'+it.cat.name+'</span></div>'
+  ).join("");
+  sugEl.classList.add("open");
+  sugEl.querySelectorAll(".sg").forEach(el=>{
+    el.onmousedown = ev=>{ ev.preventDefault(); pickSuggest(+el.dataset.i); };
+  });
+}
+function closeSuggest(){ sugEl.classList.remove("open"); sugItems=[]; sugSel=-1; }
+function pickSuggest(i){
+  const it = sugItems[i]; if(!it) return;
+  closeSuggest(); searchEl.value = "";
+  selectCat(it.cat, it.sym);
+}
+searchEl.addEventListener("input", e=> doSearch(e.target.value));
+searchEl.addEventListener("keydown", e=>{
+  if(e.key === "ArrowDown"){ e.preventDefault(); moveSug(1); }
+  else if(e.key === "ArrowUp"){ e.preventDefault(); moveSug(-1); }
+  else if(e.key === "Enter" && sugSel >= 0){ e.preventDefault(); pickSuggest(sugSel); }
+  else if(e.key === "Escape"){ closeSuggest(); searchEl.blur(); }
+});
+searchEl.addEventListener("blur", ()=> setTimeout(closeSuggest, 120));
+function moveSug(d){
+  if(!sugItems.length) return;
+  sugSel = (sugSel + d + sugItems.length) % sugItems.length;
+  sugEl.querySelectorAll(".sg").forEach((el,i)=> el.classList.toggle("sel", i===sugSel));
+}
+
+/* ---- Global keys ---- */
+document.addEventListener("keydown", e=>{
+  if(e.key === "/" && document.activeElement !== searchEl &&
+     document.activeElement.tagName !== "INPUT"){
+    e.preventDefault(); searchEl.focus();
+  }
+  if(e.key === "Escape" && document.activeElement !== searchEl){
+    $("#clear").click();
+  }
+});
+
+/* ---- Init ---- */
+selectCat(CATS[0]);
+</script>
+</body>
+</html>

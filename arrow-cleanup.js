@@ -2,7 +2,9 @@
   'use strict';
 
   const ACTION_SELECTOR = 'a, button, [role="button"], input[type="button"], input[type="submit"]';
+  const LEADING_ARROW = /^(?:[\s\u00a0]*(?:←|⟵|↩|↶|⬅|⇐|⟸|<-+)[\s\u00a0]*)+/u;
   const TRAILING_ARROW = /(?:[\s\u00a0]*(?:→|⟶|➜|➝|➞|➡|⟹|-+>)[\s\u00a0]*)+$/u;
+  const ARROW_ONLY = /^(?:[\s\u00a0]*(?:←|⟵|↩|↶|⬅|⇐|⟸|→|⟶|➜|➝|➞|➡|⟹|<-+|-+>)[\s\u00a0]*)+$/u;
   const AFTER_CLASS = 'upskill-remove-after-arrow';
   const BEFORE_CLASS = 'upskill-remove-before-arrow';
   let scanScheduled = false;
@@ -24,19 +26,27 @@
     return content.replace(/^['"]|['"]$/g, '').trim();
   }
 
-  function removeTrailingTextArrow(element) {
-    if (element instanceof HTMLInputElement) {
-      const cleanedValue = element.value.replace(TRAILING_ARROW, '').trimEnd();
-      if (cleanedValue !== element.value) element.value = cleanedValue;
-      return;
+  function cleanInputValue(element) {
+    const cleanedValue = element.value
+      .replace(LEADING_ARROW, '')
+      .replace(TRAILING_ARROW, '')
+      .trim();
+
+    if (cleanedValue !== element.value) element.value = cleanedValue;
+  }
+
+  function removeLeadingTextArrow(textNodes) {
+    for (let index = 0; index < textNodes.length; index += 1) {
+      const textNode = textNodes[index];
+      if (!textNode.nodeValue || !textNode.nodeValue.trim()) continue;
+
+      const cleaned = textNode.nodeValue.replace(LEADING_ARROW, '').trimStart();
+      if (cleaned !== textNode.nodeValue) textNode.nodeValue = cleaned;
+      break;
     }
+  }
 
-    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
-    const textNodes = [];
-    let node;
-
-    while ((node = walker.nextNode())) textNodes.push(node);
-
+  function removeTrailingTextArrow(textNodes) {
     for (let index = textNodes.length - 1; index >= 0; index -= 1) {
       const textNode = textNodes[index];
       if (!textNode.nodeValue || !textNode.nodeValue.trim()) continue;
@@ -47,13 +57,29 @@
     }
   }
 
+  function removeTextArrows(element) {
+    if (element instanceof HTMLInputElement) {
+      cleanInputValue(element);
+      return;
+    }
+
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    let node;
+
+    while ((node = walker.nextNode())) textNodes.push(node);
+
+    removeLeadingTextArrow(textNodes);
+    removeTrailingTextArrow(textNodes);
+  }
+
   function removePseudoElementArrow(element) {
     try {
       const afterContent = normalizePseudoContent(getComputedStyle(element, '::after').content);
       const beforeContent = normalizePseudoContent(getComputedStyle(element, '::before').content);
 
-      element.classList.toggle(AFTER_CLASS, TRAILING_ARROW.test(afterContent));
-      element.classList.toggle(BEFORE_CLASS, TRAILING_ARROW.test(beforeContent));
+      element.classList.toggle(AFTER_CLASS, ARROW_ONLY.test(afterContent));
+      element.classList.toggle(BEFORE_CLASS, ARROW_ONLY.test(beforeContent));
     } catch (error) {
       // The visible text cleanup still works when pseudo-element styles are unavailable.
     }
@@ -61,7 +87,7 @@
 
   function cleanAction(element) {
     if (!(element instanceof Element)) return;
-    removeTrailingTextArrow(element);
+    removeTextArrows(element);
     removePseudoElementArrow(element);
   }
 

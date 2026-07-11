@@ -14,24 +14,13 @@
 <meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
 <meta property="og:url" content="https://upskillsprint.com/index.html">
 <meta name="twitter:card" content="summary">
-<script>
-  (function () {
-    const storageKey = 'upskill-theme';
-    try {
-      const savedTheme = localStorage.getItem(storageKey);
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.dataset.theme = savedTheme || systemTheme;
-    } catch (error) {
-      document.documentElement.dataset.theme = 'light';
-    }
-  }());
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"UpSkill Sprint Consulting","url":"https://upskillsprint.com/index.html","logo":"https://upskillsprint.com/assets/logo-icon.png","email":"skillsprintconsulting@gmail.com"}
 </script>
+  <script src="/theme.js"></script>
 </head>
 <body>
   <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
@@ -311,45 +300,5 @@
     </div>
   </footer>
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-  <script>
-    (function () {
-      const storageKey = 'upskill-theme';
-      const root = document.documentElement;
-      const toggle = document.getElementById('theme-toggle');
-      const themeMeta = document.querySelector('meta[name="theme-color"]');
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-      function applyTheme(theme, savePreference) {
-        const isDark = theme === 'dark';
-        root.dataset.theme = isDark ? 'dark' : 'light';
-        toggle.setAttribute('aria-checked', String(isDark));
-        toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-        toggle.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
-        if (themeMeta) themeMeta.setAttribute('content', isDark ? '#0b1220' : '#ffffff');
-        if (savePreference) {
-          try {
-            localStorage.setItem(storageKey, isDark ? 'dark' : 'light');
-          } catch (error) {
-            // The theme still works for this visit if storage is unavailable.
-          }
-        }
-      }
-
-      applyTheme(root.dataset.theme === 'dark' ? 'dark' : 'light', false);
-
-      toggle.addEventListener('click', function () {
-        applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark', true);
-      });
-
-      systemTheme.addEventListener('change', function (event) {
-        try {
-          if (localStorage.getItem(storageKey)) return;
-        } catch (error) {
-          // Follow the system theme when storage is unavailable.
-        }
-        applyTheme(event.matches ? 'dark' : 'light', false);
-      });
-    }());
-  </script>
 </body>
 </html>

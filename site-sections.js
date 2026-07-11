@@ -15,6 +15,31 @@
     document.head.appendChild(script);
   }
 
+  function installArrowCleanupWriteHook() {
+    if (Document.prototype.__upskillArrowCleanupWriteHookInstalled) return;
+
+    const nativeWrite = Document.prototype.write;
+    Document.prototype.write = function () {
+      const chunks = Array.prototype.slice.call(arguments);
+
+      if (
+        chunks.length === 1 &&
+        typeof chunks[0] === 'string' &&
+        chunks[0].includes('</body>') &&
+        !chunks[0].includes(ARROW_CLEANUP_PATH)
+      ) {
+        chunks[0] = chunks[0].replace(
+          '</body>',
+          '<script src="' + ARROW_CLEANUP_PATH + '"><\/script></body>'
+        );
+      }
+
+      return nativeWrite.apply(this, chunks);
+    };
+
+    Document.prototype.__upskillArrowCleanupWriteHookInstalled = true;
+  }
+
   function pathEndsWith(path) {
     return window.location.pathname === path || window.location.pathname.endsWith(path);
   }
@@ -289,6 +314,8 @@
     activateAvailableTools();
     enhanceLeadMagnetCapture();
   }
+
+  installArrowCleanupWriteHook();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeSiteSections, { once: true });

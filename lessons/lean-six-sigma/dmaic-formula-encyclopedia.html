@@ -242,6 +242,10 @@
         .replace(
           '<body>',
           '<body>' + siteHeaderMarkup()
+        )
+        .replace(
+          '</body>',
+          '<script src="/dmaic-encyclopedia-fixes.js">' + '<' + '/script></body>'
         );
 
       document.open();

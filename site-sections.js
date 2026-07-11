@@ -6,12 +6,20 @@
   const CALCULATOR_PATH = '/tools/engineering-statistics-calculator.html';
   const UNIT_CONVERTER_PATH = '/tools/unit-converter.html';
   const ARROW_CLEANUP_PATH = '/arrow-cleanup.js';
+  const CHI_SQUARE_LIBRARY_PATH = '/chi-square-lesson-library.js';
 
   function loadArrowCleanup() {
     if (document.querySelector('script[src="' + ARROW_CLEANUP_PATH + '"]')) return;
     const script = document.createElement('script');
     script.src = ARROW_CLEANUP_PATH;
     script.defer = true;
+    document.head.appendChild(script);
+  }
+
+  function loadChiSquareLessonLibrary() {
+    if (!isLessonsPage() || document.querySelector('script[src="' + CHI_SQUARE_LIBRARY_PATH + '"]')) return;
+    const script = document.createElement('script');
+    script.src = CHI_SQUARE_LIBRARY_PATH;
     document.head.appendChild(script);
   }
 
@@ -467,6 +475,7 @@
     ensureNavigation();
     ensureHomeContent();
     ensureLessonsLibraryLink();
+    loadChiSquareLessonLibrary();
     enhanceLessonsHierarchy();
     activateAvailableTools();
     enhanceLeadMagnetCapture();

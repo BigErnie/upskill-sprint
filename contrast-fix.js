@@ -10,7 +10,97 @@
   const LIGHT_CLASS = 'upskill-contrast-on-light';
   const DARK_CLASS = 'upskill-contrast-on-dark';
   const SKIP_SELECTOR = 'script,style,noscript,template,svg,canvas,[data-contrast-ignore]';
+  const DMAIC_LESSON_PATH = '/lessons/lean-six-sigma/dmaic-formula-encyclopedia';
   let scanQueued = false;
+
+  function isLessonsPage() {
+    const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+    return pathname === '/lessons' || pathname.endsWith('/lessons.html');
+  }
+
+  function ensureDmaicFormulaLesson() {
+    if (!isLessonsPage()) return;
+
+    const section = document.getElementById('lean-six-sigma');
+    const list = section && section.querySelector('.lesson-list');
+    if (!section || !list || list.querySelector('[data-dmaic-formula-encyclopedia]')) return;
+
+    const row = document.createElement('a');
+    row.className = 'lesson-row';
+    row.href = DMAIC_LESSON_PATH;
+    row.setAttribute('data-lesson-item', '');
+    row.setAttribute('data-topic', 'lean-six-sigma');
+    row.setAttribute('data-level', 'intermediate');
+    row.setAttribute('data-interactive', 'true');
+    row.setAttribute('data-dmaic-formula-encyclopedia', 'true');
+    row.setAttribute(
+      'data-search',
+      'dmaic formula encyclopedia asq cssbb cqe cmbb pre-dmaic define measure analyze improve control searchable formulas lean six sigma reference'
+    );
+    row.innerHTML = `
+      <div>
+        <div class="lesson-meta"><span>Intermediate</span><span>Interactive</span><span>Reference</span></div>
+        <h3>DMAIC Formula Encyclopedia</h3>
+        <p>Search validated CSSBB, CQE, and CMBB formula families organized across Pre-DMAIC, Define, Measure, Analyze, Improve, and Control.</p>
+      </div>
+      <span class="lesson-action">Start lesson <span class="lesson-arrow" aria-hidden="true">&rarr;</span></span>`;
+    list.appendChild(row);
+
+    const categoryCount = section.querySelector('.category-count');
+    if (categoryCount) categoryCount.textContent = '4 lessons';
+
+    const searchInput = document.getElementById('lesson-search');
+    const topicFilter = document.getElementById('topic-filter');
+    const levelFilter = document.getElementById('level-filter');
+    const interactiveFilter = document.getElementById('interactive-filter');
+    const clearButton = document.getElementById('clear-filters');
+    const resultsCount = document.getElementById('results-count');
+    const noResults = document.getElementById('no-results');
+
+    function normalise(value) {
+      return String(value || '').toLowerCase().trim();
+    }
+
+    function syncLesson() {
+      const query = normalise(searchInput && searchInput.value);
+      const topic = topicFilter ? topicFilter.value : '';
+      const level = levelFilter ? levelFilter.value : '';
+      const interactiveOnly = Boolean(interactiveFilter && interactiveFilter.checked);
+      const matches = (
+        (!query || normalise(row.dataset.search).includes(query)) &&
+        (!topic || row.dataset.topic === topic) &&
+        (!level || row.dataset.level === level) &&
+        (!interactiveOnly || row.dataset.interactive === 'true')
+      );
+
+      row.hidden = !matches;
+
+      const sectionHasVisibleLesson = Array.from(section.querySelectorAll('[data-lesson-item]')).some(function (lesson) {
+        return !lesson.hidden;
+      });
+      section.hidden = !sectionHasVisibleLesson;
+
+      const visibleCount = Array.from(document.querySelectorAll('[data-lesson-item]')).filter(function (lesson) {
+        return !lesson.hidden;
+      }).length;
+      if (resultsCount) resultsCount.textContent = visibleCount + (visibleCount === 1 ? ' lesson' : ' lessons');
+
+      if (noResults) {
+        const visibleEmptySection = Array.from(document.querySelectorAll('[data-empty-category]')).some(function (emptySection) {
+          return !emptySection.hidden;
+        });
+        noResults.hidden = visibleCount > 0 || visibleEmptySection;
+      }
+    }
+
+    [searchInput, topicFilter, levelFilter, interactiveFilter].forEach(function (control) {
+      if (!control) return;
+      control.addEventListener(control.type === 'search' ? 'input' : 'change', syncLesson);
+    });
+    if (clearButton) clearButton.addEventListener('click', syncLesson);
+
+    syncLesson();
+  }
 
   function ensureStyles() {
     if (document.getElementById('upskill-contrast-fix-styles')) return;
@@ -198,6 +288,7 @@
   }
 
   function initialize() {
+    ensureDmaicFormulaLesson();
     scan(document);
 
     const observer = new MutationObserver(function (mutations) {

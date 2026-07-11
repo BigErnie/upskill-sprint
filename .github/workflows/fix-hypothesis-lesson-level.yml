@@ -51,3 +51,5 @@ jobs:
           git add lessons/hypothesis-testing-for-beginners.html lessons.html .github/workflows/fix-hypothesis-lesson-level.yml
           git commit -m "Set hypothesis testing lesson to Beginner [skip ci]"
           git push
+
+# Triggered after workflow registration.

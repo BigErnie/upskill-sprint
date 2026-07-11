@@ -2,6 +2,11 @@
   'use strict';
 
   const REQUEST_URL = '/request-topic?topic=DMAIC%20Formula%20Encyclopedia&format=HTML%2FPDF';
+  const REMOVED_HERO_BADGES = new Set([
+    'mathjax stacked equations',
+    'searchable',
+    'print-ready'
+  ]);
   let scheduled = false;
 
   function normalize(value) {
@@ -14,6 +19,9 @@
     const style = document.createElement('style');
     style.id = 'upskill-dmaic-fixes';
     style.textContent = `
+      [data-upskill-hidden="true"] {
+        display: none !important;
+      }
       .upskill-format-request {
         display: inline-flex !important;
         align-items: center !important;
@@ -100,6 +108,30 @@
       }
     `;
     document.head.appendChild(style);
+  }
+
+  function removeUnwantedNavigationAndBadges() {
+    let changed = false;
+
+    document.querySelectorAll('.upskill-lesson-sitebar a, .upskill-lesson-sitebar button').forEach(function (element) {
+      if (normalize(element.textContent) === 'back to home') {
+        element.dataset.upskillHidden = 'true';
+        element.remove();
+        changed = true;
+      }
+    });
+
+    document.querySelectorAll('a, button, [role="button"], .chip, .badge, .pill, li, span, div').forEach(function (element) {
+      const text = normalize(element.textContent);
+      if (!REMOVED_HERO_BADGES.has(text)) return;
+
+      const removable = element.closest('a, button, [role="button"], li') || element;
+      removable.dataset.upskillHidden = 'true';
+      removable.remove();
+      changed = true;
+    });
+
+    return changed;
   }
 
   function replaceDownloadControls() {
@@ -239,6 +271,7 @@
   function applyFixes() {
     scheduled = false;
     addStyles();
+    removeUnwantedNavigationAndBadges();
     const controlsDone = replaceDownloadControls();
     const scopeDone = replaceScopeSection();
     const formulasDone = replaceFinanceFormulas();

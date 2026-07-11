@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DMAIC Formula Encyclopedia | UpSkill Sprint Consulting</title>
+  <meta name="description" content="An interactive ASQ DMAIC formula encyclopedia covering CSSBB, CQE and Certified Master Black Belt formula families across Pre-DMAIC, Define, Measure, Analyze, Improve and Control.">
+  <link rel="canonical" href="https://upskillsprint.com/lessons/lean-six-sigma/dmaic-formula-encyclopedia.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="DMAIC Formula Encyclopedia | UpSkill Sprint Consulting">
+  <meta property="og:description" content="Search and study validated Lean Six Sigma, quality engineering and Master Black Belt formula families organized by DMAIC phase.">
+  <meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+  <meta property="og:url" content="https://upskillsprint.com/lessons/lean-six-sigma/dmaic-formula-encyclopedia.html">
+  <meta name="twitter:card" content="summary">
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background: #f4f7fb;
+      color: #182230;
+      font: 16px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .loader-card {
+      width: min(560px, 100%);
+      padding: 30px;
+      border: 1px solid #d8e0ea;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, .08);
+      text-align: center;
+    }
+    .loader-card h1 { margin: 0 0 8px; font-size: 1.45rem; }
+    .loader-card p { margin: 0; color: #5f6b7a; }
+    .spinner {
+      width: 34px;
+      height: 34px;
+      margin: 0 auto 18px;
+      border: 4px solid #d8e0ea;
+      border-top-color: #075985;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-color-scheme: dark) {
+      body { background: #07111f; color: #e5edf7; }
+      .loader-card { border-color: #2c3d55; background: #101c2e; box-shadow: 0 12px 30px rgba(0,0,0,.28); }
+      .loader-card p { color: #a8b5c7; }
+      .spinner { border-color: #2c3d55; border-top-color: #38bdf8; }
+    }
+  </style>
+</head>
+<body>
+  <main class="loader-card" id="loader-card" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <h1>Loading the DMAIC Formula Encyclopedia</h1>
+    <p>Preparing the searchable equations and interactive study tools.</p>
+  </main>
+  <noscript>This interactive lesson requires JavaScript. Enable JavaScript and reload the page.</noscript>
+
+  <script>
+  (async function loadLesson() {
+    const assetRoot = '/assets/lessons/dmaic-formula-encyclopedia/';
+    const partNames = ['part-1.txt', 'part-2.txt', 'part-3.txt', 'part-4.txt'];
+
+    function decodeBase64(value) {
+      const binary = atob(value.replace(/\s+/g, ''));
+      return Uint8Array.from(binary, function (character) {
+        return character.charCodeAt(0);
+      });
+    }
+
+    async function gunzip(bytes) {
+      if ('DecompressionStream' in window) {
+        const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+        return new Response(stream).text();
+      }
+
+      const fflate = await import('https://cdn.jsdelivr.net/npm/fflate@0.8.2/esm/browser.js');
+      return fflate.strFromU8(fflate.gunzipSync(bytes));
+    }
+
+    try {
+      const responses = await Promise.all(partNames.map(async function (partName) {
+        const response = await fetch(assetRoot + partName, { cache: 'force-cache' });
+        if (!response.ok) {
+          throw new Error('Unable to load ' + partName + ' (' + response.status + ')');
+        }
+        return response.text();
+      }));
+
+      let lessonHTML = await gunzip(decodeBase64(responses.join('')));
+
+      lessonHTML = lessonHTML
+        .replace(
+          '<title>ASQ DMAIC Formula Encyclopedia — CSSBB, CQE and CMBB</title>',
+          '<title>DMAIC Formula Encyclopedia | UpSkill Sprint Consulting</title>'
+        )
+        .replace(
+          '</head>',
+          '<style id="upskill-lesson-navigation">.upskill-back-link{position:fixed;z-index:1000;left:16px;bottom:16px;display:inline-flex;align-items:center;min-height:42px;padding:9px 14px;border:1px solid rgba(255,255,255,.35);border-radius:999px;background:#082f49;color:#fff!important;text-decoration:none;font:750 13px/1.2 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-shadow:0 8px 24px rgba(15,23,42,.22)}.upskill-back-link:hover,.upskill-back-link:focus{background:#075985;outline:3px solid rgba(14,165,233,.22);outline-offset:2px}@media print{.upskill-back-link{display:none!important}}</style></head>'
+        )
+        .replace(
+          '<body>',
+          '<body><a class="upskill-back-link" href="/lessons#lean-six-sigma" aria-label="Return to Lean Six Sigma lessons">Back to Lean Six Sigma lessons</a>'
+        );
+
+      document.open();
+      document.write(lessonHTML);
+      document.close();
+    } catch (error) {
+      console.error(error);
+      const card = document.getElementById('loader-card');
+      card.innerHTML = '<h1>The lesson could not be loaded</h1><p>Please refresh the page. If the issue continues, return to the <a href="/lessons#lean-six-sigma">Lean Six Sigma lesson library</a>.</p>';
+    }
+  }());
+  </script>
+</body>
+</html>

@@ -21,7 +21,7 @@
 <script src="/tools/calculator-assets/calc-payload-05b.js"></script>
 <script src="/tools/calculator-assets/calc-payload-05c.js"></script>
 <script src="/tools/calculator-assets/calc-payload-06.js"></script>
-  <script src="/site-sections.js"></script>
+<script src="/site-sections.js"></script>
 </head>
 <body>
 <main class="loader" id="loader">
@@ -36,7 +36,13 @@
     const bytes=Uint8Array.from(atob(payload),c=>c.charCodeAt(0));
     const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
     const html=await new Response(stream).text();
-    document.open();document.write(html);document.close();
+    const finalHtml=html
+      .replace(/Engineering <span class="amp">&amp;<\/span> Statistical Calculator/g,'Engineering <span class="amp">&amp;</span> Statistics Calculator')
+      .replace(/Engineering &amp; Statistical Calculator/g,'Engineering &amp; Statistics Calculator')
+      .replace(/Engineering & Statistical Calculator/g,'Engineering & Statistics Calculator')
+      .replace(/15 probability distributions/g,'16 probability distributions')
+      .replace(/15 distributions/g,'16 distributions');
+    document.open();document.write(finalHtml);document.close();
   }catch(error){
     document.getElementById('loader').innerHTML='<h1>Unable to open the tool</h1><p>'+String(error.message||error)+'<br><br><a href="/engineering-tools.html">Return to Engineering Tools</a></p>';
   }

@@ -90,7 +90,6 @@
     let result = { r: 255, g: 255, b: 255, a: 1 };
     for (let index = layers.length - 1; index >= 0; index -= 1) {
       result = blend(layers[index], result);
-      if (result.a >= 0.999) break;
     }
     return result;
   }
@@ -124,11 +123,31 @@
     });
   }
 
-  function minimumContrast(element, styles) {
+  function minimumContrast(styles) {
     const fontSize = parseFloat(styles.fontSize) || 16;
     const weight = parseInt(styles.fontWeight, 10) || 400;
     const largeText = fontSize >= 24 || (fontSize >= 18.66 && weight >= 700);
     return largeText ? 3 : 4.5;
+  }
+
+  function setRepairClass(element, desiredClass) {
+    const hasLight = element.classList.contains(LIGHT_CLASS);
+    const hasDark = element.classList.contains(DARK_CLASS);
+
+    if (desiredClass === LIGHT_CLASS) {
+      if (!hasLight) element.classList.add(LIGHT_CLASS);
+      if (hasDark) element.classList.remove(DARK_CLASS);
+      return;
+    }
+
+    if (desiredClass === DARK_CLASS) {
+      if (!hasDark) element.classList.add(DARK_CLASS);
+      if (hasLight) element.classList.remove(LIGHT_CLASS);
+      return;
+    }
+
+    if (hasLight) element.classList.remove(LIGHT_CLASS);
+    if (hasDark) element.classList.remove(DARK_CLASS);
   }
 
   function repairElement(element) {
@@ -141,21 +160,24 @@
     const styles = getComputedStyle(element);
     if (styles.visibility === 'hidden' || styles.display === 'none' || Number(styles.opacity) === 0) return;
 
+    const background = effectiveBackground(element);
+    const backgroundIsLight = luminance(background) >= 0.5;
+    const existingRepair = element.classList.contains(LIGHT_CLASS) || element.classList.contains(DARK_CLASS);
+
+    // Once an element has been repaired, keep the appropriate class unless its
+    // background switches between light and dark. This prevents observer loops.
+    if (existingRepair) {
+      setRepairClass(element, backgroundIsLight ? LIGHT_CLASS : DARK_CLASS);
+      return;
+    }
+
     const textColour = parseColour(styles.color);
     if (!textColour) return;
 
-    const background = effectiveBackground(element);
     const ratio = contrastRatio(textColour, background);
-    const required = minimumContrast(element, styles);
+    if (ratio >= minimumContrast(styles)) return;
 
-    element.classList.remove(LIGHT_CLASS, DARK_CLASS);
-    if (ratio >= required) return;
-
-    if (luminance(background) >= 0.5) {
-      element.classList.add(LIGHT_CLASS);
-    } else {
-      element.classList.add(DARK_CLASS);
-    }
+    setRepairClass(element, backgroundIsLight ? LIGHT_CLASS : DARK_CLASS);
   }
 
   function scan(root) {

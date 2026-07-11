@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hypothesis Testing for Beginners | UpSkill Sprint Consulting</title>
+<meta name="description" content="Learn how to turn a workplace question into a hypothesis test, interpret a p-value, and run a 1-sample t-test in Minitab.">
+<link rel="canonical" href="https://upskillsprint.com/lessons/hypothesis-testing-for-beginners.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hypothesis Testing for Beginners | UpSkill Sprint Consulting">
+<meta property="og:description" content="Decide whether a difference in your data is real or just normal sample variation.">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<meta property="og:url" content="https://upskillsprint.com/lessons/hypothesis-testing-for-beginners.html">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hypothesis-testing-for-beginners.css">
+</head>
+<body>
+<input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+<header class="site">
+  <a href="https://upskillsprint.com/index.html" class="brand">
+    <img src="https://upskillsprint.com/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+    <span>UpSkill Sprint Consulting</span>
+  </a>
+  <nav class="desktop-nav" aria-label="Primary navigation">
+    <a href="https://upskillsprint.com/start-here.html">Start Here</a>
+    <a href="https://upskillsprint.com/lessons.html" aria-current="page">Lessons</a>
+    <a href="https://upskillsprint.com/services.html">Services</a>
+    <a href="https://upskillsprint.com/request-topic.html">Request a Topic</a>
+    <a href="https://upskillsprint.com/about.html">About</a>
+    <a href="https://upskillsprint.com/faq.html">FAQ</a>
+    <a href="https://upskillsprint.com/contact.html">Contact</a>
+  </nav>
+  <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1f26" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </label>
+  <a href="https://upskillsprint.com/lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+</header>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="https://upskillsprint.com/start-here.html">Start Here</a>
+  <a href="https://upskillsprint.com/lessons.html">Lessons</a>
+  <a href="https://upskillsprint.com/services.html">Services</a>
+  <a href="https://upskillsprint.com/request-topic.html">Request a Topic</a>
+  <a href="https://upskillsprint.com/about.html">About</a>
+  <a href="https://upskillsprint.com/faq.html">FAQ</a>
+  <a href="https://upskillsprint.com/contact.html">Contact</a>
+</nav>
+
+<section class="section" style="padding-bottom:8px;">
+  <div class="wrap lesson-shell">
+    <p class="eyebrow">Intermediate &middot; 15 min read &middot; Minitab</p>
+    <h1 style="font-size:32px;margin:0 0 16px;">Hypothesis Testing for Beginners</h1>
+    <p style="font-size:16px;line-height:1.65;color:var(--ink-soft);margin:0;"><strong>What you will learn:</strong> how to decide whether a difference in sample data is strong enough to support a workplace conclusion.</p>
+    <div class="badge-row" aria-label="Lesson categories">
+      <span class="badge badge-stats">Statistics</span>
+      <span class="badge badge-quality">Quality Engineering</span>
+      <span class="badge badge-lss">Lean Six Sigma</span>
+    </div>
+    <nav class="jump-nav" aria-label="Lesson sections">
+      <a href="#plain-english">Plain English</a>
+      <a href="#workflow">Six Steps</a>
+      <a href="#decision-lab">Decision Lab</a>
+      <a href="#test-selector">Test Selector</a>
+      <a href="#minitab">Minitab Example</a>
+      <a href="#quiz">Quiz</a>
+    </nav>
+  </div>
+</section>
+
+<section class="section" style="padding:24px 0 0;">
+  <div class="wrap lesson-shell">
+    <h2 style="font-size:20px;margin:0 0 14px;">By the end, you should be able to</h2>
+    <div class="card">
+      <ul class="lesson-objectives">
+        <li>Turn a workplace question into a null and alternative hypothesis.</li>
+        <li>Use the p-value and significance level to make the correct statistical decision.</li>
+        <li>Explain Type I and Type II errors in practical language.</li>
+        <li>Choose a basic hypothesis test for a common business or quality problem.</li>
+        <li>Run and interpret a 1-sample t-test in Minitab.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding:32px 0 0;">
+  <div class="wrap lesson-shell">
+    <h2 class="section-title">Why this matters at work</h2>
+    <p class="lesson-copy">A sample can look different even when the underlying process has not changed. Hypothesis testing helps you separate a <strong>real signal</strong> from normal sample-to-sample variation. It gives you a disciplined way to decide whether to adjust a process, challenge a supplier, approve a change, or collect more evidence.</p>
+    <div class="callout callout-warning">
+      <strong>Important:</strong> a hypothesis test does not make the business decision for you. It measures the strength of the statistical evidence. You must still judge cost, risk, specifications, and practical importance.
+    </div>
+
+    <h2 id="plain-english" class="section-title">Hypothesis testing in plain English</h2>
+    <p class="lesson-copy">Start with a default explanation: <strong>nothing meaningful has changed</strong>. Then ask whether the data are too unusual for that explanation to remain believable.</p>
+    <div class="rule-banner" aria-label="Hypothesis test logic">
+      <div class="rule-side"><strong>Start with H<sub>0</sub></strong><span>No difference or no effect</span></div>
+      <div class="rule-arrow" aria-hidden="true">&rarr;</div>
+      <div class="rule-side"><strong>Challenge it with data</strong><span>Is the result too unusual under H<sub>0</sub>?</span></div>
+    </div>
+    <div class="callout callout-formula">
+      <strong>Memory phrase:</strong><br>
+      Assume no real difference. Measure how surprising the sample would be. Reject that assumption only when the evidence is strong enough.
+    </div>
+
+    <h2 class="section-title">The two competing statements</h2>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3>Null hypothesis, H<sub>0</sub></h3>
+        <p>The starting position. It usually says there is no difference, no effect, or the population value equals a target.</p>
+      </div>
+      <div class="concept-card">
+        <h3>Alternative hypothesis, H<sub>1</sub></h3>
+        <p>The claim supported when the evidence against H<sub>0</sub> is strong enough. It states the difference or direction you are testing.</p>
+      </div>
+    </div>
+    <div class="example-box">
+      <h3 style="font-size:17px;margin:0 0 10px;">Example: average wall thickness</h3>
+      <p class="lesson-copy" style="margin:0 0 14px;">The nominal average wall thickness is 8.00 mm. You want to know whether the process average has moved in either direction.</p>
+      <div class="callout callout-info" style="margin-bottom:0;">
+        <span class="formula-line">H<sub>0</sub>: &mu; = 8.00 mm</span><br>
+        <span class="formula-line">H<sub>1</sub>: &mu; &ne; 8.00 mm</span>
+      </div>
+    </div>
+
+    <h2 class="section-title">One-sided or two-sided?</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Question</th><th>Alternative hypothesis</th><th>Test direction</th></tr></thead>
+        <tbody>
+          <tr><td>Has the mean changed in either direction?</td><td>&mu; &ne; target</td><td>Two-sided</td></tr>
+          <tr><td>Has the mean fallen below the minimum?</td><td>&mu; &lt; target</td><td>Lower one-sided</td></tr>
+          <tr><td>Has the mean increased above the baseline?</td><td>&mu; &gt; target</td><td>Upper one-sided</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout callout-warning">
+      <strong>Choose the direction before looking at the result.</strong> Changing from a two-sided test to a one-sided test after seeing the data weakens the credibility of the analysis.
+    </div>
+
+    <h2 id="workflow" class="section-title">The six-step workflow</h2>
+    <div class="example-box">
+      <ol class="step-list">
+        <li><div><strong>State the business question.</strong> Example: “Has the average wall thickness moved away from 8.00 mm?”</div></li>
+        <li><div><strong>Write H<sub>0</sub> and H<sub>1</sub>.</strong> Use population language, not just the values in your sample.</div></li>
+        <li><div><strong>Choose &alpha; before analyzing.</strong> A common choice is 0.05, but the risk of a false alarm should match the decision.</div></li>
+        <li><div><strong>Select the right test.</strong> Base the choice on the response type, number of groups, and whether observations are independent or paired.</div></li>
+        <li><div><strong>Check assumptions and run the test.</strong> Look for poor sampling, dependence, outliers, and strong skewness.</div></li>
+        <li><div><strong>Interpret both statistical and practical significance.</strong> Report the estimated difference, confidence interval, p-value, and business meaning.</div></li>
+      </ol>
+    </div>
+
+    <h2 class="section-title">The p-value and alpha</h2>
+    <p class="lesson-copy"><strong>Alpha (&alpha;)</strong> is the false-alarm risk you choose before the test. The <strong>p-value</strong> measures how incompatible the sample result is with H<sub>0</sub>, assuming H<sub>0</sub> and the test assumptions are correct.</p>
+    <div class="callout callout-formula">
+      <span class="formula-line">p-value &le; &alpha; &rarr; Reject H<sub>0</sub></span><br>
+      <span class="formula-line">p-value &gt; &alpha; &rarr; Fail to reject H<sub>0</sub></span>
+    </div>
+    <div class="callout callout-danger">
+      <strong>Do not say “the p-value is the probability that H<sub>0</sub> is true.”</strong> It is calculated under the assumption that H<sub>0</sub> is true. It tells you how unusual the observed evidence would be under that assumption.
+    </div>
+
+    <h2 id="decision-lab" class="section-title">Interactive decision lab</h2>
+    <div class="interactive">
+      <h3>Separate statistical significance from practical significance</h3>
+      <p>Change the values below. The tool will give you the formal test decision and a separate practical interpretation.</p>
+      <div class="control-grid">
+        <div>
+          <label class="field-label" for="pValue">P-value</label>
+          <input id="pValue" type="number" min="0" max="1" step="0.001" value="0.016">
+          <p class="helper">Must be between 0 and 1.</p>
+        </div>
+        <div>
+          <label class="field-label" for="alphaValue">Significance level, &alpha;</label>
+          <select id="alphaValue">
+            <option value="0.01">0.01</option>
+            <option value="0.05" selected>0.05</option>
+            <option value="0.10">0.10</option>
+          </select>
+          <p class="helper">Set this before analyzing the data.</p>
+        </div>
+        <div>
+          <label class="field-label" for="observedDifference">Observed difference</label>
+          <input id="observedDifference" type="number" step="0.001" value="-0.081">
+          <p class="helper">Example: sample mean minus target.</p>
+        </div>
+        <div>
+          <label class="field-label" for="practicalThreshold">Minimum practical difference</label>
+          <input id="practicalThreshold" type="number" min="0" step="0.001" value="0.100">
+          <p class="helper">Smallest change worth acting on.</p>
+        </div>
+      </div>
+      <button class="btn btn-teal" type="button" onclick="interpretTest()">Interpret the result</button>
+      <div id="decisionResult" class="result-panel neutral" aria-live="polite"></div>
+    </div>
+
+    <h2 class="section-title">Type I and Type II errors</h2>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <h3>Type I error: false alarm</h3>
+        <p>You reject H<sub>0</sub> even though it is true. Example: you stop and adjust a stable process because the sample looked unusual by chance. Alpha controls this risk.</p>
+      </div>
+      <div class="concept-card">
+        <h3>Type II error: missed signal</h3>
+        <p>You fail to reject H<sub>0</sub> even though a real difference exists. Example: you miss a meaningful process shift because the sample is too small or too noisy.</p>
+      </div>
+    </div>
+    <div class="callout callout-info">
+      <strong>Power = 1 &minus; &beta;.</strong> Higher power means a better chance of detecting a real difference of practical importance. Larger samples, lower variation, and larger effects usually improve power.
+    </div>
+
+    <h2 id="test-selector" class="section-title">Interactive basic-test selector</h2>
+    <div class="interactive">
+      <h3>Which test fits the question?</h3>
+      <p>This is a beginner guide for common mean and proportion questions. Complex designs may require a more specialized method.</p>
+      <div class="control-grid">
+        <div>
+          <label class="field-label" for="responseType">What type of result are you measuring?</label>
+          <select id="responseType" onchange="recommendTest()">
+            <option value="numeric">A numeric measurement</option>
+            <option value="binary">A yes/no or pass/fail result</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" for="comparisonType">What are you comparing?</label>
+          <select id="comparisonType" onchange="recommendTest()">
+            <option value="one">One sample against a target</option>
+            <option value="two-independent">Two independent groups</option>
+            <option value="two-paired">Before/after or matched pairs</option>
+            <option value="three-plus">Three or more groups</option>
+          </select>
+        </div>
+      </div>
+      <div id="testRecommendation" class="result-panel neutral" aria-live="polite"></div>
+    </div>
+
+    <h2 id="minitab" class="section-title">Worked example in Minitab</h2>
+    <div class="example-box">
+      <h3 style="font-size:17px;margin:0 0 10px;">Is average wall thickness different from 8.00 mm?</h3>
+      <p class="lesson-copy">A quality engineer randomly selects 12 pipe measurements. The question is whether the population mean differs from the 8.00 mm nominal value.</p>
+      <div class="callout callout-info">
+        <strong>Data:</strong> 7.76, 8.05, 7.89, 7.92, 8.09, 7.81, 7.96, 7.86, 8.00, 7.88, 7.97, 7.84
+      </div>
+      <div class="kpi-row" aria-label="Sample summary">
+        <div class="kpi"><span>Sample size</span><strong>12</strong></div>
+        <div class="kpi"><span>Mean</span><strong>7.919 mm</strong></div>
+        <div class="kpi"><span>StDev</span><strong>0.098 mm</strong></div>
+      </div>
+      <p class="lesson-copy"><strong>Hypotheses:</strong> H<sub>0</sub>: &mu; = 8.00 mm; H<sub>1</sub>: &mu; &ne; 8.00 mm. Use &alpha; = 0.05.</p>
+
+      <h3 style="font-size:17px;margin:24px 0 10px;">Minitab steps</h3>
+      <div class="minitab-steps">
+        <div class="minitab-step"><span>1</span><p>Enter the 12 values in one worksheet column and name it <strong>Wall Thickness</strong>.</p></div>
+        <div class="minitab-step"><span>2</span><p>Choose <strong>Stat &gt; Basic Statistics &gt; 1-Sample t</strong>.</p></div>
+        <div class="minitab-step"><span>3</span><p>Select <strong>One or more samples, each in a column</strong>, then enter <strong>Wall Thickness</strong>.</p></div>
+        <div class="minitab-step"><span>4</span><p>Select <strong>Perform hypothesis test</strong> and enter <strong>8.00</strong> as the hypothesized mean.</p></div>
+        <div class="minitab-step"><span>5</span><p>Under <strong>Options</strong>, use a 95% confidence level and the alternative <strong>mean &ne; hypothesized mean</strong>. Click <strong>OK</strong>.</p></div>
+      </div>
+
+      <h3 style="font-size:17px;margin:24px 0 10px;">Simplified Minitab-style output</h3>
+      <div class="output-box" role="region" aria-label="Simplified Minitab output" tabindex="0">
+<strong>One-Sample T: Wall Thickness</strong>
+
+Test of &mu; = 8.000 vs &mu; &ne; 8.000
+
+ N      Mean      StDev    SE Mean      95% CI
+12     7.919      0.098      0.028    (7.857, 7.982)
+
+T-Value = -2.85     P-Value = 0.016
+      </div>
+
+      <ol class="step-list">
+        <li><div><strong>Statistical decision:</strong> 0.016 &le; 0.05, so reject H<sub>0</sub>.</div></li>
+        <li><div><strong>Evidence statement:</strong> the sample provides statistically significant evidence that the population mean differs from 8.00 mm.</div></li>
+        <li><div><strong>Direction and size:</strong> the estimated mean is 0.081 mm below nominal. The 95% confidence interval for the mean is 7.857 to 7.982 mm.</div></li>
+        <li><div><strong>Business interpretation:</strong> determine whether a shift of 0.081 mm is large enough to matter. Compare it with engineering tolerances, risk, and the preselected practical threshold.</div></li>
+      </ol>
+    </div>
+
+    <h2 class="section-title">Assumption check before trusting the result</h2>
+    <div class="concept-grid">
+      <div class="concept-card"><h3>Representative sample</h3><p>The measurements should represent the population and time period covered by your conclusion.</p></div>
+      <div class="concept-card"><h3>Independent observations</h3><p>One observation should not determine another. Repeated measurements on the same item may require a paired or repeated-measures method.</p></div>
+      <div class="concept-card"><h3>No unexplained extreme outliers</h3><p>Investigate data-entry errors, measurement problems, and unusual special causes before running the test.</p></div>
+      <div class="concept-card"><h3>Distribution is reasonable</h3><p>For a small sample, severe skewness can make a t-test less reliable. Use a histogram, boxplot, or probability plot.</p></div>
+    </div>
+
+    <h2 class="section-title">Common interpretation mistakes</h2>
+    <div class="callout callout-warning">
+      <strong>“Fail to reject” does not mean “prove equal.”</strong> It means the sample did not provide strong enough evidence of a difference at the chosen alpha level.
+    </div>
+    <div class="callout callout-warning">
+      <strong>Statistical significance does not guarantee practical importance.</strong> A large sample can detect a difference that is too small to justify action.
+    </div>
+    <div class="callout callout-warning">
+      <strong>A hypothesis test is not a specification test.</strong> Testing whether the process mean equals a target does not tell you whether every unit meets specification limits.
+    </div>
+    <div class="callout callout-warning">
+      <strong>Do not report the p-value alone.</strong> Include the estimated effect, confidence interval, sample size, assumptions, and business meaning.
+    </div>
+
+    <h2 class="section-title">A professional reporting sentence</h2>
+    <div class="callout callout-practice">
+      “A 1-sample t-test found that average wall thickness differed from the 8.00 mm nominal value (mean = 7.919 mm, 95% CI: 7.857 to 7.982 mm, p = 0.016). The estimated shift was 0.081 mm below nominal. Engineering review is required to determine whether this difference is practically important.”
+    </div>
+  </div>
+</section>
+
+<section id="quiz" class="section" style="padding:32px 0 0;">
+  <div class="wrap lesson-shell">
+    <h2 style="font-size:20px;margin:0 0 14px;">Check your understanding</h2>
+    <div class="quiz">
+      <form id="lessonQuiz">
+        <fieldset class="quiz-question">
+          <legend>1. What does the null hypothesis usually represent?</legend>
+          <label class="quiz-choice"><input type="radio" name="q1" value="a"> The result you hope to prove</label>
+          <label class="quiz-choice"><input type="radio" name="q1" value="b"> No difference, no effect, or equality to a target</label>
+          <label class="quiz-choice"><input type="radio" name="q1" value="c"> The sample average</label>
+          <div class="quiz-feedback" id="f1"></div>
+        </fieldset>
+
+        <fieldset class="quiz-question">
+          <legend>2. If p = 0.032 and &alpha; = 0.05, what is the formal decision?</legend>
+          <label class="quiz-choice"><input type="radio" name="q2" value="a"> Reject H<sub>0</sub></label>
+          <label class="quiz-choice"><input type="radio" name="q2" value="b"> Accept H<sub>0</sub></label>
+          <label class="quiz-choice"><input type="radio" name="q2" value="c"> Increase alpha after seeing the result</label>
+          <div class="quiz-feedback" id="f2"></div>
+        </fieldset>
+
+        <fieldset class="quiz-question">
+          <legend>3. What is a Type I error?</legend>
+          <label class="quiz-choice"><input type="radio" name="q3" value="a"> Missing a real difference</label>
+          <label class="quiz-choice"><input type="radio" name="q3" value="b"> Rejecting H<sub>0</sub> when H<sub>0</sub> is true</label>
+          <label class="quiz-choice"><input type="radio" name="q3" value="c"> Choosing the wrong chart type</label>
+          <div class="quiz-feedback" id="f3"></div>
+        </fieldset>
+
+        <fieldset class="quiz-question">
+          <legend>4. A result is statistically significant but smaller than the minimum change worth acting on. What should you conclude?</legend>
+          <label class="quiz-choice"><input type="radio" name="q4" value="a"> The result may be real but not practically important</label>
+          <label class="quiz-choice"><input type="radio" name="q4" value="b"> The result must be a data error</label>
+          <label class="quiz-choice"><input type="radio" name="q4" value="c"> The process is automatically out of specification</label>
+          <div class="quiz-feedback" id="f4"></div>
+        </fieldset>
+
+        <fieldset class="quiz-question">
+          <legend>5. Which test fits one numeric sample compared with a target mean when population standard deviation is unknown?</legend>
+          <label class="quiz-choice"><input type="radio" name="q5" value="a"> 1-Sample t</label>
+          <label class="quiz-choice"><input type="radio" name="q5" value="b"> Chi-square test of independence</label>
+          <label class="quiz-choice"><input type="radio" name="q5" value="c"> Two-proportion test</label>
+          <div class="quiz-feedback" id="f5"></div>
+        </fieldset>
+
+        <button class="btn btn-teal" type="button" onclick="gradeQuiz()">Check my score</button>
+        <button class="btn btn-outline" type="reset" onclick="resetQuiz()" style="margin-left:8px;">Reset</button>
+        <div id="quizScore" class="score-box" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="section tint" style="margin-top:48px;padding-top:56px;padding-bottom:56px;">
+  <div class="wrap lesson-shell">
+    <h2 style="font-size:20px;margin:0 0 12px;">Lesson summary</h2>
+    <div class="card">
+      <ul class="summary-list">
+        <li>H<sub>0</sub> is the default claim; H<sub>1</sub> is the difference or direction being tested.</li>
+        <li>Choose the test direction and alpha before looking at the result.</li>
+        <li>Reject H<sub>0</sub> when p &le; &alpha;; otherwise, fail to reject H<sub>0</sub>.</li>
+        <li>A p-value is not the probability that H<sub>0</sub> is true.</li>
+        <li>Always separate statistical significance from practical significance.</li>
+        <li>Report the effect estimate, confidence interval, p-value, assumptions, and workplace meaning.</li>
+      </ul>
+    </div>
+    <h2 style="font-size:20px;margin:32px 0 12px;">Next lesson</h2>
+    <a href="https://upskillsprint.com/lessons/one-way-anova.html" style="font-family:'Source Serif 4',serif;font-size:19px;font-weight:600;">Compare three or more group means with one-way ANOVA &rarr;</a>
+
+    <details style="margin-top:36px;">
+      <summary style="cursor:pointer;font-weight:700;color:var(--navy);">Sources used for the Minitab workflow</summary>
+      <ul class="reference-list">
+        <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistics/basic-statistics/how-to/1-sample-t/before-you-start/example/" target="_blank" rel="noopener">Minitab Support: Example of 1-Sample t</a></li>
+        <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistics/basic-statistics/how-to/1-sample-t/interpret-the-results/key-results/" target="_blank" rel="noopener">Minitab Support: Interpret the key results for 1-Sample t</a></li>
+        <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistics/basic-statistics/how-to/2-sample-t/before-you-start/example/" target="_blank" rel="noopener">Minitab Support: Example of 2-Sample t</a></li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand" style="margin-bottom:14px;">
+          <img src="https://upskillsprint.com/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+          <span>UpSkill Sprint Consulting</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.6;max-width:260px;margin:0;">Practical learning for quality, data, process improvement, and business problem-solving.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <a href="https://upskillsprint.com/index.html">Home</a>
+        <a href="https://upskillsprint.com/start-here.html">Start Here</a>
+        <a href="https://upskillsprint.com/lessons.html">Lessons</a>
+        <a href="https://upskillsprint.com/services.html">Services</a>
+        <a href="https://upskillsprint.com/request-topic.html">Request a Topic</a>
+      </div>
+      <div>
+        <h4>Topics</h4>
+        <a href="https://upskillsprint.com/lessons.html#data-analytics">Data Analytics</a>
+        <a href="https://upskillsprint.com/lessons.html#quality-engineering">Quality Engineering</a>
+        <a href="https://upskillsprint.com/lessons.html#lean-six-sigma">Lean Six Sigma</a>
+        <a href="https://upskillsprint.com/lessons.html#statistics">Statistics</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="mailto:skillsprintconsulting@gmail.com">skillsprintconsulting@gmail.com</a>
+        <p style="font-size:13.5px;margin:0;">Saskatchewan, Canada</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 UpSkill Sprint Consulting</span>
+    <div><a href="https://upskillsprint.com/privacy.html">Privacy Policy</a><a href="https://upskillsprint.com/terms.html">Terms of Use</a></div>
+  </div>
+</footer>
+
+<script src="hypothesis-testing-for-beginners.js"></script>
+</body>
+</html>

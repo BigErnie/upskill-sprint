@@ -1,0 +1,174 @@
+name: Fix homepage email capture
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/fix-lead-capture.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-homepage-form:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Replace and style the starter-kit email form
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          index_path = Path('index.html')
+          css_path = Path('style.css')
+
+          html = index_path.read_text(encoding='utf-8')
+          old = '''      <form name="lead-magnet" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thank-you-kit.html" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <input type="hidden" name="form-name" value="lead-magnet">
+        <div class="honeypot" aria-hidden="true"><label>Don't fill this out<input tabindex="-1" autocomplete="off" name="bot-field"></label></div>
+        <input class="lead-email" type="email" name="email" required placeholder="you@email.com" style="padding:13px 16px;border-radius:6px;border:1px solid #cfc8b8;font-size:14.5px;width:100%;max-width:260px;">
+        <button type="submit" class="btn btn-teal">Send me the kit</button>
+      </form>'''
+
+          new = '''      <form class="lead-capture" name="lead-magnet" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thank-you-kit.html">
+        <input type="hidden" name="form-name" value="lead-magnet">
+        <div class="honeypot" aria-hidden="true"><label>Don't fill this out<input tabindex="-1" autocomplete="off" name="bot-field"></label></div>
+        <div class="lead-capture-row">
+          <label class="lead-capture-field" for="starter-kit-email">
+            <span>Email address</span>
+            <input
+              class="lead-email"
+              id="starter-kit-email"
+              type="text"
+              inputmode="email"
+              name="email"
+              required
+              autocomplete="off"
+              autocapitalize="none"
+              spellcheck="false"
+              pattern="^[^ @]+@[^ @]+[.][^ @]+$"
+              title="Enter a valid email address, such as name@example.com"
+              placeholder="you@example.com"
+              data-1p-ignore="true"
+              data-bwignore="true"
+              data-lpignore="true"
+              data-form-type="other">
+          </label>
+          <button type="submit" class="btn btn-teal lead-capture-submit">Send me the kit</button>
+        </div>
+        <p class="lead-capture-note">Free download. No spam. Unsubscribe at any time.</p>
+      </form>'''
+
+          if old in html:
+              html = html.replace(old, new, 1)
+              index_path.write_text(html, encoding='utf-8')
+          elif 'class="lead-capture"' not in html:
+              raise SystemExit('Could not find the existing starter-kit form to replace.')
+
+          css = css_path.read_text(encoding='utf-8')
+          marker = '/* homepage starter-kit email capture */'
+          if marker not in css:
+              css += '''
+
+/* homepage starter-kit email capture */
+.lead-capture {
+  width: min(100%, 680px);
+  margin: 0 auto;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  box-shadow: 0 10px 28px rgba(15, 42, 67, 0.08);
+  text-align: left;
+}
+.lead-capture-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+.lead-capture-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+.lead-capture .lead-email {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 50px;
+  margin: 0;
+  padding: 0 15px;
+  appearance: none;
+  border: 1px solid #cfd4dc;
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 15px/1 'Work Sans', Arial, sans-serif;
+  box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.lead-capture .lead-email::placeholder { color: #8792a2; }
+.lead-capture .lead-email:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.14);
+  outline: none;
+}
+.lead-capture-submit {
+  min-width: 168px;
+  height: 50px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.lead-capture-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: center;
+}
+/* Hide browser-extension controls injected beside the field. */
+.lead-capture-row > *:not(.lead-capture-field):not(.lead-capture-submit),
+.lead-capture-field > *:not(span):not(input) {
+  display: none !important;
+}
+html[data-theme="dark"] .lead-capture {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+}
+html[data-theme="dark"] .lead-capture .lead-email {
+  background: var(--paper) !important;
+  color: var(--ink);
+  border-color: var(--line) !important;
+}
+@media (max-width: 600px) {
+  .lead-capture { padding: 16px; }
+  .lead-capture-row { grid-template-columns: 1fr; }
+  .lead-capture-submit { width: 100%; min-width: 0; }
+}
+'''
+              css_path.write_text(css, encoding='utf-8')
+          PY
+
+      - name: Commit the form fix
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "The homepage email capture is already fixed."
+            exit 0
+          fi
+
+          git config user.name "UpSkill Sprint Site Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html style.css
+          git commit -m "Fix homepage starter-kit email capture"
+          git push

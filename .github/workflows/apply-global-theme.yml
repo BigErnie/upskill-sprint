@@ -1,105 +1,86 @@
-name: Apply direct protected-email cleanup
+name: Apply shared site controllers
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - test
+      - main
     paths:
-      - '.github/workflows/apply-global-theme.yml'
+      - '**/*.html'
+      - theme.js
+      - site-sections.js
+      - .github/workflows/apply-global-theme.yml
 
 permissions:
   contents: write
 
 jobs:
-  fix-protected-email-html:
+  update-html-pages:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out test branch
+      - name: Check out repository
         uses: actions/checkout@v4
         with:
-          ref: test
           fetch-depth: 0
 
-      - name: Replace Cloudflare markup in every HTML file
+      - name: Add shared controllers to every HTML page
         shell: bash
         run: |
-          python3 - <<'PY'
+          python - <<'PY'
           from pathlib import Path
           import re
-          import sys
 
-          EMAIL = "skillsprintconsulting@gmail.com"
-          MAILTO = f"mailto:{EMAIL}"
-
-          protected_anchor = re.compile(
-              r'<a(?P<pre>[^>]*?)\bhref=(?P<q>["\'])/cdn-cgi/l/email-protection[^"\']*(?P=q)(?P<post>[^>]*)>\s*'
-              r'<span\b[^>]*\bclass=(?P<sq>["\'])[^"\']*(?:__cf_email__|cf_email)[^"\']*(?P=sq)[^>]*>.*?</span>\s*</a>',
-              re.IGNORECASE | re.DOTALL,
-          )
-          generic_protected_anchor = re.compile(
-              r'<a(?P<pre>[^>]*?)\bhref=(?P<q>["\'])/cdn-cgi/l/email-protection[^"\']*(?P=q)(?P<post>[^>]*)>.*?</a>',
-              re.IGNORECASE | re.DOTALL,
-          )
-          standalone_cf_span = re.compile(
-              r'<span\b[^>]*\bclass=(?P<q>["\'])[^"\']*(?:__cf_email__|cf_email)[^"\']*(?P=q)[^>]*>.*?</span>',
-              re.IGNORECASE | re.DOTALL,
-          )
-          cdn_script = re.compile(
-              r'<script\b[^>]*\bsrc=(?P<q>["\'])[^"\']*cdn-cgi[^"\']*(?P=q)[^>]*>\s*</script>',
-              re.IGNORECASE | re.DOTALL,
-          )
-
+          repo = Path('.')
+          script_tags = [
+              '<script src="/theme.js"></script>',
+              '<script src="/site-sections.js"></script>',
+          ]
           changed = []
-          for path in sorted(Path('.').rglob('*.html')):
+
+          inline_theme_pattern = re.compile(
+              r'\s*<script>\s*\(function\s*\(\)\s*\{.*?upskill-theme.*?</script>',
+              flags=re.DOTALL,
+          )
+
+          for path in sorted(repo.rglob('*.html')):
               if '.git' in path.parts:
                   continue
-              original = path.read_text(encoding='utf-8')
-              text = protected_anchor.sub(
-                  lambda m: f'<a{m.group("pre")}href="{MAILTO}"{m.group("post")}>{EMAIL}</a>',
-                  original,
-              )
-              text = generic_protected_anchor.sub(
-                  lambda m: f'<a{m.group("pre")}href="{MAILTO}"{m.group("post")}>{EMAIL}</a>',
-                  text,
-              )
-              text = standalone_cf_span.sub(f'<a href="{MAILTO}">{EMAIL}</a>', text)
-              text = cdn_script.sub('', text)
+
+              text = path.read_text(encoding='utf-8')
+              original = text
+
+              # Remove the older homepage-only inline theme scripts so the
+              # shared controller remains the single source of truth.
+              text = inline_theme_pattern.sub('', text)
+
+              if '</head>' not in text:
+                  print(f'Skipping {path}: no closing head tag')
+                  continue
+
+              missing_tags = [tag for tag in script_tags if tag not in text]
+              if missing_tags:
+                  insertion = ''.join(f'  {tag}\n' for tag in missing_tags)
+                  text = text.replace('</head>', insertion + '</head>', 1)
 
               if text != original:
                   path.write_text(text, encoding='utf-8')
                   changed.append(str(path))
 
-          decoder = Path('cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js')
-          if decoder.exists():
-              decoder.unlink()
-              changed.append(str(decoder))
-
-          remaining = []
-          for path in sorted(Path('.').rglob('*.html')):
-              if '.git' in path.parts:
-                  continue
-              text = path.read_text(encoding='utf-8')
-              if re.search(r'cdn-cgi|cf_email', text, re.IGNORECASE):
-                  remaining.append(str(path))
-
-          if remaining:
-              print('Protected email markup remains in:', file=sys.stderr)
-              print('\n'.join(remaining), file=sys.stderr)
-              sys.exit(1)
-
-          print('Changed files:')
-          print('\n'.join(changed) if changed else '(none)')
+          print(f'Updated {len(changed)} HTML files')
+          for item in changed:
+              print(f'  - {item}')
           PY
 
-      - name: Commit direct HTML fixes to test
+      - name: Commit generated HTML updates
         shell: bash
         run: |
-          git config user.name "UpSkill Sprint Site Bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
+          if git diff --quiet; then
+            echo "All HTML pages already use the shared site controllers."
             exit 0
           fi
-          git commit -m "Finish direct HTML email cleanup"
-          git push origin HEAD:test
+
+          git config user.name "UpSkill Sprint Site Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -- '*.html'
+          git commit -m "Load shared theme and site navigation on every page"
+          git push

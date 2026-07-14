@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- UPSKILLSPRINT_LESSON_META
+{
+  "title": "The Normal Distribution: Meet the Bell Curve",
+  "slug": "the-normal-distribution-meet-the-bell-curve",
+  "category": "Statistics",
+  "category_slug": "statistics",
+  "level": "Beginner",
+  "estimated_minutes": 15,
+  "interactive": true,
+  "card_title": "The Normal Distribution",
+  "card_description": "Meet the bell curve: master the 68-95-99.7 rule and z-scores with live, hands-on tools.",
+  "search_keywords": [
+    "normal distribution",
+    "bell curve",
+    "gaussian",
+    "empirical rule",
+    "68 95 99.7",
+    "z-score",
+    "standard deviation",
+    "probability",
+    "statistics basics"
+  ],
+  "suggested_github_path": "lessons/statistics/the-normal-distribution-meet-the-bell-curve.html"
+}
+-->
+<head>
+<!-- EDIT: Lesson metadata -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Normal Distribution: Meet the Bell Curve | UpSkill Sprint Consulting</title>
+<meta name="description" content="A beginner-friendly, interactive lesson on the normal distribution: the bell curve, the 68-95-99.7 rule, z-scores, and how to use them at work.">
+<link rel="canonical" href="https://upskillsprint.com/lessons/statistics/the-normal-distribution-meet-the-bell-curve">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Normal Distribution: Meet the Bell Curve | UpSkill Sprint Consulting">
+<meta property="og:description" content="A beginner-friendly, interactive lesson on the normal distribution, the 68-95-99.7 rule, and z-scores.">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<meta property="og:url" content="https://upskillsprint.com/lessons/statistics/the-normal-distribution-meet-the-bell-curve">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/lessons-theme.css">
+
+<!-- EDIT: Lesson styles (single style block) -->
+<style>
+/* ============ Design tokens ============ */
+:root {
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #f5f7fa;
+  --card: #ffffff;
+  --tint: #f5f7fa;
+  --ink: #101828;
+  --ink-soft: #344054;
+  --muted: #667085;
+  --line: #e3e7ee;
+  --navy: #0f2a43;
+  --teal: #0e7490;
+  --teal-dark: #0a5a70;
+  --amber: #d97706;
+  --success: #2e8b57;
+  --warning: #b97a17;
+  --danger: #bf3b2b;
+  --info: #2f6fb0;
+  --shade-1: rgba(15, 139, 141, 0.42);
+  --shade-2: rgba(15, 139, 141, 0.22);
+  --shade-3: rgba(15, 139, 141, 0.10);
+  --focus-ring: 3px solid var(--amber);
+}
+html[data-theme="dark"] {
+  --paper: #0b1220;
+  --surface: #111c2d;
+  --surface-soft: #0f1a2b;
+  --card: #111c2d;
+  --tint: #0f1a2b;
+  --ink: #f4f7fb;
+  --ink-soft: #d2dbea;
+  --muted: #a9b6c8;
+  --line: #2b3b50;
+  --navy: #102a43;
+  --teal: #2bb7c9;
+  --teal-dark: #67d4df;
+  --amber: #f0c36a;
+  --success: #58c48a;
+  --warning: #e9a94a;
+  --danger: #e57368;
+  --info: #6ea3d8;
+  --shade-1: rgba(62, 196, 198, 0.45);
+  --shade-2: rgba(62, 196, 198, 0.24);
+  --shade-3: rgba(62, 196, 198, 0.11);
+}
+
+/* ============ Base ============ */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Work Sans', Arial, sans-serif;
+  line-height: 1.65;
+  font-size: 1.02rem;
+}
+h1, h2, h3, h4 { color: var(--ink); line-height: 1.25; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin: 0.4em 0; }
+h2 { font-size: clamp(1.45rem, 3vw, 1.9rem); margin-top: 0; border-bottom: 3px solid var(--amber); display: inline-block; padding-bottom: 0.22em; }
+h3 { font-size: 1.15rem; }
+p { margin: 0.7em 0; }
+a { color: var(--teal-dark); }
+code {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+  font-size: 0.92em;
+  color: var(--ink);
+}
+strong { color: var(--ink); }
+
+/* Visible focus for keyboard users */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, [role="switch"]:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--navy);
+  color: #fff;
+  padding: 0.6em 1em;
+  z-index: 100;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* ============ SITE INTEGRATION: Header ============ */
+header.site.lesson-sitebar {
+  z-index: 50;
+}
+.lesson-sitebar .header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.lesson-sitebar .theme-control {
+  flex-shrink: 0;
+}
+
+/* ============ Layout ============ */
+main#lesson-content { max-width: 1120px; margin: 0 auto; padding: 2.25rem clamp(1rem, 4vw, 3.5rem) 4.5rem; }
+article.lesson-wrapper { display: block; }
+section { margin: 3rem 0; scroll-margin-top: 92px; }
+
+/* Lesson hero */
+.lesson-hero {
+  margin-top: 0;
+  padding: clamp(2rem, 5vw, 3.25rem);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0f2a43, #0e7490);
+  box-shadow: 0 10px 30px rgba(15, 42, 67, 0.16);
+  color: #ffffff;
+}
+.lesson-hero h1 { color: #ffffff; }
+.lesson-hero .lesson-lede { color: #e0f2fe; }
+.lesson-hero .why-it-matters {
+  background: rgba(255, 255, 255, 0.12);
+  border-left-color: #f0c36a;
+  color: #f8fafc;
+}
+.lesson-hero .why-it-matters strong { color: #ffffff; }
+.lesson-meta-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.6rem 0; }
+.pill {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.28);
+  color: #f8fafc;
+  border-radius: 999px;
+  padding: 0.25rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.pill.accent { background: #ffffff; color: #0f2a43; border-color: rgba(255,255,255,.7); }
+html[data-theme="dark"] .pill.accent { color: #0f2a43; }
+.lesson-lede { font-size: 1.12rem; color: var(--ink-soft); max-width: 62ch; }
+.why-it-matters {
+  border-left: 4px solid var(--amber);
+  background: var(--surface);
+  padding: 0.8rem 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-top: 1rem;
+}
+
+/* Table of contents */
+nav.lesson-toc {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.5rem 0;
+}
+nav.lesson-toc h2 { border: none; font-size: 1rem; margin: 0 0 0.4rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+nav.lesson-toc ol { margin: 0; padding-left: 1.2rem; columns: 2; column-gap: 2rem; }
+nav.lesson-toc li { margin: 0.25rem 0; break-inside: avoid; }
+nav.lesson-toc a { text-decoration: none; }
+nav.lesson-toc a:hover { text-decoration: underline; }
+@media (max-width: 620px) { nav.lesson-toc ol { columns: 1; } }
+
+/* Cards & panels */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+}
+.callout { border-left: 4px solid var(--info); }
+.callout.tip { border-left-color: var(--success); }
+.callout.warn { border-left-color: var(--warning); }
+
+/* Objectives */
+.objectives-list { padding-left: 1.3rem; }
+.objectives-list li { margin: 0.45rem 0; }
+.objectives-list li::marker { color: var(--teal); font-weight: 700; }
+
+/* Terminology & tables */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { border-collapse: collapse; width: 100%; min-width: 540px; background: var(--surface); }
+caption { text-align: left; color: var(--muted); font-size: 0.88rem; padding: 0.3rem 0; }
+th, td { border: 1px solid var(--line); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
+th { background: var(--surface-soft); color: var(--ink); }
+tbody tr:nth-child(even) { background: var(--surface-soft); }
+html[data-theme="dark"] tbody tr:nth-child(even) { background: var(--surface-soft); }
+
+/* ============ Formula display (CSS stacked fractions) ============ */
+.formula-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+}
+.math {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  color: var(--ink);
+}
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 0.15em; }
+.frac .top { padding: 0 0.35em 0.1em; border-bottom: 1.5px solid var(--ink); }
+.frac .bottom { padding: 0.1em 0.35em 0; }
+.sup { font-size: 0.72em; vertical-align: super; }
+.sym-list { list-style: none; padding-left: 0; margin: 0.8rem 0 0; }
+.sym-list li { padding: 0.25rem 0; border-bottom: 1px dashed var(--line); }
+.sym-list li:last-child { border-bottom: none; }
+.sym { font-family: Georgia, serif; font-weight: 700; color: var(--teal-dark); padding-right: 0.4rem; }
+
+/* ============ SVG figures ============ */
+figure { margin: 1.4rem 0; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; }
+.fig-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0.8rem; }
+
+/* ============ Interactive controls ============ */
+.tool {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.35rem 1.45rem;
+}
+.tool-title { display: flex; align-items: center; gap: 0.5rem; margin-top: 0; }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.9rem 1.4rem; margin: 0.8rem 0; }
+.control label { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
+.control input[type="range"] { width: 100%; accent-color: var(--teal); min-height: 32px; }
+.control input[type="number"] {
+  width: 100%;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 1rem;
+}
+.value-readout { font-variant-numeric: tabular-nums; color: var(--teal-dark); font-weight: 700; }
+.btn {
+  appearance: none;
+  border: 1px solid var(--teal-dark);
+  background: var(--teal);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+html[data-theme="dark"] .btn { color: #0d1722; }
+.btn.secondary { background: var(--surface-soft); color: var(--ink); border-color: var(--line); }
+html[data-theme="dark"] .btn.secondary { color: var(--ink); }
+.btn:hover { filter: brightness(1.05); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.8rem; }
+.result-box {
+  margin-top: 1rem;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+}
+.result-big { font-size: 1.35rem; font-weight: 700; color: var(--teal-dark); font-variant-numeric: tabular-nums; }
+.error-msg { color: var(--danger); font-weight: 600; margin-top: 0.6rem; }
+.method-note { font-size: 0.88rem; color: var(--muted); margin-top: 0.6rem; }
+
+/* Reveal panels */
+.reveal-panel { margin-top: 0.9rem; }
+.reveal-body {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  margin-top: 0.6rem;
+  background: var(--surface-soft);
+}
+[hidden] { display: none !important; }
+
+/* Mistake cards */
+.mistake { border-left: 4px solid var(--danger); background: var(--surface); border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin: 0.9rem 0; }
+.mistake h4 { margin: 0 0 0.3rem; }
+.tag { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; padding: 0.1rem 0.45rem; margin-left: 0.4rem; background: var(--surface-soft); border: 1px solid var(--line); color: var(--ink-soft); }
+
+/* ============ Quiz ============ */
+.quiz-q { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; margin: 1rem 0; }
+.quiz-q fieldset { border: none; margin: 0; padding: 0; }
+.quiz-q legend { font-weight: 700; padding: 0; margin-bottom: 0.5rem; }
+.quiz-option { display: flex; align-items: flex-start; gap: 0.55rem; padding: 0.45rem 0.5rem; border-radius: 8px; margin: 0.2rem 0; cursor: pointer; }
+.quiz-option:hover { background: var(--surface-soft); }
+.quiz-option input { margin-top: 0.3rem; accent-color: var(--teal); width: 1.05rem; height: 1.05rem; flex: none; }
+.quiz-q.correct { border-color: var(--success); box-shadow: inset 4px 0 0 var(--success); }
+.quiz-q.incorrect { border-color: var(--danger); box-shadow: inset 4px 0 0 var(--danger); }
+.quiz-feedback { margin-top: 0.6rem; padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.95rem; }
+.quiz-feedback.ok { background: var(--shade-3); border: 1px solid var(--success); }
+.quiz-feedback.no { background: var(--surface-soft); border: 1px solid var(--danger); }
+.quiz-status { font-weight: 700; }
+.quiz-status.ok { color: var(--success); }
+.quiz-status.no { color: var(--danger); }
+#quiz-score { font-size: 1.15rem; font-weight: 700; margin-top: 0.5rem; }
+
+/* Summary */
+.takeaways { padding-left: 1.3rem; }
+.takeaways li { margin: 0.45rem 0; }
+.remember {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+html[data-theme="dark"] .remember { background: var(--surface-soft); color: var(--ink); border: 1px solid var(--line); }
+
+/* Footer */
+footer.lesson-footer {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
+  padding: 1.2rem 1rem 2rem;
+  font-size: 0.9rem;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Small screens */
+@media (max-width: 520px) {
+  .brand span { font-size: 0.9rem; }
+  .back-link { font-size: 0.85rem; }
+  body { font-size: 0.98rem; }
+}
+
+/* ============ Responsive and print refinements ============ */
+.table-scroll { max-width: 100%; }
+.lesson-bottom-nav {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 3.5rem) 1.5rem;
+}
+.back-to-category {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--teal-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+.back-to-category:hover { background: var(--surface-soft); text-decoration: none; }
+footer.lesson-footer { text-align: left; }
+.lesson-footer-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 3.5rem);
+}
+@media (max-width: 700px) {
+  main#lesson-content { padding-top: 1.25rem; }
+  .lesson-hero { padding: 1.6rem 1.2rem; }
+  .panel, .tool, .formula-box, nav.lesson-toc { padding-left: 1rem; padding-right: 1rem; }
+  .math { font-size: 1.1rem; }
+}
+@media print {
+  html, body { background: #ffffff !important; color: #000000 !important; }
+  header.site, nav.mobile-nav, .skip-link, .theme-control, .btn-row, .reveal-panel > button, .lesson-bottom-nav { display: none !important; }
+  main#lesson-content { max-width: none; padding: 0; }
+  .lesson-hero, .panel, .tool, .formula-box, nav.lesson-toc, .fig-panel, .quiz-q, .mistake {
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #777777 !important;
+    break-inside: avoid;
+  }
+  .lesson-hero h1, .lesson-hero .lesson-lede, .lesson-hero .why-it-matters, .lesson-hero strong, h1, h2, h3, h4, p, li, td, th { color: #000000 !important; }
+  a { color: #000000 !important; text-decoration: underline; }
+  footer.lesson-footer { background: #ffffff !important; color: #000000 !important; border-top: 1px solid #777777; }
+}
+</style>
+<script src="/theme.js"></script>
+<script src="/site-sections.js"></script>
+</head>
+<body
+  data-lesson-page="true"
+  data-category="statistics"
+  data-level="beginner"
+  data-interactive="true"
+>
+<a class="skip-link" href="#lesson-content">Skip to lesson content</a>
+
+<!-- SITE INTEGRATION: Header -->
+<input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+<header class="site lesson-sitebar">
+  <a class="brand" href="/">
+    <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+    <span>UpSkill Sprint Consulting</span>
+  </a>
+  <nav class="desktop-nav" aria-label="Primary navigation">
+    <a href="/start-here">Start Here</a>
+    <a href="/lessons" aria-current="page">Lessons</a>
+    <a href="/services">Services</a>
+    <a href="/request-topic">Request a Topic</a>
+    <a href="/about">About</a>
+    <a href="/faq">FAQ</a>
+    <a href="/contact">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <div class="theme-control" aria-label="Colour theme">
+      <svg class="theme-icon theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+      <button type="button" class="theme-toggle" data-theme-toggle="true" role="switch" aria-checked="false" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="sr-only">Toggle dark and light mode</span></button>
+      <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </div>
+  </div>
+</header>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="/start-here">Start Here</a>
+  <a href="/lessons" aria-current="page">Lessons</a>
+  <a href="/services">Services</a>
+  <a href="/request-topic">Request a Topic</a>
+  <a href="/about">About</a>
+  <a href="/faq">FAQ</a>
+  <a href="/contact">Contact</a>
+</nav>
+
+<main id="lesson-content">
+<article class="lesson-wrapper">
+
+<!-- EDIT: Lesson header -->
+<section class="lesson-hero" aria-labelledby="lesson-title">
+  <h1 id="lesson-title">The Normal Distribution: Meet the Bell Curve</h1>
+  <div class="lesson-meta-row">
+    <span class="pill">Statistics</span>
+    <span class="pill">Beginner</span>
+    <span class="pill">15 minutes</span>
+    <span class="pill accent">Interactive</span>
+  </div>
+  <p class="lesson-lede">
+    The normal distribution &mdash; the famous &ldquo;bell curve&rdquo; &mdash; describes how many real-world
+    measurements naturally spread around an average. In this lesson you&rsquo;ll learn to read the curve,
+    use the 68&ndash;95&ndash;99.7 rule, and turn any measurement into a z-score you can interpret in seconds.
+  </p>
+  <div class="why-it-matters">
+    <strong>Why this matters:</strong> heights, exam marks, measurement errors, filling volumes,
+    cycle times &mdash; a huge amount of workplace data is roughly bell-shaped. Once you can read that shape,
+    you can answer questions like &ldquo;how unusual is this result?&rdquo; without ever opening a statistics textbook.
+  </div>
+</section>
+
+<nav class="lesson-toc" aria-label="Lesson contents">
+  <h2>In this lesson</h2>
+  <ol>
+    <li><a href="#learning-objectives">Learning objectives</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#key-concepts">The idea in plain English</a></li>
+    <li><a href="#terminology">Key terminology</a></li>
+    <li><a href="#core-formula">The formula (gently)</a></li>
+    <li><a href="#empirical-rule">The 68&ndash;95&ndash;99.7 rule</a></li>
+    <li><a href="#curve-explorer">Interactive: shape the curve</a></li>
+    <li><a href="#procedure">Step-by-step procedure</a></li>
+    <li><a href="#worked-example">Worked example</a></li>
+    <li><a href="#z-calculator">Interactive: z-score calculator</a></li>
+    <li><a href="#interpretation">Interpretation guide</a></li>
+    <li><a href="#mistakes">Common mistakes</a></li>
+    <li><a href="#software">Excel &amp; Minitab guidance</a></li>
+    <li><a href="#practice">Practice activity</a></li>
+    <li><a href="#quiz">Mini quiz</a></li>
+    <li><a href="#summary">Summary</a></li>
+  </ol>
+</nav>
+
+<section id="learning-objectives" aria-labelledby="objectives-h">
+  <h2 id="objectives-h">Learning objectives</h2>
+  <p>By the end of this lesson you will be able to:</p>
+  <ol class="objectives-list">
+    <li><strong>Identify</strong> the key features of a normal distribution (symmetry, one peak, mean = median = mode).</li>
+    <li><strong>Explain</strong> what the mean (&mu;) and standard deviation (&sigma;) control in a bell curve.</li>
+    <li><strong>Apply</strong> the 68&ndash;95&ndash;99.7 rule to estimate what proportion of data falls in a given range.</li>
+    <li><strong>Calculate</strong> a z-score for any measurement and <strong>interpret</strong> what it means.</li>
+    <li><strong>Select</strong> situations where the normal model is (and is not) a sensible assumption.</li>
+  </ol>
+</section>
+
+<section id="prerequisites" aria-labelledby="prereq-h">
+  <h2 id="prereq-h">Prerequisites</h2>
+  <div class="panel callout tip">
+    <p>You should be comfortable with the idea of an <strong>average (mean)</strong> and basic arithmetic
+    (subtraction and division). That&rsquo;s it. If you have met the <strong>standard deviation</strong> before,
+    great &mdash; but we recap it below, so no prior statistics knowledge is required.</p>
+  </div>
+</section>
+
+<!-- EDIT: Concept explanation -->
+<section id="key-concepts" aria-labelledby="concepts-h">
+  <h2 id="concepts-h">The idea in plain English</h2>
+  <p>
+    Measure the height of 1,000 adults and draw a bar chart of the results. You won&rsquo;t get a random
+    mess &mdash; you&rsquo;ll get a very particular shape: <strong>most people are close to the average, and the
+    further you move from the average, the fewer people you find.</strong> The result is a smooth,
+    symmetric hill: the bell curve.
+  </p>
+  <p><strong>What it is:</strong> the normal (or Gaussian) distribution is a mathematical model for data
+    that clusters symmetrically around an average. It is completely described by just two numbers:
+    the <strong>mean</strong> (where the centre is) and the <strong>standard deviation</strong> (how spread out the data is).</p>
+  <p><strong>Why it is used:</strong> it shows up everywhere. When a result is the sum of many small,
+    independent influences &mdash; genetics plus diet plus environment for height, or dozens of tiny process
+    variations for a machined part &mdash; the combined outcome tends to be bell-shaped. This is why heights,
+    exam marks, measurement errors, IQ scores, and daily temperatures all look roughly normal.</p>
+  <p><strong>What question it answers:</strong> &ldquo;How common or unusual is a particular value?&rdquo;
+    If you know the mean and standard deviation, the curve tells you what fraction of results you should
+    expect in any range.</p>
+  <p><strong>Where it is used in practice:</strong> quality control limits, grading and performance
+    comparisons, tolerance and specification analysis, forecasting error bands, and as the foundation
+    of most classic statistical tests.</p>
+  <p><strong>What it does not tell us:</strong> the normal curve is a <em>model</em>, not a law of nature.
+    Plenty of real data is <em>not</em> normal &mdash; incomes, house prices, call-waiting times, and defect
+    counts are usually lopsided (skewed). Assuming normality without checking is one of the most common
+    mistakes in data analysis, and we&rsquo;ll show you how to spot it.</p>
+
+  <figure class="fig-panel">
+    <svg viewBox="0 0 720 210" role="img" aria-labelledby="skew-title skew-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="skew-title">Three distribution shapes: right-skewed, normal, and left-skewed</title>
+      <desc id="skew-desc">Three small curves. The left curve leans with a long tail to the right (right-skewed). The middle curve is a symmetric bell (normal). The right curve leans with a long tail to the left (left-skewed).</desc>
+      <!-- right-skewed -->
+      <path d="M 30 170 C 55 60, 85 55, 105 95 C 130 145, 175 165, 225 170" fill="var(--shade-2)" stroke="var(--teal)" stroke-width="2.5"/>
+      <line x1="20" y1="170" x2="235" y2="170" stroke="var(--muted)" stroke-width="1.5"/>
+      <text x="127" y="195" text-anchor="middle" font-size="15" fill="var(--ink-soft)">Right-skewed (long right tail)</text>
+      <!-- normal -->
+      <path d="M 265 170 C 310 168, 325 60, 360 60 C 395 60, 410 168, 455 170" fill="var(--shade-2)" stroke="var(--teal)" stroke-width="2.5"/>
+      <line x1="255" y1="170" x2="465" y2="170" stroke="var(--muted)" stroke-width="1.5"/>
+      <text x="360" y="195" text-anchor="middle" font-size="15" fill="var(--ink-soft)">Normal (symmetric bell)</text>
+      <!-- left-skewed -->
+      <path d="M 495 170 C 545 165, 590 145, 615 95 C 635 55, 665 60, 690 170" fill="var(--shade-2)" stroke="var(--teal)" stroke-width="2.5"/>
+      <line x1="485" y1="170" x2="700" y2="170" stroke="var(--muted)" stroke-width="1.5"/>
+      <text x="593" y="195" text-anchor="middle" font-size="15" fill="var(--ink-soft)">Left-skewed (long left tail)</text>
+    </svg>
+    <figcaption>Only the middle curve &ldquo;behaves normally.&rdquo; Skewed data needs different tools &mdash; don&rsquo;t force the bell curve onto it.</figcaption>
+  </figure>
+</section>
+
+<section id="terminology" aria-labelledby="terms-h">
+  <h2 id="terms-h">Key terminology</h2>
+  <div class="table-scroll">
+    <table>
+      <caption>Terms you&rsquo;ll meet in this lesson</caption>
+      <thead>
+        <tr><th scope="col">Term</th><th scope="col">Plain-language meaning</th><th scope="col">Technical meaning</th><th scope="col">Practical interpretation</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mean (&mu;)</strong></td>
+          <td>The average.</td>
+          <td>The balance point of the distribution; for a normal curve it sits exactly at the peak.</td>
+          <td>&ldquo;A typical value.&rdquo; Slide &mu; and the whole curve moves left or right.</td>
+        </tr>
+        <tr>
+          <td><strong>Standard deviation (&sigma;)</strong></td>
+          <td>A typical distance from the average.</td>
+          <td>The square root of the variance; the distance from the mean to the curve&rsquo;s inflection point.</td>
+          <td>Small &sigma; = tall, narrow curve (consistent data). Large &sigma; = short, wide curve (variable data).</td>
+        </tr>
+        <tr>
+          <td><strong>Normal / Gaussian distribution</strong></td>
+          <td>The bell curve.</td>
+          <td>A continuous, symmetric distribution fully defined by &mu; and &sigma;.</td>
+          <td>A model for data where values cluster evenly around an average.</td>
+        </tr>
+        <tr>
+          <td><strong>z-score</strong></td>
+          <td>How many standard deviations a value is from the mean.</td>
+          <td>z = (x &minus; &mu;) / &sigma;; a value from the standard normal distribution (&mu; = 0, &sigma; = 1).</td>
+          <td>z = +2 means &ldquo;unusually high&rdquo;; z = 0 means &ldquo;perfectly average.&rdquo;</td>
+        </tr>
+        <tr>
+          <td><strong>Empirical rule</strong></td>
+          <td>The 68&ndash;95&ndash;99.7 shortcut.</td>
+          <td>For normal data: about 68% of values lie within &plusmn;1&sigma;, 95% within &plusmn;2&sigma;, 99.7% within &plusmn;3&sigma;.</td>
+          <td>Lets you estimate proportions instantly, with no tables or software.</td>
+        </tr>
+        <tr>
+          <td><strong>Skewness</strong></td>
+          <td>Lopsidedness.</td>
+          <td>Asymmetry of a distribution; a long tail on one side.</td>
+          <td>A warning sign that the normal model (and the empirical rule) may not apply.</td>
+        </tr>
+        <tr>
+          <td><strong>Percentile</strong></td>
+          <td>The share of values below a given point.</td>
+          <td>The cumulative probability up to a value.</td>
+          <td>&ldquo;90th percentile&rdquo; = higher than about 90% of results.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- EDIT: Core formula -->
+<section id="core-formula" aria-labelledby="formula-h">
+  <h2 id="formula-h">The formula (gently)</h2>
+  <p>
+    You will rarely compute this by hand &mdash; software does it for you &mdash; but seeing it once removes the
+    mystery. The height of the bell curve at any value <em>x</em> is:
+  </p>
+  <div class="formula-box">
+    <p class="math" aria-label="f of x equals 1 over sigma times the square root of 2 pi, times e raised to the power of negative, open parenthesis, x minus mu, close parenthesis squared, divided by 2 sigma squared">
+      <span><em>f</em>(<em>x</em>) =</span>
+      <span class="frac"><span class="top">1</span><span class="bottom">&sigma;&radic;<span style="border-top:1.5px solid var(--ink); padding-top:1px;">2&pi;</span></span></span>
+      <span>&middot; <em>e</em><span class="sup">&minus;(<em>x</em> &minus; &mu;)&sup2; / 2&sigma;&sup2;</span></span>
+    </p>
+    <ul class="sym-list">
+      <li><span class="sym">f(x)</span> the height (density) of the curve at value <em>x</em> &mdash; taller means &ldquo;more likely around here&rdquo;</li>
+      <li><span class="sym">&mu;</span> the mean of the data (same units as <em>x</em>, e.g. cm, marks, ml)</li>
+      <li><span class="sym">&sigma;</span> the standard deviation of the data (same units as <em>x</em>; must be greater than 0)</li>
+      <li><span class="sym">&pi;</span> the constant pi &asymp; 3.14159</li>
+      <li><span class="sym">e</span> Euler&rsquo;s number &asymp; 2.71828</li>
+    </ul>
+  </div>
+  <p><strong>Plain-language interpretation:</strong> the exponent measures how far <em>x</em> is from the
+    mean, in units of &sigma;. Values close to &mu; get a small exponent and a tall curve; values far from
+    &mu; get a large negative exponent and the curve drops toward zero. The fraction at the front simply
+    scales the curve so the total area underneath equals 1 (i.e. 100% of the data).</p>
+  <p><strong>Assumptions &mdash; use this model when:</strong> the data is continuous (or nearly so), roughly
+    symmetric with one peak, and free of hard boundaries near the bulk of the data.</p>
+  <p><strong>Do not use it when:</strong> the data is clearly skewed (incomes, waiting times), is a count of
+    rare events (defects per unit), has two peaks (mixed populations), or is capped hard at a boundary
+    (e.g. percentages piling up at 0% or 100%).</p>
+
+  <h3>The one formula you <em>will</em> use: the z-score</h3>
+  <div class="formula-box">
+    <p class="math" aria-label="z equals x minus mu, divided by sigma">
+      <span><em>z</em> =</span>
+      <span class="frac"><span class="top"><em>x</em> &minus; &mu;</span><span class="bottom">&sigma;</span></span>
+    </p>
+    <ul class="sym-list">
+      <li><span class="sym">z</span> the z-score: distance from the mean, measured in standard deviations (no units)</li>
+      <li><span class="sym">x</span> the value you are examining (in original units)</li>
+      <li><span class="sym">&mu;</span> the mean; <span class="sym">&sigma;</span> the standard deviation (&sigma; &gt; 0)</li>
+    </ul>
+  </div>
+  <p><strong>Plain-language interpretation:</strong> subtract the average, then divide by the &ldquo;typical
+    distance.&rdquo; The answer tells you how many typical distances your value sits above (+) or below (&minus;)
+    the mean. Standardising like this lets you compare apples with oranges: a z-score of +1.5 on an exam
+    means the same &ldquo;degree of unusualness&rdquo; as a z-score of +1.5 in height.</p>
+</section>
+
+<!-- EDIT: Empirical rule figure -->
+<section id="empirical-rule" aria-labelledby="rule-h">
+  <h2 id="rule-h">The 68&ndash;95&ndash;99.7 rule</h2>
+  <p>
+    Here is the superpower of the normal distribution. For <em>any</em> normal data, no matter the mean or
+    standard deviation:
+  </p>
+  <ul>
+    <li>About <strong>68%</strong> of values fall within <strong>1 standard deviation</strong> of the mean (34.1% on each side).</li>
+    <li>About <strong>95%</strong> fall within <strong>2 standard deviations</strong> (adding 13.6% on each side).</li>
+    <li>About <strong>99.7%</strong> fall within <strong>3 standard deviations</strong> (adding 2.1% on each side, leaving roughly 0.15% in each extreme tail).</li>
+  </ul>
+  <figure class="fig-panel">
+    <svg viewBox="0 0 740 395" role="img" aria-labelledby="emp-title emp-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="emp-title">The empirical rule on a bell curve</title>
+      <desc id="emp-desc">A bell curve divided into bands. From the mean outward: 34.1% between the mean and 1 sigma on each side, 13.6% between 1 and 2 sigma on each side, 2.1% between 2 and 3 sigma on each side, and about 0.1% beyond 3 sigma. Brackets show 68% within 1 sigma, 95% within 2 sigma, and 99.7% within 3 sigma.</desc>
+      <!-- axis -->
+      <line x1="40" y1="280" x2="700" y2="280" stroke="var(--muted)" stroke-width="1.5"/>
+      <!-- shaded bands (exact gaussian, mean at x=370, sigma=90px) -->
+      <path d="M 280 280 L 280.0 146.6 L 285.0 139.2 L 290.0 131.8 L 295.0 124.5 L 300.0 117.4 L 305.0 110.5 L 310.0 103.8 L 315.0 97.5 L 320.0 91.5 L 325.0 85.9 L 330.0 80.7 L 335.0 76.0 L 340.0 71.9 L 345.0 68.3 L 350.0 65.4 L 355.0 63.0 L 360.0 61.4 L 365.0 60.3 L 370.0 60.0 L 375.0 60.3 L 380.0 61.4 L 385.0 63.0 L 390.0 65.4 L 395.0 68.3 L 400.0 71.9 L 405.0 76.0 L 410.0 80.7 L 415.0 85.9 L 420.0 91.5 L 425.0 97.5 L 430.0 103.8 L 435.0 110.5 L 440.0 117.4 L 445.0 124.5 L 450.0 131.8 L 455.0 139.2 L 460.0 146.6 L 460 280 Z" fill="var(--shade-1)"/>
+      <path d="M 190 280 L 190.0 250.2 L 195.0 246.8 L 200.0 243.0 L 205.0 239.0 L 210.0 234.7 L 215.0 230.1 L 220.0 225.1 L 225.0 219.9 L 230.0 214.4 L 235.0 208.6 L 240.0 202.5 L 245.0 196.1 L 250.0 189.6 L 255.0 182.8 L 260.0 175.8 L 265.0 168.6 L 270.0 161.3 L 275.0 154.0 L 280.0 146.6 L 280 280 Z" fill="var(--shade-2)"/>
+      <path d="M 460 280 L 460.0 146.6 L 465.0 154.0 L 470.0 161.3 L 475.0 168.6 L 480.0 175.8 L 485.0 182.8 L 490.0 189.6 L 495.0 196.1 L 500.0 202.5 L 505.0 208.6 L 510.0 214.4 L 515.0 219.9 L 520.0 225.1 L 525.0 230.1 L 530.0 234.7 L 535.0 239.0 L 540.0 243.0 L 545.0 246.8 L 550.0 250.2 L 550 280 Z" fill="var(--shade-2)"/>
+      <path d="M 100 280 L 100.0 277.6 L 105.0 277.1 L 110.0 276.6 L 115.0 276.0 L 120.0 275.4 L 125.0 274.6 L 130.0 273.7 L 135.0 272.7 L 140.0 271.6 L 145.0 270.3 L 150.0 268.9 L 155.0 267.3 L 160.0 265.5 L 165.0 263.6 L 170.0 261.4 L 175.0 259.0 L 180.0 256.3 L 185.0 253.4 L 190.0 250.2 L 190 280 Z" fill="var(--shade-3)"/>
+      <path d="M 550 280 L 550.0 250.2 L 555.0 253.4 L 560.0 256.3 L 565.0 259.0 L 570.0 261.4 L 575.0 263.6 L 580.0 265.5 L 585.0 267.3 L 590.0 268.9 L 595.0 270.3 L 600.0 271.6 L 605.0 272.7 L 610.0 273.7 L 615.0 274.6 L 620.0 275.4 L 625.0 276.0 L 630.0 276.6 L 635.0 277.1 L 640.0 277.6 L 640 280 Z" fill="var(--shade-3)"/>
+      <!-- curve outline -->
+      <path d="M 60.0 279.4 L 65.0 279.3 L 70.0 279.1 L 75.0 279.0 L 80.0 278.8 L 85.0 278.5 L 90.0 278.3 L 95.0 277.9 L 100.0 277.6 L 105.0 277.1 L 110.0 276.6 L 115.0 276.0 L 120.0 275.4 L 125.0 274.6 L 130.0 273.7 L 135.0 272.7 L 140.0 271.6 L 145.0 270.3 L 150.0 268.9 L 155.0 267.3 L 160.0 265.5 L 165.0 263.6 L 170.0 261.4 L 175.0 259.0 L 180.0 256.3 L 185.0 253.4 L 190.0 250.2 L 195.0 246.8 L 200.0 243.0 L 205.0 239.0 L 210.0 234.7 L 215.0 230.1 L 220.0 225.1 L 225.0 219.9 L 230.0 214.4 L 235.0 208.6 L 240.0 202.5 L 245.0 196.1 L 250.0 189.6 L 255.0 182.8 L 260.0 175.8 L 265.0 168.6 L 270.0 161.3 L 275.0 154.0 L 280.0 146.6 L 285.0 139.2 L 290.0 131.8 L 295.0 124.5 L 300.0 117.4 L 305.0 110.5 L 310.0 103.8 L 315.0 97.5 L 320.0 91.5 L 325.0 85.9 L 330.0 80.7 L 335.0 76.0 L 340.0 71.9 L 345.0 68.3 L 350.0 65.4 L 355.0 63.0 L 360.0 61.4 L 365.0 60.3 L 370.0 60.0 L 375.0 60.3 L 380.0 61.4 L 385.0 63.0 L 390.0 65.4 L 395.0 68.3 L 400.0 71.9 L 405.0 76.0 L 410.0 80.7 L 415.0 85.9 L 420.0 91.5 L 425.0 97.5 L 430.0 103.8 L 435.0 110.5 L 440.0 117.4 L 445.0 124.5 L 450.0 131.8 L 455.0 139.2 L 460.0 146.6 L 465.0 154.0 L 470.0 161.3 L 475.0 168.6 L 480.0 175.8 L 485.0 182.8 L 490.0 189.6 L 495.0 196.1 L 500.0 202.5 L 505.0 208.6 L 510.0 214.4 L 515.0 219.9 L 520.0 225.1 L 525.0 230.1 L 530.0 234.7 L 535.0 239.0 L 540.0 243.0 L 545.0 246.8 L 550.0 250.2 L 555.0 253.4 L 560.0 256.3 L 565.0 259.0 L 570.0 261.4 L 575.0 263.6 L 580.0 265.5 L 585.0 267.3 L 590.0 268.9 L 595.0 270.3 L 600.0 271.6 L 605.0 272.7 L 610.0 273.7 L 615.0 274.6 L 620.0 275.4 L 625.0 276.0 L 630.0 276.6 L 635.0 277.1 L 640.0 277.6 L 645.0 277.9 L 650.0 278.3 L 655.0 278.5 L 660.0 278.8 L 665.0 279.0 L 670.0 279.1 L 675.0 279.3 L 680.0 279.4" fill="none" stroke="var(--teal)" stroke-width="3"/>
+      <!-- sigma gridlines -->
+      <line x1="370" y1="60"  x2="370" y2="280" stroke="var(--muted)" stroke-dasharray="4 4"/>
+      <line x1="280" y1="120" x2="280" y2="280" stroke="var(--line)"/>
+      <line x1="460" y1="120" x2="460" y2="280" stroke="var(--line)"/>
+      <line x1="190" y1="230" x2="190" y2="280" stroke="var(--line)"/>
+      <line x1="550" y1="230" x2="550" y2="280" stroke="var(--line)"/>
+      <line x1="100" y1="262" x2="100" y2="280" stroke="var(--line)"/>
+      <line x1="640" y1="262" x2="640" y2="280" stroke="var(--line)"/>
+      <!-- band percentages -->
+      <text x="325" y="215" text-anchor="middle" font-size="17" font-weight="700" fill="var(--ink)">34.1%</text>
+      <text x="415" y="215" text-anchor="middle" font-size="17" font-weight="700" fill="var(--ink)">34.1%</text>
+      <text x="235" y="266" text-anchor="middle" font-size="14" font-weight="600" fill="var(--ink)">13.6%</text>
+      <text x="505" y="266" text-anchor="middle" font-size="14" font-weight="600" fill="var(--ink)">13.6%</text>
+      <text x="145" y="270" text-anchor="middle" font-size="12" fill="var(--ink-soft)">2.1%</text>
+      <text x="595" y="270" text-anchor="middle" font-size="12" fill="var(--ink-soft)">2.1%</text>
+      <text x="72" y="270" text-anchor="middle" font-size="11" fill="var(--muted)">0.15%</text>
+      <text x="668" y="270" text-anchor="middle" font-size="11" fill="var(--muted)">0.15%</text>
+      <!-- axis labels -->
+      <text x="370" y="302" text-anchor="middle" font-size="15" fill="var(--ink)">&#956;</text>
+      <text x="280" y="302" text-anchor="middle" font-size="14" fill="var(--ink-soft)">&#8722;1&#963;</text>
+      <text x="460" y="302" text-anchor="middle" font-size="14" fill="var(--ink-soft)">+1&#963;</text>
+      <text x="190" y="302" text-anchor="middle" font-size="14" fill="var(--ink-soft)">&#8722;2&#963;</text>
+      <text x="550" y="302" text-anchor="middle" font-size="14" fill="var(--ink-soft)">+2&#963;</text>
+      <text x="100" y="302" text-anchor="middle" font-size="14" fill="var(--ink-soft)">&#8722;3&#963;</text>
+      <text x="640" y="302" text-anchor="middle" font-size="14" fill="var(--ink-soft)">+3&#963;</text>
+      <!-- brackets -->
+      <line x1="280" y1="318" x2="460" y2="318" stroke="var(--teal-dark)" stroke-width="2"/>
+      <text x="370" y="334" text-anchor="middle" font-size="13" font-weight="700" fill="var(--teal-dark)">68% within &#177;1&#963;</text>
+      <line x1="190" y1="344" x2="550" y2="344" stroke="var(--info)" stroke-width="2"/>
+      <text x="370" y="360" text-anchor="middle" font-size="13" font-weight="700" fill="var(--info)">95% within &#177;2&#963;</text>
+      <line x1="100" y1="370" x2="640" y2="370" stroke="var(--amber)" stroke-width="2"/>
+      <text x="370" y="386" text-anchor="middle" font-size="13" font-weight="700" fill="var(--amber)">99.7% within &#177;3&#963;</text>
+    </svg>
+    <figcaption>The empirical rule. Memorise 68 / 95 / 99.7 and you can estimate proportions for any normal dataset in your head.</figcaption>
+  </figure>
+  <div class="panel callout">
+    <p><strong>Instant example:</strong> adult heights with mean 170&nbsp;cm and standard deviation 8&nbsp;cm.
+    Then about 68% of people are between 162 and 178&nbsp;cm, about 95% are between 154 and 186&nbsp;cm,
+    and only about 0.15% are taller than 194&nbsp;cm (that&rsquo;s beyond +3&sigma;).</p>
+  </div>
+</section>
+
+<!-- EDIT: Interactive curve explorer -->
+<section id="curve-explorer" aria-labelledby="explorer-h">
+  <h2 id="explorer-h">Interactive: shape the curve</h2>
+  <p>
+    The mean and standard deviation are the curve&rsquo;s only two &ldquo;control knobs.&rdquo; Drag the sliders and
+    watch what each one does. The shaded band always covers &mu; &plusmn; 1&sigma; &mdash; the middle 68%.
+  </p>
+  <div class="tool" aria-label="Interactive normal curve explorer">
+    <div class="controls">
+      <div class="control">
+        <label for="mu-slider">Mean &mu;: <span id="mu-readout" class="value-readout">100</span></label>
+        <input type="range" id="mu-slider" min="70" max="130" step="1" value="100"
+               aria-describedby="explorer-summary">
+      </div>
+      <div class="control">
+        <label for="sigma-slider">Standard deviation &sigma;: <span id="sigma-readout" class="value-readout">15</span></label>
+        <input type="range" id="sigma-slider" min="5" max="25" step="1" value="15"
+               aria-describedby="explorer-summary">
+      </div>
+    </div>
+    <figure class="fig-panel" style="margin:0.5rem 0;">
+      <svg id="explorer-svg" viewBox="0 0 700 300" role="img" aria-labelledby="explorer-fig-title" xmlns="http://www.w3.org/2000/svg">
+        <title id="explorer-fig-title">Normal curve that updates as you change the mean and standard deviation</title>
+        <line x1="30" y1="260" x2="670" y2="260" stroke="var(--muted)" stroke-width="1.5"/>
+        <g id="explorer-ticks"></g>
+        <path id="explorer-band" fill="var(--shade-2)" stroke="none" d=""></path>
+        <path id="explorer-curve" fill="none" stroke="var(--teal)" stroke-width="3" d=""></path>
+        <line id="explorer-meanline" x1="350" y1="40" x2="350" y2="260" stroke="var(--amber)" stroke-width="2" stroke-dasharray="5 4"/>
+      </svg>
+    </figure>
+    <div class="result-box" id="explorer-summary" aria-live="polite">
+      With mean <strong>100</strong> and standard deviation <strong>15</strong>, about <strong>68%</strong> of
+      values fall between <strong>85</strong> and <strong>115</strong>, and about <strong>95%</strong> fall
+      between <strong>70</strong> and <strong>130</strong>.
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn secondary" id="explorer-reset">Reset</button>
+      <button type="button" class="btn secondary" id="explorer-example">Example: IQ scores (&mu;=100, &sigma;=15)</button>
+    </div>
+    <p class="method-note">Method: the curve plots f(x) = (1 / (&sigma;&radic;2&pi;)) &middot; e<sup>&minus;(x&minus;&mu;)&sup2;/2&sigma;&sup2;</sup>
+    over a fixed axis from 40 to 160. Note how a larger &sigma; makes the curve wider <em>and</em> flatter &mdash;
+    the total area under the curve always stays at 100%.</p>
+  </div>
+</section>
+
+<!-- EDIT: Step-by-step procedure -->
+<section id="procedure" aria-labelledby="procedure-h">
+  <h2 id="procedure-h">Step-by-step: answering &ldquo;how unusual is this value?&rdquo;</h2>
+  <ol>
+    <li><strong>Check the shape first.</strong> Plot a histogram (or dot plot) of your data. You are looking
+      for one peak and rough symmetry. If it&rsquo;s clearly skewed or has two peaks, stop &mdash; the normal
+      model doesn&rsquo;t apply.</li>
+    <li><strong>Find the mean (&mu;) and standard deviation (&sigma;).</strong> From your data, from software,
+      or from a known specification.</li>
+    <li><strong>Choose your tool.</strong> If the value of interest sits neatly at &plusmn;1, 2, or 3&sigma;,
+      the empirical rule is enough. Otherwise, compute a z-score.</li>
+    <li><strong>Calculate.</strong> z = (x &minus; &mu;) / &sigma;. Keep the sign: negative means below the mean.</li>
+    <li><strong>Convert to a proportion.</strong> Use the empirical rule, a z-table, or software
+      (Excel&rsquo;s <code>NORM.S.DIST</code>) to turn z into &ldquo;% of values below/above this point.&rdquo;</li>
+    <li><strong>Interpret in context.</strong> Translate back to plain language: &ldquo;a fill volume of 372&nbsp;ml
+      is 2.2 standard deviations above target &mdash; fewer than 2 bottles in 100 should be this full.&rdquo;</li>
+    <li><strong>Document.</strong> Record the mean, standard deviation, sample size, and the date/source of
+      the data, so the analysis can be checked and repeated.</li>
+  </ol>
+</section>
+
+<!-- EDIT: Worked example -->
+<section id="worked-example" aria-labelledby="worked-h">
+  <h2 id="worked-h">Worked example: is this exam score exceptional?</h2>
+  <div class="panel">
+    <p><strong>The problem:</strong> a certification exam has scores that are approximately normally
+    distributed. Priya scored <strong>88</strong>. Her team lead asks: &ldquo;How good is that, really?&rdquo;</p>
+    <p><strong>The data:</strong> historical results show a mean of &mu; = 72 marks and a standard deviation
+    of &sigma; = 8 marks. The histogram of past scores is single-peaked and symmetric, so the normal model
+    is reasonable.</p>
+    <p><strong>The method:</strong> standardise the score with a z-score, then use the empirical rule.</p>
+    <p><strong>The formula:</strong></p>
+    <div class="formula-box">
+      <p class="math" aria-label="z equals x minus mu over sigma">
+        <span><em>z</em> =</span>
+        <span class="frac"><span class="top"><em>x</em> &minus; &mu;</span><span class="bottom">&sigma;</span></span>
+      </p>
+    </div>
+    <p><strong>Substitute the values:</strong></p>
+    <div class="formula-box">
+      <p class="math" aria-label="z equals 88 minus 72 over 8">
+        <span><em>z</em> =</span>
+        <span class="frac"><span class="top">88 &minus; 72</span><span class="bottom">8</span></span>
+      </p>
+    </div>
+    <p><strong>Intermediate calculation:</strong> the numerator is 88 &minus; 72 = <strong>16</strong>.
+    Then 16 &divide; 8 = <strong>2</strong>.</p>
+    <p><strong>Final answer:</strong> z = <strong>+2.0</strong> &mdash; Priya&rsquo;s score is exactly 2 standard
+    deviations above the mean.</p>
+    <p><strong>Practical interpretation:</strong> by the empirical rule, 95% of scores fall within &plusmn;2&sigma;
+    of the mean, so 5% fall outside &mdash; and by symmetry, half of that 5% (about <strong>2.5%</strong>) is
+    <em>above</em> +2&sigma;. Priya beat roughly 97.5% of past candidates. That is a genuinely exceptional result,
+    and you worked it out with nothing but subtraction, division, and one memorised rule.</p>
+    <p><strong>Limitations:</strong> this assumes past scores really are close to normal and that the historical
+    mean and standard deviation still describe current exams. If the exam changed recently, the comparison is weaker.</p>
+  </div>
+</section>
+
+<!-- EDIT: Interactive calculator -->
+<section id="z-calculator" aria-labelledby="calc-h">
+  <h2 id="calc-h">Interactive: z-score calculator</h2>
+  <p>Now you try. Enter any mean, standard deviation, and value &mdash; the calculator standardises it,
+  places it on the curve, and tells you how unusual it is.</p>
+  <div class="tool" aria-label="z-score calculator">
+    <div class="controls">
+      <div class="control">
+        <label for="calc-mean">Mean (&mu;)</label>
+        <input type="number" id="calc-mean" inputmode="decimal" step="any" value="170" aria-describedby="calc-error">
+      </div>
+      <div class="control">
+        <label for="calc-sd">Standard deviation (&sigma;)</label>
+        <input type="number" id="calc-sd" inputmode="decimal" step="any" value="8" min="0" aria-describedby="calc-error">
+      </div>
+      <div class="control">
+        <label for="calc-x">Your value (x)</label>
+        <input type="number" id="calc-x" inputmode="decimal" step="any" value="182" aria-describedby="calc-error">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn" id="calc-run">Calculate z-score</button>
+      <button type="button" class="btn secondary" id="calc-sample">Load sample data (heights)</button>
+      <button type="button" class="btn secondary" id="calc-reset">Reset</button>
+    </div>
+    <p class="error-msg" id="calc-error" role="alert" hidden></p>
+    <div class="result-box" id="calc-result" aria-live="polite" hidden>
+      <p class="result-big" id="calc-z-line"></p>
+      <p id="calc-percentile-line"></p>
+      <p id="calc-interpret-line"></p>
+      <figure class="fig-panel" style="margin:0.7rem 0 0;">
+        <svg id="calc-svg" viewBox="0 0 700 240" role="img" aria-labelledby="calc-fig-title" xmlns="http://www.w3.org/2000/svg">
+          <title id="calc-fig-title">Standard normal curve showing the position of your z-score</title>
+          <line x1="30" y1="200" x2="670" y2="200" stroke="var(--muted)" stroke-width="1.5"/>
+          <path id="calc-fill" fill="var(--shade-2)" d=""></path>
+          <path id="calc-curve" fill="none" stroke="var(--teal)" stroke-width="3" d=""></path>
+          <g id="calc-axis-labels"></g>
+          <line id="calc-marker" x1="0" y1="40" x2="0" y2="200" stroke="var(--danger)" stroke-width="2.5"/>
+          <text id="calc-marker-label" x="0" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="var(--danger)"></text>
+        </svg>
+        <figcaption>The shaded area is the proportion of values <em>below</em> your value.</figcaption>
+      </figure>
+    </div>
+    <p class="method-note">Method: z = (x &minus; &mu;) / &sigma;. The percentile is the cumulative standard
+    normal probability &Phi;(z), computed with the Zelen&ndash;Severo polynomial approximation (accurate to
+    about 7 decimal places). Assumes your data is approximately normal.</p>
+  </div>
+</section>
+
+<!-- EDIT: Interpretation guide -->
+<section id="interpretation" aria-labelledby="interp-h">
+  <h2 id="interp-h">Interpretation guide</h2>
+  <div class="table-scroll">
+    <table>
+      <caption>When you see this, it means this</caption>
+      <thead>
+        <tr><th scope="col">When you see&hellip;</th><th scope="col">It means&hellip;</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>z = 0</td><td>The value is exactly average.</td></tr>
+        <tr><td>z between &minus;1 and +1</td><td>Completely ordinary &mdash; about 68% of all values live here.</td></tr>
+        <tr><td>z beyond &plusmn;2</td><td>Unusual &mdash; only about 5% of values are this far from the mean. Worth a closer look.</td></tr>
+        <tr><td>z beyond &plusmn;3</td><td>Rare (about 0.3%). In quality control this typically triggers an out-of-control signal.</td></tr>
+        <tr><td>A histogram with one peak and mirror-image sides</td><td>The normal model is plausible; the empirical rule should work well.</td></tr>
+        <tr><td>Mean noticeably larger than the median</td><td>Right skew &mdash; a long tail of high values. Be cautious with the normal model.</td></tr>
+        <tr><td>Data piled up against a boundary (e.g. 0)</td><td>Likely skewed; the bell curve would predict impossible negative values.</td></tr>
+        <tr><td>Two separate peaks</td><td>Probably two mixed groups (two machines, two shifts). Split the data before modelling.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- EDIT: Common mistakes -->
+<section id="mistakes" aria-labelledby="mistakes-h">
+  <h2 id="mistakes-h">Common mistakes and exam traps</h2>
+
+  <div class="mistake">
+    <h4>1. Assuming everything is normal <span class="tag">Assumption error</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> many datasets (incomes, waiting times, defect counts) are skewed,
+    so normal-based percentages will be badly off.
+    <strong>How to recognise it:</strong> a lopsided histogram, or a mean far from the median.
+    <strong>How to avoid it:</strong> always plot the data before applying the empirical rule or z-scores.</p>
+  </div>
+
+  <div class="mistake">
+    <h4>2. Mixing up standard deviation and variance <span class="tag">Calculation error</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> variance is &sigma;&sup2; &mdash; the standard deviation squared. Dividing
+    by variance instead of &sigma; gives a meaningless z-score.
+    <strong>How to recognise it:</strong> z-scores that look absurdly small (e.g. 0.03 for an obviously extreme value).
+    <strong>How to avoid it:</strong> check units &mdash; &sigma; is in the same units as the data; variance is in squared units.</p>
+  </div>
+
+  <div class="mistake">
+    <h4>3. Reading &ldquo;below&rdquo; when the question asks &ldquo;above&rdquo; <span class="tag">Interpretation error</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> tables and software usually give the area <em>below</em> a value.
+    If the question asks for the proportion above, you must subtract from 1 (or 100%).
+    <strong>How to recognise it:</strong> an answer like &ldquo;97.7% of bottles are overfilled&rdquo; when overfilling should be rare.
+    <strong>How to avoid it:</strong> sketch the curve and shade the region you actually want before calculating.</p>
+  </div>
+
+  <div class="mistake">
+    <h4>4. Dropping the minus sign <span class="tag">Calculation error</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> z = &minus;1.5 and z = +1.5 are equally &ldquo;unusual&rdquo; but on opposite
+    sides of the mean &mdash; one is below average, one above.
+    <strong>How to recognise it:</strong> conclusions that don&rsquo;t match common sense (&ldquo;the shortest person is above average height&rdquo;).
+    <strong>How to avoid it:</strong> always compute x &minus; &mu; carefully and keep the sign through the whole calculation.</p>
+  </div>
+
+  <div class="mistake">
+    <h4>5. Treating 68&ndash;95&ndash;99.7 as exact for any dataset <span class="tag">Exam trap</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> the rule holds only for (approximately) normal data, and the numbers
+    themselves are rounded (the true values are 68.27%, 95.45%, 99.73%).
+    <strong>How to recognise it:</strong> exam questions that sneak in a skewed dataset and expect you to notice.
+    <strong>How to avoid it:</strong> state the normality assumption whenever you use the rule &mdash; examiners often award marks for it.</p>
+  </div>
+
+  <div class="mistake">
+    <h4>6. Using the density instead of the cumulative probability in Excel <span class="tag">Software-output error</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> <code>NORM.DIST(x, mean, sd, FALSE)</code> returns the curve&rsquo;s
+    <em>height</em>, not a probability. Only the cumulative form (<code>TRUE</code>) gives &ldquo;% of values below x.&rdquo;
+    <strong>How to recognise it:</strong> &ldquo;probabilities&rdquo; that don&rsquo;t land between sensible bounds, or results that change wildly with units.
+    <strong>How to avoid it:</strong> for proportions, always set the last argument of <code>NORM.DIST</code> to <code>TRUE</code>.</p>
+  </div>
+</section>
+
+<!-- EDIT: Software guidance -->
+<section id="software" aria-labelledby="software-h">
+  <h2 id="software-h">Software guidance: Excel and Minitab</h2>
+  <p>Software should confirm and speed up what you now understand &mdash; not replace the thinking.</p>
+  <h3>Excel</h3>
+  <div class="table-scroll">
+    <table>
+      <caption>Excel functions for the normal distribution (Formulas &rsaquo; More Functions &rsaquo; Statistical)</caption>
+      <thead>
+        <tr><th scope="col">Task</th><th scope="col">Function</th><th scope="col">Inputs</th><th scope="col">Output that matters</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>z-score for a value</td>
+          <td><code>=STANDARDIZE(x, mean, sd)</code></td>
+          <td>Your value, the mean, the standard deviation</td>
+          <td>The z-score (compare against &plusmn;1, &plusmn;2, &plusmn;3)</td>
+        </tr>
+        <tr>
+          <td>% of values below x</td>
+          <td><code>=NORM.DIST(x, mean, sd, TRUE)</code></td>
+          <td>Value, mean, sd, and <code>TRUE</code> for cumulative</td>
+          <td>A proportion between 0 and 1 (multiply by 100 for %)</td>
+        </tr>
+        <tr>
+          <td>% below a z-score</td>
+          <td><code>=NORM.S.DIST(z, TRUE)</code></td>
+          <td>The z-score, and <code>TRUE</code></td>
+          <td>The percentile as a proportion</td>
+        </tr>
+        <tr>
+          <td>Value at a given percentile</td>
+          <td><code>=NORM.INV(p, mean, sd)</code></td>
+          <td>The percentile as a proportion (e.g. 0.95)</td>
+          <td>The cutoff value in original units</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Interpreting the result:</strong> <code>=NORM.DIST(182, 170, 8, TRUE)</code> returns about 0.9332,
+  meaning roughly 93.3% of values fall below 182 &mdash; matching a z-score of +1.5.
+  <strong>Common Excel mistakes:</strong> passing <code>FALSE</code> when you want a probability (see mistake 6 above),
+  and entering the variance where the function expects the standard deviation.</p>
+  <h3>Minitab</h3>
+  <p><strong>Where to find it:</strong> <em>Graph &rsaquo; Probability Distribution Plot &rsaquo; View Probability</em>
+  lets you shade regions of a normal curve visually. For numbers, use
+  <em>Calc &rsaquo; Probability Distributions &rsaquo; Normal</em>, choose <em>Cumulative probability</em>, and enter the
+  mean, standard deviation, and your value as the input constant.</p>
+  <p><strong>Output that matters:</strong> the <em>P(X &le; x)</em> value &mdash; the proportion below your value.
+  To check whether your data is normal in the first place, run <em>Stat &rsaquo; Basic Statistics &rsaquo; Normality Test</em>
+  and look at the probability plot: points close to a straight line suggest normality.
+  <strong>Common Minitab mistake:</strong> reading the <em>probability density</em> output as if it were a probability.</p>
+</section>
+
+<!-- EDIT: Practice activity -->
+<section id="practice" aria-labelledby="practice-h">
+  <h2 id="practice-h">Practice activity: the bottling line</h2>
+  <div class="panel">
+    <p><strong>Scenario:</strong> a bottling machine fills juice bottles with a mean of
+    <strong>&mu; = 350&nbsp;ml</strong> and a standard deviation of <strong>&sigma; = 10&nbsp;ml</strong>.
+    Historical fill volumes are approximately normal.</p>
+    <p><strong>Your task:</strong> using only the empirical rule (no calculator needed), answer:</p>
+    <ol>
+      <li>What percentage of bottles contain between <strong>340&nbsp;ml and 360&nbsp;ml</strong>?</li>
+      <li>What percentage of bottles contain <strong>more than 370&nbsp;ml</strong>?</li>
+      <li>The legal minimum on the label is <strong>320&nbsp;ml</strong>. Roughly how often should a bottle fall below it?</li>
+    </ol>
+    <p>Work each one out (a quick sketch of the curve helps), then check yourself.</p>
+    <div class="reveal-panel">
+      <button type="button" class="btn" id="practice-reveal" aria-expanded="false" aria-controls="practice-answer">Reveal answer</button>
+      <div class="reveal-body" id="practice-answer" hidden>
+        <p><strong>1. About 68%.</strong> 340 and 360 are exactly &mu; &minus; 1&sigma; and &mu; + 1&sigma;
+        (350 &minus; 10 and 350 + 10). The empirical rule says about 68% of values fall within &plusmn;1&sigma;.</p>
+        <p><strong>2. About 2.5%.</strong> 370 = 350 + 2&times;10 = &mu; + 2&sigma;. About 95% of bottles fall within
+        &plusmn;2&sigma;, leaving 5% outside. The curve is symmetric, so half of that 5% &mdash; about 2.5% &mdash; is
+        above +2&sigma;.</p>
+        <p><strong>3. Almost never &mdash; about 0.1&ndash;0.15% of bottles.</strong> 320 = 350 &minus; 3&times;10 = &mu; &minus; 3&sigma;.
+        About 99.7% of bottles fall within &plusmn;3&sigma;, leaving 0.3% outside, split between two tails.
+        Below &minus;3&sigma; is roughly 0.15% &mdash; about 1 or 2 bottles in every 1,000.</p>
+        <p><strong>The reasoning pattern:</strong> convert each boundary into &ldquo;how many &sigma; from &mu;?&rdquo;,
+        then read the proportion straight off the 68&ndash;95&ndash;99.7 rule, remembering to halve any leftover
+        percentage when the question asks about one tail only.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDIT: Quiz questions -->
+<section id="quiz" aria-labelledby="quiz-h">
+  <h2 id="quiz-h">Mini quiz</h2>
+  <p>Five questions. Pick an answer for each, then press <strong>Check my answers</strong>.</p>
+  <form id="quiz-form" novalidate>
+
+    <div class="quiz-q" data-q="q1" data-answer="b">
+      <fieldset>
+        <legend>1. Which set of features describes a normal distribution?</legend>
+        <label class="quiz-option"><input type="radio" name="q1" value="a"><span>Two peaks, with most values at the extremes</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="b"><span>One peak, symmetric, with mean = median = mode at the centre</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="c"><span>A long tail of high values pulling the mean above the median</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="d"><span>A flat shape where every value is equally likely</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="quiz-q" data-q="q2" data-answer="c">
+      <fieldset>
+        <legend>2. For normal data, roughly what percentage of values fall within 2 standard deviations of the mean?</legend>
+        <label class="quiz-option"><input type="radio" name="q2" value="a"><span>50%</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="b"><span>68%</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="c"><span>95%</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="d"><span>99.7%</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="quiz-q" data-q="q3" data-answer="d">
+      <fieldset>
+        <legend>3. Delivery times have a mean of 50 minutes and a standard deviation of 5 minutes. What is the z-score of a 60-minute delivery?</legend>
+        <label class="quiz-option"><input type="radio" name="q3" value="a"><span>z = 0.5</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="b"><span>z = 10</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="c"><span>z = 1</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="d"><span>z = 2</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="quiz-q" data-q="q4" data-answer="a">
+      <fieldset>
+        <legend>4. A candidate&rsquo;s z-score on a test is &minus;1.5. What does this mean?</legend>
+        <label class="quiz-option"><input type="radio" name="q4" value="a"><span>Their score is 1.5 standard deviations below the mean</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="b"><span>They scored 1.5 marks below the pass mark</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="c"><span>Their score is 1.5% below average</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="d"><span>The test was 1.5 times harder than usual</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="quiz-q" data-q="q5" data-answer="c">
+      <fieldset>
+        <legend>5. For which dataset is the normal model probably a poor choice?</legend>
+        <label class="quiz-option"><input type="radio" name="q5" value="a"><span>Adult heights in a large city</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="b"><span>Measurement errors from a calibrated instrument</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="c"><span>Household incomes in a country</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="d"><span>Fill volumes from a stable bottling machine</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="quiz-submit">Check my answers</button>
+      <button type="button" class="btn secondary" id="quiz-reset">Reset quiz</button>
+    </div>
+    <p id="quiz-score" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<!-- EDIT: Summary -->
+<section id="summary" aria-labelledby="summary-h">
+  <h2 id="summary-h">Final summary</h2>
+  <h3>Key takeaways</h3>
+  <ul class="takeaways">
+    <li>The normal distribution is a symmetric, single-peaked model where values cluster around the mean.</li>
+    <li>Two numbers describe it completely: the mean &mu; (location) and the standard deviation &sigma; (spread).</li>
+    <li>The empirical rule: about 68% of values fall within &plusmn;1&sigma;, 95% within &plusmn;2&sigma;, 99.7% within &plusmn;3&sigma;.</li>
+    <li>A z-score, z = (x &minus; &mu;) / &sigma;, converts any value into &ldquo;standard deviations from the mean&rdquo; so different measurements can be compared fairly.</li>
+    <li>|z| beyond 2 is unusual; |z| beyond 3 is rare and usually worth investigating.</li>
+    <li>Software gives the area <em>below</em> a value by default &mdash; subtract from 100% when you need the area above.</li>
+    <li>Always plot your data first: skewed, bounded, or two-peaked data breaks the normal model.</li>
+  </ul>
+  <h3>Decision rule</h3>
+  <div class="panel callout">
+    <p>If the histogram shows <strong>one peak and rough symmetry</strong>, use the normal model:
+    boundaries at whole multiples of &sigma;  empirical rule; anything else  z-score plus a table or
+    software. If the histogram is <strong>skewed, bounded, or two-peaked</strong>, do not use the normal model.</p>
+  </div>
+  <div class="remember">Remember this: subtract the mean, divide by &sigma; &mdash; then let 68&ndash;95&ndash;99.7 do the talking.</div>
+  <p style="margin-top:1rem;"><strong>Suggested next lesson:</strong>
+    <a href="/lessons#statistics">Descriptive Statistics: Mean, Median &amp; Standard Deviation</a> (if you want
+    to solidify the building blocks) or <em>Confidence Intervals for Beginners</em> (to see the normal curve
+    put to work in estimation).</p>
+</section>
+
+<!-- EDIT: References -->
+<section id="references" aria-labelledby="refs-h">
+  <h2 id="refs-h">References</h2>
+  <ul>
+    <li>NIST/SEMATECH e-Handbook of Statistical Methods &mdash; Normal Distribution:
+      <a href="https://www.itl.nist.gov/div898/handbook/eda/section3/eda3661.htm" rel="noopener">itl.nist.gov/div898/handbook</a></li>
+    <li>OpenStax, <em>Introductory Statistics</em> (open textbook), chapter on the Normal Distribution:
+      <a href="https://openstax.org/details/books/introductory-statistics" rel="noopener">openstax.org</a></li>
+  </ul>
+</section>
+
+</article>
+</main>
+
+<div class="lesson-bottom-nav">
+  <a class="back-to-category" href="/lessons#statistics">Back to Statistics</a>
+</div>
+<footer class="lesson-footer">
+  <div class="lesson-footer-inner">
+    <p>&copy; 2026 UpSkill Sprint Consulting &middot; Statistics lesson library</p>
+  </div>
+</footer>
+
+<!-- EDIT: Lesson JavaScript (single script block, IIFE, no globals) -->
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Maths helpers ---------- */
+
+  // Normal probability density function
+  function normalPdf(x, mu, sigma) {
+    var zz = (x - mu) / sigma;
+    return Math.exp(-0.5 * zz * zz) / (sigma * Math.sqrt(2 * Math.PI));
+  }
+
+  // Standard normal cumulative distribution, Phi(z).
+  // Zelen & Severo (1964) polynomial approximation, |error| < 7.5e-8.
+  function normalCdf(z) {
+    var t, d, p;
+    t = 1 / (1 + 0.2316419 * Math.abs(z));
+    d = 0.3989422804014327 * Math.exp(-0.5 * z * z);
+    p = d * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+    return z >= 0 ? 1 - p : p;
+  }
+
+  function fmt(n, dp) {
+    return Number(n.toFixed(dp)).toLocaleString("en", { maximumFractionDigits: dp });
+  }
+
+  /* ---------- 1. Curve explorer ---------- */
+
+  var explorer = {
+    xMin: 40, xMax: 160,
+    pxLeft: 30, pxRight: 670, pxBase: 260, pxTop: 40,
+    sigmaMin: 5
+  };
+
+  function explorerXtoPx(x) {
+    return explorer.pxLeft + (x - explorer.xMin) / (explorer.xMax - explorer.xMin) * (explorer.pxRight - explorer.pxLeft);
+  }
+
+  function explorerYtoPx(density, peakDensity) {
+    var h = density / peakDensity; // 0..1
+    return explorer.pxBase - h * (explorer.pxBase - explorer.pxTop);
+  }
+
+  function buildCurvePath(mu, sigma, from, to, peakDensity, closeToBase) {
+    var d = [], x, step = 1;
+    for (x = from; x <= to + 0.0001; x += step) {
+      d.push((d.length ? "L" : "M") + explorerXtoPx(x).toFixed(1) + " " +
+             explorerYtoPx(normalPdf(x, mu, sigma), peakDensity).toFixed(1));
+    }
+    if (closeToBase) {
+      d.push("L" + explorerXtoPx(to).toFixed(1) + " " + explorer.pxBase);
+      d.push("L" + explorerXtoPx(from).toFixed(1) + " " + explorer.pxBase);
+      d.push("Z");
+    }
+    return d.join(" ");
+  }
+
+  function initExplorer() {
+    var muSlider = document.getElementById("mu-slider");
+    var sigmaSlider = document.getElementById("sigma-slider");
+    if (!muSlider || !sigmaSlider) { return; }
+
+    var muOut = document.getElementById("mu-readout");
+    var sigmaOut = document.getElementById("sigma-readout");
+    var curveEl = document.getElementById("explorer-curve");
+    var bandEl = document.getElementById("explorer-band");
+    var meanLine = document.getElementById("explorer-meanline");
+    var summary = document.getElementById("explorer-summary");
+    var ticks = document.getElementById("explorer-ticks");
+    var resetBtn = document.getElementById("explorer-reset");
+    var exampleBtn = document.getElementById("explorer-example");
+
+    // Fixed vertical scale: the tallest possible curve (sigma = 5) reaches the top.
+    var peakDensity = normalPdf(0, 0, explorer.sigmaMin);
+
+    // Axis ticks every 20 units
+    (function drawTicks() {
+      var frag = document.createDocumentFragment(), v, line, label, px;
+      for (v = explorer.xMin; v <= explorer.xMax; v += 20) {
+        px = explorerXtoPx(v);
+        line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", px); line.setAttribute("x2", px);
+        line.setAttribute("y1", explorer.pxBase); line.setAttribute("y2", explorer.pxBase + 6);
+        line.setAttribute("stroke", "var(--muted)");
+        frag.appendChild(line);
+        label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", px); label.setAttribute("y", explorer.pxBase + 24);
+        label.setAttribute("text-anchor", "middle");
+        label.setAttribute("font-size", "14");
+        label.setAttribute("fill", "var(--ink-soft)");
+        label.textContent = String(v);
+        frag.appendChild(label);
+      }
+      ticks.appendChild(frag);
+    })();
+
+    function render() {
+      var mu = Number(muSlider.value);
+      var sigma = Number(sigmaSlider.value);
+      muOut.textContent = String(mu);
+      sigmaOut.textContent = String(sigma);
+      curveEl.setAttribute("d", buildCurvePath(mu, sigma, explorer.xMin, explorer.xMax, peakDensity, false));
+      bandEl.setAttribute("d", buildCurvePath(mu, sigma,
+        Math.max(explorer.xMin, mu - sigma),
+        Math.min(explorer.xMax, mu + sigma),
+        peakDensity, true));
+      var mx = explorerXtoPx(mu);
+      meanLine.setAttribute("x1", mx);
+      meanLine.setAttribute("x2", mx);
+      summary.innerHTML =
+        "With mean <strong>" + mu + "</strong> and standard deviation <strong>" + sigma +
+        "</strong>, about <strong>68%</strong> of values fall between <strong>" + (mu - sigma) +
+        "</strong> and <strong>" + (mu + sigma) + "</strong>, and about <strong>95%</strong> fall between <strong>" +
+        (mu - 2 * sigma) + "</strong> and <strong>" + (mu + 2 * sigma) + "</strong>.";
+    }
+
+    muSlider.addEventListener("input", render);
+    sigmaSlider.addEventListener("input", render);
+    resetBtn.addEventListener("click", function () {
+      muSlider.value = "100"; sigmaSlider.value = "15"; render();
+    });
+    exampleBtn.addEventListener("click", function () {
+      muSlider.value = "100"; sigmaSlider.value = "15"; render();
+      summary.innerHTML = "IQ scores are scaled so that &mu; = 100 and &sigma; = 15: about 68% of people score " +
+        "between <strong>85</strong> and <strong>115</strong>, and about 95% between <strong>70</strong> and <strong>130</strong>.";
+    });
+
+    render();
+  }
+
+  /* ---------- 2. z-score calculator ---------- */
+
+  function initCalculator() {
+    var meanInput = document.getElementById("calc-mean");
+    if (!meanInput) { return; }
+    var sdInput = document.getElementById("calc-sd");
+    var xInput = document.getElementById("calc-x");
+    var runBtn = document.getElementById("calc-run");
+    var sampleBtn = document.getElementById("calc-sample");
+    var resetBtn = document.getElementById("calc-reset");
+    var errorEl = document.getElementById("calc-error");
+    var resultEl = document.getElementById("calc-result");
+    var zLine = document.getElementById("calc-z-line");
+    var pctLine = document.getElementById("calc-percentile-line");
+    var interpLine = document.getElementById("calc-interpret-line");
+    var curveEl = document.getElementById("calc-curve");
+    var fillEl = document.getElementById("calc-fill");
+    var marker = document.getElementById("calc-marker");
+    var markerLabel = document.getElementById("calc-marker-label");
+    var axisLabels = document.getElementById("calc-axis-labels");
+
+    // Standard-normal drawing area: z from -4 to 4
+    var geo = { zMin: -4, zMax: 4, pxLeft: 30, pxRight: 670, pxBase: 200, pxTop: 40 };
+    var peak = normalPdf(0, 0, 1);
+
+    function zToPx(z) {
+      return geo.pxLeft + (z - geo.zMin) / (geo.zMax - geo.zMin) * (geo.pxRight - geo.pxLeft);
+    }
+    function densToPx(dens) {
+      return geo.pxBase - (dens / peak) * (geo.pxBase - geo.pxTop);
+    }
+    function stdPath(from, to, close) {
+      var d = [], z, step = 0.05;
+      for (z = from; z <= to + 0.0001; z += step) {
+        d.push((d.length ? "L" : "M") + zToPx(z).toFixed(1) + " " + densToPx(normalPdf(z, 0, 1)).toFixed(1));
+      }
+      if (close) {
+        d.push("L" + zToPx(to).toFixed(1) + " " + geo.pxBase);
+        d.push("L" + zToPx(from).toFixed(1) + " " + geo.pxBase);
+        d.push("Z");
+      }
+      return d.join(" ");
+    }
+
+    // Static curve + axis labels drawn once
+    curveEl.setAttribute("d", stdPath(geo.zMin, geo.zMax, false));
+    (function drawAxis() {
+      var frag = document.createDocumentFragment(), z, t;
+      for (z = -3; z <= 3; z += 1) {
+        t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        t.setAttribute("x", zToPx(z));
+        t.setAttribute("y", geo.pxBase + 22);
+        t.setAttribute("text-anchor", "middle");
+        t.setAttribute("font-size", "14");
+        t.setAttribute("fill", "var(--ink-soft)");
+        t.textContent = (z > 0 ? "+" : "") + z + (z === 0 ? " (\u03BC)" : "\u03C3");
+        if (z === 0) { t.textContent = "\u03BC"; }
+        frag.appendChild(t);
+      }
+      axisLabels.appendChild(frag);
+    })();
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.hidden = false;
+      resultEl.hidden = true;
+    }
+    function clearError() {
+      errorEl.textContent = "";
+      errorEl.hidden = true;
+    }
+
+    function calculate() {
+      clearError();
+      var mu = parseFloat(meanInput.value);
+      var sd = parseFloat(sdInput.value);
+      var x = parseFloat(xInput.value);
+
+      if (meanInput.value.trim() === "" || isNaN(mu)) {
+        showError("Please enter a numeric mean (\u03BC)."); meanInput.focus(); return;
+      }
+      if (sdInput.value.trim() === "" || isNaN(sd)) {
+        showError("Please enter a numeric standard deviation (\u03C3)."); sdInput.focus(); return;
+      }
+      if (sd <= 0) {
+        showError("The standard deviation must be greater than 0 \u2014 it measures spread, so it cannot be zero or negative."); sdInput.focus(); return;
+      }
+      if (xInput.value.trim() === "" || isNaN(x)) {
+        showError("Please enter a numeric value (x) to standardise."); xInput.focus(); return;
+      }
+
+      var z = (x - mu) / sd;
+      var p = normalCdf(z);
+      var pctBelow = p * 100;
+      var pctAbove = (1 - p) * 100;
+
+      zLine.textContent = "z = " + fmt(z, 2);
+      pctLine.innerHTML = "About <strong>" + fmt(pctBelow, 1) + "%</strong> of values fall below " +
+        fmt(x, 2) + ", and about <strong>" + fmt(pctAbove, 1) + "%</strong> fall above it.";
+
+      var verdict;
+      var az = Math.abs(z);
+      if (az < 1) { verdict = "This is a completely ordinary value \u2014 well inside the middle 68% of the data."; }
+      else if (az < 2) { verdict = "Somewhat " + (z > 0 ? "high" : "low") + ", but not remarkable \u2014 still within the middle 95%."; }
+      else if (az < 3) { verdict = "Unusual: fewer than 5% of values are this far from the mean. Worth a closer look."; }
+      else { verdict = "Very rare: values beyond \u00B13\u03C3 occur only about 0.3% of the time. Investigate!"; }
+      interpLine.textContent = "Interpretation: this value is " + fmt(az, 2) +
+        " standard deviation" + (az === 1 ? "" : "s") + " " + (z >= 0 ? "above" : "below") + " the mean. " + verdict;
+
+      var zClamped = Math.max(geo.zMin, Math.min(geo.zMax, z));
+      fillEl.setAttribute("d", stdPath(geo.zMin, zClamped, true));
+      var mx = zToPx(zClamped);
+      marker.setAttribute("x1", mx); marker.setAttribute("x2", mx);
+      markerLabel.setAttribute("x", Math.max(60, Math.min(640, mx)));
+      markerLabel.textContent = "z = " + fmt(z, 2);
+
+      resultEl.hidden = false;
+    }
+
+    runBtn.addEventListener("click", calculate);
+    [meanInput, sdInput, xInput].forEach(function (el) {
+      el.addEventListener("keydown", function (evt) {
+        if (evt.key === "Enter") { evt.preventDefault(); calculate(); }
+      });
+    });
+    sampleBtn.addEventListener("click", function () {
+      meanInput.value = "170"; sdInput.value = "8"; xInput.value = "182";
+      calculate();
+    });
+    resetBtn.addEventListener("click", function () {
+      meanInput.value = "170"; sdInput.value = "8"; xInput.value = "182";
+      clearError();
+      resultEl.hidden = true;
+    });
+  }
+
+  /* ---------- 3. Reveal panels ---------- */
+
+  function initReveals() {
+    var btn = document.getElementById("practice-reveal");
+    var panel = document.getElementById("practice-answer");
+    if (!btn || !panel) { return; }
+    btn.addEventListener("click", function () {
+      var isHidden = panel.hidden;
+      panel.hidden = !isHidden;
+      btn.setAttribute("aria-expanded", String(isHidden));
+      btn.textContent = isHidden ? "Hide answer" : "Reveal answer";
+    });
+  }
+
+  /* ---------- 4. Quiz ---------- */
+
+  var quizExplanations = {
+    q1: "A normal distribution has a single peak and mirror-image symmetry, with the mean, median and mode all at the centre. Two peaks, skewed tails, or a flat shape all describe non-normal patterns.",
+    q2: "The empirical rule: about 68% of values fall within \u00B11\u03C3, about 95% within \u00B12\u03C3, and about 99.7% within \u00B13\u03C3. \u201CWithin 2 standard deviations\u201D is the 95% band.",
+    q3: "z = (x \u2212 \u03BC) / \u03C3 = (60 \u2212 50) / 5 = 10 / 5 = 2. The delivery took 2 standard deviations longer than average.",
+    q4: "A z-score counts standard deviations from the mean, and the minus sign means below it. It says nothing about pass marks, percentages, or test difficulty.",
+    q5: "Household incomes are strongly right-skewed: many moderate incomes and a long tail of very high ones, so mean > median and the bell curve fits poorly. Heights, measurement errors, and stable fill volumes are classic near-normal examples."
+  };
+
+  function initQuiz() {
+    var form = document.getElementById("quiz-form");
+    if (!form) { return; }
+    var submitBtn = document.getElementById("quiz-submit");
+    var resetBtn = document.getElementById("quiz-reset");
+    var scoreEl = document.getElementById("quiz-score");
+    var questions = Array.prototype.slice.call(form.querySelectorAll(".quiz-q"));
+
+    function grade() {
+      var score = 0;
+      var answeredAll = true;
+
+      questions.forEach(function (q) {
+        var name = q.getAttribute("data-q");
+        var correct = q.getAttribute("data-answer");
+        var chosen = form.querySelector('input[name="' + name + '"]:checked');
+        var feedback = q.querySelector("[data-feedback]");
+        q.classList.remove("correct", "incorrect");
+        feedback.hidden = false;
+        feedback.className = "quiz-feedback";
+
+        if (!chosen) {
+          answeredAll = false;
+          feedback.classList.add("no");
+          feedback.innerHTML = '<span class="quiz-status no">Not answered.</span> Choose an option, then check again.';
+          return;
+        }
+        if (chosen.value === correct) {
+          score += 1;
+          q.classList.add("correct");
+          feedback.classList.add("ok");
+          feedback.innerHTML = '<span class="quiz-status ok">Correct.</span> ' + quizExplanations[name];
+        } else {
+          q.classList.add("incorrect");
+          feedback.classList.add("no");
+          feedback.innerHTML = '<span class="quiz-status no">Not quite.</span> ' + quizExplanations[name];
+        }
+      });
+
+      var msg = "Your score: " + score + " out of " + questions.length + ".";
+      if (!answeredAll) { msg += " (Some questions are unanswered \u2014 answer them and check again.)"; }
+      else if (score === questions.length) { msg += " Perfectly normal performance \u2014 in the best possible way!"; }
+      else if (score >= 3) { msg += " Solid \u2014 review the explanations above to close the gaps."; }
+      else { msg += " Revisit the 68\u201395\u201399.7 section and the z-score formula, then try again."; }
+      scoreEl.textContent = msg;
+    }
+
+    function reset() {
+      questions.forEach(function (q) {
+        q.classList.remove("correct", "incorrect");
+        var feedback = q.querySelector("[data-feedback]");
+        feedback.hidden = true;
+        feedback.innerHTML = "";
+        Array.prototype.forEach.call(q.querySelectorAll("input[type=radio]"), function (r) { r.checked = false; });
+      });
+      scoreEl.textContent = "";
+    }
+
+    submitBtn.addEventListener("click", grade);
+    resetBtn.addEventListener("click", reset);
+  }
+
+  /* ---------- Init ---------- */
+  function initAll() {
+    initExplorer();
+    initCalculator();
+    initReveals();
+    initQuiz();
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAll);
+  } else {
+    initAll();
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 (function () {
   'use strict';
 
-  const cssParts = ["/assets/lessons/introduction-to-design-of-experiment-doe/style-01.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/style-02.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/style-03.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/style-04.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/style-05.txt"];
-  const htmlParts = ["/assets/lessons/introduction-to-design-of-experiment-doe/content-01.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/content-02.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/content-03.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/content-04.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/content-05.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/content-06.txt"];
-  const jsParts = ["/assets/lessons/introduction-to-design-of-experiment-doe/app-01.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/app-02.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/app-03.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/app-04.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/app-05.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/app-06.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/app-07.txt", "/assets/lessons/introduction-to-design-of-experiment-doe/app-08.txt"];
+  const cssParts = ['/assets/lessons/introduction-to-design-of-experiment-doe/style-1.txt', '/assets/lessons/introduction-to-design-of-experiment-doe/style-2.txt', '/assets/lessons/introduction-to-design-of-experiment-doe/style-3.txt'];
+  const htmlParts = ['/assets/lessons/introduction-to-design-of-experiment-doe/content-1.txt', '/assets/lessons/introduction-to-design-of-experiment-doe/content-2.txt', '/assets/lessons/introduction-to-design-of-experiment-doe/content-3.txt'];
+  const jsParts = ['/assets/lessons/introduction-to-design-of-experiment-doe/app-1.txt', '/assets/lessons/introduction-to-design-of-experiment-doe/app-2.txt', '/assets/lessons/introduction-to-design-of-experiment-doe/app-3.txt', '/assets/lessons/introduction-to-design-of-experiment-doe/app-4.txt'];
 
   async function readParts(paths) {
     const responses = await Promise.all(paths.map(function (path) {

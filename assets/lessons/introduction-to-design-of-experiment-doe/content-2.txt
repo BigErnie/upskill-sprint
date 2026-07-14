@@ -1,0 +1,232 @@
+          <div class="toolbar-group">
+            <button class="btn btn-dark" id="load3Sample">Load machine data</button>
+            <button class="btn btn-outline" id="open3Import">Paste dataset</button>
+            <button class="btn btn-outline" id="export3Csv">Export CSV</button>
+            <button class="btn btn-outline" id="randomize3">Generate randomized run order</button>
+          </div>
+          <div class="toolbar-group">
+            <span class="pill">8 treatment combinations</span>
+            <span class="pill">7 estimable effects</span>
+          </div>
+        </div>
+
+        <div class="workspace-body">
+          <div class="setup-grid">
+            <div class="field">
+              <label for="f3aName">Factor A</label>
+              <input id="f3aName" value="Time" />
+            </div>
+            <div class="field">
+              <label for="f3aLow">A low</label>
+              <input id="f3aLow" value="10" />
+            </div>
+            <div class="field">
+              <label for="f3aHigh">A high</label>
+              <input id="f3aHigh" value="16" />
+            </div>
+            <div class="field">
+              <label for="f3aUnit">A unit</label>
+              <input id="f3aUnit" value="cycles" />
+            </div>
+            <div class="field">
+              <label for="f3Response">Response</label>
+              <input id="f3Response" value="Strength" />
+            </div>
+
+            <div class="field">
+              <label for="f3bName">Factor B</label>
+              <input id="f3bName" value="Force" />
+            </div>
+            <div class="field">
+              <label for="f3bLow">B low</label>
+              <input id="f3bLow" value="2" />
+            </div>
+            <div class="field">
+              <label for="f3bHigh">B high</label>
+              <input id="f3bHigh" value="4" />
+            </div>
+            <div class="field">
+              <label for="f3bUnit">B unit</label>
+              <input id="f3bUnit" value="kN" />
+            </div>
+            <div class="field">
+              <label for="f3Goal">Response goal</label>
+              <select id="f3Goal">
+                <option value="max">Maximize</option>
+                <option value="min">Minimize</option>
+                <option value="target">Hit a target</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="f3cName">Factor C</label>
+              <input id="f3cName" value="Current" />
+            </div>
+            <div class="field">
+              <label for="f3cLow">C low</label>
+              <input id="f3cLow" value="9" />
+            </div>
+            <div class="field">
+              <label for="f3cHigh">C high</label>
+              <input id="f3cHigh" value="11" />
+            </div>
+            <div class="field">
+              <label for="f3cUnit">C unit</label>
+              <input id="f3cUnit" value="kA" />
+            </div>
+            <div class="field">
+              <label for="f3Target">Target, if applicable</label>
+              <input id="f3Target" type="number" value="400" />
+            </div>
+          </div>
+
+          <div id="import3Panel" class="card card-pad hidden">
+            <h3>Paste a 2³ dataset</h3>
+            <p class="small muted">
+              Paste columns for Factor A, Factor B, Factor C, and Response. The importer expects all eight combinations.
+              If duplicate treatment combinations are supplied, their responses are averaged and a warning is shown.
+            </p>
+            <textarea id="import3Text">Time,Force,Current,Strength
+10,2,9,187
+16,2,9,318
+10,4,9,245
+16,4,9,362
+10,2,11,279
+16,2,11,445
+10,4,11,343
+16,4,11,513</textarea>
+            <div class="toolbar-group mt-10">
+              <button class="btn btn-dark" id="apply3Import">Apply dataset</button>
+              <button class="btn btn-outline" id="cancel3Import">Close</button>
+            </div>
+            <div id="import3Message" class="feedback" aria-live="polite"></div>
+          </div>
+
+          <div class="table-wrap mt-16">
+            <table id="table3">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="cube-layout">
+            <aside class="cube-controls">
+              <div class="control-group">
+                <h4>Camera</h4>
+                <div class="toolbar-group">
+                  <button class="btn btn-soft cube-view-btn" data-view="iso">Isometric</button>
+                  <button class="btn btn-soft cube-view-btn" data-view="front">Front</button>
+                  <button class="btn btn-soft cube-view-btn" data-view="top">Top</button>
+                  <button class="btn btn-soft cube-view-btn" data-view="right">Right</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <h4>Plane isolation</h4>
+                <div class="field">
+                  <label for="planeSelect">Show all or focus one factor plane</label>
+                  <select id="planeSelect">
+                    <option value="all">All corners</option>
+                    <option value="A-">A low plane</option>
+                    <option value="A+">A high plane</option>
+                    <option value="B-">B low plane</option>
+                    <option value="B+">B high plane</option>
+                    <option value="C-">C low plane</option>
+                    <option value="C+">C high plane</option>
+                  </select>
+                </div>
+                <button class="btn btn-outline mt-10" id="focusPlane">Zoom to selected plane</button>
+              </div>
+
+              <div class="control-group">
+                <h4>Response display</h4>
+                <div class="field">
+                  <label for="cubeResponseMode">Corner labels and colors</label>
+                  <select id="cubeResponseMode">
+                    <option value="observed">Observed response</option>
+                    <option value="predicted">Predicted from active terms</option>
+                    <option value="residual">Residual: observed − predicted</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <h4>Model-term switches</h4>
+                <p class="small muted">
+                  Turning off a term sets its regression coefficient to zero and recalculates the predicted response.
+                </p>
+                <div class="term-toggle-list" id="term3Toggles">
+                  <label class="toggle"><input type="checkbox" class="term3" value="A" checked /> A</label>
+                  <label class="toggle"><input type="checkbox" class="term3" value="B" checked /> B</label>
+                  <label class="toggle"><input type="checkbox" class="term3" value="C" checked /> C</label>
+                  <label class="toggle"><input type="checkbox" class="term3" value="AB" checked /> AB</label>
+                  <label class="toggle"><input type="checkbox" class="term3" value="AC" checked /> AC</label>
+                  <label class="toggle"><input type="checkbox" class="term3" value="BC" checked /> BC</label>
+                  <label class="toggle"><input type="checkbox" class="term3" value="ABC" checked /> ABC</label>
+                </div>
+                <div class="toolbar-group">
+                  <button class="btn btn-soft" id="mainOnly3">Main effects only</button>
+                  <button class="btn btn-soft" id="allTerms3">All terms</button>
+                  <button class="btn btn-soft" id="noTerms3">Mean only</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <h4>Interaction focus</h4>
+                <div class="toolbar-group">
+                  <button class="btn btn-outline interaction-focus" data-term="AB">AB</button>
+                  <button class="btn btn-outline interaction-focus" data-term="AC">AC</button>
+                  <button class="btn btn-outline interaction-focus" data-term="BC">BC</button>
+                  <button class="btn btn-outline interaction-focus" data-term="ABC">ABC</button>
+                </div>
+              </div>
+
+              <div class="selected-run" id="selected3Run">
+                Click a cube corner to inspect the run.
+              </div>
+              <button class="btn btn-dark" id="focusCorner" disabled>Zoom to selected corner</button>
+            </aside>
+
+            <div class="cube-view" id="cubeContainer">
+              <canvas id="cubeCanvas" aria-label="Interactive three-dimensional DOE cube"></canvas>
+              <div class="cube-tooltip" id="cubeTooltip"></div>
+              <div class="cube-hint">Drag to rotate · wheel/pinch to zoom · click a corner to inspect</div>
+            </div>
+          </div>
+
+          <div class="analysis-grid">
+            <div>
+              <h3>Effect estimates</h3>
+              <div class="table-wrap">
+                <table class="effect-table" id="effects3Table">
+                  <thead>
+                    <tr>
+                      <th>Term</th>
+                      <th>Effect</th>
+                      <th>Coefficient</th>
+                      <th>Relative size</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div class="model-box mt-16" id="model3"></div>
+              <div class="notice mt-16" id="dominantEffect3"></div>
+            </div>
+
+            <div>
+              <div class="toolbar-group" style="justify-content:space-between">
+                <h3 class="mb-0">Conditional interaction plot</h3>
+                <select id="interaction3Term" style="width:auto; min-width:180px">
+                  <option value="AB">A × B, conditioned on C</option>
+                  <option value="AC">A × C, conditioned on B</option>
+                  <option value="BC">B × C, conditioned on A</option>
+                </select>
+              </div>
+              <div id="interaction3Plot" class="plot mt-10"></div>
+            </div>
+          </div>
+
+          <div class="grid-2 mt-20">
+            <div>
+              <h3>Main-effects plot</h3>

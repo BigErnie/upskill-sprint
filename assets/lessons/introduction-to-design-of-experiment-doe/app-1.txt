@@ -1,0 +1,305 @@
+(() => {
+  "use strict";
+
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const fmt = (value, digits = 3) => {
+    if (!Number.isFinite(Number(value))) return "—";
+    return Number(value).toLocaleString(undefined, { maximumFractionDigits: digits });
+  };
+  const escapeHtml = (value) => String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+  function downloadText(filename, text, mime = "text/plain") {
+    const blob = new Blob([text], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function parseDelimited(text) {
+    const lines = text.trim().split(/\r?\n/).filter(line => line.trim());
+    if (!lines.length) throw new Error("No data were found.");
+    const delimiter = lines.some(x => x.includes("\t")) ? "\t" : lines.some(x => x.includes(";")) ? ";" : ",";
+    return lines.map(line => line.split(delimiter).map(cell => cell.trim().replace(/^"|"$/g, "")));
+  }
+
+  function numericOrStringSort(values) {
+    const nums = values.map(Number);
+    if (nums.every(Number.isFinite)) {
+      return [...values].sort((a, b) => Number(a) - Number(b));
+    }
+    return [...values].sort((a, b) => String(a).localeCompare(String(b)));
+  }
+
+  function unique(values) {
+    return [...new Set(values.map(String))];
+  }
+
+  function productCode(row, term) {
+    return [...term].reduce((acc, ch) => acc * row[ch], 1);
+  }
+
+  function factorialEffects(rows, terms) {
+    const grand = rows.reduce((s, r) => s + Number(r.y), 0) / rows.length;
+    const effects = {};
+    const coefficients = { intercept: grand };
+    for (const term of terms) {
+      const plus = rows.filter(r => productCode(r, term) === 1);
+      const minus = rows.filter(r => productCode(r, term) === -1);
+      const plusMean = plus.reduce((s, r) => s + Number(r.y), 0) / plus.length;
+      const minusMean = minus.reduce((s, r) => s + Number(r.y), 0) / minus.length;
+      effects[term] = plusMean - minusMean;
+      coefficients[term] = effects[term] / 2;
+    }
+    return { grand, effects, coefficients };
+  }
+
+  function predictedValue(row, analysis, activeTerms) {
+    return analysis.grand + activeTerms.reduce((s, term) => s + analysis.coefficients[term] * productCode(row, term), 0);
+  }
+
+  function plotConfig() {
+    return {
+      responsive: true,
+      displaylogo: false,
+      modeBarButtonsToRemove: ["lasso2d", "select2d"]
+    };
+  }
+
+  function cssVar(name, fallback) {
+    const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return value || fallback;
+  }
+
+  function chartPalette() {
+    return {
+      surface: cssVar("--surface", "#ffffff"),
+      ink: cssVar("--ink", "#172033"),
+      muted: cssVar("--muted", "#657086"),
+      grid: cssVar("--doe-grid", "#e2e8f0"),
+      hover: cssVar("--navy", "#0b2545")
+    };
+  }
+
+  function plotLayoutBase() {
+    const palette = chartPalette();
+    return {
+      paper_bgcolor: "rgba(0,0,0,0)",
+      plot_bgcolor: palette.surface,
+      font: { family: "Work Sans, Arial, sans-serif", color: palette.ink },
+      margin: { l: 58, r: 20, t: 30, b: 55 },
+      hoverlabel: { bgcolor: palette.hover, font: { color: "#fff" } }
+    };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Progress
+  // ---------------------------------------------------------------------------
+  function updateProgress() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+    $("#progressBar").style.width = `${Math.min(100, Math.max(0, pct))}%`;
+  }
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  updateProgress();
+
+  // ---------------------------------------------------------------------------
+  // 2² DESIGN
+  // ---------------------------------------------------------------------------
+  const state2 = {
+    responses: [35, 34, 42, 84], // Standard order: --, +-, -+, ++
+    selected: null,
+    step: 1
+  };
+
+  const terms2 = ["A", "B", "AB"];
+  const standard2 = [
+    { A: -1, B: -1 },
+    { A:  1, B: -1 },
+    { A: -1, B:  1 },
+    { A:  1, B:  1 }
+  ];
+
+  function meta2() {
+    return {
+      aName: $("#f2aName").value.trim() || "Factor A",
+      aLow: $("#f2aLow").value,
+      aHigh: $("#f2aHigh").value,
+      aUnit: $("#f2aUnit").value.trim(),
+      bName: $("#f2bName").value.trim() || "Factor B",
+      bLow: $("#f2bLow").value,
+      bHigh: $("#f2bHigh").value,
+      bUnit: $("#f2bUnit").value.trim(),
+      response: $("#f2Response").value.trim() || "Response"
+    };
+  }
+
+  function rows2() {
+    return standard2.map((codes, i) => ({ ...codes, y: Number(state2.responses[i]) }));
+  }
+
+  function activeTerms2() {
+    return $$(".term2:checked").map(el => el.value);
+  }
+
+  function actualLevel(code, low, high) {
+    return code === -1 ? low : high;
+  }
+
+  function renderTable2() {
+    const m = meta2();
+    $("#table2 thead").innerHTML = `
+      <tr>
+        <th>Std order</th>
+        <th>${escapeHtml(m.aName)} (${escapeHtml(m.aUnit || "unit")})</th>
+        <th>${escapeHtml(m.bName)} (${escapeHtml(m.bUnit || "unit")})</th>
+        <th>Coded A</th>
+        <th>Coded B</th>
+        <th>${escapeHtml(m.response)}</th>
+      </tr>`;
+    $("#table2 tbody").innerHTML = standard2.map((r, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${escapeHtml(actualLevel(r.A, m.aLow, m.aHigh))}</td>
+        <td>${escapeHtml(actualLevel(r.B, m.bLow, m.bHigh))}</td>
+        <td><span class="code-chip">${r.A > 0 ? "+1" : "−1"}</span></td>
+        <td><span class="code-chip">${r.B > 0 ? "+1" : "−1"}</span></td>
+        <td><input type="number" step="any" class="response2" data-index="${i}" value="${state2.responses[i]}" aria-label="Response for run ${i + 1}" /></td>
+      </tr>`).join("");
+
+    $$(".response2").forEach(input => {
+      input.addEventListener("input", () => {
+        state2.responses[Number(input.dataset.index)] = Number(input.value);
+        update2();
+      });
+    });
+  }
+
+  function responseColor(value, min, max) {
+    const t = max === min ? .5 : (value - min) / (max - min);
+    const hue = 210 - t * 190;
+    return `hsl(${hue} 74% 45%)`;
+  }
+
+  function renderSquare2() {
+    const m = meta2();
+    const rows = rows2();
+    const analysis = factorialEffects(rows, terms2);
+    const active = activeTerms2();
+    const values = rows.map(r => predictedValue(r, analysis, active));
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+
+    $("#squareAxisX").textContent = `${m.aName}: low → high`;
+    $("#squareAxisY").textContent = `${m.bName}: low → high`;
+
+    $$(".corner, .corner-label", $("#factorSquare")).forEach(el => el.remove());
+
+    const positions = [
+      { left: 20, top: 80 },
+      { left: 80, top: 80 },
+      { left: 20, top: 20 },
+      { left: 80, top: 20 }
+    ];
+
+    rows.forEach((r, i) => {
+      const predicted = values[i];
+      const button = document.createElement("button");
+      button.className = `corner${state2.selected === i ? " active" : ""}`;
+      button.style.left = positions[i].left + "%";
+      button.style.top = positions[i].top + "%";
+      button.style.background = responseColor(predicted, min, max);
+      button.innerHTML = `${fmt(predicted, 2)}<small>${m.response}</small>`;
+      button.title = `Run ${i + 1}`;
+      button.addEventListener("click", () => {
+        state2.selected = i;
+        renderSquare2();
+        renderSelected2();
+      });
+      $("#factorSquare").appendChild(button);
+
+      const label = document.createElement("div");
+      label.className = "corner-label";
+      label.style.left = positions[i].left + "%";
+      label.style.top = (positions[i].top + (positions[i].top < 50 ? 13 : -13)) + "%";
+      label.textContent = `${m.aName} ${r.A < 0 ? "low" : "high"} · ${m.bName} ${r.B < 0 ? "low" : "high"}`;
+      $("#factorSquare").appendChild(label);
+    });
+  }
+
+  function renderSelected2() {
+    if (state2.selected === null) {
+      $("#selected2Run").textContent = "Select a corner in the square.";
+      return;
+    }
+    const m = meta2();
+    const r = rows2()[state2.selected];
+    const analysis = factorialEffects(rows2(), terms2);
+    const pred = predictedValue(r, analysis, activeTerms2());
+    $("#selected2Run").innerHTML = `
+      <strong>Run ${state2.selected + 1}</strong><br>
+      ${escapeHtml(m.aName)}: <strong>${escapeHtml(actualLevel(r.A, m.aLow, m.aHigh))} ${escapeHtml(m.aUnit)}</strong><br>
+      ${escapeHtml(m.bName)}: <strong>${escapeHtml(actualLevel(r.B, m.bLow, m.bHigh))} ${escapeHtml(m.bUnit)}</strong><br>
+      Observed ${escapeHtml(m.response)}: <strong>${fmt(r.y)}</strong><br>
+      Predicted from active terms: <strong>${fmt(pred)}</strong>
+    `;
+  }
+
+  function renderMetrics2() {
+    const m = meta2();
+    const analysis = factorialEffects(rows2(), terms2);
+    $("#metrics2").innerHTML = `
+      <div class="metric"><small>Grand mean</small><strong>${fmt(analysis.grand)}</strong><span class="sub">Average of all four responses</span></div>
+      <div class="metric"><small>${escapeHtml(m.aName)} effect, A</small><strong>${fmt(analysis.effects.A)}</strong><span class="sub">High A mean − low A mean</span></div>
+      <div class="metric"><small>${escapeHtml(m.bName)} effect, B</small><strong>${fmt(analysis.effects.B)}</strong><span class="sub">High B mean − low B mean</span></div>
+      <div class="metric"><small>${escapeHtml(m.aName)} × ${escapeHtml(m.bName)}, AB</small><strong>${fmt(analysis.effects.AB)}</strong><span class="sub">Difference in conditional A effects</span></div>
+    `;
+
+    const active = activeTerms2();
+    const terms = active.map(term => {
+      const sign = analysis.coefficients[term] >= 0 ? "+" : "−";
+      return `${sign} ${fmt(Math.abs(analysis.coefficients[term]))}${term}`;
+    }).join(" ");
+    $("#model2").innerHTML = `ŷ = ${fmt(analysis.grand)} ${terms || ""}`;
+  }
+
+  function renderPlots2() {
+    const m = meta2();
+    const rows = rows2();
+
+    const meanByA = [-1, 1].map(a => {
+      const subset = rows.filter(r => r.A === a);
+      return subset.reduce((s, r) => s + r.y, 0) / subset.length;
+    });
+    const meanByB = [-1, 1].map(b => {
+      const subset = rows.filter(r => r.B === b);
+      return subset.reduce((s, r) => s + r.y, 0) / subset.length;
+    });
+
+    Plotly.react("main2Plot", [
+      { x: [`${m.aName} low`, `${m.aName} high`], y: meanByA, mode: "lines+markers", name: m.aName, line: { width: 4 }, marker: { size: 10 } },
+      { x: [`${m.bName} low`, `${m.bName} high`], y: meanByB, mode: "lines+markers", name: m.bName, line: { width: 4 }, marker: { size: 10 } }
+    ], {
+      ...plotLayoutBase(),
+      yaxis: { title: `Mean ${m.response}`, zeroline: false, gridcolor: chartPalette().grid },
+      xaxis: { title: "Factor level", gridcolor: chartPalette().grid },
+      legend: { orientation: "h", y: 1.12 }
+    }, plotConfig());
+
+    const traces = [-1, 1].map(b => ({
+      x: [m.aLow, m.aHigh],
+      y: [-1, 1].map(a => rows.find(r => r.A === a && r.B === b).y),
+      mode: "lines+markers",
+      name: `${m.bName} ${b < 0 ? "low" : "high"}`,
+      line: { width: 4 },
+      marker: { size: 10 }

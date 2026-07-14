@@ -1,0 +1,274 @@
+        <td>${fmt(analysis.coefficients[term])}</td>
+        <td style="min-width:130px">
+          <div class="bar"><span style="width:${Math.abs(analysis.effects[term]) / maxAbs * 100}%"></span></div>
+        </td>
+      </tr>`).join("");
+
+    const active = activeTerms3();
+    const expression = active.map(term => {
+      const coefficient = analysis.coefficients[term];
+      return `${coefficient >= 0 ? "+" : "−"} ${fmt(Math.abs(coefficient))}${term}`;
+    }).join(" ");
+    $("#model3").innerHTML = `ŷ = ${fmt(analysis.grand)} ${expression}`;
+
+    const dominant = [...terms3].sort((a,b) => Math.abs(analysis.effects[b]) - Math.abs(analysis.effects[a]))[0];
+    const labels = {
+      A: m.aName, B: m.bName, C: m.cName,
+      AB: `${m.aName} × ${m.bName}`,
+      AC: `${m.aName} × ${m.cName}`,
+      BC: `${m.bName} × ${m.cName}`,
+      ABC: `${m.aName} × ${m.bName} × ${m.cName}`
+    };
+    $("#dominantEffect3").innerHTML = `
+      <strong>Largest estimated effect:</strong> ${escapeHtml(labels[dominant])}
+      (${dominant}) = <strong>${fmt(analysis.effects[dominant])}</strong>.
+      Magnitude identifies the strongest contrast in this dataset; practical and statistical importance still require engineering context and an error estimate.
+    `;
+  }
+
+  function renderSelected3() {
+    if (state3.selected === null) {
+      $("#selected3Run").innerHTML = "Click a cube corner to inspect the run.";
+      $("#focusCorner").disabled = true;
+      return;
+    }
+    const m = meta3();
+    const r = rows3()[state3.selected];
+    const analysis = factorialEffects(rows3(), terms3);
+    const pred = predictedValue(r, analysis, activeTerms3());
+    $("#selected3Run").innerHTML = `
+      <strong>Run ${state3.selected + 1}</strong><br>
+      ${escapeHtml(m.aName)}: <strong>${escapeHtml(actualLevel(r.A, m.aLow, m.aHigh))} ${escapeHtml(m.aUnit)}</strong><br>
+      ${escapeHtml(m.bName)}: <strong>${escapeHtml(actualLevel(r.B, m.bLow, m.bHigh))} ${escapeHtml(m.bUnit)}</strong><br>
+      ${escapeHtml(m.cName)}: <strong>${escapeHtml(actualLevel(r.C, m.cLow, m.cHigh))} ${escapeHtml(m.cUnit)}</strong><br>
+      Observed ${escapeHtml(m.response)}: <strong>${fmt(r.y)}</strong><br>
+      Model prediction: <strong>${fmt(pred)}</strong><br>
+      Residual: <strong>${fmt(r.y - pred)}</strong>
+    `;
+    $("#focusCorner").disabled = false;
+  }
+
+  function renderMain3() {
+    const m = meta3();
+    const rows = rows3();
+    const factors = [
+      ["A", m.aName],
+      ["B", m.bName],
+      ["C", m.cName]
+    ];
+    const traces = factors.map(([code, name]) => ({
+      x: [`${name} low`, `${name} high`],
+      y: [-1,1].map(level => {
+        const subset = rows.filter(r => r[code] === level);
+        return subset.reduce((s,r) => s + r.y, 0) / subset.length;
+      }),
+      mode: "lines+markers",
+      name,
+      line: { width: 4 },
+      marker: { size: 10 }
+    }));
+    Plotly.react("main3Plot", traces, {
+      ...plotLayoutBase(),
+      xaxis: { title: "Factor level", gridcolor: chartPalette().grid },
+      yaxis: { title: `Mean ${m.response}`, gridcolor: chartPalette().grid, zeroline: false },
+      legend: { orientation: "h", y: 1.15 }
+    }, plotConfig());
+  }
+
+  function renderInteraction3() {
+    const m = meta3();
+    const rows = rows3();
+    const selection = $("#interaction3Term").value;
+    const map = {
+      AB: { x: "A", line: "B", condition: "C", xName: m.aName, lineName: m.bName, conditionName: m.cName, xLevels:[m.aLow,m.aHigh] },
+      AC: { x: "A", line: "C", condition: "B", xName: m.aName, lineName: m.cName, conditionName: m.bName, xLevels:[m.aLow,m.aHigh] },
+      BC: { x: "B", line: "C", condition: "A", xName: m.bName, lineName: m.cName, conditionName: m.aName, xLevels:[m.bLow,m.bHigh] }
+    };
+    const s = map[selection];
+    const traces = [];
+    [-1,1].forEach(conditionLevel => {
+      [-1,1].forEach(lineLevel => {
+        const y = [-1,1].map(xLevel => {
+          const row = rows.find(r => r[s.x] === xLevel && r[s.line] === lineLevel && r[s.condition] === conditionLevel);
+          return row.y;
+        });
+        traces.push({
+          x: s.xLevels,
+          y,
+          mode: "lines+markers",
+          name: `${s.lineName} ${lineLevel < 0 ? "low" : "high"} · ${s.conditionName} ${conditionLevel < 0 ? "low" : "high"}`,
+          line: { width: conditionLevel < 0 ? 3 : 5, dash: conditionLevel < 0 ? "dot" : "solid" },
+          marker: { size: 9, symbol: conditionLevel < 0 ? "circle-open" : "circle" }
+        });
+      });
+    });
+
+    Plotly.react("interaction3Plot", traces, {
+      ...plotLayoutBase(),
+      margin: { l: 58, r: 20, t: 35, b: 58 },
+      xaxis: { title: `${s.xName} level`, gridcolor: chartPalette().grid },
+      yaxis: { title: m.response, gridcolor: chartPalette().grid, zeroline: false },
+      legend: { orientation: "h", y: 1.22, font: { size: 10 } }
+    }, plotConfig());
+  }
+
+  function renderPred3() {
+    const m = meta3();
+    const rows = rows3();
+    const analysis = factorialEffects(rows, terms3);
+    const active = activeTerms3();
+    const pred = rows.map(r => predictedValue(r, analysis, active));
+    const min = Math.min(...rows.map(r => r.y), ...pred);
+    const max = Math.max(...rows.map(r => r.y), ...pred);
+    Plotly.react("pred3Plot", [
+      {
+        x: pred,
+        y: rows.map(r => r.y),
+        text: rows.map((r,i) => `Run ${i+1}`),
+        mode: "markers+text",
+        textposition: "top center",
+        name: "Runs",
+        marker: { size: 11 }
+      },
+      {
+        x: [min,max],
+        y: [min,max],
+        mode: "lines",
+        name: "Perfect agreement",
+        line: { dash: "dash", width: 2 }
+      }
+    ], {
+      ...plotLayoutBase(),
+      xaxis: { title: `Predicted ${m.response}`, gridcolor: chartPalette().grid },
+      yaxis: { title: `Observed ${m.response}`, gridcolor: chartPalette().grid },
+      legend: { orientation: "h", y: 1.14 }
+    }, plotConfig());
+  }
+
+  function randomize3() {
+    state3.randomized = [...Array(8).keys()].map(i => i + 1);
+    for (let i = state3.randomized.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [state3.randomized[i], state3.randomized[j]] = [state3.randomized[j], state3.randomized[i]];
+    }
+    $("#randomRunOrder").innerHTML = state3.randomized.map((std, run) =>
+      `<span class="pill">Run ${run + 1}: standard order ${std}</span>`).join("");
+  }
+
+  // ---------------------------------------------------------------------------
+  // THREE.JS CUBE
+  // ---------------------------------------------------------------------------
+  let scene, camera, renderer, controls, raycaster, pointer;
+  let cubeGroup, cornerMeshes = [], cornerSprites = [], edgeLines = [], faceMeshes = [];
+  let hoveredCorner = null;
+  const cornerPositions = standard3.map(r => new THREE.Vector3(r.A * 1.55, r.B * 1.55, r.C * 1.55));
+  const edgePairs = [];
+  for (let i = 0; i < standard3.length; i++) {
+    for (let j = i + 1; j < standard3.length; j++) {
+      const diff = ["A","B","C"].filter(k => standard3[i][k] !== standard3[j][k]);
+      if (diff.length === 1) edgePairs.push({ i, j, axis: diff[0] });
+    }
+  }
+
+  function createTextSprite(text, bg = "rgba(11,37,69,.90)", fg = "#ffffff") {
+    const canvas = document.createElement("canvas");
+    canvas.width = 320;
+    canvas.height = 112;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = bg;
+    roundRect(ctx, 4, 4, 312, 104, 20);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.65)";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fillStyle = fg;
+    ctx.font = "700 34px Inter, Arial, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, 160, 57);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.minFilter = THREE.LinearFilter;
+    const material = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
+    const sprite = new THREE.Sprite(material);
+    sprite.scale.set(1.55, .54, 1);
+    return sprite;
+  }
+
+  function roundRect(ctx, x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.arcTo(x + width, y, x + width, y + height, radius);
+    ctx.arcTo(x + width, y + height, x, y + height, radius);
+    ctx.arcTo(x, y + height, x, y, radius);
+    ctx.arcTo(x, y, x + width, y, radius);
+    ctx.closePath();
+  }
+
+  function initCube() {
+    const canvas = $("#cubeCanvas");
+    const container = $("#cubeContainer");
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(44, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(6.6, 5.5, 7.0);
+
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(container.clientWidth, container.clientHeight, false);
+
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = .07;
+    controls.minDistance = 4;
+    controls.maxDistance = 17;
+    controls.target.set(0,0,0);
+
+    raycaster = new THREE.Raycaster();
+    pointer = new THREE.Vector2();
+
+    scene.add(new THREE.AmbientLight(0xffffff, .72));
+    const keyLight = new THREE.DirectionalLight(0xffffff, .95);
+    keyLight.position.set(5,7,8);
+    scene.add(keyLight);
+    const fill = new THREE.DirectionalLight(0x5ac8fa, .5);
+    fill.position.set(-6,-2,4);
+    scene.add(fill);
+
+    cubeGroup = new THREE.Group();
+    scene.add(cubeGroup);
+
+    buildCubeObjects();
+    setCameraView("iso");
+    animateCube();
+
+    renderer.domElement.addEventListener("pointermove", onCubePointerMove);
+    renderer.domElement.addEventListener("pointerleave", () => {
+      hoveredCorner = null;
+      $("#cubeTooltip").style.display = "none";
+      renderer.domElement.style.cursor = "grab";
+    });
+    renderer.domElement.addEventListener("click", onCubeClick);
+    window.addEventListener("resize", resizeCube);
+  }
+
+  function buildCubeObjects() {
+    cornerMeshes.forEach(o => cubeGroup.remove(o));
+    cornerSprites.forEach(o => cubeGroup.remove(o));
+    edgeLines.forEach(o => cubeGroup.remove(o));
+    faceMeshes.forEach(o => cubeGroup.remove(o));
+    cornerMeshes = []; cornerSprites = []; edgeLines = []; faceMeshes = [];
+
+    edgePairs.forEach(pair => {
+      const geometry = new THREE.BufferGeometry().setFromPoints([cornerPositions[pair.i], cornerPositions[pair.j]]);
+      const material = new THREE.LineBasicMaterial({ color: 0x466b88, transparent: true, opacity: .72 });
+      const line = new THREE.Line(geometry, material);
+      line.userData = pair;
+      cubeGroup.add(line);
+      edgeLines.push(line);
+    });
+
+    const faceDefs = [
+      { key:"A-", axis:"x", value:-1.55, rot:[0,Math.PI/2,0] },
+      { key:"A+", axis:"x", value: 1.55, rot:[0,Math.PI/2,0] },
+      { key:"B-", axis:"y", value:-1.55, rot:[Math.PI/2,0,0] },
+      { key:"B+", axis:"y", value: 1.55, rot:[Math.PI/2,0,0] },

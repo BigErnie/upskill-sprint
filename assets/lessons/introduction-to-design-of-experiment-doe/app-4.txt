@@ -1,0 +1,313 @@
+      { key:"C-", axis:"z", value:-1.55, rot:[0,0,0] },
+      { key:"C+", axis:"z", value: 1.55, rot:[0,0,0] }
+    ];
+    faceDefs.forEach(def => {
+      const geometry = new THREE.PlaneGeometry(3.1, 3.1);
+      const material = new THREE.MeshBasicMaterial({
+        color: 0x16a6d9,
+        transparent: true,
+        opacity: 0,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.rotation.set(...def.rot);
+      mesh.position[def.axis] = def.value;
+      mesh.userData.key = def.key;
+      cubeGroup.add(mesh);
+      faceMeshes.push(mesh);
+    });
+
+    standard3.forEach((r, i) => {
+      const geometry = new THREE.SphereGeometry(.26, 30, 30);
+      const material = new THREE.MeshStandardMaterial({
+        color: 0x1769aa,
+        roughness: .3,
+        metalness: .08,
+        transparent: true,
+        opacity: 1
+      });
+      const sphere = new THREE.Mesh(geometry, material);
+      sphere.position.copy(cornerPositions[i]);
+      sphere.userData.index = i;
+      cubeGroup.add(sphere);
+      cornerMeshes.push(sphere);
+
+      const sprite = createTextSprite(String(state3.responses[i]));
+      const direction = cornerPositions[i].clone().normalize().multiplyScalar(.48);
+      sprite.position.copy(cornerPositions[i].clone().add(direction));
+      sprite.userData.index = i;
+      cubeGroup.add(sprite);
+      cornerSprites.push(sprite);
+    });
+
+    updateCubeVisuals();
+  }
+
+  function cubeDisplayValues() {
+    const rows = rows3();
+    const analysis = factorialEffects(rows, terms3);
+    const pred = rows.map(r => predictedValue(r, analysis, activeTerms3()));
+    const mode = $("#cubeResponseMode").value;
+    if (mode === "predicted") return pred;
+    if (mode === "residual") return rows.map((r,i) => r.y - pred[i]);
+    return rows.map(r => r.y);
+  }
+
+  function planeMatch(row, selection) {
+    if (selection === "all") return true;
+    const factor = selection[0];
+    const level = selection[1] === "+" ? 1 : -1;
+    return row[factor] === level;
+  }
+
+  function updateCubeVisuals() {
+    if (!scene) return;
+    const values = cubeDisplayValues();
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const plane = $("#planeSelect").value;
+
+    cornerMeshes.forEach((mesh, i) => {
+      const t = max === min ? .5 : (values[i] - min) / (max - min);
+      const color = new THREE.Color();
+      color.setHSL((210 - t * 190) / 360, .72, .46);
+      mesh.material.color.copy(color);
+      const visible = planeMatch(standard3[i], plane);
+      mesh.material.opacity = visible ? 1 : .12;
+      mesh.scale.setScalar(state3.selected === i ? 1.35 : 1);
+    });
+
+    cornerSprites.forEach((oldSprite, i) => {
+      const visible = planeMatch(standard3[i], plane);
+      const selected = state3.selected === i;
+      const sprite = createTextSprite(
+        fmt(values[i], 2),
+        selected ? "rgba(244,124,32,.96)" : visible ? "rgba(11,37,69,.92)" : "rgba(11,37,69,.18)"
+      );
+      sprite.position.copy(oldSprite.position);
+      sprite.userData.index = i;
+      cubeGroup.remove(oldSprite);
+      if (oldSprite.material.map) oldSprite.material.map.dispose();
+      oldSprite.material.dispose();
+      cornerSprites[i] = sprite;
+      cubeGroup.add(sprite);
+    });
+
+    edgeLines.forEach(line => {
+      const aVisible = planeMatch(standard3[line.userData.i], plane);
+      const bVisible = planeMatch(standard3[line.userData.j], plane);
+      line.material.opacity = aVisible && bVisible ? .78 : .08;
+    });
+
+    faceMeshes.forEach(face => {
+      face.material.opacity = face.userData.key === plane ? .17 : 0;
+    });
+  }
+
+  function cubePointerCoordinates(event) {
+    const rect = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  }
+
+  function intersectCorner(event) {
+    cubePointerCoordinates(event);
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(cornerMeshes, false);
+    return hits.length ? hits[0].object : null;
+  }
+
+  function onCubePointerMove(event) {
+    const hit = intersectCorner(event);
+    const tooltip = $("#cubeTooltip");
+    if (!hit) {
+      hoveredCorner = null;
+      tooltip.style.display = "none";
+      renderer.domElement.style.cursor = "grab";
+      return;
+    }
+    hoveredCorner = hit.userData.index;
+    renderer.domElement.style.cursor = "pointer";
+    const m = meta3();
+    const r = rows3()[hoveredCorner];
+    const rect = $("#cubeContainer").getBoundingClientRect();
+    tooltip.style.left = `${event.clientX - rect.left + 14}px`;
+    tooltip.style.top = `${event.clientY - rect.top + 14}px`;
+    tooltip.style.display = "block";
+    tooltip.innerHTML = `
+      <strong>Run ${hoveredCorner + 1}</strong><br>
+      ${escapeHtml(m.aName)}: ${escapeHtml(actualLevel(r.A,m.aLow,m.aHigh))}<br>
+      ${escapeHtml(m.bName)}: ${escapeHtml(actualLevel(r.B,m.bLow,m.bHigh))}<br>
+      ${escapeHtml(m.cName)}: ${escapeHtml(actualLevel(r.C,m.cLow,m.cHigh))}<br>
+      ${escapeHtml(m.response)}: <strong>${fmt(r.y)}</strong>`;
+  }
+
+  function onCubeClick(event) {
+    const hit = intersectCorner(event);
+    if (!hit) return;
+    state3.selected = hit.userData.index;
+    renderSelected3();
+    updateCubeVisuals();
+  }
+
+  function animateCube() {
+    requestAnimationFrame(animateCube);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+
+  function resizeCube() {
+    if (!renderer) return;
+    const container = $("#cubeContainer");
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h, false);
+  }
+
+  function setCameraView(view) {
+    if (!camera || !controls) return;
+    const positions = {
+      iso: [6.6, 5.5, 7.0],
+      front: [0, 0, 9],
+      top: [0, 9, .01],
+      right: [9, 0, 0]
+    };
+    camera.position.set(...positions[view]);
+    controls.target.set(0,0,0);
+    controls.update();
+  }
+
+  function zoomToPlane() {
+    const plane = $("#planeSelect").value;
+    if (plane === "all") { setCameraView("iso"); return; }
+    const map = {
+      "A-": [-8,0,0], "A+": [8,0,0],
+      "B-": [0,-8,.01], "B+": [0,8,.01],
+      "C-": [0,0,-8], "C+": [0,0,8]
+    };
+    camera.position.set(...map[plane]);
+    controls.target.set(0,0,0);
+    controls.update();
+  }
+
+  function zoomToSelectedCorner() {
+    if (state3.selected === null) return;
+    const p = cornerPositions[state3.selected];
+    const direction = p.clone().normalize();
+    camera.position.copy(p.clone().add(direction.multiplyScalar(3.2)));
+    controls.target.copy(p);
+    controls.update();
+  }
+
+  function focusInteraction(term) {
+    const map = {
+      AB: "C-",
+      AC: "B-",
+      BC: "A-",
+      ABC: "all"
+    };
+    $("#planeSelect").value = map[term];
+    if (term !== "ABC") {
+      $("#interaction3Term").value = term;
+      renderInteraction3();
+    } else {
+      $("#interaction3Term").value = "AB";
+      renderInteraction3();
+    }
+    updateCubeVisuals();
+    zoomToPlane();
+  }
+
+  function update3() {
+    renderEffects3();
+    renderSelected3();
+    renderMain3();
+    renderInteraction3();
+    renderPred3();
+    updateCubeVisuals();
+  }
+
+  function fullRender3() {
+    renderTable3();
+    update3();
+  }
+
+  $("#load3Sample").addEventListener("click", loadSample3);
+  $("#open3Import").addEventListener("click", () => $("#import3Panel").classList.toggle("hidden"));
+  $("#cancel3Import").addEventListener("click", () => $("#import3Panel").classList.add("hidden"));
+  $("#apply3Import").addEventListener("click", import3);
+  $("#export3Csv").addEventListener("click", export3);
+  $("#randomize3").addEventListener("click", randomize3);
+  $("#interaction3Term").addEventListener("change", renderInteraction3);
+  $("#planeSelect").addEventListener("change", updateCubeVisuals);
+  $("#focusPlane").addEventListener("click", zoomToPlane);
+  $("#cubeResponseMode").addEventListener("change", updateCubeVisuals);
+  $("#focusCorner").addEventListener("click", zoomToSelectedCorner);
+
+  $$(".cube-view-btn").forEach(btn => btn.addEventListener("click", () => setCameraView(btn.dataset.view)));
+  $$(".interaction-focus").forEach(btn => btn.addEventListener("click", () => focusInteraction(btn.dataset.term)));
+  $$(".term3").forEach(el => el.addEventListener("change", update3));
+
+  $("#mainOnly3").addEventListener("click", () => {
+    $$(".term3").forEach(el => el.checked = ["A","B","C"].includes(el.value));
+    update3();
+  });
+  $("#allTerms3").addEventListener("click", () => {
+    $$(".term3").forEach(el => el.checked = true);
+    update3();
+  });
+  $("#noTerms3").addEventListener("click", () => {
+    $$(".term3").forEach(el => el.checked = false);
+    update3();
+  });
+
+  ["f3aName","f3aLow","f3aHigh","f3aUnit","f3bName","f3bLow","f3bHigh","f3bUnit","f3cName","f3cLow","f3cHigh","f3cUnit","f3Response"].forEach(id => {
+    $("#" + id).addEventListener("input", () => {
+      renderTable3();
+      update3();
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Quiz
+  // ---------------------------------------------------------------------------
+  $$(".quiz-check").forEach(button => {
+    button.addEventListener("click", () => {
+      const card = button.closest(".quiz-card");
+      const selected = $("input:checked", card);
+      const feedback = $(".feedback", card);
+      if (!selected) {
+        feedback.textContent = "Select an answer first.";
+        feedback.style.color = "#9a6900";
+        return;
+      }
+      const correct = selected.value === card.dataset.answer;
+      feedback.textContent = correct ? "Correct." : "Not quite. Review the explanation above and try again.";
+      feedback.style.color = correct ? "#1f8a5b" : "#d63b2f";
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Initial render
+  // ---------------------------------------------------------------------------
+  fullRender2();
+  fullRender3();
+  randomize3();
+  initCube();
+
+  window.addEventListener("upskill:themechange", () => {
+    update2();
+    update3();
+    resizeCube();
+  });
+
+  // Plotly sometimes computes width before fonts/layout settle.
+  window.setTimeout(() => {
+    [$("#main2Plot"), $("#interaction2Plot"), $("#main3Plot"), $("#interaction3Plot"), $("#pred3Plot")]
+      .forEach(el => window.Plotly && Plotly.Plots.resize(el));
+    resizeCube();
+  }, 350);
+})();

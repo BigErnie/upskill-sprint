@@ -4,6 +4,7 @@
   const LESSONS = [
     {
       marker: 'data-chi-square-goodness-of-fit',
+      sectionId: 'statistics',
       path: '/lessons/statistics/chi-square-goodness-of-fit-test',
       topic: 'statistics',
       level: 'intermediate',
@@ -15,6 +16,7 @@
     },
     {
       marker: 'data-normal-distribution',
+      sectionId: 'statistics',
       path: '/lessons/statistics/the-normal-distribution-meet-the-bell-curve',
       topic: 'statistics',
       level: 'beginner',
@@ -26,6 +28,7 @@
     },
     {
       marker: 'data-beyond-the-bell',
+      sectionId: 'statistics',
       path: '/lessons/statistics/beyond-the-bell-the-normal-distribution-and-its-relatives',
       topic: 'statistics',
       level: 'intermediate',
@@ -34,6 +37,18 @@
       meta: '<span>Intermediate</span><span>Interactive</span><span>20 min</span>',
       title: 'Beyond the Bell: The Normal Distribution and Its Relatives',
       description: 'See how the normal connects to the Weibull, lognormal, t, binomial and more — with a live Central Limit Theorem simulator.'
+    },
+    {
+      marker: 'data-introduction-doe',
+      sectionId: 'lean-six-sigma',
+      path: '/lessons/introduction-to-design-of-experiment-doe',
+      topic: 'lean-six-sigma',
+      level: 'intermediate',
+      interactive: 'true',
+      search: 'doe design of experiment design of experiments factorial design two factor two level three factor two level 2x2 2 cubed main effects interaction effects cube minitab excel lean six sigma interactive',
+      meta: '<span>Intermediate</span><span>Interactive</span><span>30 min</span>',
+      title: 'Introduction to Design of Experiment (DOE)',
+      description: 'DOE, Design of Experiment'
     }
   ];
 
@@ -47,12 +62,11 @@
   }
 
   function updateCounts() {
-    const statistics = document.getElementById('statistics');
-    if (statistics) {
-      const total = statistics.querySelectorAll('[data-lesson-item]').length;
-      const categoryCount = statistics.querySelector('.category-count');
+    document.querySelectorAll('[data-category-section]').forEach(function (section) {
+      const total = section.querySelectorAll('[data-lesson-item]').length;
+      const categoryCount = section.querySelector('.category-count');
       if (categoryCount) categoryCount.textContent = total + (total === 1 ? ' lesson' : ' lessons');
-    }
+    });
 
     const visibleCount = Array.from(document.querySelectorAll('[data-lesson-item]')).filter(function (lesson) {
       return !lesson.hidden;
@@ -84,18 +98,24 @@
   function installLessons() {
     if (!isLessonsPage()) return;
 
-    const section = document.getElementById('statistics');
-    const list = section && section.querySelector('.lesson-list');
-    if (!section || !list) return;
+    const managedRows = [];
+    const affectedSections = new Set();
 
-    const managedRows = LESSONS.map(function (definition) {
+    LESSONS.forEach(function (definition) {
+      const section = document.getElementById(definition.sectionId);
+      const list = section && section.querySelector('.lesson-list');
+      if (!section || !list) return;
+
+      affectedSections.add(section);
       let row = list.querySelector('[' + definition.marker + ']');
       if (!row) {
         row = createLessonRow(definition);
         list.appendChild(row);
       }
-      return row;
+      managedRows.push(row);
     });
+
+    if (!managedRows.length) return;
 
     const searchInput = document.getElementById('lesson-search');
     const topicFilter = document.getElementById('topic-filter');
@@ -120,10 +140,12 @@
         row.hidden = !matches;
       });
 
-      const hasVisibleLesson = Array.from(section.querySelectorAll('[data-lesson-item]')).some(function (lesson) {
-        return !lesson.hidden;
+      affectedSections.forEach(function (section) {
+        const hasVisibleLesson = Array.from(section.querySelectorAll('[data-lesson-item]')).some(function (lesson) {
+          return !lesson.hidden;
+        });
+        section.hidden = !hasVisibleLesson;
       });
-      section.hidden = !hasVisibleLesson;
 
       updateCounts();
 

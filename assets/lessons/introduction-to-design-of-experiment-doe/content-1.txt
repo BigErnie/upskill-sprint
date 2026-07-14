@@ -1,0 +1,253 @@
+<section id="foundations">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Part 1 · Foundations</div>
+          <h2>What DOE is designed to reveal</h2>
+          <p class="lead">
+            Design of Experiments changes several controllable inputs in a planned pattern so that their
+            individual and combined effects on a response can be estimated efficiently.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <article class="card concept-card" data-number="1">
+          <h3>Factor</h3>
+          <p>A controllable input such as time, force, current, temperature, speed, or chemistry.</p>
+          <div class="pill-row">
+            <span class="pill">A: Time</span>
+            <span class="pill">B: Force</span>
+            <span class="pill">C: Current</span>
+          </div>
+        </article>
+
+        <article class="card concept-card" data-number="2">
+          <h3>Level</h3>
+          <p>A setting of a factor. In a two-level design, each factor has a low and high setting.</p>
+          <div class="equation">Low = −1 &nbsp;&nbsp;&nbsp; High = +1</div>
+        </article>
+
+        <article class="card concept-card" data-number="3">
+          <h3>Response</h3>
+          <p>The measured outcome, such as strength, yield, deviation, cycle time, or defect rate.</p>
+          <div class="pill-row">
+            <span class="pill">Y: Strength</span>
+            <span class="pill">Goal: maximize</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="grid-2 mt-20">
+        <div class="card card-pad">
+          <h3>Why factorial experimentation?</h3>
+          <p>
+            A factorial design tests every combination of the selected factor levels. This makes it possible
+            to estimate interactions—the cases where the effect of one factor changes depending on another factor.
+          </p>
+          <div class="equation">
+            Number of treatment combinations = 2<sup>k</sup>
+          </div>
+          <p class="small muted mb-0">For two factors: 2² = 4 combinations. For three factors: 2³ = 8 combinations.</p>
+        </div>
+
+        <div class="card card-pad">
+          <h3>Interaction: the central idea</h3>
+          <p>
+            An interaction exists when the effect of factor A is not constant across the levels of factor B.
+            On an interaction plot, nonparallel lines indicate interaction.
+          </p>
+          <div class="equation">
+            AB effect = average response when AB = +1 − average response when AB = −1
+          </div>
+        </div>
+      </div>
+
+      <div class="notice mt-20">
+        <strong>Terminology caution:</strong> a treatment combination is a unique factor-level combination.
+        A run is the physical execution of that combination. Replicating a combination creates additional runs,
+        but not additional treatment combinations.
+      </div>
+    </section>
+
+    <section id="two-factor">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Part 2 · Two factors, two levels</div>
+          <h2>Build and analyze a 2² full factorial design</h2>
+          <p class="lead">
+            The starter dataset uses height and angle as the factors and deviation from target as the response.
+            Every value can be edited, and a new dataset can be pasted into the lesson.
+          </p>
+        </div>
+      </div>
+
+      <div class="card workspace">
+        <div class="workspace-toolbar">
+          <div class="toolbar-group">
+            <button class="btn btn-dark" id="load2Sample">Load starter data</button>
+            <button class="btn btn-outline" id="open2Import">Paste dataset</button>
+            <button class="btn btn-outline" id="export2Csv">Export CSV</button>
+          </div>
+          <div class="toolbar-group">
+            <span class="pill">4 treatment combinations</span>
+            <span class="pill">A, B, AB estimable</span>
+          </div>
+        </div>
+
+        <div class="workspace-body">
+          <div class="setup-grid">
+            <div class="field">
+              <label for="f2aName">Factor A</label>
+              <input id="f2aName" value="Height" />
+            </div>
+            <div class="field">
+              <label for="f2aLow">A low</label>
+              <input id="f2aLow" value="4" />
+            </div>
+            <div class="field">
+              <label for="f2aHigh">A high</label>
+              <input id="f2aHigh" value="6" />
+            </div>
+            <div class="field">
+              <label for="f2aUnit">A unit</label>
+              <input id="f2aUnit" value="feet" />
+            </div>
+            <div class="field">
+              <label for="f2Response">Response</label>
+              <input id="f2Response" value="Deviation" />
+            </div>
+
+            <div class="field">
+              <label for="f2bName">Factor B</label>
+              <input id="f2bName" value="Angle" />
+            </div>
+            <div class="field">
+              <label for="f2bLow">B low</label>
+              <input id="f2bLow" value="0" />
+            </div>
+            <div class="field">
+              <label for="f2bHigh">B high</label>
+              <input id="f2bHigh" value="90" />
+            </div>
+            <div class="field">
+              <label for="f2bUnit">B unit</label>
+              <input id="f2bUnit" value="degrees" />
+            </div>
+            <div class="field">
+              <label for="f2Goal">Response goal</label>
+              <select id="f2Goal">
+                <option value="min">Minimize</option>
+                <option value="max">Maximize</option>
+                <option value="target">Hit a target</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="import2Panel" class="card card-pad hidden">
+            <h3>Paste a 2² dataset</h3>
+            <p class="small muted">
+              Paste four rows with columns for Factor A, Factor B, and Response. Headers are optional.
+              Comma-, tab-, or semicolon-separated data are accepted.
+            </p>
+            <textarea id="import2Text">Height,Angle,Deviation
+6,0,34
+6,90,84
+4,0,35
+4,90,42</textarea>
+            <div class="toolbar-group mt-10">
+              <button class="btn btn-dark" id="apply2Import">Apply dataset</button>
+              <button class="btn btn-outline" id="cancel2Import">Close</button>
+            </div>
+            <div id="import2Message" class="feedback" aria-live="polite"></div>
+          </div>
+
+          <div class="table-wrap mt-16">
+            <table id="table2">
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="square-layout">
+            <div>
+              <h3>Interactive factorial square</h3>
+              <p class="small muted">Click a corner to inspect that treatment combination.</p>
+              <div class="factor-square" id="factorSquare">
+                <div class="square-edge sq-horizontal sq-top"></div>
+                <div class="square-edge sq-horizontal sq-bottom"></div>
+                <div class="square-edge sq-vertical sq-left"></div>
+                <div class="square-edge sq-vertical sq-right"></div>
+                <div class="square-axis axis-x" id="squareAxisX">Factor A →</div>
+                <div class="square-axis axis-y" id="squareAxisY">Factor B →</div>
+              </div>
+              <div class="selected-run mt-16" id="selected2Run">Select a corner in the square.</div>
+            </div>
+
+            <div>
+              <h3>Live effect calculation</h3>
+              <div class="metric-grid" id="metrics2"></div>
+
+              <div class="control-group mt-16">
+                <h4>Model terms</h4>
+                <p class="small muted">Clear a term to see how the predicted corner responses change.</p>
+                <div class="term-toggle-list">
+                  <label class="toggle"><input type="checkbox" class="term2" value="A" checked /> A main effect</label>
+                  <label class="toggle"><input type="checkbox" class="term2" value="B" checked /> B main effect</label>
+                  <label class="toggle"><input type="checkbox" class="term2" value="AB" checked /> AB interaction</label>
+                </div>
+                <div class="model-box" id="model2"></div>
+              </div>
+
+              <div class="control-group mt-16">
+                <h4>Guided explanation</h4>
+                <div id="step2_1" class="guided-step active">
+                  <strong>Step 1:</strong> Each corner represents one unique combination of Height and Angle.
+                </div>
+                <div id="step2_2" class="guided-step">
+                  <strong>Step 2:</strong> The A effect compares the average response at high Height with the average at low Height.
+                </div>
+                <div id="step2_3" class="guided-step">
+                  <strong>Step 3:</strong> The AB interaction asks whether the Height effect changes when Angle changes.
+                </div>
+                <div class="toolbar-group mt-10">
+                  <button class="btn btn-soft" id="prev2Step">Previous</button>
+                  <button class="btn btn-dark" id="next2Step">Next</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2 mt-20">
+            <div>
+              <h3>Main-effects plot</h3>
+              <div id="main2Plot" class="plot"></div>
+            </div>
+            <div>
+              <h3>Interaction plot</h3>
+              <div id="interaction2Plot" class="plot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="notice danger-notice mt-20">
+        <strong>Analysis caution:</strong> with one observation at each of the four corners, the design is saturated.
+        You can calculate A, B, and AB exactly, but there is no independent pure-error estimate for a formal significance test.
+        Replication is the preferred way to estimate experimental error.
+      </div>
+    </section>
+
+    <section id="three-factor">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Part 3 · Three factors, two levels</div>
+          <h2>Move from the factorial square to the 2³ DOE cube</h2>
+          <p class="lead">
+            The machine dataset uses Time, Force, and Current to explain Strength. Rotate the cube in any direction,
+            zoom to a plane or corner, turn model terms on and off, and replace the data with another full factorial dataset.
+          </p>
+        </div>
+      </div>
+
+      <div class="card workspace">
+        <div class="workspace-toolbar">

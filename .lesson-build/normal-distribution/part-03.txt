@@ -1,0 +1,155 @@
+ming normality without checking is one of the most common
+    mistakes in data analysis, and we&rsquo;ll show you how to spot it.</p>
+
+  <figure class="fig-panel">
+    <svg viewBox="0 0 720 210" role="img" aria-labelledby="skew-title skew-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="skew-title">Three distribution shapes: right-skewed, normal, and left-skewed</title>
+      <desc id="skew-desc">Three small curves. The left curve leans with a long tail to the right (right-skewed). The middle curve is a symmetric bell (normal). The right curve leans with a long tail to the left (left-skewed).</desc>
+      <!-- right-skewed -->
+      <path d="M 30 170 C 55 60, 85 55, 105 95 C 130 145, 175 165, 225 170" fill="var(--shade-2)" stroke="var(--teal)" stroke-width="2.5"/>
+      <line x1="20" y1="170" x2="235" y2="170" stroke="var(--muted)" stroke-width="1.5"/>
+      <text x="127" y="195" text-anchor="middle" font-size="15" fill="var(--ink-soft)">Right-skewed (long right tail)</text>
+      <!-- normal -->
+      <path d="M 265 170 C 310 168, 325 60, 360 60 C 395 60, 410 168, 455 170" fill="var(--shade-2)" stroke="var(--teal)" stroke-width="2.5"/>
+      <line x1="255" y1="170" x2="465" y2="170" stroke="var(--muted)" stroke-width="1.5"/>
+      <text x="360" y="195" text-anchor="middle" font-size="15" fill="var(--ink-soft)">Normal (symmetric bell)</text>
+      <!-- left-skewed -->
+      <path d="M 495 170 C 545 165, 590 145, 615 95 C 635 55, 665 60, 690 170" fill="var(--shade-2)" stroke="var(--teal)" stroke-width="2.5"/>
+      <line x1="485" y1="170" x2="700" y2="170" stroke="var(--muted)" stroke-width="1.5"/>
+      <text x="593" y="195" text-anchor="middle" font-size="15" fill="var(--ink-soft)">Left-skewed (long left tail)</text>
+    </svg>
+    <figcaption>Only the middle curve &ldquo;behaves normally.&rdquo; Skewed data needs different tools &mdash; don&rsquo;t force the bell curve onto it.</figcaption>
+  </figure>
+</section>
+
+<section id="terminology" aria-labelledby="terms-h">
+  <h2 id="terms-h">Key terminology</h2>
+  <div class="table-scroll">
+    <table>
+      <caption>Terms you&rsquo;ll meet in this lesson</caption>
+      <thead>
+        <tr><th scope="col">Term</th><th scope="col">Plain-language meaning</th><th scope="col">Technical meaning</th><th scope="col">Practical interpretation</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mean (&mu;)</strong></td>
+          <td>The average.</td>
+          <td>The balance point of the distribution; for a normal curve it sits exactly at the peak.</td>
+          <td>&ldquo;A typical value.&rdquo; Slide &mu; and the whole curve moves left or right.</td>
+        </tr>
+        <tr>
+          <td><strong>Standard deviation (&sigma;)</strong></td>
+          <td>A typical distance from the average.</td>
+          <td>The square root of the variance; the distance from the mean to the curve&rsquo;s inflection point.</td>
+          <td>Small &sigma; = tall, narrow curve (consistent data). Large &sigma; = short, wide curve (variable data).</td>
+        </tr>
+        <tr>
+          <td><strong>Normal / Gaussian distribution</strong></td>
+          <td>The bell curve.</td>
+          <td>A continuous, symmetric distribution fully defined by &mu; and &sigma;.</td>
+          <td>A model for data where values cluster evenly around an average.</td>
+        </tr>
+        <tr>
+          <td><strong>z-score</strong></td>
+          <td>How many standard deviations a value is from the mean.</td>
+          <td>z = (x &minus; &mu;) / &sigma;; a value from the standard normal distribution (&mu; = 0, &sigma; = 1).</td>
+          <td>z = +2 means &ldquo;unusually high&rdquo;; z = 0 means &ldquo;perfectly average.&rdquo;</td>
+        </tr>
+        <tr>
+          <td><strong>Empirical rule</strong></td>
+          <td>The 68&ndash;95&ndash;99.7 shortcut.</td>
+          <td>For normal data: about 68% of values lie within &plusmn;1&sigma;, 95% within &plusmn;2&sigma;, 99.7% within &plusmn;3&sigma;.</td>
+          <td>Lets you estimate proportions instantly, with no tables or software.</td>
+        </tr>
+        <tr>
+          <td><strong>Skewness</strong></td>
+          <td>Lopsidedness.</td>
+          <td>Asymmetry of a distribution; a long tail on one side.</td>
+          <td>A warning sign that the normal model (and the empirical rule) may not apply.</td>
+        </tr>
+        <tr>
+          <td><strong>Percentile</strong></td>
+          <td>The share of values below a given point.</td>
+          <td>The cumulative probability up to a value.</td>
+          <td>&ldquo;90th percentile&rdquo; = higher than about 90% of results.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- EDIT: Core formula -->
+<section id="core-formula" aria-labelledby="formula-h">
+  <h2 id="formula-h">The formula (gently)</h2>
+  <p>
+    You will rarely compute this by hand &mdash; software does it for you &mdash; but seeing it once removes the
+    mystery. The height of the bell curve at any value <em>x</em> is:
+  </p>
+  <div class="formula-box">
+    <p class="math" aria-label="f of x equals 1 over sigma times the square root of 2 pi, times e raised to the power of negative, open parenthesis, x minus mu, close parenthesis squared, divided by 2 sigma squared">
+      <span><em>f</em>(<em>x</em>) =</span>
+      <span class="frac"><span class="top">1</span><span class="bottom">&sigma;&radic;<span style="border-top:1.5px solid var(--ink); padding-top:1px;">2&pi;</span></span></span>
+      <span>&middot; <em>e</em><span class="sup">&minus;(<em>x</em> &minus; &mu;)&sup2; / 2&sigma;&sup2;</span></span>
+    </p>
+    <ul class="sym-list">
+      <li><span class="sym">f(x)</span> the height (density) of the curve at value <em>x</em> &mdash; taller means &ldquo;more likely around here&rdquo;</li>
+      <li><span class="sym">&mu;</span> the mean of the data (same units as <em>x</em>, e.g. cm, marks, ml)</li>
+      <li><span class="sym">&sigma;</span> the standard deviation of the data (same units as <em>x</em>; must be greater than 0)</li>
+      <li><span class="sym">&pi;</span> the constant pi &asymp; 3.14159</li>
+      <li><span class="sym">e</span> Euler&rsquo;s number &asymp; 2.71828</li>
+    </ul>
+  </div>
+  <p><strong>Plain-language interpretation:</strong> the exponent measures how far <em>x</em> is from the
+    mean, in units of &sigma;. Values close to &mu; get a small exponent and a tall curve; values far from
+    &mu; get a large negative exponent and the curve drops toward zero. The fraction at the front simply
+    scales the curve so the total area underneath equals 1 (i.e. 100% of the data).</p>
+  <p><strong>Assumptions &mdash; use this model when:</strong> the data is continuous (or nearly so), roughly
+    symmetric with one peak, and free of hard boundaries near the bulk of the data.</p>
+  <p><strong>Do not use it when:</strong> the data is clearly skewed (incomes, waiting times), is a count of
+    rare events (defects per unit), has two peaks (mixed populations), or is capped hard at a boundary
+    (e.g. percentages piling up at 0% or 100%).</p>
+
+  <h3>The one formula you <em>will</em> use: the z-score</h3>
+  <div class="formula-box">
+    <p class="math" aria-label="z equals x minus mu, divided by sigma">
+      <span><em>z</em> =</span>
+      <span class="frac"><span class="top"><em>x</em> &minus; &mu;</span><span class="bottom">&sigma;</span></span>
+    </p>
+    <ul class="sym-list">
+      <li><span class="sym">z</span> the z-score: distance from the mean, measured in standard deviations (no units)</li>
+      <li><span class="sym">x</span> the value you are examining (in original units)</li>
+      <li><span class="sym">&mu;</span> the mean; <span class="sym">&sigma;</span> the standard deviation (&sigma; &gt; 0)</li>
+    </ul>
+  </div>
+  <p><strong>Plain-language interpretation:</strong> subtract the average, then divide by the &ldquo;typical
+    distance.&rdquo; The answer tells you how many typical distances your value sits above (+) or below (&minus;)
+    the mean. Standardising like this lets you compare apples with oranges: a z-score of +1.5 on an exam
+    means the same &ldquo;degree of unusualness&rdquo; as a z-score of +1.5 in height.</p>
+</section>
+
+<!-- EDIT: Empirical rule figure -->
+<section id="empirical-rule" aria-labelledby="rule-h">
+  <h2 id="rule-h">The 68&ndash;95&ndash;99.7 rule</h2>
+  <p>
+    Here is the superpower of the normal distribution. For <em>any</em> normal data, no matter the mean or
+    standard deviation:
+  </p>
+  <ul>
+    <li>About <strong>68%</strong> of values fall within <strong>1 standard deviation</strong> of the mean (34.1% on each side).</li>
+    <li>About <strong>95%</strong> fall within <strong>2 standard deviations</strong> (adding 13.6% on each side).</li>
+    <li>About <strong>99.7%</strong> fall within <strong>3 standard deviations</strong> (adding 2.1% on each side, leaving roughly 0.15% in each extreme tail).</li>
+  </ul>
+  <figure class="fig-panel">
+    <svg viewBox="0 0 740 395" role="img" aria-labelledby="emp-title emp-desc" xmlns="http://www.w3.org/2000/svg">
+      <title id="emp-title">The empirical rule on a bell curve</title>
+      <desc id="emp-desc">A bell curve divided into bands. From the mean outward: 34.1% between the mean and 1 sigma on each side, 13.6% between 1 and 2 sigma on each side, 2.1% between 2 and 3 sigma on each side, and about 0.1% beyond 3 sigma. Brackets show 68% within 1 sigma, 95% within 2 sigma, and 99.7% within 3 sigma.</desc>
+      <!-- axis -->
+      <line x1="40" y1="280" x2="700" y2="280" stroke="var(--muted)" stroke-width="1.5"/>
+      <!-- shaded bands (exact gaussian, mean at x=370, sigma=90px) -->
+      <path d="M 280 280 L 280.0 146.6 L 285.0 139.2 L 290.0 131.8 L 295.0 124.5 L 300.0 117.4 L 305.0 110.5 L 310.0 103.8 L 315.0 97.5 L 320.0 91.5 L 325.0 85.9 L 330.0 80.7 L 335.0 76.0 L 340.0 71.9 L 345.0 68.3 L 350.0 65.4 L 355.0 63.0 L 360.0 61.4 L 365.0 60.3 L 370.0 60.0 L 375.0 60.3 L 380.0 61.4 L 385.0 63.0 L 390.0 65.4 L 395.0 68.3 L 400.0 71.9 L 405.0 76.0 L 410.0 80.7 L 415.0 85.9 L 420.0 91.5 L 425.0 97.5 L 430.0 103.8 L 435.0 110.5 L 440.0 117.4 L 445.0 124.5 L 450.0 131.8 L 455.0 139.2 L 460.0 146.6 L 460 280 Z" fill="var(--shade-1)"/>
+      <path d="M 190 280 L 190.0 250.2 L 195.0 246.8 L 200.0 243.0 L 205.0 239.0 L 210.0 234.7 L 215.0 230.1 L 220.0 225.1 L 225.0 219.9 L 230.0 214.4 L 235.0 208.6 L 240.0 202.5 L 245.0 196.1 L 250.0 189.6 L 255.0 182.8 L 260.0 175.8 L 265.0 168.6 L 270.0 161.3 L 275.0 154.0 L 280.0 146.6 L 280 280 Z" fill="var(--shade-2)"/>
+      <path d="M 460 280 L 460.0 146.6 L 465.0 154.0 L 470.0 161.3 L 475.0 168.6 L 480.0 175.8 L 485.0 182.8 L 490.0 189.6 L 495.0 196.1 L 500.0 202.5 L 505.0 208.6 L 510.0 214.4 L 515.0 219.9 L 520.0 225.1 L 525.0 230.1 L 530.0 234.7 L 535.0 239.0 L 540.0 243.0 L 545.0 246.8 L 550.0 250.2 L 550 280 Z" fill="var(--shade-2)"/>
+      <path d="M 100 280 L 100.0 277.6 L 105.0 277.1 L 110.0 276.6 L 115.0 276.0 L 120.0 275.4 L 125.0 274.6 L 130.0 273.7 L 135.0 272.7 L 140.0 271.6 L 145.0 270.3 L 150.0 268.9 L 155.0 267.3 L 160.0 265.5 L 165.0 263.6 L 170.0 261.4 L 175.0 259.0 L 180.0 256.3 L 185.0 253.4 L 190.0 250.2 L 190 280 Z" fill="var(--shade-3)"/>
+      <path d="M 550 280 L 550.0 250.2 L 555.0 253.4 L 560.0 256.3 L 565.0 259.0 L 570.0 261.4 L 575.0 263.6 L 580.0 265.5 L 585.0 267.3 L 590.0 268.9 L 595.0 270.3 L 600.0 271.6 L 605.0 272.7 L 610.0 273.7 L 615.0 274.6 L 620.0 275.4 L 625.0 276.0 L 630.0 276.6 L 635.0 277.1 L 640.0 277.6 L 640 280 Z" fill="var(--shade-3)"/>
+      <!-- curve outline -->
+      <path d="M 60.0 279.4 L 65.0 279.3 L 70.0 279.1 L 75.0 279.0 L 80.0 278.8 L 85.0 278.5 L 90.0 278.3 L 95.0 277.9 L 100.0 277.6 L 105.0 277.1 L 110.0 276.6 L 115.0 276.0 L 120.0 275.4 L 125.0 274.6 L 130.0 273.7 L 135.0 272.7 L 140.0 271.6 L 145.0 270.3 L 150.0 268.9 L 155.0 267.3 L 160.0 265.5 L 165.0 263.6 L 170.0 261.4 L 175.0 259.0 L 180.0 256.3 L 185.0 253.4 L 190.0 250.2 L 195.0 

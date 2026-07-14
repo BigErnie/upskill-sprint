@@ -1,0 +1,190 @@
+t type="number" id="calc-mean" inputmode="decimal" step="any" value="170" aria-describedby="calc-error">
+      </div>
+      <div class="control">
+        <label for="calc-sd">Standard deviation (&sigma;)</label>
+        <input type="number" id="calc-sd" inputmode="decimal" step="any" value="8" min="0" aria-describedby="calc-error">
+      </div>
+      <div class="control">
+        <label for="calc-x">Your value (x)</label>
+        <input type="number" id="calc-x" inputmode="decimal" step="any" value="182" aria-describedby="calc-error">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn" id="calc-run">Calculate z-score</button>
+      <button type="button" class="btn secondary" id="calc-sample">Load sample data (heights)</button>
+      <button type="button" class="btn secondary" id="calc-reset">Reset</button>
+    </div>
+    <p class="error-msg" id="calc-error" role="alert" hidden></p>
+    <div class="result-box" id="calc-result" aria-live="polite" hidden>
+      <p class="result-big" id="calc-z-line"></p>
+      <p id="calc-percentile-line"></p>
+      <p id="calc-interpret-line"></p>
+      <figure class="fig-panel" style="margin:0.7rem 0 0;">
+        <svg id="calc-svg" viewBox="0 0 700 240" role="img" aria-labelledby="calc-fig-title" xmlns="http://www.w3.org/2000/svg">
+          <title id="calc-fig-title">Standard normal curve showing the position of your z-score</title>
+          <line x1="30" y1="200" x2="670" y2="200" stroke="var(--muted)" stroke-width="1.5"/>
+          <path id="calc-fill" fill="var(--shade-2)" d=""></path>
+          <path id="calc-curve" fill="none" stroke="var(--teal)" stroke-width="3" d=""></path>
+          <g id="calc-axis-labels"></g>
+          <line id="calc-marker" x1="0" y1="40" x2="0" y2="200" stroke="var(--danger)" stroke-width="2.5"/>
+          <text id="calc-marker-label" x="0" y="30" text-anchor="middle" font-size="15" font-weight="700" fill="var(--danger)"></text>
+        </svg>
+        <figcaption>The shaded area is the proportion of values <em>below</em> your value.</figcaption>
+      </figure>
+    </div>
+    <p class="method-note">Method: z = (x &minus; &mu;) / &sigma;. The percentile is the cumulative standard
+    normal probability &Phi;(z), computed with the Zelen&ndash;Severo polynomial approximation (accurate to
+    about 7 decimal places). Assumes your data is approximately normal.</p>
+  </div>
+</section>
+
+<!-- EDIT: Interpretation guide -->
+<section id="interpretation" aria-labelledby="interp-h">
+  <h2 id="interp-h">Interpretation guide</h2>
+  <div class="table-scroll">
+    <table>
+      <caption>When you see this, it means this</caption>
+      <thead>
+        <tr><th scope="col">When you see&hellip;</th><th scope="col">It means&hellip;</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>z = 0</td><td>The value is exactly average.</td></tr>
+        <tr><td>z between &minus;1 and +1</td><td>Completely ordinary &mdash; about 68% of all values live here.</td></tr>
+        <tr><td>z beyond &plusmn;2</td><td>Unusual &mdash; only about 5% of values are this far from the mean. Worth a closer look.</td></tr>
+        <tr><td>z beyond &plusmn;3</td><td>Rare (about 0.3%). In quality control this typically triggers an out-of-control signal.</td></tr>
+        <tr><td>A histogram with one peak and mirror-image sides</td><td>The normal model is plausible; the empirical rule should work well.</td></tr>
+        <tr><td>Mean noticeably larger than the median</td><td>Right skew &mdash; a long tail of high values. Be cautious with the normal model.</td></tr>
+        <tr><td>Data piled up against a boundary (e.g. 0)</td><td>Likely skewed; the bell curve would predict impossible negative values.</td></tr>
+        <tr><td>Two separate peaks</td><td>Probably two mixed groups (two machines, two shifts). Split the data before modelling.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- EDIT: Common mistakes -->
+<section id="mistakes" aria-labelledby="mistakes-h">
+  <h2 id="mistakes-h">Common mistakes and exam traps</h2>
+
+  <div class="mistake">
+    <h4>1. Assuming everything is normal <span class="tag">Assumption error</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> many datasets (incomes, waiting times, defect counts) are skewed,
+    so normal-based percentages will be badly off.
+    <strong>How to recognise it:</strong> a lopsided histogram, or a mean far from the median.
+    <strong>How to avoid it:</strong> always plot the data before applying the empirical rule or z-scores.</p>
+  </div>
+
+  <div class="mistake">
+    <h4>2. Mixing up standard deviation and variance <span class="tag">Calculation error</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> variance is &sigma;&sup2; &mdash; the standard deviation squared. Dividing
+    by variance instead of &sigma; gives a meaningless z-score.
+    <strong>How to recognise it:</strong> z-scores that look absurdly small (e.g. 0.03 for an obviously extreme value).
+    <strong>How to avoid it:</strong> check units &mdash; &sigma; is in the same units as the data; variance is in squared units.</p>
+  </div>
+
+  <div class="mistake">
+    <h4>3. Reading &ldquo;below&rdquo; when the question asks &ldquo;above&rdquo; <span class="tag">Interpretation error</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> tables and software usually give the area <em>below</em> a value.
+    If the question asks for the proportion above, you must subtract from 1 (or 100%).
+    <strong>How to recognise it:</strong> an answer like &ldquo;97.7% of bottles are overfilled&rdquo; when overfilling should be rare.
+    <strong>How to avoid it:</strong> sketch the curve and shade the region you actually want before calculating.</p>
+  </div>
+
+  <div class="mistake">
+    <h4>4. Dropping the minus sign <span class="tag">Calculation error</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> z = &minus;1.5 and z = +1.5 are equally &ldquo;unusual&rdquo; but on opposite
+    sides of the mean &mdash; one is below average, one above.
+    <strong>How to recognise it:</strong> conclusions that don&rsquo;t match common sense (&ldquo;the shortest person is above average height&rdquo;).
+    <strong>How to avoid it:</strong> always compute x &minus; &mu; carefully and keep the sign through the whole calculation.</p>
+  </div>
+
+  <div class="mistake">
+    <h4>5. Treating 68&ndash;95&ndash;99.7 as exact for any dataset <span class="tag">Exam trap</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> the rule holds only for (approximately) normal data, and the numbers
+    themselves are rounded (the true values are 68.27%, 95.45%, 99.73%).
+    <strong>How to recognise it:</strong> exam questions that sneak in a skewed dataset and expect you to notice.
+    <strong>How to avoid it:</strong> state the normality assumption whenever you use the rule &mdash; examiners often award marks for it.</p>
+  </div>
+
+  <div class="mistake">
+    <h4>6. Using the density instead of the cumulative probability in Excel <span class="tag">Software-output error</span></h4>
+    <p><strong>Why it&rsquo;s wrong:</strong> <code>NORM.DIST(x, mean, sd, FALSE)</code> returns the curve&rsquo;s
+    <em>height</em>, not a probability. Only the cumulative form (<code>TRUE</code>) gives &ldquo;% of values below x.&rdquo;
+    <strong>How to recognise it:</strong> &ldquo;probabilities&rdquo; that don&rsquo;t land between sensible bounds, or results that change wildly with units.
+    <strong>How to avoid it:</strong> for proportions, always set the last argument of <code>NORM.DIST</code> to <code>TRUE</code>.</p>
+  </div>
+</section>
+
+<!-- EDIT: Software guidance -->
+<section id="software" aria-labelledby="software-h">
+  <h2 id="software-h">Software guidance: Excel and Minitab</h2>
+  <p>Software should confirm and speed up what you now understand &mdash; not replace the thinking.</p>
+  <h3>Excel</h3>
+  <div class="table-scroll">
+    <table>
+      <caption>Excel functions for the normal distribution (Formulas &rsaquo; More Functions &rsaquo; Statistical)</caption>
+      <thead>
+        <tr><th scope="col">Task</th><th scope="col">Function</th><th scope="col">Inputs</th><th scope="col">Output that matters</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>z-score for a value</td>
+          <td><code>=STANDARDIZE(x, mean, sd)</code></td>
+          <td>Your value, the mean, the standard deviation</td>
+          <td>The z-score (compare against &plusmn;1, &plusmn;2, &plusmn;3)</td>
+        </tr>
+        <tr>
+          <td>% of values below x</td>
+          <td><code>=NORM.DIST(x, mean, sd, TRUE)</code></td>
+          <td>Value, mean, sd, and <code>TRUE</code> for cumulative</td>
+          <td>A proportion between 0 and 1 (multiply by 100 for %)</td>
+        </tr>
+        <tr>
+          <td>% below a z-score</td>
+          <td><code>=NORM.S.DIST(z, TRUE)</code></td>
+          <td>The z-score, and <code>TRUE</code></td>
+          <td>The percentile as a proportion</td>
+        </tr>
+        <tr>
+          <td>Value at a given percentile</td>
+          <td><code>=NORM.INV(p, mean, sd)</code></td>
+          <td>The percentile as a proportion (e.g. 0.95)</td>
+          <td>The cutoff value in original units</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Interpreting the result:</strong> <code>=NORM.DIST(182, 170, 8, TRUE)</code> returns about 0.9332,
+  meaning roughly 93.3% of values fall below 182 &mdash; matching a z-score of +1.5.
+  <strong>Common Excel mistakes:</strong> passing <code>FALSE</code> when you want a probability (see mistake 6 above),
+  and entering the variance where the function expects the standard deviation.</p>
+  <h3>Minitab</h3>
+  <p><strong>Where to find it:</strong> <em>Graph &rsaquo; Probability Distribution Plot &rsaquo; View Probability</em>
+  lets you shade regions of a normal curve visually. For numbers, use
+  <em>Calc &rsaquo; Probability Distributions &rsaquo; Normal</em>, choose <em>Cumulative probability</em>, and enter the
+  mean, standard deviation, and your value as the input constant.</p>
+  <p><strong>Output that matters:</strong> the <em>P(X &le; x)</em> value &mdash; the proportion below your value.
+  To check whether your data is normal in the first place, run <em>Stat &rsaquo; Basic Statistics &rsaquo; Normality Test</em>
+  and look at the probability plot: points close to a straight line suggest normality.
+  <strong>Common Minitab mistake:</strong> reading the <em>probability density</em> output as if it were a probability.</p>
+</section>
+
+<!-- EDIT: Practice activity -->
+<section id="practice" aria-labelledby="practice-h">
+  <h2 id="practice-h">Practice activity: the bottling line</h2>
+  <div class="panel">
+    <p><strong>Scenario:</strong> a bottling machine fills juice bottles with a mean of
+    <strong>&mu; = 350&nbsp;ml</strong> and a standard deviation of <strong>&sigma; = 10&nbsp;ml</strong>.
+    Historical fill volumes are approximately normal.</p>
+    <p><strong>Your task:</strong> using only the empirical rule (no calculator needed), answer:</p>
+    <ol>
+      <li>What percentage of bottles contain between <strong>340&nbsp;ml and 360&nbsp;ml</strong>?</li>
+      <li>What percentage of bottles contain <strong>more than 370&nbsp;ml</strong>?</li>
+      <li>The legal minimum on the label is <strong>320&nbsp;ml</strong>. Roughly how often should a bottle fall below it?</li>
+    </ol>
+    <p>Work each one out (a quick sketch of the curve helps), then check yourself.</p>
+    <div class="reveal-panel">
+      <button type="button" class="btn" id="practice-reveal" aria-expanded="false" aria-controls="practice-answer">Reveal answer</button>
+      <div class="reveal-body" id="practice-answer" hidden>
+        <p><strong>1. About 68%.</strong> 340 and 360 are exactly &mu; &minus; 1&sigma; and &mu; + 1&sigma;
+        (350 &minus; 10 and 350 + 10). The empirical rule says about 68% of values fall within &plusmn;1&sigma;.</p>
+        <p><strong>2. About 2.

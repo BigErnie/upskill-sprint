@@ -1,0 +1,211 @@
+              <div id="main3Plot" class="plot"></div>
+            </div>
+            <div>
+              <h3>Observed versus model-predicted response</h3>
+              <div id="pred3Plot" class="plot"></div>
+            </div>
+          </div>
+
+          <div class="card card-pad mt-20">
+            <h3>Randomized run order</h3>
+            <p class="small muted">
+              The geometric cube uses standard-order treatment combinations. The physical experiment should normally be run in randomized order.
+            </p>
+            <div id="randomRunOrder" class="pill-row"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-20">
+        <div class="notice danger-notice">
+          <strong>Unreplicated-design caution:</strong> all seven effects consume the seven degrees of freedom beyond the grand mean.
+          With no replicates, there is no residual degree of freedom. Effect magnitude, engineering knowledge, sparsity assumptions,
+          half-normal plots, or deliberately pooled higher-order interactions may guide screening—but these are not substitutes for replication.
+        </div>
+        <div class="notice">
+          <strong>Interpretation caution:</strong> a face of the cube is a 2² slice at a fixed level of the third factor.
+          The ABC interaction is not “the whole cube”; it measures whether a two-factor interaction changes across the levels of the third factor.
+        </div>
+      </div>
+    </section>
+
+    <section id="practice">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Part 4 · Practice and implementation</div>
+          <h2>Plan the real experiment correctly</h2>
+          <p class="lead">
+            The arithmetic is only one part of DOE. The experimental strategy determines whether the effect estimates are credible.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion">
+        <details open>
+          <summary>Randomization, replication, blocking, and center points</summary>
+          <div>
+            <div class="grid-2">
+              <div>
+                <h4>Randomization</h4>
+                <p>Protects effect estimates against time trends, warm-up, tool wear, operator sequence, and other lurking variables.</p>
+              </div>
+              <div>
+                <h4>Replication</h4>
+                <p>Repeats treatment combinations independently and supplies an estimate of experimental error.</p>
+              </div>
+              <div>
+                <h4>Blocking</h4>
+                <p>Accounts for known nuisance variation, such as day, heat, coil, machine, raw-material lot, or operator.</p>
+              </div>
+              <div>
+                <h4>Center points</h4>
+                <p>Provide a curvature check. A two-level model is linear between low and high settings and cannot independently estimate quadratic curvature.</p>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary>Excel implementation</summary>
+          <div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Excel method</th>
+                    <th>Use case</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Average at a factor level</td>
+                    <td><span class="mono">AVERAGEIFS(response_range, factor_range, high_level)</span></td>
+                    <td>Calculate the high-level and low-level means used in a main effect.</td>
+                  </tr>
+                  <tr>
+                    <td>Main effect</td>
+                    <td><span class="mono">AVERAGEIFS(...high...) - AVERAGEIFS(...low...)</span></td>
+                    <td>Estimate high minus low for A, B, or C.</td>
+                  </tr>
+                  <tr>
+                    <td>Coded interaction column</td>
+                    <td><span class="mono">=A_code*B_code</span></td>
+                    <td>Create AB, AC, BC, and ABC columns from −1/+1 coded factors.</td>
+                  </tr>
+                  <tr>
+                    <td>Regression coefficients</td>
+                    <td><span class="mono">LINEST</span> or Data Analysis → Regression</td>
+                    <td>Fit the coded factorial model. In a balanced orthogonal design, each coefficient is one-half of its effect.</td>
+                  </tr>
+                  <tr>
+                    <td>Random run order</td>
+                    <td><span class="mono">RAND()</span>, then sort</td>
+                    <td>Generate a randomized execution sequence without changing the design combinations.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="notice mt-16">
+              <strong>Excel limitation:</strong> standard Excel does not have a dedicated factorial DOE design generator and analyzer.
+              It can perform the calculations, but Minitab or specialist DOE software provides stronger design, diagnostics, alias, and effect-plot workflows.
+            </div>
+          </div>
+        </details>
+
+        <details>
+          <summary>Minitab implementation and exam navigation</summary>
+          <div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Objective</th>
+                    <th>Minitab path</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Create a new two-level factorial design</td>
+                    <td>Stat → DOE → Factorial → Create Factorial Design</td>
+                  </tr>
+                  <tr>
+                    <td>Enter an existing design</td>
+                    <td>Stat → DOE → Factorial → Define Custom Factorial Design</td>
+                  </tr>
+                  <tr>
+                    <td>Analyze effects and interactions</td>
+                    <td>Stat → DOE → Factorial → Analyze Factorial Design</td>
+                  </tr>
+                  <tr>
+                    <td>Create main-effects and interaction plots</td>
+                    <td>Stat → DOE → Factorial → Factorial Plots</td>
+                  </tr>
+                  <tr>
+                    <td>Inspect cube plots</td>
+                    <td>Stat → DOE → Factorial → Cube Plot</td>
+                  </tr>
+                  <tr>
+                    <td>Review alias structure</td>
+                    <td>Stat → DOE → Factorial → Display Design</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="small muted">
+              Menu names can vary slightly by Minitab version, but the Factorial DOE menu is the key exam-navigation anchor.
+            </p>
+          </div>
+        </details>
+
+        <details>
+          <summary>Pre-run checklist</summary>
+          <div>
+            <div class="grid-2">
+              <div class="notice success-notice"><strong>Define:</strong> response, factor ranges, units, measurement method, and practical effect size.</div>
+              <div class="notice success-notice"><strong>Protect:</strong> randomize, replicate, block known nuisance variables, and standardize measurement.</div>
+              <div class="notice success-notice"><strong>Verify:</strong> the eight settings are safe, feasible, and sufficiently separated to create a detectable signal.</div>
+              <div class="notice success-notice"><strong>Analyze:</strong> inspect residuals, effect hierarchy, interactions, curvature, and engineering plausibility.</div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="card card-pad mt-20">
+        <h3>Knowledge check</h3>
+        <div class="quiz-grid">
+          <div class="quiz-card" data-answer="b">
+            <strong>1. How many treatment combinations are in a full 2³ design?</strong>
+            <div class="quiz-options">
+              <label><input type="radio" name="q1" value="a" /> 6</label>
+              <label><input type="radio" name="q1" value="b" /> 8</label>
+              <label><input type="radio" name="q1" value="c" /> 12</label>
+            </div>
+            <button class="btn btn-outline quiz-check">Check</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-card" data-answer="c">
+            <strong>2. What does a nonparallel interaction plot suggest?</strong>
+            <div class="quiz-options">
+              <label><input type="radio" name="q2" value="a" /> No factor effects</label>
+              <label><input type="radio" name="q2" value="b" /> A blocked design</label>
+              <label><input type="radio" name="q2" value="c" /> The effect of one factor depends on another</label>
+            </div>
+            <button class="btn btn-outline quiz-check">Check</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-card" data-answer="a">
+            <strong>3. Why is replication important in an unreplicated 2³ design?</strong>
+            <div class="quiz-options">
+              <label><input type="radio" name="q3" value="a" /> It provides an independent estimate of experimental error</label>
+              <label><input type="radio" name="q3" value="b" /> It reduces the design to four combinations</label>
+              <label><input type="radio" name="q3" value="c" /> It removes all interactions</label>
+            </div>
+            <button class="btn btn-outline quiz-check">Check</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </section>

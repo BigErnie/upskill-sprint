@@ -1,0 +1,241 @@
+var(--line); border-radius: 12px; padding: 1rem 1.1rem; margin: 1rem 0; }
+.quiz-q fieldset { border: none; margin: 0; padding: 0; }
+.quiz-q legend { font-weight: 700; padding: 0; margin-bottom: 0.5rem; }
+.quiz-option { display: flex; align-items: flex-start; gap: 0.55rem; padding: 0.45rem 0.5rem; border-radius: 8px; margin: 0.2rem 0; cursor: pointer; }
+.quiz-option:hover { background: var(--surface-soft); }
+.quiz-option input { margin-top: 0.3rem; accent-color: var(--teal); width: 1.05rem; height: 1.05rem; flex: none; }
+.quiz-q.correct { border-color: var(--success); box-shadow: inset 4px 0 0 var(--success); }
+.quiz-q.incorrect { border-color: var(--danger); box-shadow: inset 4px 0 0 var(--danger); }
+.quiz-feedback { margin-top: 0.6rem; padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.95rem; }
+.quiz-feedback.ok { background: var(--shade-3); border: 1px solid var(--success); }
+.quiz-feedback.no { background: var(--surface-soft); border: 1px solid var(--danger); }
+.quiz-status { font-weight: 700; }
+.quiz-status.ok { color: var(--success); }
+.quiz-status.no { color: var(--danger); }
+#quiz-score { font-size: 1.15rem; font-weight: 700; margin-top: 0.5rem; }
+
+/* Summary */
+.takeaways { padding-left: 1.3rem; }
+.takeaways li { margin: 0.45rem 0; }
+.remember {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+html[data-theme="dark"] .remember { background: var(--surface-soft); color: var(--ink); border: 1px solid var(--line); }
+
+/* Footer */
+footer.lesson-footer {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
+  padding: 1.2rem 1rem 2rem;
+  font-size: 0.9rem;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Small screens */
+@media (max-width: 520px) {
+  .brand span { font-size: 0.9rem; }
+  .back-link { font-size: 0.85rem; }
+  body { font-size: 0.98rem; }
+}
+
+/* ============ Responsive and print refinements ============ */
+.table-scroll { max-width: 100%; }
+.lesson-bottom-nav {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 3.5rem) 1.5rem;
+}
+.back-to-category {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--teal-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+.back-to-category:hover { background: var(--surface-soft); text-decoration: none; }
+footer.lesson-footer { text-align: left; }
+.lesson-footer-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 3.5rem);
+}
+@media (max-width: 700px) {
+  main#lesson-content { padding-top: 1.25rem; }
+  .lesson-hero { padding: 1.6rem 1.2rem; }
+  .panel, .tool, .formula-box, nav.lesson-toc { padding-left: 1rem; padding-right: 1rem; }
+  .math { font-size: 1.1rem; }
+}
+@media print {
+  html, body { background: #ffffff !important; color: #000000 !important; }
+  header.site, nav.mobile-nav, .skip-link, .theme-control, .btn-row, .reveal-panel > button, .lesson-bottom-nav { display: none !important; }
+  main#lesson-content { max-width: none; padding: 0; }
+  .lesson-hero, .panel, .tool, .formula-box, nav.lesson-toc, .fig-panel, .quiz-q, .mistake {
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #777777 !important;
+    break-inside: avoid;
+  }
+  .lesson-hero h1, .lesson-hero .lesson-lede, .lesson-hero .why-it-matters, .lesson-hero strong, h1, h2, h3, h4, p, li, td, th { color: #000000 !important; }
+  a { color: #000000 !important; text-decoration: underline; }
+  footer.lesson-footer { background: #ffffff !important; color: #000000 !important; border-top: 1px solid #777777; }
+}
+</style>
+<script src="/theme.js"></script>
+<script src="/site-sections.js"></script>
+</head>
+<body
+  data-lesson-page="true"
+  data-category="statistics"
+  data-level="beginner"
+  data-interactive="true"
+>
+<a class="skip-link" href="#lesson-content">Skip to lesson content</a>
+
+<!-- SITE INTEGRATION: Header -->
+<input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+<header class="site lesson-sitebar">
+  <a class="brand" href="/">
+    <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+    <span>UpSkill Sprint Consulting</span>
+  </a>
+  <nav class="desktop-nav" aria-label="Primary navigation">
+    <a href="/start-here">Start Here</a>
+    <a href="/lessons" aria-current="page">Lessons</a>
+    <a href="/services">Services</a>
+    <a href="/request-topic">Request a Topic</a>
+    <a href="/about">About</a>
+    <a href="/faq">FAQ</a>
+    <a href="/contact">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <div class="theme-control" aria-label="Colour theme">
+      <svg class="theme-icon theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+      <button type="button" class="theme-toggle" data-theme-toggle="true" role="switch" aria-checked="false" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="sr-only">Toggle dark and light mode</span></button>
+      <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </div>
+  </div>
+</header>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="/start-here">Start Here</a>
+  <a href="/lessons" aria-current="page">Lessons</a>
+  <a href="/services">Services</a>
+  <a href="/request-topic">Request a Topic</a>
+  <a href="/about">About</a>
+  <a href="/faq">FAQ</a>
+  <a href="/contact">Contact</a>
+</nav>
+
+<main id="lesson-content">
+<article class="lesson-wrapper">
+
+<!-- EDIT: Lesson header -->
+<section class="lesson-hero" aria-labelledby="lesson-title">
+  <h1 id="lesson-title">The Normal Distribution: Meet the Bell Curve</h1>
+  <div class="lesson-meta-row">
+    <span class="pill">Statistics</span>
+    <span class="pill">Beginner</span>
+    <span class="pill">15 minutes</span>
+    <span class="pill accent">Interactive</span>
+  </div>
+  <p class="lesson-lede">
+    The normal distribution &mdash; the famous &ldquo;bell curve&rdquo; &mdash; describes how many real-world
+    measurements naturally spread around an average. In this lesson you&rsquo;ll learn to read the curve,
+    use the 68&ndash;95&ndash;99.7 rule, and turn any measurement into a z-score you can interpret in seconds.
+  </p>
+  <div class="why-it-matters">
+    <strong>Why this matters:</strong> heights, exam marks, measurement errors, filling volumes,
+    cycle times &mdash; a huge amount of workplace data is roughly bell-shaped. Once you can read that shape,
+    you can answer questions like &ldquo;how unusual is this result?&rdquo; without ever opening a statistics textbook.
+  </div>
+</section>
+
+<nav class="lesson-toc" aria-label="Lesson contents">
+  <h2>In this lesson</h2>
+  <ol>
+    <li><a href="#learning-objectives">Learning objectives</a></li>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#key-concepts">The idea in plain English</a></li>
+    <li><a href="#terminology">Key terminology</a></li>
+    <li><a href="#core-formula">The formula (gently)</a></li>
+    <li><a href="#empirical-rule">The 68&ndash;95&ndash;99.7 rule</a></li>
+    <li><a href="#curve-explorer">Interactive: shape the curve</a></li>
+    <li><a href="#procedure">Step-by-step procedure</a></li>
+    <li><a href="#worked-example">Worked example</a></li>
+    <li><a href="#z-calculator">Interactive: z-score calculator</a></li>
+    <li><a href="#interpretation">Interpretation guide</a></li>
+    <li><a href="#mistakes">Common mistakes</a></li>
+    <li><a href="#software">Excel &amp; Minitab guidance</a></li>
+    <li><a href="#practice">Practice activity</a></li>
+    <li><a href="#quiz">Mini quiz</a></li>
+    <li><a href="#summary">Summary</a></li>
+  </ol>
+</nav>
+
+<section id="learning-objectives" aria-labelledby="objectives-h">
+  <h2 id="objectives-h">Learning objectives</h2>
+  <p>By the end of this lesson you will be able to:</p>
+  <ol class="objectives-list">
+    <li><strong>Identify</strong> the key features of a normal distribution (symmetry, one peak, mean = median = mode).</li>
+    <li><strong>Explain</strong> what the mean (&mu;) and standard deviation (&sigma;) control in a bell curve.</li>
+    <li><strong>Apply</strong> the 68&ndash;95&ndash;99.7 rule to estimate what proportion of data falls in a given range.</li>
+    <li><strong>Calculate</strong> a z-score for any measurement and <strong>interpret</strong> what it means.</li>
+    <li><strong>Select</strong> situations where the normal model is (and is not) a sensible assumption.</li>
+  </ol>
+</section>
+
+<section id="prerequisites" aria-labelledby="prereq-h">
+  <h2 id="prereq-h">Prerequisites</h2>
+  <div class="panel callout tip">
+    <p>You should be comfortable with the idea of an <strong>average (mean)</strong> and basic arithmetic
+    (subtraction and division). That&rsquo;s it. If you have met the <strong>standard deviation</strong> before,
+    great &mdash; but we recap it below, so no prior statistics knowledge is required.</p>
+  </div>
+</section>
+
+<!-- EDIT: Concept explanation -->
+<section id="key-concepts" aria-labelledby="concepts-h">
+  <h2 id="concepts-h">The idea in plain English</h2>
+  <p>
+    Measure the height of 1,000 adults and draw a bar chart of the results. You won&rsquo;t get a random
+    mess &mdash; you&rsquo;ll get a very particular shape: <strong>most people are close to the average, and the
+    further you move from the average, the fewer people you find.</strong> The result is a smooth,
+    symmetric hill: the bell curve.
+  </p>
+  <p><strong>What it is:</strong> the normal (or Gaussian) distribution is a mathematical model for data
+    that clusters symmetrically around an average. It is completely described by just two numbers:
+    the <strong>mean</strong> (where the centre is) and the <strong>standard deviation</strong> (how spread out the data is).</p>
+  <p><strong>Why it is used:</strong> it shows up everywhere. When a result is the sum of many small,
+    independent influences &mdash; genetics plus diet plus environment for height, or dozens of tiny process
+    variations for a machined part &mdash; the combined outcome tends to be bell-shaped. This is why heights,
+    exam marks, measurement errors, IQ scores, and daily temperatures all look roughly normal.</p>
+  <p><strong>What question it answers:</strong> &ldquo;How common or unusual is a particular value?&rdquo;
+    If you know the mean and standard deviation, the curve tells you what fraction of results you should
+    expect in any range.</p>
+  <p><strong>Where it is used in practice:</strong> quality control limits, grading and performance
+    comparisons, tolerance and specification analysis, forecasting error bands, and as the foundation
+    of most classic statistical tests.</p>
+  <p><strong>What it does not tell us:</strong> the normal curve is a <em>model</em>, not a law of nature.
+    Plenty of real data is <em>not</em> normal &mdash; incomes, house prices, call-waiting times, and defect
+    counts are usually lopsided (skewed). Assu

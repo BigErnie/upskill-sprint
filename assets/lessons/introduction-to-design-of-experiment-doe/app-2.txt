@@ -1,0 +1,293 @@
+    }));
+
+    Plotly.react("interaction2Plot", traces, {
+      ...plotLayoutBase(),
+      xaxis: { title: `${m.aName} level`, gridcolor: chartPalette().grid },
+      yaxis: { title: m.response, zeroline: false, gridcolor: chartPalette().grid },
+      legend: { orientation: "h", y: 1.12 }
+    }, plotConfig());
+  }
+
+  function update2() {
+    renderMetrics2();
+    renderSquare2();
+    renderSelected2();
+    renderPlots2();
+  }
+
+  function fullRender2() {
+    renderTable2();
+    update2();
+  }
+
+  function loadSample2() {
+    $("#f2aName").value = "Height";
+    $("#f2aLow").value = "4";
+    $("#f2aHigh").value = "6";
+    $("#f2aUnit").value = "feet";
+    $("#f2bName").value = "Angle";
+    $("#f2bLow").value = "0";
+    $("#f2bHigh").value = "90";
+    $("#f2bUnit").value = "degrees";
+    $("#f2Response").value = "Deviation";
+    $("#f2Goal").value = "min";
+    state2.responses = [35, 34, 42, 84];
+    state2.selected = null;
+    fullRender2();
+  }
+
+  function import2() {
+    try {
+      const raw = parseDelimited($("#import2Text").value);
+      let header = null;
+      let data = raw;
+      if (raw[0].length >= 3 && !Number.isFinite(Number(raw[0][2]))) {
+        header = raw[0];
+        data = raw.slice(1);
+      }
+      if (data.length < 4) throw new Error("At least four data rows are required.");
+      const aValues = numericOrStringSort(unique(data.map(r => r[0])));
+      const bValues = numericOrStringSort(unique(data.map(r => r[1])));
+      if (aValues.length !== 2 || bValues.length !== 2) throw new Error("Each factor must have exactly two unique levels.");
+
+      const map = new Map();
+      data.forEach(r => {
+        const key = `${r[0]}|||${r[1]}`;
+        if (!map.has(key)) map.set(key, []);
+        const y = Number(r[2]);
+        if (!Number.isFinite(y)) throw new Error(`Non-numeric response found: ${r[2]}`);
+        map.get(key).push(y);
+      });
+
+      const newResponses = standard2.map(code => {
+        const a = code.A === -1 ? aValues[0] : aValues[1];
+        const b = code.B === -1 ? bValues[0] : bValues[1];
+        const vals = map.get(`${a}|||${b}`);
+        if (!vals) throw new Error(`Missing treatment combination: ${a}, ${b}`);
+        return vals.reduce((s, v) => s + v, 0) / vals.length;
+      });
+
+      if (header) {
+        $("#f2aName").value = header[0] || "Factor A";
+        $("#f2bName").value = header[1] || "Factor B";
+        $("#f2Response").value = header[2] || "Response";
+      }
+      $("#f2aLow").value = aValues[0];
+      $("#f2aHigh").value = aValues[1];
+      $("#f2bLow").value = bValues[0];
+      $("#f2bHigh").value = bValues[1];
+      state2.responses = newResponses;
+      state2.selected = null;
+      fullRender2();
+      $("#import2Message").textContent = data.length > 4
+        ? "Dataset applied. Duplicate treatment combinations were averaged."
+        : "Dataset applied successfully.";
+      $("#import2Message").style.color = "#1f8a5b";
+    } catch (err) {
+      $("#import2Message").textContent = err.message;
+      $("#import2Message").style.color = "#d63b2f";
+    }
+  }
+
+  function export2() {
+    const m = meta2();
+    const lines = [[m.aName, m.bName, m.response]];
+    rows2().forEach(r => lines.push([
+      actualLevel(r.A, m.aLow, m.aHigh),
+      actualLevel(r.B, m.bLow, m.bHigh),
+      r.y
+    ]));
+    downloadText("two_factor_two_level_DOE.csv", lines.map(r => r.join(",")).join("\n"), "text/csv");
+  }
+
+  $("#load2Sample").addEventListener("click", loadSample2);
+  $("#open2Import").addEventListener("click", () => $("#import2Panel").classList.toggle("hidden"));
+  $("#cancel2Import").addEventListener("click", () => $("#import2Panel").classList.add("hidden"));
+  $("#apply2Import").addEventListener("click", import2);
+  $("#export2Csv").addEventListener("click", export2);
+
+  ["f2aName","f2aLow","f2aHigh","f2aUnit","f2bName","f2bLow","f2bHigh","f2bUnit","f2Response"].forEach(id => {
+    $("#" + id).addEventListener("input", () => {
+      renderTable2();
+      update2();
+    });
+  });
+  $$(".term2").forEach(el => el.addEventListener("change", update2));
+
+  function updateStep2() {
+    [1,2,3].forEach(i => $("#step2_" + i).classList.toggle("active", i === state2.step));
+  }
+  $("#next2Step").addEventListener("click", () => { state2.step = state2.step === 3 ? 1 : state2.step + 1; updateStep2(); });
+  $("#prev2Step").addEventListener("click", () => { state2.step = state2.step === 1 ? 3 : state2.step - 1; updateStep2(); });
+
+  // ---------------------------------------------------------------------------
+  // 2³ DESIGN
+  // ---------------------------------------------------------------------------
+  const standard3 = [
+    { A: -1, B: -1, C: -1 },
+    { A:  1, B: -1, C: -1 },
+    { A: -1, B:  1, C: -1 },
+    { A:  1, B:  1, C: -1 },
+    { A: -1, B: -1, C:  1 },
+    { A:  1, B: -1, C:  1 },
+    { A: -1, B:  1, C:  1 },
+    { A:  1, B:  1, C:  1 }
+  ];
+  const terms3 = ["A","B","C","AB","AC","BC","ABC"];
+  const state3 = {
+    responses: [187,318,245,362,279,445,343,513],
+    selected: null,
+    randomized: []
+  };
+
+  function meta3() {
+    return {
+      aName: $("#f3aName").value.trim() || "Factor A",
+      aLow: $("#f3aLow").value,
+      aHigh: $("#f3aHigh").value,
+      aUnit: $("#f3aUnit").value.trim(),
+      bName: $("#f3bName").value.trim() || "Factor B",
+      bLow: $("#f3bLow").value,
+      bHigh: $("#f3bHigh").value,
+      bUnit: $("#f3bUnit").value.trim(),
+      cName: $("#f3cName").value.trim() || "Factor C",
+      cLow: $("#f3cLow").value,
+      cHigh: $("#f3cHigh").value,
+      cUnit: $("#f3cUnit").value.trim(),
+      response: $("#f3Response").value.trim() || "Response"
+    };
+  }
+
+  function rows3() {
+    return standard3.map((codes, i) => ({ ...codes, y: Number(state3.responses[i]) }));
+  }
+
+  function activeTerms3() {
+    return $$(".term3:checked").map(el => el.value);
+  }
+
+  function renderTable3() {
+    const m = meta3();
+    $("#table3 thead").innerHTML = `
+      <tr>
+        <th>Std order</th>
+        <th>${escapeHtml(m.aName)} (${escapeHtml(m.aUnit || "unit")})</th>
+        <th>${escapeHtml(m.bName)} (${escapeHtml(m.bUnit || "unit")})</th>
+        <th>${escapeHtml(m.cName)} (${escapeHtml(m.cUnit || "unit")})</th>
+        <th>A</th><th>B</th><th>C</th>
+        <th>${escapeHtml(m.response)}</th>
+      </tr>`;
+
+    $("#table3 tbody").innerHTML = standard3.map((r, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${escapeHtml(actualLevel(r.A, m.aLow, m.aHigh))}</td>
+        <td>${escapeHtml(actualLevel(r.B, m.bLow, m.bHigh))}</td>
+        <td>${escapeHtml(actualLevel(r.C, m.cLow, m.cHigh))}</td>
+        <td><span class="code-chip">${r.A > 0 ? "+1" : "−1"}</span></td>
+        <td><span class="code-chip">${r.B > 0 ? "+1" : "−1"}</span></td>
+        <td><span class="code-chip">${r.C > 0 ? "+1" : "−1"}</span></td>
+        <td><input type="number" step="any" class="response3" data-index="${i}" value="${state3.responses[i]}" aria-label="Response for run ${i + 1}" /></td>
+      </tr>`).join("");
+
+    $$(".response3").forEach(input => {
+      input.addEventListener("input", () => {
+        state3.responses[Number(input.dataset.index)] = Number(input.value);
+        update3();
+      });
+    });
+  }
+
+  function loadSample3() {
+    const values = {
+      f3aName: "Time", f3aLow: "10", f3aHigh: "16", f3aUnit: "cycles",
+      f3bName: "Force", f3bLow: "2", f3bHigh: "4", f3bUnit: "kN",
+      f3cName: "Current", f3cLow: "9", f3cHigh: "11", f3cUnit: "kA",
+      f3Response: "Strength"
+    };
+    Object.entries(values).forEach(([id, value]) => $("#" + id).value = value);
+    $("#f3Goal").value = "max";
+    state3.responses = [187,318,245,362,279,445,343,513];
+    state3.selected = null;
+    fullRender3();
+    setCameraView("iso");
+  }
+
+  function import3() {
+    try {
+      const raw = parseDelimited($("#import3Text").value);
+      let header = null;
+      let data = raw;
+      if (raw[0].length >= 4 && !Number.isFinite(Number(raw[0][3]))) {
+        header = raw[0];
+        data = raw.slice(1);
+      }
+      if (data.length < 8) throw new Error("At least eight data rows are required.");
+      const aValues = numericOrStringSort(unique(data.map(r => r[0])));
+      const bValues = numericOrStringSort(unique(data.map(r => r[1])));
+      const cValues = numericOrStringSort(unique(data.map(r => r[2])));
+      if (aValues.length !== 2 || bValues.length !== 2 || cValues.length !== 2) {
+        throw new Error("Each of the three factors must have exactly two unique levels.");
+      }
+
+      const map = new Map();
+      data.forEach(r => {
+        const y = Number(r[3]);
+        if (!Number.isFinite(y)) throw new Error(`Non-numeric response found: ${r[3]}`);
+        const key = `${r[0]}|||${r[1]}|||${r[2]}`;
+        if (!map.has(key)) map.set(key, []);
+        map.get(key).push(y);
+      });
+
+      const newResponses = standard3.map(code => {
+        const a = code.A === -1 ? aValues[0] : aValues[1];
+        const b = code.B === -1 ? bValues[0] : bValues[1];
+        const c = code.C === -1 ? cValues[0] : cValues[1];
+        const vals = map.get(`${a}|||${b}|||${c}`);
+        if (!vals) throw new Error(`Missing treatment combination: ${a}, ${b}, ${c}`);
+        return vals.reduce((s, v) => s + v, 0) / vals.length;
+      });
+
+      if (header) {
+        $("#f3aName").value = header[0] || "Factor A";
+        $("#f3bName").value = header[1] || "Factor B";
+        $("#f3cName").value = header[2] || "Factor C";
+        $("#f3Response").value = header[3] || "Response";
+      }
+      $("#f3aLow").value = aValues[0]; $("#f3aHigh").value = aValues[1];
+      $("#f3bLow").value = bValues[0]; $("#f3bHigh").value = bValues[1];
+      $("#f3cLow").value = cValues[0]; $("#f3cHigh").value = cValues[1];
+      state3.responses = newResponses;
+      state3.selected = null;
+      fullRender3();
+
+      $("#import3Message").textContent = data.length > 8
+        ? "Dataset applied. Duplicate treatment combinations were averaged; verify balance before formal inference."
+        : "Dataset applied successfully.";
+      $("#import3Message").style.color = data.length > 8 ? "#9a6900" : "#1f8a5b";
+    } catch (err) {
+      $("#import3Message").textContent = err.message;
+      $("#import3Message").style.color = "#d63b2f";
+    }
+  }
+
+  function export3() {
+    const m = meta3();
+    const lines = [[m.aName, m.bName, m.cName, m.response]];
+    rows3().forEach(r => lines.push([
+      actualLevel(r.A, m.aLow, m.aHigh),
+      actualLevel(r.B, m.bLow, m.bHigh),
+      actualLevel(r.C, m.cLow, m.cHigh),
+      r.y
+    ]));
+    downloadText("three_factor_two_level_DOE.csv", lines.map(r => r.join(",")).join("\n"), "text/csv");
+  }
+
+  function renderEffects3() {
+    const m = meta3();
+    const analysis = factorialEffects(rows3(), terms3);
+    const maxAbs = Math.max(...terms3.map(t => Math.abs(analysis.effects[t])), 1);
+    $("#effects3Table tbody").innerHTML = terms3.map(term => `
+      <tr>
+        <td><strong>${term}</strong></td>
+        <td>${fmt(analysis.effects[term])}</td>

@@ -1,0 +1,91 @@
+name: Fix normal lesson quiz dark mode
+
+on:
+  push:
+    branches:
+      - agent/add-normal-distribution-lesson
+    paths:
+      - .github/workflows/fix-normal-quiz-dark-mode.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/add-normal-distribution-lesson
+          fetch-depth: 0
+
+      - name: Fix quiz option contrast in dark mode
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('lessons/statistics/the-normal-distribution-meet-the-bell-curve.html')
+          text = path.read_text(encoding='utf-8')
+
+          old = '''.quiz-option { display: flex; align-items: flex-start; gap: 0.55rem; padding: 0.45rem 0.5rem; border-radius: 8px; margin: 0.2rem 0; cursor: pointer; }
+          .quiz-option:hover { background: var(--surface-soft); }
+          .quiz-option input { margin-top: 0.3rem; accent-color: var(--teal); width: 1.05rem; height: 1.05rem; flex: none; }'''
+
+          new = '''.quiz-option {
+            display: flex;
+            width: 100%;
+            align-items: flex-start;
+            gap: 0.55rem;
+            padding: 0.65rem 0.75rem;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            margin: 0.3rem 0;
+            background: var(--surface);
+            color: var(--ink);
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+          }
+          .quiz-option span { color: var(--ink); }
+          .quiz-option:hover { background: var(--surface-soft); border-color: var(--teal); }
+          .quiz-option:focus-within { border-color: var(--teal); box-shadow: 0 0 0 3px var(--shade-3); }
+          .quiz-option input[type="radio"] {
+            margin-top: 0.25rem;
+            accent-color: var(--teal);
+            width: 1.05rem;
+            height: 1.05rem;
+            flex: none;
+          }
+          html[data-theme="dark"] .quiz-option {
+            background: var(--surface-soft);
+            color: var(--ink);
+            border-color: var(--line);
+          }
+          html[data-theme="dark"] .quiz-option:hover,
+          html[data-theme="dark"] .quiz-option:focus-within {
+            background: var(--surface);
+            border-color: var(--teal);
+          }
+          html[data-theme="dark"] .quiz-option span { color: var(--ink); }'''
+
+          if old not in text:
+              if new not in text:
+                  raise SystemExit('Expected quiz CSS block was not found')
+          else:
+              text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+          PY
+
+          rm -f .github/workflows/fix-normal-quiz-dark-mode.yml
+
+      - name: Commit fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Fix quiz contrast in dark mode"
+          git push origin HEAD:agent/add-normal-distribution-lesson

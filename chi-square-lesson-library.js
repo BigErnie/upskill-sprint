@@ -23,6 +23,17 @@
       meta: '<span>Beginner</span><span>Interactive</span><span>15 min</span>',
       title: 'The Normal Distribution: Meet the Bell Curve',
       description: 'Master the bell curve, the 68-95-99.7 rule, and z-scores with interactive graphs, a live calculator, worked examples, and a quiz.'
+    },
+    {
+      marker: 'data-beyond-the-bell',
+      path: '/lessons/statistics/beyond-the-bell-the-normal-distribution-and-its-relatives',
+      topic: 'statistics',
+      level: 'intermediate',
+      interactive: 'true',
+      search: 'beyond the bell normal related distributions central limit theorem clt weibull lognormal student t binomial poisson exponential chi square standard error sampling distribution reliability density pdf cdf intermediate interactive simulator',
+      meta: '<span>Intermediate</span><span>Interactive</span><span>20 min</span>',
+      title: 'Beyond the Bell: The Normal Distribution and Its Relatives',
+      description: 'See how the normal connects to the Weibull, lognormal, t, binomial and more — with a live Central Limit Theorem simulator.'
     }
   ];
 

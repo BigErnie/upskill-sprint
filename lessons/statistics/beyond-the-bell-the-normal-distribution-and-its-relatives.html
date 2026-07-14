@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beyond the Bell: The Normal Distribution and Its Relatives | UpSkill Sprint Consulting</title>
+  <meta name="description" content="An intermediate, interactive lesson on how the normal distribution relates to Weibull, lognormal, Student's t, binomial, exponential, and other distributions.">
+  <link rel="canonical" href="https://upskillsprint.com/lessons/statistics/beyond-the-bell-the-normal-distribution-and-its-relatives">
+  <style>
+    *{box-sizing:border-box}
+    body{min-height:100vh;margin:0;display:grid;place-items:center;padding:28px;background:#f4f7fb;color:#172033;font:15px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .loader{width:min(600px,100%);padding:32px;border:1px solid #d8e0ea;border-radius:16px;background:#fff;box-shadow:0 12px 30px rgba(15,23,42,.08);text-align:center}
+    .spinner{width:36px;height:36px;margin:0 auto 18px;border:4px solid #d8e0ea;border-top-color:#0e7490;border-radius:50%;animation:spin .8s linear infinite}
+    h1{margin:0 0 8px;font-size:1.45rem}p{margin:0;color:#5f6b7a}a{color:#0e7490}@keyframes spin{to{transform:rotate(360deg)}}
+    html[data-theme="dark"] body{background:#0b1220;color:#f4f7fb}html[data-theme="dark"] .loader{background:#111c2d;border-color:#2b3b50;box-shadow:0 12px 30px rgba(0,0,0,.28)}html[data-theme="dark"] p{color:#a9b6c8}
+  </style>
+  <script src="/theme.js"></script>
+</head>
+<body>
+  <main class="loader" id="loader" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <h1>Loading Beyond the Bell</h1>
+    <p>Preparing the interactive distribution simulators, examples, and quiz.</p>
+  </main>
+  <script>
+  (async function(){
+    'use strict';
+    const paths=[
+      '/assets/lessons/beyond-the-bell/part-01.txt',
+      '/assets/lessons/beyond-the-bell/part-02.txt',
+      '/assets/lessons/beyond-the-bell/part-03.txt',
+      '/assets/lessons/beyond-the-bell/part-04.txt'
+    ];
+    try{
+      const responses=await Promise.all(paths.map(function(path){return fetch(path,{cache:'no-cache'});}));
+      responses.forEach(function(response){if(!response.ok)throw new Error('Lesson content is unavailable.');});
+      const parts=await Promise.all(responses.map(function(response){return response.text();}));
+      const payload=parts.join('').replace(/\s+/g,'');
+      const bytes=Uint8Array.from(atob(payload),function(c){return c.charCodeAt(0);});
+      let html;
+      if('DecompressionStream' in window){
+        const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+        html=await new Response(stream).text();
+      }else{
+        const fflate=await import('https://cdn.jsdelivr.net/npm/fflate@0.8.2/esm/browser.js');
+        html=fflate.strFromU8(fflate.gunzipSync(bytes));
+      }
+      if(!html.includes('Beyond the Bell: The Normal Distribution and Its Relatives'))throw new Error('Lesson validation failed.');
+      document.open();document.write(html);document.close();
+    }catch(error){
+      document.getElementById('loader').innerHTML='<h1>The lesson could not be loaded</h1><p>'+String(error.message||error)+'<br><br><a href="/lessons#statistics">Back to Statistics</a></p>';
+    }
+  }());
+  </script>
+</body>
+</html>

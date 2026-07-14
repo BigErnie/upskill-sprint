@@ -1,0 +1,391 @@
+      cursor: pointer;
+    }
+
+    .quiz-options input {
+      width: 17px;
+      min-height: 17px;
+      margin: 0;
+    }
+
+    .feedback {
+      min-height: 24px;
+      margin-top: 8px;
+      font-weight: 750;
+    }
+
+    .footer {
+      margin-top: 60px;
+      padding: 36px 20px;
+      color: #d8e8f5;
+      background: var(--navy);
+      text-align: center;
+    }
+
+    .hidden { display: none !important; }
+
+    .muted { color: var(--muted); }
+    .small { font-size: .86rem; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .right { text-align: right; }
+    .mt-10 { margin-top: 10px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-20 { margin-top: 20px; }
+    .mb-0 { margin-bottom: 0; }
+
+    @media (max-width: 1050px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-cube { min-height: 340px; }
+      .cube-layout, .analysis-grid, .square-layout { grid-template-columns: 1fr; }
+      .cube-controls { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .setup-grid { grid-template-columns: repeat(3, minmax(120px, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .top-links { display: none; }
+      .hero { padding: 52px 20px; }
+      main { width: min(100% - 20px, 1240px); }
+      section { padding: 54px 0; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .cube-controls { grid-template-columns: 1fr; }
+      .setup-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+      .section-head { grid-template-columns: 1fr; }
+      .metric-grid { grid-template-columns: 1fr; }
+      .term-toggle-list { grid-template-columns: 1fr; }
+      .cube-view, #cubeCanvas { min-height: 470px; }
+    }
+
+    @media print {
+      header.site, nav.mobile-nav, .lesson-progress-shell, .hero-actions, .workspace-toolbar, button, .cube-hint { display: none !important; }
+      body { background: white; }
+      .hero { min-height: auto; color: black; background: white; padding: 20px 0; }
+      .hero p { color: #333; }
+      .hero-cube { display: none; }
+      section { page-break-inside: avoid; padding: 24px 0; }
+      .card { box-shadow: none; }
+    }
+
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      z-index: 1000;
+      padding: 10px 14px;
+      color: #ffffff;
+      background: var(--navy);
+      border-radius: 0 0 8px 0;
+      font-weight: 700;
+    }
+
+    .skip-link:focus {
+      left: 0;
+    }
+
+    header.site.lesson-sitebar {
+      z-index: 50;
+    }
+
+    /* Shared UpSkill Sprint lesson-page integration */
+    main#lesson-content {
+      display: block;
+      max-width: none;
+      margin: 0;
+      padding: 0 0 4rem;
+      background: var(--paper);
+    }
+
+    .lesson-progress-shell {
+      position: sticky;
+      top: 69px;
+      z-index: 45;
+      height: 5px;
+      background: color-mix(in srgb, var(--line) 75%, transparent);
+    }
+
+    .lesson-progress-shell .progress-track {
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .lesson-progress-shell .progress-bar {
+      background: linear-gradient(90deg, var(--teal), var(--amber));
+    }
+
+    .lesson-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border: 1px solid rgba(255,255,255,.30);
+      border-radius: 999px;
+      color: #ffffff;
+      background: rgba(255,255,255,.10);
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    .hero-pill-accent {
+      color: var(--navy);
+      background: #ffffff;
+      border-color: #ffffff;
+    }
+
+    .lesson-content-shell {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .card {
+      padding: 0;
+      background: var(--surface);
+      color: var(--ink);
+      transform: none;
+    }
+
+    .card:hover {
+      transform: none;
+      box-shadow: var(--shadow);
+    }
+
+    .workspace-toolbar,
+    .workspace-body,
+    .control-group,
+    .metric,
+    .table-wrap,
+    .plot,
+    .factor-square,
+    .cube-view,
+    .selected-run,
+    .guided-step,
+    .model-box,
+    .quiz-card,
+    details,
+    input,
+    select,
+    textarea,
+    table,
+    td,
+    th {
+      transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    h2, h3, h4,
+    .metric strong,
+    .square-axis,
+    .model-box,
+    label {
+      color: var(--doe-heading);
+    }
+
+    .equation,
+    .pill,
+    .selected-run,
+    .guided-step,
+    .model-box {
+      color: var(--ink);
+    }
+
+    th {
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    td,
+    tbody tr:hover {
+      color: var(--ink);
+    }
+
+    tbody tr:hover {
+      background: var(--surface-2);
+    }
+
+    input,
+    select,
+    textarea {
+      color: var(--ink);
+      background: var(--surface);
+      border-color: var(--line);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--muted);
+    }
+
+    .btn-outline,
+    .btn-soft {
+      color: var(--ink);
+      background: var(--surface);
+      border-color: var(--line);
+    }
+
+    .btn-soft {
+      background: var(--surface-2);
+    }
+
+    .btn-dark {
+      background: var(--teal);
+      color: #ffffff;
+    }
+
+    .workspace-toolbar {
+      background: var(--surface-2);
+    }
+
+    .factor-square {
+      background:
+        linear-gradient(90deg, transparent 49.7%, var(--line) 50%, transparent 50.3%),
+        linear-gradient(0deg, transparent 49.7%, var(--line) 50%, transparent 50.3%),
+        var(--surface);
+    }
+
+    .corner-label,
+    .cube-tooltip {
+      color: var(--ink);
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      border-color: var(--line);
+    }
+
+    .cube-view {
+      background: var(--doe-cube-bg);
+    }
+
+    .cube-hint {
+      color: var(--ink);
+      background: color-mix(in srgb, var(--surface) 90%, transparent);
+      border-color: var(--line);
+    }
+
+    summary {
+      color: var(--doe-heading);
+      background: var(--surface-2);
+    }
+
+    details,
+    .quiz-card,
+    .quiz-options label {
+      background: var(--surface);
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .quiz-options label {
+      background: var(--surface-2);
+    }
+
+    .lesson-back {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 26px 0 0;
+      border-top: 1px solid var(--line);
+      text-align: left;
+    }
+
+    .lesson-back a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 10px 15px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: var(--surface);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .lesson-back a:hover {
+      color: var(--teal-dark);
+      border-color: var(--teal);
+      background: var(--surface-2);
+    }
+
+    html[data-theme="dark"] .hero-pill-accent {
+      color: #0b1220;
+    }
+
+    html[data-theme="dark"] .notice {
+      color: var(--ink-soft);
+    }
+
+    html[data-theme="dark"] .notice strong {
+      color: var(--ink);
+    }
+
+    html[data-theme="dark"] .danger-notice,
+    html[data-theme="dark"] .success-notice,
+    html[data-theme="dark"] .notice {
+      background: var(--surface-2);
+      border-color: var(--line);
+    }
+
+    html[data-theme="dark"] .bar {
+      background: var(--surface-3);
+    }
+
+    @media (max-width: 1080px) {
+      .lesson-progress-shell { top: 65px; }
+    }
+
+    @media (max-width: 760px) {
+      .lesson-progress-shell { top: 61px; }
+    }
+
+    @media print {
+      header.site,
+      nav.mobile-nav,
+      .lesson-progress-shell,
+      footer.site,
+      .lesson-back,
+      .theme-control {
+        display: none !important;
+      }
+
+      main#lesson-content {
+        padding: 0;
+        background: #ffffff !important;
+      }
+
+      .lesson-content-shell {
+        width: 100%;
+      }
+
+      .hero {
+        min-height: auto;
+        color: #000000 !important;
+        background: #ffffff !important;
+        border: 1px solid #999999;
+      }
+
+      .hero h1,
+      .hero p,
+      .hero strong,
+      .hero-pill {
+        color: #000000 !important;
+      }
+
+      .hero-pill {
+        border-color: #777777 !important;
+        background: #ffffff !important;
+      }
+
+      .card,
+      .workspace,
+      .control-group,
+      .metric,
+      .plot,
+      .table-wrap,
+      details,
+      .quiz-card {
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+    }

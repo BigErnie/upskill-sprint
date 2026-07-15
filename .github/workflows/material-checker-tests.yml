@@ -10,7 +10,7 @@ on:
       - 'tools/material-specification-compliance-checker*.css'
       - 'tools/material-specification-compliance-checker.html'
       - 'tests/material-checker-engine.test.js'
-      - 'netlify/functions/material-checker.js'
+      - 'netlify/functions/material-checker.mjs'
       - 'package.json'
       - 'netlify.toml'
   push:
@@ -20,7 +20,7 @@ on:
       - 'tools/material-checker-platform*.js'
       - 'tools/material-checker-platform*.css'
       - 'tests/material-checker-engine.test.js'
-      - 'netlify/functions/material-checker.js'
+      - 'netlify/functions/material-checker.mjs'
       - 'package.json'
       - 'netlify.toml'
 
@@ -43,4 +43,4 @@ jobs:
       - run: node --check tools/material-specification-compliance-checker.js
       - run: node --check tools/material-specification-compliance-checker-config.js
       - run: node --check tools/material-specification-grade-library.js
-      - run: node --check netlify/functions/material-checker.js
+      - run: node --check netlify/functions/material-checker.mjs

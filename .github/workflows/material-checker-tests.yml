@@ -4,19 +4,25 @@ on:
   pull_request:
     paths:
       - 'tools/material-checker-engine.js'
-      - 'tools/material-checker-platform.js'
+      - 'tools/material-checker-platform*.js'
+      - 'tools/material-checker-platform*.css'
       - 'tools/material-specification-compliance-checker*.js'
       - 'tools/material-specification-compliance-checker*.css'
       - 'tools/material-specification-compliance-checker.html'
       - 'tests/material-checker-engine.test.js'
       - 'netlify/functions/material-checker.js'
       - 'package.json'
+      - 'netlify.toml'
   push:
     branches: [main, test]
     paths:
       - 'tools/material-checker-engine.js'
-      - 'tools/material-checker-platform.js'
+      - 'tools/material-checker-platform*.js'
+      - 'tools/material-checker-platform*.css'
       - 'tests/material-checker-engine.test.js'
+      - 'netlify/functions/material-checker.js'
+      - 'package.json'
+      - 'netlify.toml'
 
 permissions:
   contents: read
@@ -31,7 +37,10 @@ jobs:
           node-version: '22'
       - run: npm install
       - run: npm test
+      - run: node --check tools/material-checker-engine.js
       - run: node --check tools/material-checker-platform.js
+      - run: node --check tools/material-checker-platform-hardening.js
       - run: node --check tools/material-specification-compliance-checker.js
       - run: node --check tools/material-specification-compliance-checker-config.js
       - run: node --check tools/material-specification-grade-library.js
+      - run: node --check netlify/functions/material-checker.js

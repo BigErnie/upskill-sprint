@@ -1,0 +1,164 @@
+/* Focused refinements for controlled requirement selection, KPI density, and dark-mode contrast. */
+
+.guardrail-message {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--teal) 45%, var(--line));
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--teal) 9%, var(--card));
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.guardrail-message.is-error {
+  border-color: color-mix(in srgb, var(--mc-fail) 55%, var(--line));
+  background: var(--mc-fail-bg);
+  color: var(--mc-fail);
+}
+.guardrail-message[hidden] { display: none !important; }
+
+select[data-property-select] {
+  font-weight: 650;
+}
+select[data-property-select] option:disabled {
+  color: var(--muted);
+}
+
+/* Prevent the summary metrics from stretching to the height of the overall-result card. */
+.decision-grid {
+  align-items: start;
+}
+.metrics {
+  align-self: start;
+  align-content: start;
+  align-items: start;
+  grid-auto-rows: max-content;
+}
+.metric {
+  position: relative;
+  display: flex;
+  min-height: 96px;
+  height: auto;
+  align-self: start;
+  flex-direction: column;
+  justify-content: center;
+  padding: 14px 16px 13px;
+  overflow: hidden;
+}
+.metric::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--mc-neutral);
+}
+.metric:nth-child(1)::before { background: var(--mc-pass); }
+.metric:nth-child(2)::before { background: var(--mc-fail); }
+.metric:nth-child(3)::before { background: var(--mc-warn); }
+.metric:nth-child(4)::before { background: var(--teal); }
+.metric span {
+  line-height: 1.2;
+}
+.metric strong {
+  margin-top: 5px;
+  font-size: clamp(1.55rem, 2.4vw, 2rem);
+  line-height: 1;
+}
+
+/* Dark-mode contrast audit: headings and supporting text must not retain light-mode navy. */
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] {
+  --mc-heading: #edf6ff;
+  --mc-body: #d3dfef;
+  --mc-muted-readable: #afbed1;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .card,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .notice,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .selector,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .req-row,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .unit-note,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .metric,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .summary {
+  color: var(--mc-body);
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .heading h2,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .panel-head h3,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .notice h2,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .card h2,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .card h3,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .card h4 {
+  color: var(--mc-heading) !important;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .heading p:not(.kicker),
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .panel-head p,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .unit-note p,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .selector small,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .summary small,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .status-note,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .row-field {
+  color: var(--mc-muted-readable) !important;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .field,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .mandatory,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .selector strong,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .metric strong,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .metric span,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .summary p,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .notice p {
+  color: var(--mc-body) !important;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .kicker {
+  color: #54d7e5 !important;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] input,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] select,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] textarea,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] button.outline,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .remove {
+  background: #0e1a2b !important;
+  color: #edf6ff !important;
+  border-color: #34475f !important;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] input::placeholder,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] textarea::placeholder {
+  color: #8fa1b8 !important;
+  opacity: 1;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .tab:not([aria-selected='true']) {
+  background: #0e1a2b;
+  color: #edf6ff;
+  border-color: #34475f;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .selector {
+  background: #101d2f;
+  border-color: #34475f;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .selector:has(input:checked) {
+  border-color: #35c4d5;
+  box-shadow: inset 0 0 0 1px #35c4d5;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .results td,
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .results small {
+  color: var(--mc-body) !important;
+}
+html[data-theme='dark'] body[data-tool-page='material-specification-compliance-checker'] .back a {
+  color: #edf6ff !important;
+  background: #0e1a2b;
+  border-color: #34475f;
+}
+
+@media (max-width: 860px) {
+  .metric { min-height: 88px; }
+}
+@media (max-width: 640px) {
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .metric { min-height: 82px; padding: 12px 14px; }
+}
+@media (max-width: 420px) {
+  .metrics { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .guardrail-message { display: none !important; }
+  .metric { min-height: 0; padding: 8px 10px; }
+  .metric::before { display: none; }
+}

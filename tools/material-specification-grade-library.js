@@ -8,11 +8,11 @@
   window.MaterialCheckerConfig.LIB = {
     CSA: {
       'CSA G40.21': withOther([
-        'Grade 230G (33G)', 'Grade 260G (38G)', 'Grade 300G (44G)',
-        'Grade 230W (33W)', 'Grade 260W (38W)', 'Grade 300W (44W)',
-        'Grade 350W (50W)', 'Grade 350WT (50WT)',
-        'Grade 350A (50A)', 'Grade 350AT (50AT)',
-        'Grade 400W (60W)', 'Grade 480W (70W)'
+        'Grade 230G', 'Grade 33G', 'Grade 260G', 'Grade 38G', 'Grade 300G', 'Grade 44G',
+        'Grade 230W', 'Grade 33W', 'Grade 260W', 'Grade 38W', 'Grade 300W', 'Grade 44W',
+        'Grade 350W', 'Grade 50W', 'Grade 350WT', 'Grade 50WT',
+        'Grade 350A', 'Grade 50A', 'Grade 350AT', 'Grade 50AT',
+        'Grade 400W', 'Grade 60W', 'Grade 480W', 'Grade 70W'
       ]),
       'CSA Z245.1': withOther([
         'Grade 241', 'Grade 290', 'Grade 359', 'Grade 386', 'Grade 414',
@@ -98,11 +98,14 @@
 
     API: {
       'API Specification 5L': withOther([
-        'Grade L175 / A25', 'Grade L175P / A25P', 'Grade L210 / A',
-        'Grade L245 / B', 'Grade L290 / X42', 'Grade L320 / X46',
-        'Grade L360 / X52', 'Grade L390 / X56', 'Grade L415 / X60',
-        'Grade L450 / X65', 'Grade L485 / X70', 'Grade L555 / X80',
-        'Grade L625 / X90', 'Grade L690 / X100', 'Grade L830 / X120'
+        'Grade A25', 'Grade L175', 'Grade A25P', 'Grade L175P',
+        'Grade A', 'Grade L210', 'Grade B', 'Grade L245',
+        'Grade X42', 'Grade L290', 'Grade X46', 'Grade L320',
+        'Grade X52', 'Grade L360', 'Grade X56', 'Grade L390',
+        'Grade X60', 'Grade L415', 'Grade X65', 'Grade L450',
+        'Grade X70', 'Grade L485', 'Grade X80', 'Grade L555',
+        'Grade X90', 'Grade L625', 'Grade X100', 'Grade L690',
+        'Grade X120', 'Grade L830'
       ]),
       'API Specification 5CT': withOther([
         'Grade H40', 'Grade J55', 'Grade K55', 'Grade M65',

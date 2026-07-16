@@ -49,6 +49,18 @@
       meta: '<span>Intermediate</span><span>Interactive</span><span>30 min</span>',
       title: 'Introduction to Design of Experiment (DOE)',
       description: 'DOE, Design of Experiment'
+    },
+    {
+      marker: 'data-understanding-dot-notation',
+      sectionId: 'statistics',
+      path: '/lessons/statistics/understanding-dot-notation',
+      topic: 'statistics',
+      level: 'beginner',
+      interactive: 'true',
+      search: 'dot notation anova doe row total column total grand total summation sum then square square then sum squared total sum of squared observations correction factor raw sum of squares excel sumsq minitab beginner general interactive',
+      meta: '<span>Beginner</span><span>General</span><span>10 min</span>',
+      title: 'Understanding Dot Notation',
+      description: 'Dot notation'
     }
   ];
 

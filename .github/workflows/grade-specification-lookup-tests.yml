@@ -29,9 +29,28 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
       - name: Build verified source files
-        run: node scripts/build-grade-specification-lookup.mjs
+        id: build
+        continue-on-error: true
+        run: |
+          set +e
+          node scripts/build-grade-specification-lookup.mjs > grade-build.log 2>&1
+          code=$?
+          node -e "const fs=require('fs'); for (const p of ['source-assets/grade-specification-lookup/grade_spec_lookup.html.br.b64.part-01','source-assets/grade-specification-lookup/grade_spec_lookup_user_guide.html.gz.b64']) { const s=fs.statSync(p); fs.appendFileSync('grade-build.log', '\n'+p+' bytes='+s.size+'\n'); }"
+          exit $code
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: grade-specification-lookup-build-log
+          path: grade-build.log
+          retention-days: 3
+      - name: Stop after build failure
+        if: steps.build.outcome == 'failure'
+        run: |
+          cat grade-build.log
+          exit 1
       - name: Validate generated routes and integration
         run: |
           node <<'NODE'

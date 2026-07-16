@@ -1,0 +1,64 @@
+name: Grade Specification Lookup validation
+
+on:
+  pull_request:
+    paths:
+      - 'engineering-tools.html'
+      - 'scripts/build-grade-specification-lookup.mjs'
+      - 'source-assets/grade-specification-lookup/**'
+      - 'sitemap.xml'
+      - 'netlify.toml'
+      - '.github/workflows/grade-specification-lookup-tests.yml'
+  push:
+    branches: [main, test]
+    paths:
+      - 'engineering-tools.html'
+      - 'scripts/build-grade-specification-lookup.mjs'
+      - 'source-assets/grade-specification-lookup/**'
+      - 'sitemap.xml'
+      - 'netlify.toml'
+      - '.github/workflows/grade-specification-lookup-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build verified source files
+        run: node scripts/build-grade-specification-lookup.mjs
+      - name: Validate generated routes and integration
+        run: |
+          node <<'NODE'
+          const { readFileSync, existsSync } = require('node:fs');
+          const appPath = 'engineering-tools/grade-specification-lookup/index.html';
+          const guidePath = 'engineering-tools/grade-specification-lookup/how-to-use/index.html';
+          if (!existsSync(appPath) || !existsSync(guidePath)) throw new Error('Generated application or guide is missing.');
+          const app = readFileSync(appPath, 'utf8');
+          const guide = readFileSync(guidePath, 'utf8');
+          const directory = readFileSync('engineering-tools.html', 'utf8');
+          const sitemap = readFileSync('sitemap.xml', 'utf8');
+          const requiredNav = ['Start Here','Lessons','Engineering Tools','Services','Request a Topic','About','FAQ','Contact'];
+          for (const label of requiredNav) {
+            if (!app.includes(label) || !guide.includes(label)) throw new Error(`Missing navigation label: ${label}`);
+          }
+          const checks = [
+            [app.includes('https://upskillsprint.com/engineering-tools/grade-specification-lookup'), 'Application canonical URL missing'],
+            [guide.includes('https://upskillsprint.com/engineering-tools/grade-specification-lookup/how-to-use'), 'Guide canonical URL missing'],
+            [app.includes('/assets/logo-icon.png') && guide.includes('/assets/logo-icon.png'), 'UpSkill Sprint logo missing'],
+            [app.includes('Back to Engineering Tools') && guide.includes('Back to Engineering Tools'), 'Category return link missing'],
+            [app.includes('/tools/material-specification-compliance-checker'), 'Companion compliance-checker link missing'],
+            [!app.includes('grade_spec_lookup_user_guide.html'), 'Legacy guide link remains'],
+            [directory.includes('Material Specification Tools'), 'Material Specification Tools group missing'],
+            [directory.includes('/engineering-tools/grade-specification-lookup'), 'Engineering Tools directory entry missing'],
+            [sitemap.includes('/engineering-tools/grade-specification-lookup</loc>'), 'Application sitemap URL missing'],
+            [sitemap.includes('/engineering-tools/grade-specification-lookup/how-to-use</loc>'), 'Guide sitemap URL missing']
+          ];
+          for (const [condition, message] of checks) if (!condition) throw new Error(message);
+          console.log('Grade Specification Lookup integration checks passed.');
+          NODE

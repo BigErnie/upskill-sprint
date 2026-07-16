@@ -6,13 +6,13 @@
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#ffffff">
 <title>Engineering Tools | UpSkill Sprint Consulting</title>
-<meta name="description" content="Practical engineering calculators, material compliance checkers, and unit conversion tools for technical and quality work.">
-<link rel="canonical" href="https://upskillsprint.com/engineering-tools.html">
+<meta name="description" content="Practical engineering calculators, material specification lookup and compliance tools, and unit converters for technical and quality work.">
+<link rel="canonical" href="https://upskillsprint.com/engineering-tools">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Engineering Tools | UpSkill Sprint Consulting">
-<meta property="og:description" content="Practical engineering calculators, material compliance checkers, and unit conversion tools.">
+<meta property="og:description" content="Practical engineering calculators, material specification lookup and compliance tools, and unit converters.">
 <meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
-<meta property="og:url" content="https://upskillsprint.com/engineering-tools.html">
+<meta property="og:url" content="https://upskillsprint.com/engineering-tools">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -21,90 +21,38 @@
   .tools-hero { padding-bottom: 42px; }
   .tools-lead { max-width: 760px; font-size: 16px; line-height: 1.7; color: var(--ink-soft); margin: 0; }
   .tool-directory { display: flex; flex-direction: column; gap: 14px; }
-  .tool-row {
-    display: grid;
-    grid-template-columns: 58px minmax(0,1fr) 130px 150px;
-    align-items: center;
-    gap: 22px;
-    padding: 22px 24px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: var(--card);
-    color: var(--ink);
-    transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
-  }
-  .tool-row:hover { color: var(--ink); transform: translateY(-2px); border-color: rgba(14,116,144,.45); box-shadow: 0 10px 26px rgba(15,23,42,.08); }
-  .tool-row.is-planned:hover { transform: none; border-color: var(--line); box-shadow: none; }
-  .tool-icon {
-    width: 48px;
-    height: 48px;
-    display: grid;
-    place-items: center;
-    border-radius: 10px;
-    background: rgba(14,116,144,.12);
-    color: var(--teal);
-  }
-  .tool-icon svg { width: 24px; height: 24px; }
-  .tool-content h2 { font-size: 20px; margin: 0 0 6px; }
-  .tool-content p { font-size: 14.5px; line-height: 1.6; color: var(--muted); margin: 0; max-width: 680px; }
-  .tool-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-  .tool-tags span { padding: 5px 8px; border-radius: 999px; background: var(--tint); border: 1px solid var(--line); color: var(--ink-soft); font-size: 11.5px; font-weight: 600; }
-  .tool-status {
-    justify-self: start;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 94px;
-    padding: 7px 10px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: var(--tint);
-    color: var(--muted);
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-  }
-  .tool-status.available { background: rgba(14,116,144,.12); border-color: rgba(14,116,144,.3); color: var(--teal); }
-  .tool-action {
-    justify-self: end;
-    min-width: 132px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    text-align: center;
-    font-size: 13.5px;
-    font-weight: 700;
-    color: var(--ink);
-    background: transparent;
-  }
-  .tool-action.primary { border-color: var(--teal); background: var(--teal); color: #fff; }
-  .tool-action.primary:hover { color: #fff; background: var(--teal-dark); }
-  .tool-action.secondary:hover { border-color: var(--teal); color: var(--teal); }
-  .directory-note { margin: 18px 0 0; color: var(--muted); font-size: 13px; }
-  .category-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
-  .category-card { border: 1px solid var(--line); border-radius: 10px; background: var(--card); overflow: hidden; }
-  .category-card summary { list-style: none; cursor: pointer; padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--ink); font-family: 'Source Serif 4',Georgia,serif; font-size: 18px; font-weight: 600; }
-  .category-card summary::-webkit-details-marker { display: none; }
-  .category-card summary::after { content: '+'; color: var(--teal); font-family: 'Work Sans',Arial,sans-serif; font-size: 24px; font-weight: 500; }
-  .category-card[open] summary::after { content: '\2212'; }
-  .category-body { padding: 0 24px 22px; }
-  .category-body p { color: var(--muted); font-size: 14.5px; line-height: 1.65; margin: 0 0 12px; }
-  .category-body ul { margin: 0; padding-left: 20px; color: var(--ink-soft); font-size: 14px; line-height: 1.7; }
-  .tools-note { margin-top: 28px; padding: 22px 24px; border-left: 5px solid var(--teal); border-radius: 8px; background: var(--tint); }
-  .tools-note p { margin: 0; color: var(--ink-soft); font-size: 14.5px; line-height: 1.65; }
-  @media (max-width: 900px) {
-    .tool-row { grid-template-columns: 52px minmax(0,1fr) auto; }
-    .tool-status { grid-column: 2; grid-row: 2; margin-top: 4px; }
-    .tool-action { grid-column: 3; grid-row: 1 / span 2; }
-  }
-  @media (max-width: 680px) {
-    .tool-row { grid-template-columns: 48px 1fr; gap: 16px; padding: 20px; }
-    .tool-content { grid-column: 2; }
-    .tool-status { grid-column: 2; grid-row: auto; }
-    .tool-action { grid-column: 2; grid-row: auto; justify-self: stretch; width: 100%; }
-    .category-grid { grid-template-columns: 1fr; }
-  }
+  .tool-group-label { display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:10px 0 0;padding:0 2px 5px; }
+  .tool-group-label h2 { margin:0;font-size:22px; }
+  .tool-group-label p { max-width:680px;margin:0;color:var(--muted);font-size:13.5px;line-height:1.55;text-align:right; }
+  .tool-row { display:grid;grid-template-columns:58px minmax(0,1fr) 130px 150px;align-items:center;gap:22px;padding:22px 24px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease; }
+  .tool-row:hover { color:var(--ink);transform:translateY(-2px);border-color:rgba(14,116,144,.45);box-shadow:0 10px 26px rgba(15,23,42,.08); }
+  .tool-row.is-planned:hover { transform:none;border-color:var(--line);box-shadow:none; }
+  .tool-icon { width:48px;height:48px;display:grid;place-items:center;border-radius:10px;background:rgba(14,116,144,.12);color:var(--teal); }
+  .tool-icon svg { width:24px;height:24px; }
+  .tool-content h2 { font-size:20px;margin:0 0 6px; }
+  .tool-content p { font-size:14.5px;line-height:1.6;color:var(--muted);margin:0;max-width:680px; }
+  .tool-tags { display:flex;flex-wrap:wrap;gap:7px;margin-top:12px; }
+  .tool-tags span { padding:5px 8px;border-radius:999px;background:var(--tint);border:1px solid var(--line);color:var(--ink-soft);font-size:11.5px;font-weight:600; }
+  .tool-status { justify-self:start;display:inline-flex;align-items:center;justify-content:center;min-width:94px;padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:var(--tint);color:var(--muted);font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase; }
+  .tool-status.available { background:rgba(14,116,144,.12);border-color:rgba(14,116,144,.3);color:var(--teal); }
+  .tool-action { justify-self:end;min-width:132px;padding:10px 14px;border-radius:8px;border:1px solid var(--line);text-align:center;font-size:13.5px;font-weight:700;color:var(--ink);background:transparent; }
+  .tool-action.primary { border-color:var(--teal);background:var(--teal);color:#fff; }
+  .tool-action.primary:hover { color:#fff;background:var(--teal-dark); }
+  .tool-action.secondary:hover { border-color:var(--teal);color:var(--teal); }
+  .directory-note { margin:18px 0 0;color:var(--muted);font-size:13px; }
+  .category-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px; }
+  .category-card { border:1px solid var(--line);border-radius:10px;background:var(--card);overflow:hidden; }
+  .category-card summary { list-style:none;cursor:pointer;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;color:var(--ink);font-family:'Source Serif 4',Georgia,serif;font-size:18px;font-weight:600; }
+  .category-card summary::-webkit-details-marker { display:none; }
+  .category-card summary::after { content:'+';color:var(--teal);font-family:'Work Sans',Arial,sans-serif;font-size:24px;font-weight:500; }
+  .category-card[open] summary::after { content:'\2212'; }
+  .category-body { padding:0 24px 22px; }
+  .category-body p { color:var(--muted);font-size:14.5px;line-height:1.65;margin:0 0 12px; }
+  .category-body ul { margin:0;padding-left:20px;color:var(--ink-soft);font-size:14px;line-height:1.7; }
+  .tools-note { margin-top:28px;padding:22px 24px;border-left:5px solid var(--teal);border-radius:8px;background:var(--tint); }
+  .tools-note p { margin:0;color:var(--ink-soft);font-size:14.5px;line-height:1.65; }
+  @media (max-width:900px) { .tool-row{grid-template-columns:52px minmax(0,1fr) auto}.tool-status{grid-column:2;grid-row:2;margin-top:4px}.tool-action{grid-column:3;grid-row:1 / span 2}.tool-group-label{align-items:flex-start;flex-direction:column;gap:5px}.tool-group-label p{text-align:left} }
+  @media (max-width:680px) { .tool-row{grid-template-columns:48px 1fr;gap:16px;padding:20px}.tool-content{grid-column:2}.tool-status{grid-column:2;grid-row:auto}.tool-action{grid-column:2;grid-row:auto;justify-self:stretch;width:100%}.category-grid{grid-template-columns:1fr} }
 </style>
 <script src="/theme.js"></script>
 <script src="/site-sections.js"></script>
@@ -112,205 +60,47 @@
 <body>
   <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
   <header class="site">
-    <a href="index.html" class="brand">
-      <img src="assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
-      <span>UpSkill Sprint Consulting</span>
-    </a>
-    <nav class="desktop-nav">
-      <a href="start-here.html">Start Here</a>
-      <a href="lessons.html">Lessons</a>
-      <a href="engineering-tools.html" aria-current="page">Engineering Tools</a>
-      <a href="services.html">Services</a>
-      <a href="request-topic.html">Request a Topic</a>
-      <a href="about.html">About</a>
-      <a href="faq.html">FAQ</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-    </label>
-    <a href="lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+    <a href="/" class="brand"><img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo"><span>UpSkill Sprint Consulting</span></a>
+    <nav class="desktop-nav" aria-label="Primary navigation"><a href="/start-here">Start Here</a><a href="/lessons">Lessons</a><a href="/engineering-tools" aria-current="page">Engineering Tools</a><a href="/services">Services</a><a href="/request-topic">Request a Topic</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></nav>
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></label>
+    <a href="/lessons" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
   </header>
-  <nav class="mobile-nav">
-    <a href="start-here.html">Start Here</a>
-    <a href="lessons.html">Lessons</a>
-    <a href="engineering-tools.html" aria-current="page">Engineering Tools</a>
-    <a href="services.html">Services</a>
-    <a href="request-topic.html">Request a Topic</a>
-    <a href="about.html">About</a>
-    <a href="faq.html">FAQ</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+  <nav class="mobile-nav" aria-label="Mobile navigation"><a href="/start-here">Start Here</a><a href="/lessons">Lessons</a><a href="/engineering-tools" aria-current="page">Engineering Tools</a><a href="/services">Services</a><a href="/request-topic">Request a Topic</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></nav>
 
   <main>
-    <section class="section tools-hero">
-      <div class="wrap">
-        <p class="eyebrow">Engineering Tools</p>
-        <h1 style="font-size:34px;line-height:1.2;margin:0 0 16px;max-width:760px;">Practical tools for technical decisions</h1>
-        <p class="tools-lead">A growing collection of focused calculators, converters, and compliance checkers for engineering, quality, and process-improvement work.</p>
-      </div>
-    </section>
+    <section class="section tools-hero"><div class="wrap"><p class="eyebrow">Engineering Tools</p><h1 style="font-size:34px;line-height:1.2;margin:0 0 16px;max-width:760px;">Practical tools for technical decisions</h1><p class="tools-lead">A growing collection of focused calculators, converters, specification references, and compliance checkers for engineering, quality, and process-improvement work.</p></div></section>
 
-    <section class="section" style="padding-top:22px;">
-      <div class="wrap">
-        <div class="tool-directory" aria-label="Engineering tool directory">
-          <a id="materials-quality" href="tools/material-specification-compliance-checker.html" class="tool-row">
-            <div class="tool-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM8 9h8M8 13h5M8 17h3"/></svg>
-            </div>
-            <div class="tool-content">
-              <h2>Material Specification Compliance Checker</h2>
-              <p>Compare chemistry, tensile, Charpy, dimensional, and certification results against selected CSA, ASTM, customer, or internal requirements.</p>
-              <div class="tool-tags" aria-label="Checker capabilities">
-                <span>Chemistry</span><span>Mechanical</span><span>Charpy</span><span>Dimensions</span><span>Certification</span>
-              </div>
-            </div>
-            <span class="tool-status available">Available</span>
-            <span class="tool-action primary tool-link">Open checker &rarr;</span>
-          </a>
+    <section class="section" style="padding-top:22px;"><div class="wrap"><div class="tool-directory" aria-label="Engineering tool directory">
+      <div class="tool-group-label" id="material-specification-tools"><h2>Material Specification Tools</h2><p>Reference grade requirements first, then document an evidence-based compliance assessment against the controlled specification and order requirements.</p></div>
 
-          <a id="engineering-calculators" href="request-topic.html" class="tool-row is-planned">
-            <div class="tool-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></svg>
-            </div>
-            <div class="tool-content">
-              <h2>Engineering &amp; Statistics Calculator</h2>
-              <p>Quick calculations for engineering and statistical work, including geometry, mass, pressure, flow, force, velocity, sample size, confidence intervals, capability, and process analysis.</p>
-            </div>
-            <span class="tool-status">Planned</span>
-            <span class="tool-action secondary tool-link">Suggest features &rarr;</span>
-          </a>
+      <a id="materials-quality" href="/tools/material-specification-compliance-checker" class="tool-row" aria-label="Open Material Specification Compliance Checker">
+        <div class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4zM8 9h8M8 13h5M8 17h3"/></svg></div>
+        <div class="tool-content"><h2>Material Specification Compliance Checker</h2><p>Compare chemistry, tensile, Charpy, dimensional, process, and certification evidence against selected CSA, ASTM, customer, or internal requirements.</p><div class="tool-tags" aria-label="Checker capabilities"><span>Chemistry</span><span>Mechanical</span><span>Charpy</span><span>Dimensions</span><span>Certification</span></div></div>
+        <span class="tool-status available">Available</span><span class="tool-action primary tool-link">Open checker</span>
+      </a>
 
-          <a id="converters" href="request-topic.html" class="tool-row is-planned">
-            <div class="tool-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h11l-3-3M17 17H6l3 3M18 7l-3 3M6 17l3-3"/></svg>
-            </div>
-            <div class="tool-content">
-              <h2>Unit Converter</h2>
-              <p>Convert SI, Imperial, and common industry units for length, mass, pressure, temperature, energy, flow, density, speed, and force.</p>
-            </div>
-            <span class="tool-status">Planned</span>
-            <span class="tool-action secondary tool-link">Suggest units &rarr;</span>
-          </a>
-        </div>
-        <p class="directory-note">Available tools open directly. Planned tools link to the request form so you can help define the most useful features.</p>
-      </div>
-    </section>
+      <a id="grade-specification-lookup" href="/engineering-tools/grade-specification-lookup" class="tool-row" aria-label="Open Grade Specification Lookup">
+        <div class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v14H4zM8 9h8M8 13h5M16.5 16.5l2.5 2.5M18 15a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg></div>
+        <div class="tool-content"><h2>Grade Specification Lookup</h2><p>Reference CSA G40.21, CSA Z245.1, API 5L, and ASTM grade data; resolve thickness-dependent requirements; compare grades; check entered results; and use engineering calculators.</p><div class="tool-tags" aria-label="Lookup capabilities"><span>CSA</span><span>API</span><span>ASTM</span><span>Reverse lookup</span><span>Calculators</span></div></div>
+        <span class="tool-status available">Available</span><span class="tool-action primary tool-link">Open lookup</span>
+      </a>
 
-    <section class="section tint">
-      <div class="wrap">
-        <p class="eyebrow">Expandable tool library</p>
-        <h2 style="font-size:28px;margin:0 0 12px;max-width:720px;">Organized around real engineering work</h2>
-        <p style="font-size:15.5px;line-height:1.7;color:var(--muted);margin:0 0 28px;max-width:760px;">The library will expand by category so each tool remains focused and easy to find.</p>
+      <a id="engineering-calculators" href="/request-topic" class="tool-row is-planned"><div class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></svg></div><div class="tool-content"><h2>Engineering &amp; Statistics Calculator</h2><p>Quick calculations for engineering and statistical work, including geometry, mass, pressure, flow, force, velocity, sample size, confidence intervals, capability, and process analysis.</p></div><span class="tool-status">Planned</span><span class="tool-action secondary tool-link">Suggest features</span></a>
 
-        <div class="category-grid">
-          <details class="category-card" open>
-            <summary>Materials &amp; Quality</summary>
-            <div class="category-body">
-              <p>Tools for checking material data and supporting quality decisions.</p>
-              <ul>
-                <li>CSA and ASTM material compliance checks</li>
-                <li>Chemistry and mechanical-property comparisons</li>
-                <li>Plate, coil, and pipe reference calculations</li>
-              </ul>
-            </div>
-          </details>
+      <a id="converters" href="/request-topic" class="tool-row is-planned"><div class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h11l-3-3M17 17H6l3 3M18 7l-3 3M6 17l3-3"/></svg></div><div class="tool-content"><h2>Unit Converter</h2><p>Convert SI, Imperial, and common industry units for length, mass, pressure, temperature, energy, flow, density, speed, and force.</p></div><span class="tool-status">Planned</span><span class="tool-action secondary tool-link">Suggest units</span></a>
+    </div><p class="directory-note">Available tools open directly. Planned tools link to the request form so you can help define the most useful features.</p></div></section>
 
-          <details class="category-card">
-            <summary>Engineering Calculators</summary>
-            <div class="category-body">
-              <p>Focused calculators for recurring technical calculations.</p>
-              <ul>
-                <li>Geometry, area, volume, and mass</li>
-                <li>Pressure, force, flow, and velocity</li>
-                <li>Production and process calculations</li>
-              </ul>
-            </div>
-          </details>
+    <section class="section tint"><div class="wrap"><p class="eyebrow">Expandable tool library</p><h2 style="font-size:28px;margin:0 0 12px;max-width:720px;">Organized around real engineering work</h2><p style="font-size:15.5px;line-height:1.7;color:var(--muted);margin:0 0 28px;max-width:760px;">The library will expand by category so each tool remains focused and easy to find.</p><div class="category-grid">
+      <details class="category-card" open><summary>Materials &amp; Quality</summary><div class="category-body"><p>Tools for finding material requirements, checking evidence, and supporting quality decisions.</p><ul><li>CSA, ASTM, and API grade specification lookup</li><li>Chemistry, mechanical-property, Charpy, and dimensional comparisons</li><li>Plate, coil, pipe, and certification compliance workflows</li></ul></div></details>
+      <details class="category-card"><summary>Engineering Calculators</summary><div class="category-body"><p>Focused calculators for recurring technical calculations.</p><ul><li>Geometry, area, volume, and mass</li><li>Pressure, force, flow, and velocity</li><li>Production and process calculations</li></ul></div></details>
+      <details class="category-card"><summary>Statistics &amp; Lean Six Sigma</summary><div class="category-body"><p>Decision-support tools that connect analysis to improvement work.</p><ul><li>Sample-size and confidence calculations</li><li>Process capability and performance metrics</li><li>Takt time, cycle time, and improvement metrics</li></ul></div></details>
+      <details class="category-card"><summary>Converters</summary><div class="category-body"><p>Fast conversions for common SI, Imperial, and industry units.</p><ul><li>Length, area, volume, and mass</li><li>Pressure, temperature, energy, and power</li><li>Flow, density, speed, and force</li></ul></div></details>
+    </div><div class="tools-note"><p><strong>Tool-development rule:</strong> each tool explains its equations, units, assumptions, evidence status, and limitations so the result can be independently checked.</p></div></div></section>
 
-          <details class="category-card">
-            <summary>Statistics &amp; Lean Six Sigma</summary>
-            <div class="category-body">
-              <p>Decision-support tools that connect analysis to improvement work.</p>
-              <ul>
-                <li>Sample-size and confidence calculations</li>
-                <li>Process capability and performance metrics</li>
-                <li>Takt time, cycle time, and improvement metrics</li>
-              </ul>
-            </div>
-          </details>
-
-          <details class="category-card">
-            <summary>Converters</summary>
-            <div class="category-body">
-              <p>Fast conversions for common SI, Imperial, and industry units.</p>
-              <ul>
-                <li>Length, area, volume, and mass</li>
-                <li>Pressure, temperature, energy, and power</li>
-                <li>Flow, density, speed, and force</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-
-        <div class="tools-note">
-          <p><strong>Tool-development rule:</strong> each tool will explain the equation, show the units, and make its assumptions visible so the result can be checked.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" style="text-align:center;">
-      <div class="wrap" style="max-width:720px;">
-        <p class="eyebrow">Help shape the library</p>
-        <h2 style="font-size:28px;margin:0 0 14px;">Which engineering tool should be built next?</h2>
-        <p style="font-size:15.5px;line-height:1.7;color:var(--muted);margin:0 0 26px;">Submit the calculation, standard check, or converter you use repeatedly at work.</p>
-        <a href="request-topic.html" class="btn btn-teal">Request an engineering tool</a>
-      </div>
-    </section>
+    <section class="section" style="text-align:center;"><div class="wrap" style="max-width:720px;"><p class="eyebrow">Help shape the library</p><h2 style="font-size:28px;margin:0 0 14px;">Which engineering tool should be built next?</h2><p style="font-size:15.5px;line-height:1.7;color:var(--muted);margin:0 0 26px;">Submit the calculation, standard check, or converter you use repeatedly at work.</p><a href="/request-topic" class="btn btn-teal">Request an engineering tool</a></div></section>
   </main>
 
-  <footer class="site">
-    <div class="wrap">
-      <div class="footer-grid">
-        <div>
-          <div class="brand" style="margin-bottom:14px;">
-            <img src="assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
-            <span>UpSkill Sprint Consulting</span>
-          </div>
-          <p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, engineering, process improvement, and business problem-solving.</p>
-        </div>
-        <div>
-          <h4>Quick Links</h4>
-          <a href="index.html">Home</a>
-          <a href="start-here.html">Start Here</a>
-          <a href="lessons.html">Lessons</a>
-          <a href="engineering-tools.html">Engineering Tools</a>
-          <a href="services.html">Services</a>
-          <a href="request-topic.html">Request a Topic</a>
-          <a href="about.html">About</a>
-          <a href="faq.html">FAQ</a>
-          <a href="contact.html">Contact</a>
-        </div>
-        <div>
-          <h4>Tool Categories</h4>
-          <a href="#materials-quality">Materials &amp; Quality</a>
-          <a href="#engineering-calculators">Engineering Calculators</a>
-          <a href="#converters">Unit Converters</a>
-          <a href="lessons.html#statistics">Statistics</a>
-          <a href="lessons.html#lean-six-sigma">Lean Six Sigma</a>
-        </div>
-        <div>
-          <h4>Contact</h4>
-          <a href="mailto:skillsprintconsulting@gmail.com">skillsprintconsulting@gmail.com</a>
-          <p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 UpSkill Sprint Consulting</span>
-      <div><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></div>
-    </div>
-  </footer>
+  <footer class="site"><div class="wrap"><div class="footer-grid"><div><div class="brand" style="margin-bottom:14px;"><img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo"><span>UpSkill Sprint Consulting</span></div><p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, engineering, process improvement, and business problem-solving.</p></div><div><h4>Quick Links</h4><a href="/">Home</a><a href="/start-here">Start Here</a><a href="/lessons">Lessons</a><a href="/engineering-tools">Engineering Tools</a><a href="/services">Services</a><a href="/request-topic">Request a Topic</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></div><div><h4>Tool Categories</h4><a href="#material-specification-tools">Material Specification Tools</a><a href="#engineering-calculators">Engineering Calculators</a><a href="#converters">Unit Converters</a><a href="/lessons#statistics">Statistics</a><a href="/lessons#lean-six-sigma">Lean Six Sigma</a></div><div><h4>Contact</h4><a href="mailto:skillsprintconsulting@gmail.com">skillsprintconsulting@gmail.com</a><p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p></div></div></div><div class="footer-bottom"><span>&copy; 2026 UpSkill Sprint Consulting</span><div><a href="/privacy">Privacy Policy</a><a href="/terms">Terms of Use</a></div></div></footer>
 <script src="/contrast-fix.js"></script>
 </body>
 </html>

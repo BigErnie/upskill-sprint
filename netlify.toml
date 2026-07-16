@@ -2,6 +2,8 @@
 # Pretty URLs serve HTML pages without exposing the .html extension.
 
 [build]
+  command = "node scripts/build-grade-specification-lookup.mjs"
+  publish = "."
   functions = "netlify/functions"
 
 [functions]

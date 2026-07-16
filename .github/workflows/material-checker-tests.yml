@@ -1,0 +1,50 @@
+name: Material checker validation
+
+on:
+  pull_request:
+    paths:
+      - 'tools/material-checker-engine.js'
+      - 'tools/material-checker-platform*.js'
+      - 'tools/material-checker-platform*.css'
+      - 'tools/material-specification-compliance-checker*.js'
+      - 'tools/material-specification-compliance-checker*.css'
+      - 'tools/material-specification-compliance-checker.html'
+      - 'tests/material-checker-engine.test.js'
+      - 'netlify/functions/material-checker.mjs'
+      - 'package.json'
+      - 'netlify.toml'
+      - '.node-version'
+      - '.github/workflows/material-checker-tests.yml'
+  push:
+    branches: [main, test]
+    paths:
+      - 'tools/material-checker-engine.js'
+      - 'tools/material-checker-platform*.js'
+      - 'tools/material-checker-platform*.css'
+      - 'tests/material-checker-engine.test.js'
+      - 'netlify/functions/material-checker.mjs'
+      - 'package.json'
+      - 'netlify.toml'
+      - '.node-version'
+      - '.github/workflows/material-checker-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+      - run: npm install
+      - run: npm test
+      - run: node --check tools/material-checker-engine.js
+      - run: node --check tools/material-checker-platform.js
+      - run: node --check tools/material-checker-platform-hardening.js
+      - run: node --check tools/material-specification-compliance-checker.js
+      - run: node --check tools/material-specification-compliance-checker-config.js
+      - run: node --check tools/material-specification-grade-library.js
+      - run: node --check netlify/functions/material-checker.mjs

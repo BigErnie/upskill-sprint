@@ -1,6 +1,12 @@
 # Netlify deployment configuration for UpSkill Sprint.
 # Pretty URLs serve HTML pages without exposing the .html extension.
 
+[build]
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
 [build.processing]
   skip_processing = false
 

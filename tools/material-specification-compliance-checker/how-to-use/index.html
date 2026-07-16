@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>How to Use the Material Specification Compliance Checker | UpSkill Sprint Consulting</title>
+<meta name="description" content="Professional user guide for screening material test evidence against controlled CSA, ASTM, API, customer, and internal requirements.">
+<link rel="canonical" href="https://upskillsprint.com/tools/material-specification-compliance-checker/how-to-use">
+<meta property="og:title" content="How to Use the Material Specification Compliance Checker | UpSkill Sprint Consulting">
+<meta property="og:description" content="Step-by-step guidance for scope definition, evidence entry, compliance decisions, rule packages, batch imports, comparison, statistics, review, and reporting.">
+<meta property="og:url" content="https://upskillsprint.com/tools/material-specification-compliance-checker/how-to-use">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<script src="/theme.js"></script>
+<script src="/site-sections.js"></script>
+<style>
+:root{
+  --guide-page:#f4f7fb;
+  --guide-card:#ffffff;
+  --guide-ink:#172033;
+  --guide-muted:#536176;
+  --guide-line:#d6dee9;
+  --guide-navy:#0f2a43;
+  --guide-teal:#0e7490;
+  --guide-teal-soft:#e9f5f6;
+  --guide-amber:#9a5a00;
+  --guide-amber-soft:#fff5df;
+  --guide-red:#a52a22;
+  --guide-red-soft:#fff0ee;
+  --guide-green:#176b45;
+  --guide-green-soft:#eaf7f0;
+  --guide-tint:#eef4f8;
+  --guide-shadow:0 14px 36px rgba(15,42,67,.09);
+}
+html[data-theme="dark"]{
+  --guide-page:#090f1a;
+  --guide-card:#111c2d;
+  --guide-ink:#f4f7fb;
+  --guide-muted:#c1cad8;
+  --guide-line:#33445e;
+  --guide-navy:#f7fafc;
+  --guide-teal:#5eead4;
+  --guide-teal-soft:#14333a;
+  --guide-amber:#fbbf24;
+  --guide-amber-soft:#3b2b10;
+  --guide-red:#fca5a5;
+  --guide-red-soft:#3b1c22;
+  --guide-green:#86efac;
+  --guide-green-soft:#143122;
+  --guide-tint:#18263b;
+  --guide-shadow:0 18px 42px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body.guide-page{margin:0;background:var(--guide-page);color:var(--guide-ink);font-family:"Work Sans",Arial,sans-serif;line-height:1.65}
+.guide-page h1,.guide-page h2,.guide-page h3,.guide-page h4{color:var(--guide-ink);font-family:"Source Serif 4",Georgia,serif}
+.guide-page p,.guide-page li,.guide-page td,.guide-page dd{color:var(--guide-muted)}
+.guide-page strong{color:var(--guide-ink)}
+.guide-wrap{width:min(1180px,calc(100% - 36px));margin-inline:auto}
+.guide-hero{padding:68px 0 42px;background:linear-gradient(135deg,var(--guide-teal-soft),transparent 65%);border-bottom:1px solid var(--guide-line)}
+.guide-eyebrow{margin:0;color:var(--guide-teal)!important;font-size:.76rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.guide-hero h1{max-width:920px;margin:10px 0 18px;font-size:clamp(2.5rem,6vw,4.8rem);line-height:1.03}
+.guide-lead{max-width:880px;margin:0;font-size:1.08rem}
+.guide-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.guide-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border:1px solid var(--guide-line);border-radius:9px;background:var(--guide-card);color:var(--guide-ink)!important;text-decoration:none;font-weight:750;cursor:pointer}
+.guide-btn.primary{background:var(--guide-teal);border-color:var(--guide-teal);color:#06202a!important}
+html:not([data-theme="dark"]) .guide-btn.primary{color:#fff!important}
+.guide-layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:28px;padding:34px 0 76px}
+.guide-toc{position:sticky;top:92px;align-self:start;max-height:calc(100vh - 116px);overflow:auto;background:var(--guide-card);border:1px solid var(--guide-line);border-radius:14px;padding:18px;box-shadow:var(--guide-shadow)}
+.guide-toc strong{display:block;margin-bottom:9px}
+.guide-toc a{display:block;padding:6px 0;color:var(--guide-muted);font-size:.86rem;text-decoration:none}
+.guide-toc a:hover,.guide-toc a:focus{color:var(--guide-teal)}
+.guide-main{display:grid;gap:20px;min-width:0}
+.guide-card{background:var(--guide-card);border:1px solid var(--guide-line);border-radius:15px;padding:27px;box-shadow:var(--guide-shadow)}
+.guide-card h2{margin:0 0 12px;font-size:1.85rem;line-height:1.18}
+.guide-card h3{margin:24px 0 8px;font-size:1.24rem}
+.guide-card h4{margin:18px 0 6px;font-size:1.05rem}
+.guide-card p:first-of-type{margin-top:0}
+.guide-card ol,.guide-card ul{padding-left:22px}
+.guide-card li+li{margin-top:6px}
+.guide-kicker{margin:0 0 5px!important;color:var(--guide-teal)!important;font-size:.76rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.guide-callout{margin:16px 0 0;padding:15px 17px;border-left:4px solid var(--guide-amber);border-radius:9px;background:var(--guide-amber-soft)}
+.guide-callout.good{border-left-color:var(--guide-green);background:var(--guide-green-soft)}
+.guide-callout.danger{border-left-color:var(--guide-red);background:var(--guide-red-soft)}
+.guide-callout p{margin:0;color:var(--guide-muted)}
+.guide-flow{display:grid;gap:12px;counter-reset:guide-step;margin-top:18px}
+.guide-flow article{position:relative;padding:16px 18px 16px 58px;border:1px solid var(--guide-line);border-radius:11px;background:var(--guide-tint)}
+.guide-flow article::before{counter-increment:guide-step;content:counter(guide-step);position:absolute;left:17px;top:15px;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:var(--guide-teal);color:#06202a;font-weight:800}
+html:not([data-theme="dark"]) .guide-flow article::before{color:#fff}
+.guide-flow h3{margin:0 0 3px;font-family:"Work Sans",Arial,sans-serif;font-size:1rem}
+.guide-flow p{margin:0}
+.guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+.guide-mini{padding:17px;border:1px solid var(--guide-line);border-radius:11px;background:var(--guide-tint)}
+.guide-mini h3{margin:0 0 6px;font-family:"Work Sans",Arial,sans-serif;font-size:1rem}
+.guide-mini p{margin:0;font-size:.93rem}
+.guide-table-wrap{overflow:auto;margin-top:14px;border:1px solid var(--guide-line);border-radius:11px}
+.guide-table{width:100%;min-width:680px;border-collapse:collapse;background:var(--guide-card)}
+.guide-table th,.guide-table td{padding:11px 12px;border-bottom:1px solid var(--guide-line);text-align:left;vertical-align:top}
+.guide-table th{background:var(--guide-tint);color:var(--guide-ink);font-size:.83rem;letter-spacing:.02em}
+.guide-table tr:last-child td{border-bottom:0}
+.guide-chip{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid var(--guide-line);background:var(--guide-tint);color:var(--guide-ink);font-size:.78rem;font-weight:750;white-space:nowrap}
+.guide-chip.pass{background:var(--guide-green-soft);color:var(--guide-green)}
+.guide-chip.fail{background:var(--guide-red-soft);color:var(--guide-red)}
+.guide-chip.conditional{background:var(--guide-amber-soft);color:var(--guide-amber)}
+.guide-checklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 18px;padding:0!important;list-style:none}
+.guide-checklist li{position:relative;padding-left:25px;margin:0!important}
+.guide-checklist li::before{content:"✓";position:absolute;left:0;color:var(--guide-teal);font-weight:900}
+.guide-code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;padding:2px 6px;border-radius:5px;background:var(--guide-tint);color:var(--guide-ink)}
+.guide-page footer.site{border-top:1px solid var(--guide-line)}
+.guide-back{display:inline-flex;margin-top:4px;color:var(--guide-teal)!important;text-decoration:none;font-weight:750}
+@media(max-width:940px){.guide-layout{grid-template-columns:1fr}.guide-toc{position:static;max-height:none}.guide-hero{padding-top:50px}}
+@media(max-width:680px){.guide-wrap{width:min(100% - 22px,1180px)}.guide-card{padding:20px}.guide-grid,.guide-checklist{grid-template-columns:1fr}.guide-hero h1{font-size:2.55rem}.guide-table{min-width:620px}}
+@media print{
+  .checker-sitebar,.mobile-nav,.guide-toc,.guide-actions,footer.site{display:none!important}
+  html,body.guide-page{background:#fff!important;color:#000!important}
+  .guide-hero{padding:14px 0 20px;background:none!important;border-bottom:2px solid #000}
+  .guide-hero h1,.guide-page h2,.guide-page h3,.guide-page h4,.guide-page strong{color:#000!important}
+  .guide-page p,.guide-page li,.guide-page td,.guide-page dd{color:#222!important}
+  .guide-layout{display:block;padding:18px 0}.guide-main{gap:14px}
+  .guide-card{box-shadow:none;border:1px solid #aaa;break-inside:avoid;padding:18px}
+  .guide-callout,.guide-mini,.guide-flow article,.guide-table th{background:#f5f5f5!important}
+  .guide-table-wrap{overflow:visible}.guide-table{min-width:0}
+}
+</style>
+</head>
+<body class="guide-page">
+<a class="skip" href="#guide-content">Skip to guide</a>
+<input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+<header class="site checker-sitebar">
+<a class="brand" href="/"><img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo"><span>UpSkill Sprint Consulting</span></a>
+<nav class="desktop-nav" aria-label="Primary navigation"><a href="/start-here">Start Here</a><a href="/lessons">Lessons</a><a href="/engineering-tools" aria-current="page">Engineering Tools</a><a href="/services">Services</a><a href="/request-topic">Request a Topic</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></nav>
+<div class="header-actions"><div class="theme-control" aria-label="Colour theme"><svg class="theme-icon theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg><button type="button" class="theme-toggle" data-theme-toggle="true" role="switch" aria-checked="false" aria-label="Switch to dark mode"><span class="sr-only">Toggle dark and light mode</span></button><svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></div><label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"></path></svg></label></div>
+</header>
+<nav class="mobile-nav" aria-label="Mobile navigation"><a href="/start-here">Start Here</a><a href="/lessons">Lessons</a><a href="/engineering-tools" aria-current="page">Engineering Tools</a><a href="/services">Services</a><a href="/request-topic">Request a Topic</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></nav>
+
+<section class="guide-hero">
+  <div class="guide-wrap">
+    <p class="guide-eyebrow">Engineering Tools · User Guide</p>
+    <h1>How to Use the Material Specification Compliance Checker</h1>
+    <p class="guide-lead">Use this guide to define a traceable comparison, enter actual material evidence and controlled acceptance requirements, interpret the conservative compliance decision, manage rule packages, screen batches, and document technical review.</p>
+    <div class="guide-actions">
+      <a class="guide-btn primary" href="/tools/material-specification-compliance-checker">Open Compliance Checker</a>
+      <button class="guide-btn" type="button" onclick="window.print()">Print / Save PDF</button>
+      <a class="guide-btn" href="#quick-start">Go to quick start</a>
+    </div>
+  </div>
+</section>
+
+<div class="guide-wrap guide-layout" id="guide-content">
+  <aside class="guide-toc" aria-label="Guide contents">
+    <strong>Contents</strong>
+    <a href="#purpose">Purpose and limits</a>
+    <a href="#before-you-begin">Before you begin</a>
+    <a href="#quick-start">Quick start</a>
+    <a href="#scope">1. Define the scope</a>
+    <a href="#evidence">2. Select evidence</a>
+    <a href="#requirements">3. Enter results and limits</a>
+    <a href="#decision">4. Run the decision</a>
+    <a href="#advanced">5. Advanced workspace</a>
+    <a href="#batch">Import and batch screening</a>
+    <a href="#statistics">Statistics and capability</a>
+    <a href="#review">Review, approval, and audit</a>
+    <a href="#save-report">Save, export, and report</a>
+    <a href="#worked-example">Worked-example workflow</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+    <a href="#release-checklist">Release checklist</a>
+  </aside>
+
+  <main class="guide-main">
+    <section class="guide-card" id="purpose">
+      <p class="guide-kicker">Engineering boundary</p>
+      <h2>What the checker does—and does not do</h2>
+      <p>The checker compares entered material evidence with acceptance rules taken from a controlled source. It records the scope, performs defined unit conversions, evaluates each requirement, reports evidence coverage, and preserves the basis used for the decision.</p>
+      <div class="guide-callout danger"><p><strong>It is a screening and documentation tool, not an authoritative standards database or certification authority.</strong> It does not replace the purchased standard, customer purchase specification, contract, engineering judgment, or approval by the responsible technical authority.</p></div>
+      <div class="guide-grid">
+        <article class="guide-mini"><h3>Use it for</h3><p>Cross-specification screening, MTR review, evidence-gap identification, batch triage, rule-package management, comparison, and traceable reporting.</p></article>
+        <article class="guide-mini"><h3>Do not use it for</h3><p>Declaring equivalency from grade names alone, inventing missing limits, bypassing supplementary requirements, or releasing material without controlled-source verification.</p></article>
+      </div>
+    </section>
+
+    <section class="guide-card" id="before-you-begin">
+      <p class="guide-kicker">Preparation</p>
+      <h2>Before you begin</h2>
+      <p>Collect the evidence and requirement sources before opening a production assessment.</p>
+      <ul class="guide-checklist">
+        <li>Material, coil, plate, pipe, or heat identifier</li>
+        <li>Material test report or certificate reference</li>
+        <li>Produced/source standard, grade, and edition</li>
+        <li>Target standard, grade/class, and exact edition</li>
+        <li>Product form, thickness, width, or outside diameter</li>
+        <li>Chemistry, tensile, toughness, dimensional, and process evidence</li>
+        <li>Applicable product form, PSL/category, route, and heat treatment</li>
+        <li>Customer, sour-service, offshore, or supplementary requirements</li>
+        <li>Clause, table, footnote, or controlled-document references</li>
+        <li>Reviewer and approval authority</li>
+      </ul>
+      <div class="guide-callout"><p><strong>Best practice:</strong> record the exact edition or revision of the target requirement. A grade designation without its governing edition, product form, class, and supplementary conditions is not a complete acceptance basis.</p></div>
+    </section>
+
+    <section class="guide-card" id="quick-start">
+      <p class="guide-kicker">Fast workflow</p>
+      <h2>Quick start</h2>
+      <div class="guide-flow">
+        <article><h3>Identify the material</h3><p>Enter the material ID, heat number, product form, MTR reference, date, and reviewer.</p></article>
+        <article><h3>Define source and target</h3><p>Record the produced/source specification and the controlled target specification, including grade and edition for each.</p></article>
+        <article><h3>Record applicability</h3><p>Enter thickness and width or OD, then document service condition, orientation, sampling, heat treatment, and assumptions.</p></article>
+        <article><h3>Select evidence sections</h3><p>Choose Chemistry, Mechanical, Charpy/Toughness, Dimensions, and Process/Certification only where they apply.</p></article>
+        <article><h3>Add controlled requirements</h3><p>For each row, select the property, enter the actual result, enter the target minimum and/or maximum, choose the units, and cite the clause or source.</p></article>
+        <article><h3>Run the compliance check</h3><p>Review the overall result, evidence coverage, failures, missing evidence, review items, conversions, and basis.</p></article>
+        <article><h3>Resolve exceptions</h3><p>Correct data-entry or unit issues, obtain missing evidence, verify applicability, or document a controlled engineering disposition.</p></article>
+        <article><h3>Save and report</h3><p>Save locally, export the assessment, print a PDF, or use the advanced review workflow and engineering report.</p></article>
+      </div>
+    </section>
+
+    <section class="guide-card" id="scope">
+      <p class="guide-kicker">Step 1</p>
+      <h2>Define the material and specification scope</h2>
+      <div class="guide-table-wrap"><table class="guide-table">
+        <thead><tr><th>Field group</th><th>What to enter</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Material identity</strong></td><td>Material/coil/plate ID, heat number, product form, and certificate reference.</td><td>Provides traceability to the physical material and source evidence.</td></tr>
+          <tr><td><strong>Source specification</strong></td><td>The organization, standard, grade/class, and edition under which the material was produced or certified.</td><td>Describes the material's original certification basis. It is not automatically equivalent to the target.</td></tr>
+          <tr><td><strong>Requirement source status</strong></td><td>Controlled copy verified, working copy only, or not yet verified.</td><td>A working or unverified source prevents an unconditional release decision.</td></tr>
+          <tr><td><strong>Target specification</strong></td><td>The exact organization, standard, grade/class, and controlled edition being screened.</td><td>Defines the acceptance basis used by every requirement row.</td></tr>
+          <tr><td><strong>Dimensions</strong></td><td>Nominal thickness and width or OD with explicit units.</td><td>Many standards use thickness, diameter, product form, or size breakpoints.</td></tr>
+          <tr><td><strong>Assessment notes</strong></td><td>Service condition, orientation, test location, sampling plan, route, heat treatment, supplementary requirements, and assumptions.</td><td>Preserves conditions that may not fit into a numeric field but materially affect applicability.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="guide-callout good"><p><strong>Source versus target:</strong> the source identifies what the material was produced to. The target identifies what you are testing it against. Similar strength levels or aliases do not by themselves prove compatibility.</p></div>
+    </section>
+
+    <section class="guide-card" id="evidence">
+      <p class="guide-kicker">Step 2</p>
+      <h2>Select the applicable evidence sections</h2>
+      <p>Each selected section becomes part of the decision scope. A selected section with no configured requirements produces an unresolved result rather than silently passing.</p>
+      <div class="guide-table-wrap"><table class="guide-table">
+        <thead><tr><th>Section</th><th>Typical evidence</th><th>Use when</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Chemistry</strong></td><td>Individual elements, CEIIW, Pcm, and other calculated chemistry values.</td><td>The target limits composition, calculated carbon equivalent, or combined alloy content.</td></tr>
+          <tr><td><strong>Mechanical properties</strong></td><td>Yield strength, tensile strength, elongation, Y/T ratio, hardness, reduction of area, bend, or flattening evidence.</td><td>The target includes tensile, ductility, ratio, hardness, or formability criteria.</td></tr>
+          <tr><td><strong>Charpy / toughness</strong></td><td>Test temperature, average energy, minimum individual energy, shear area, lateral expansion, location, and orientation.</td><td>Toughness is mandatory because of product form, thickness, service temperature, PSL, category, or supplementary requirement.</td></tr>
+          <tr><td><strong>Dimensions</strong></td><td>Thickness, wall thickness, width, OD, ID, length, out-of-roundness, straightness, and weight per length.</td><td>The target includes dimensional limits or tolerances.</td></tr>
+          <tr><td><strong>Process / certification</strong></td><td>MTR availability, traceability, route, heat treatment, hydrotest, NDT, supplementary tests, and signed certification.</td><td>Acceptance depends on documentary or manufacturing evidence, not only numeric test values.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Use <strong>Select all</strong> only when every section is genuinely applicable. Use <strong>Clear scope</strong> to start with no sections and build the decision deliberately.</p>
+    </section>
+
+    <section class="guide-card" id="requirements">
+      <p class="guide-kicker">Step 3</p>
+      <h2>Enter actual results and controlled target requirements</h2>
+      <p>Use <strong>Add requirement</strong> within each selected tab. The property list is category-specific so chemistry rows cannot be assigned to mechanical or dimensional properties.</p>
+      <h3>Quantitative rows: chemistry, mechanical, and dimensions</h3>
+      <div class="guide-table-wrap"><table class="guide-table">
+        <thead><tr><th>Column</th><th>How to use it</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Requirement / property</strong></td><td>Select the canonical property. Use Custom only when the controlled requirement is not in the catalogue, then document it precisely.</td></tr>
+          <tr><td><strong>Actual</strong></td><td>Enter the measured or certified material result.</td></tr>
+          <tr><td><strong>Actual unit</strong></td><td>Select the unit used by the entered result.</td></tr>
+          <tr><td><strong>Minimum / Maximum</strong></td><td>Enter one or both acceptance limits from the controlled target source. Leave a bound blank only when it truly does not apply.</td></tr>
+          <tr><td><strong>Requirement unit</strong></td><td>Select the unit used by the acceptance limit. The checker converts only supported unit pairs.</td></tr>
+          <tr><td><strong>Clause / source</strong></td><td>Cite the standard clause, table, note, customer specification, approved rule package, or controlled internal document.</td></tr>
+          <tr><td><strong>Mandatory</strong></td><td>Keep checked when missing evidence must block an unconditional decision.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Charpy / toughness rows</h3>
+      <p>Record the location and orientation, actual test temperature, actual average energy, actual minimum individual energy, required maximum test temperature, required average energy, required individual energy, units, and source. A temperature requirement is usually a maximum test temperature; energy criteria are usually minimums.</p>
+
+      <h3>Process / certification rows</h3>
+      <p>Select the required evidence item and set its status to <span class="guide-code">yes</span>, <span class="guide-code">no</span>, <span class="guide-code">unknown</span>, or <span class="guide-code">not-applicable</span>. Mandatory evidence marked unknown or unjustified as not applicable remains unresolved.</p>
+
+      <h3>Supported automatic conversions</h3>
+      <div class="guide-table-wrap"><table class="guide-table">
+        <thead><tr><th>Quantity</th><th>Supported conversion</th><th>Practical caution</th></tr></thead>
+        <tbody>
+          <tr><td>Chemistry</td><td>% ↔ ppm</td><td>Confirm whether the source reports mass percent and whether any element is expressed differently.</td></tr>
+          <tr><td>Stress / strength</td><td>MPa ↔ ksi</td><td>Do not confuse ksi with psi.</td></tr>
+          <tr><td>Length</td><td>mm ↔ in</td><td>Confirm nominal versus measured dimensions and tolerance basis.</td></tr>
+          <tr><td>Impact energy</td><td>J ↔ ft-lb</td><td>Energy conversion does not apply specimen-size reduction factors automatically.</td></tr>
+          <tr><td>Temperature</td><td>°C ↔ °F</td><td>Verify the entered test temperature and whether the target requires testing at or below a stated value.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="guide-callout"><p><strong>No silent assumptions:</strong> an undefined conversion, missing limit, missing actual result, duplicate requirement, or incomplete custom property should be treated as a review item—not as a pass.</p></div>
+    </section>
+
+    <section class="guide-card" id="decision">
+      <p class="guide-kicker">Step 4</p>
+      <h2>Run and interpret the compliance decision</h2>
+      <p>Select <strong>Run compliance check</strong>. The checker uses conservative gating: a failure controls the overall result; unresolved mandatory evidence prevents an unconditional pass.</p>
+      <div class="guide-table-wrap"><table class="guide-table">
+        <thead><tr><th>Status</th><th>Meaning</th><th>Required response</th></tr></thead>
+        <tbody>
+          <tr><td><span class="guide-chip pass">Pass</span></td><td>All configured and applicable requirements are satisfied, required evidence is present, and no blocking review condition remains.</td><td>Complete the technical review and release controls required by your organization.</td></tr>
+          <tr><td><span class="guide-chip fail">Fail</span></td><td>At least one actual result is outside an entered limit, or required process/certification evidence is explicitly absent.</td><td>Verify the entry and units, then document rejection, retest, regrade, concession, or another controlled disposition.</td></tr>
+          <tr><td><span class="guide-chip conditional">Conditional</span></td><td>No failure was found, but required evidence, controlled-source verification, applicability, or engineering review remains unresolved.</td><td>Resolve every missing or review item before treating the material as acceptable.</td></tr>
+          <tr><td><span class="guide-chip">Missing</span></td><td>A mandatory actual result or required evidence item was not supplied.</td><td>Obtain the evidence or document why it is not applicable.</td></tr>
+          <tr><td><span class="guide-chip">Review</span></td><td>A rule is incomplete, a conversion is undefined, an applicability decision requires justification, or another technical check is needed.</td><td>Correct or formally review the condition.</td></tr>
+          <tr><td><span class="guide-chip">Not assessed</span></td><td>The checker has not been run or no meaningful decision scope exists.</td><td>Select sections, configure requirements, and rerun.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Evidence coverage</h3>
+      <p>Coverage is the proportion of applicable requirements that have assessable evidence. A high coverage percentage does not override a failure, and a low percentage should not be interpreted as a favorable result.</p>
+      <h3>Result table</h3>
+      <p>Review every row across <strong>Section</strong>, <strong>Requirement</strong>, <strong>Actual</strong>, <strong>Acceptance rule</strong>, <strong>Result</strong>, and <strong>Basis</strong>. The basis should identify the controlled clause or source used for that row.</p>
+    </section>
+
+    <section class="guide-card" id="advanced">
+      <p class="guide-kicker">Step 5</p>
+      <h2>Use the advanced material compliance workspace</h2>
+      <p>The advanced workspace extends the manual checker without replacing the controlled requirement source.</p>
+      <div class="guide-table-wrap"><table class="guide-table">
+        <thead><tr><th>Tab</th><th>Primary function</th><th>Key control</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Overview</strong></td><td>Summarizes the current decision, coverage, rule packages, batch records, derived calculations, gaps, and near-limit results.</td><td>Refresh analysis after changing the main checker inputs.</td></tr>
+          <tr><td><strong>Applicability</strong></td><td>Uses product form, manufacturing route, PSL/category, sour service, heat treatment, service temperature, Charpy, hydrotest, and NDT selections to suggest evidence sections.</td><td>The wizard changes evidence scope only; it does not create acceptance limits.</td></tr>
+          <tr><td><strong>Rule packages</strong></td><td>Stores versioned, user-verified requirements with edition, applicability, clause, table, footnote, ownership, and verification status.</td><td>Only approved and verified packages should support release decisions.</td></tr>
+          <tr><td><strong>Import & batch</strong></td><td>Imports MTR, laboratory, or production data, requires mapping confirmation, and evaluates multiple records against a selected rule package.</td><td>Review every field mapping and unit before running the batch.</td></tr>
+          <tr><td><strong>Compare</strong></td><td>Screens the current material against multiple rule packages and displays a requirement-by-requirement matrix.</td><td>Compatibility screening is not automatic grade equivalency.</td></tr>
+          <tr><td><strong>Statistics</strong></td><td>Calculates descriptive statistics, capability indices, a histogram, and an individuals chart from imported numeric records.</td><td>Confirm the unit of analysis and independence before interpreting capability.</td></tr>
+          <tr><td><strong>Review & audit</strong></td><td>Records reviewer, approver, disposition, next actions, overrides, approval lock, reports, and audit history.</td><td>An override records a separate disposition and never changes the calculated result.</td></tr>
+          <tr><td><strong>Admin & storage</strong></td><td>Controls roles, aliases, local or organization storage, sign-in, synchronization, and automated validation.</td><td>Use organization mode only when Netlify Identity and secure storage are configured.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Automatic derived calculations</h3>
+      <p>The Overview can calculate CEIIW, Pcm, yield-to-tensile ratio, and diameter-to-thickness ratio when the required canonical inputs are available. Missing inputs are listed explicitly.</p>
+
+      <h3>Rule packages and templates</h3>
+      <p><strong>Rule packages</strong> store acceptance requirements and applicability. <strong>Templates</strong> store the scope, selected sections, and row structure without actual material results. Capture a template for repeat workflows; capture a rule package only after verifying every requirement against the controlled edition.</p>
+    </section>
+
+    <section class="guide-card" id="batch">
+      <p class="guide-kicker">High-volume workflow</p>
+      <h2>Import and batch screening</h2>
+      <p>The Import & Batch tab accepts CSV, XLSX, XLS, JSON, and text-based PDF files.</p>
+      <ol>
+        <li>Drop or select the source file.</li>
+        <li>Confirm the number of detected records.</li>
+        <li>Review each source field, sample value, canonical mapping, unit, and confidence score.</li>
+        <li>Correct all uncertain mappings. Low-confidence mappings are not intended to be accepted without manual verification.</li>
+        <li>Select the target rule package.</li>
+        <li>Run the batch assessment.</li>
+        <li>Review record count, pass rate, failed and conditional counts, exception Pareto, and each record's key exception.</li>
+      </ol>
+      <div class="guide-callout danger"><p><strong>PDF caution:</strong> the tool extracts text from text-based PDFs. Image-only or scanned PDFs require manual verification or conversion to a structured file. Never assume every value was detected correctly.</p></div>
+      <div class="guide-callout"><p><strong>Mapping caution:</strong> field-name matching is only a starting point. Confirm the property identity, orientation, specimen type, unit, and aggregation level before screening.</p></div>
+    </section>
+
+    <section class="guide-card" id="statistics">
+      <p class="guide-kicker">Batch analysis</p>
+      <h2>Use statistics and capability responsibly</h2>
+      <p>Select a mapped numeric property, enter the applicable LSL and/or USL, and calculate the summary. The tool reports N, mean, standard deviation, median, minimum, maximum, Cpk/Ppk, and Pp, with a histogram and individuals chart.</p>
+      <div class="guide-callout danger"><p><strong>Unit-of-analysis caution:</strong> determine whether each row represents a specimen, test, coil, plate, pipe, or heat. Repeated tests from one heat or coil can overweight that material and make the distribution and capability indices misleading.</p></div>
+      <p>Capability indices also require a stable, meaningful process and an appropriate distributional interpretation. Use them for engineering analysis—not as a substitute for row-level specification compliance.</p>
+    </section>
+
+    <section class="guide-card" id="review">
+      <p class="guide-kicker">Governance</p>
+      <h2>Review, approve, override, and preserve the audit trail</h2>
+      <h3>Review workflow</h3>
+      <p>Record the workflow status, technical reviewer, approver, final disposition, comments, and controlled next actions such as retest, additional testing, engineering review, customer concession, regrade, rejection, or scrap.</p>
+      <h3>Engineering override or concession</h3>
+      <p>Select the affected requirement, disposition, authorization reference, and reason. The original calculated status remains visible. An override documents an authorized disposition; it does not convert a calculated failure into a mathematical pass.</p>
+      <h3>Approve and lock</h3>
+      <p>Approval requires the appropriate role plus reviewer and approver names. A failed calculated result requires a documented override or rejection disposition. Approval locks the assessment; unlocking requires permission and a recorded reason.</p>
+      <h3>Audit history</h3>
+      <p>The audit records actions, timestamps, actors, and details. Local history is included in exports and reports. Organization mode can store the workspace through authenticated Netlify storage when configured.</p>
+      <div class="guide-callout"><p><strong>Role model:</strong> Viewer, Analyst, Engineer, Approver, Standards Administrator, and System Administrator permissions are cumulative. Local mode simulates roles in one browser; organization mode uses authenticated account roles.</p></div>
+    </section>
+
+    <section class="guide-card" id="save-report">
+      <p class="guide-kicker">Documentation</p>
+      <h2>Save, import, export, and report</h2>
+      <div class="guide-table-wrap"><table class="guide-table">
+        <thead><tr><th>Action</th><th>Use</th><th>Caution</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Save current</strong></td><td>Stores the current assessment in the browser for later retrieval.</td><td>Local saves do not automatically appear on another device or browser.</td></tr>
+          <tr><td><strong>Load selected</strong></td><td>Restores a saved local assessment.</td><td>Confirm it is the correct material and revision before editing.</td></tr>
+          <tr><td><strong>Export assessment</strong></td><td>Downloads a JSON record containing the scope, rows, and result.</td><td>Treat exported production data according to your organization's information-security rules.</td></tr>
+          <tr><td><strong>Import assessment</strong></td><td>Restores a compatible exported JSON assessment.</td><td>Review imported scope, units, requirements, and evidence before relying on it.</td></tr>
+          <tr><td><strong>Print / Save PDF</strong></td><td>Creates a printable record of the manual assessment.</td><td>A printed report is only as valid as the controlled sources and evidence entered.</td></tr>
+          <tr><td><strong>Engineering report</strong></td><td>Includes scope, decision, requirement results, derived calculations, review, and disposition.</td><td>Use for the technical job file, not as automatic certification.</td></tr>
+          <tr><td><strong>Screening certificate</strong></td><td>Creates a concise compatibility-screening summary.</td><td>The certificate explicitly does not certify the material to the target standard.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="guide-card" id="worked-example">
+      <p class="guide-kicker">Practice safely</p>
+      <h2>Use the built-in worked example</h2>
+      <ol>
+        <li>Open the checker and select <strong>Load worked example</strong>.</li>
+        <li>Review the populated source and target scope before looking at the result.</li>
+        <li>Open each selected evidence tab and identify the actual value, target rule, units, clause/source, and mandatory setting.</li>
+        <li>Select <strong>Run compliance check</strong>.</li>
+        <li>Trace the overall result back to the controlling row or unresolved evidence.</li>
+        <li>Review how the evidence-coverage percentage differs from the final decision.</li>
+        <li>Open the Advanced Workspace Overview to inspect derived calculations and prioritized gaps.</li>
+        <li>Select <strong>Clear assessment</strong> before entering production or customer data.</li>
+      </ol>
+      <div class="guide-callout good"><p>The worked example is for learning the workflow. It is not an approved rule package and must not be reused as a production acceptance basis.</p></div>
+    </section>
+
+    <section class="guide-card" id="troubleshooting">
+      <p class="guide-kicker">Common issues</p>
+      <h2>Troubleshooting</h2>
+      <div class="guide-table-wrap"><table class="guide-table">
+        <thead><tr><th>Issue</th><th>Likely cause</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Conditional result with no failures</td><td>Missing target edition, working/unverified requirement source, missing mandatory evidence, selected section with no rules, or a review item.</td><td>Inspect every Missing and Review row and resolve the controlling condition.</td></tr>
+          <tr><td>Unexpected pass or fail</td><td>Actual and requirement units were selected incorrectly, or the wrong property/limit was used.</td><td>Verify property identity, units, bounds, orientation, and controlled clause.</td></tr>
+          <tr><td>No result for a row</td><td>Property name, actual, limit, or evidence status is incomplete.</td><td>Complete the row or remove it from the applicable scope.</td></tr>
+          <tr><td>Cannot edit a rule package</td><td>The effective role is below Standards Administrator, or the assessment is locked.</td><td>Use the correct role and authorized unlock process.</td></tr>
+          <tr><td>PDF values are missing</td><td>The PDF is scanned/image-only, uses an unusual layout, or text extraction did not map the field.</td><td>Enter manually or import a verified CSV/Excel export.</td></tr>
+          <tr><td>Batch results look wrong</td><td>Incorrect field mapping, unit, target package, or record granularity.</td><td>Review every mapping and sample value before rerunning.</td></tr>
+          <tr><td>Statistics option has no property</td><td>No numeric imported field is mapped to a canonical property.</td><td>Correct the mapping and unit, then reopen Statistics.</td></tr>
+          <tr><td>Saved data is missing on another computer</td><td>The assessment was stored in local browser mode.</td><td>Export/import the JSON or use configured organization storage.</td></tr>
+          <tr><td>Approval is blocked</td><td>Missing reviewer/approver, insufficient role, or a failed result lacks an authorized disposition.</td><td>Complete the review fields and document the required decision.</td></tr>
+          <tr><td>Report window does not open</td><td>The browser blocked a popup.</td><td>Allow popups for the site and generate the report again.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="guide-card" id="release-checklist">
+      <p class="guide-kicker">Final control</p>
+      <h2>Technical release checklist</h2>
+      <p>Before accepting, regrading, releasing, or representing material as compatible, verify all of the following:</p>
+      <ul class="guide-checklist">
+        <li>Controlled purchased target standard and exact edition</li>
+        <li>Correct product form, grade/class, type, category, and PSL</li>
+        <li>Thickness, diameter, width, and other applicability breakpoints</li>
+        <li>Manufacturing route and delivery/heat-treatment condition</li>
+        <li>Base, supplementary, customer, and contract requirements</li>
+        <li>Heat and material traceability to the MTR and tests</li>
+        <li>Correct specimen location, orientation, size, and test temperature</li>
+        <li>Correct units and any permitted conversion or sub-size rule</li>
+        <li>Clause, table, note, and footnote basis for every entered rule</li>
+        <li>All failures, missing evidence, review items, and near-limit results resolved</li>
+        <li>Overrides or concessions independently authorized and referenced</li>
+        <li>Responsible technical approval and required customer acceptance</li>
+      </ul>
+      <div class="guide-callout danger"><p><strong>Final caution:</strong> a favorable screening result means the entered evidence satisfies the entered rules. It does not prove that every applicable requirement was entered or that the material is automatically certified to the target specification.</p></div>
+      <a class="guide-back" href="/tools/material-specification-compliance-checker">Return to the Material Specification Compliance Checker</a>
+    </section>
+  </main>
+</div>
+
+<footer class="site"><div class="wrap"><div><a class="brand" href="/"><img src="/assets/logo-icon.png" alt=""><span>UpSkill Sprint Consulting</span></a><p>Practical learning and engineering tools for better workplace decisions.</p></div><div><h4>Quick links</h4><a href="/tools/material-specification-compliance-checker">Compliance Checker</a><a href="/engineering-tools">Engineering Tools</a><a href="/lessons">Lessons</a><a href="/contact">Contact</a></div></div></footer>
+</body>
+</html>

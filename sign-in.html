@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Create Account | UpSkill Sprint Consulting</title>
-<meta name="description" content="Create a free UpSkill Sprint account to save your lesson progress and quiz scores.">
+<title>Sign In | UpSkill Sprint Consulting</title>
+<meta name="description" content="Sign in to your UpSkill Sprint account.">
 <meta name="robots" content="noindex">
-<link rel="canonical" href="https://upskillsprint.com/signup.html">
+<link rel="canonical" href="https://upskillsprint.com/sign-in.html">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Create Account | UpSkill Sprint Consulting">
-<meta property="og:description" content="Create a free account to save your lesson progress.">
+<meta property="og:title" content="Sign In | UpSkill Sprint Consulting">
+<meta property="og:description" content="Sign in to your UpSkill Sprint account.">
 <meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
-<meta property="og:url" content="https://upskillsprint.com/signup.html">
+<meta property="og:url" content="https://upskillsprint.com/sign-in.html">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -49,66 +49,44 @@
     <a href="faq.html">FAQ</a>
     <a href="contact.html">Contact</a>
   </nav>
-<section class="section" id="create-account" aria-labelledby="create-account-heading">
-  <style id="create-account-styles">
-    #create-account .wrap { max-width: 440px; }
-    #create-account .card { text-align: left; }
-    #create-account-status { margin: 14px 0 0; font-size: 14.5px; color: var(--muted); min-height: 1.4em; }
-    #create-account-status.auth-status-success { color: var(--teal); font-weight: 600; }
-    #create-account .auth-alt { margin: 22px 0 0; font-size: 14.5px; color: var(--muted); text-align: center; }
-    #create-account .auth-check { display: flex; gap: 10px; align-items: flex-start;
-      font-size: 14px; color: var(--muted); margin: 0 0 18px; cursor: pointer; }
-    #create-account .auth-check input { margin-top: 3px; }
-    #create-account.auth-done form { display: none; }
+<section class="section" id="sign-in" aria-labelledby="sign-in-heading">
+  <style id="sign-in-styles">
+    #sign-in .wrap { max-width: 440px; }
+    #sign-in-status { margin: 14px 0 0; font-size: 14.5px; color: var(--muted); min-height: 1.4em; }
+    #sign-in-status.auth-status-success { color: var(--teal); font-weight: 600; }
+    #sign-in .auth-alt { margin: 22px 0 0; font-size: 14.5px; color: var(--muted); text-align: center; }
+    #sign-in .auth-forgot { display: block; font-size: 13.5px; margin: -6px 0 18px; text-align: right; }
   </style>
   <div class="wrap">
-    <p class="eyebrow" style="text-align:center;">Free account</p>
-    <h1 id="create-account-heading" style="font-size:28px;margin:0 0 12px;text-align:center;">Create your account</h1>
-    <p style="font-size:15.5px;color:var(--muted);margin:0 0 28px;text-align:center;">Save your lesson progress and quiz scores as you work toward your certification.</p>
+    <p class="eyebrow" style="text-align:center;">Welcome back</p>
+    <h1 id="sign-in-heading" style="font-size:28px;margin:0 0 12px;text-align:center;">Sign in</h1>
+    <p style="font-size:15.5px;color:var(--muted);margin:0 0 28px;text-align:center;">Pick up your lessons where you left off.</p>
 
-    <form id="create-account-form" class="card">
-      <label class="field">Email<input type="email" id="create-account-email" name="email" required autocomplete="email"></label>
-      <label class="field">Password<input type="password" id="create-account-password" name="password" required minlength="8" autocomplete="new-password" aria-describedby="create-account-hint"></label>
-      <p id="create-account-hint" style="font-size:13px;color:var(--muted);margin:-6px 0 16px;">At least 8 characters.</p>
-      <label class="auth-check"><input type="checkbox" id="create-account-newsletter" checked>Email me when new lessons are published (unsubscribe anytime).</label>
-      <button type="submit" class="btn btn-teal" id="create-account-submit" style="width:100%;">Create account</button>
-      <p id="create-account-status" role="status" aria-live="polite"></p>
+    <form id="sign-in-form" class="card">
+      <label class="field">Email<input type="email" id="sign-in-email" name="email" required autocomplete="email"></label>
+      <label class="field">Password<input type="password" id="sign-in-password" name="password" required autocomplete="current-password"></label>
+      <a class="auth-forgot" href="/reset-password.html">Forgot password?</a>
+      <button type="submit" class="btn btn-teal" id="sign-in-submit" style="width:100%;">Sign in</button>
+      <p id="sign-in-status" role="status" aria-live="polite"></p>
     </form>
 
-    <p class="auth-alt">Already have an account? <a href="/sign-in.html">Sign in</a></p>
+    <p class="auth-alt">New here? <a href="/signup.html">Create a free account</a></p>
   </div>
 
-  <script id="create-account-script">
-    /* Create Account page — uses window.UpskillAuth (loaded site-wide by
-       site-sections.js). Optionally also subscribes the email to the
-       existing Netlify "signup" newsletter form. */
+  <script id="sign-in-script">
     (function () {
       'use strict';
-
-      var form = document.getElementById('create-account-form');
-      var email = document.getElementById('create-account-email');
-      var password = document.getElementById('create-account-password');
-      var newsletter = document.getElementById('create-account-newsletter');
-      var status = document.getElementById('create-account-status');
-      var submit = document.getElementById('create-account-submit');
-      var section = document.getElementById('create-account');
-      if (!form || !email || !password || !status || !submit || !section) return;
+      var form = document.getElementById('sign-in-form');
+      var email = document.getElementById('sign-in-email');
+      var password = document.getElementById('sign-in-password');
+      var status = document.getElementById('sign-in-status');
+      var submit = document.getElementById('sign-in-submit');
+      if (!form || !email || !password || !status || !submit) return;
 
       function setStatus(message, isSuccess) {
         status.textContent = message;
         status.classList.toggle('auth-status-success', Boolean(isSuccess));
       }
-
-      function subscribeToNewsletter(address) {
-        var body = 'form-name=signup&email=' + encodeURIComponent(address) +
-          '&source=' + encodeURIComponent('/signup.html#account-create') + '&bot-field=';
-        return fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: body
-        }).catch(function () { /* newsletter subscription is best-effort */ });
-      }
-
       function whenAuthReady(callback) {
         if (window.UpskillAuth) callback();
         else document.addEventListener('upskill-auth-ready', callback, { once: true });
@@ -118,20 +96,13 @@
         form.addEventListener('submit', function (event) {
           event.preventDefault();
           submit.disabled = true;
-          setStatus('Creating your account\u2026', false);
-
-          window.UpskillAuth.signUp(email.value.trim(), password.value).then(function (data) {
-            if (newsletter && newsletter.checked) subscribeToNewsletter(email.value.trim());
-            section.classList.add('auth-done');
-            if (data && data.session) {
-              setStatus("Account created \u2014 you're signed in.", true);
-              window.setTimeout(function () { window.location.href = '/'; }, 1200);
-            } else {
-              setStatus('Almost done \u2014 check your email for a confirmation link.', true);
-            }
+          setStatus('Signing you in\u2026', false);
+          window.UpskillAuth.signIn(email.value.trim(), password.value).then(function () {
+            setStatus('Signed in \u2014 taking you back.', true);
+            window.setTimeout(function () { window.location.href = '/'; }, 800);
           }).catch(function (error) {
             submit.disabled = false;
-            setStatus(error && error.message ? error.message : 'Something went wrong. Please try again.', false);
+            setStatus(error && error.message ? error.message : 'Sign in failed. Please try again.', false);
           });
         });
       });

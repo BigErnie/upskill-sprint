@@ -2,7 +2,6 @@
   'use strict';
 
   const TOOLS_PATH = '/engineering-tools.html';
-  const SIGNUP_PATH = '/signup.html';
   const MATERIAL_CHECKER_PATH = '/tools/material-specification-compliance-checker.html';
   const CALCULATOR_PATH = '/tools/engineering-statistics-calculator.html';
   const UNIT_CONVERTER_PATH = '/tools/unit-converter.html';
@@ -22,6 +21,17 @@
     const script = document.createElement('script');
     script.src = CHI_SQUARE_LIBRARY_PATH;
     document.head.appendChild(script);
+  }
+
+  function loadAuthScripts() {
+    const AUTH_SCRIPTS = ['/supabase-config.js', '/vendor/supabase.js', '/auth.js'];
+    AUTH_SCRIPTS.forEach(function (path) {
+      if (document.querySelector('script[src="' + path + '"]')) return;
+      const script = document.createElement('script');
+      script.src = path;
+      script.async = false; /* preserve execution order */
+      document.head.appendChild(script);
+    });
   }
 
   function installArrowCleanupWriteHook() {
@@ -57,10 +67,6 @@
     return pathEndsWith(TOOLS_PATH) || pathEndsWith('/engineering-tools');
   }
 
-  function isSignupPage() {
-    return pathEndsWith(SIGNUP_PATH) || pathEndsWith('/signup');
-  }
-
   function isLessonsPage() {
     return pathEndsWith('/lessons.html') || pathEndsWith('/lessons');
   }
@@ -94,24 +100,6 @@
     else nav.appendChild(toolsLink);
   }
 
-  function createSignupLink(currentPage) {
-    const link = document.createElement('a');
-    link.href = SIGNUP_PATH;
-    link.textContent = 'Sign Up';
-    if (currentPage) link.setAttribute('aria-current', 'page');
-    return link;
-  }
-
-  function addSignupLinkToNav(nav) {
-    if (!nav || nav.querySelector('a[href*="signup.html"], a[href="/signup"]')) return;
-    const contactLink = Array.from(nav.querySelectorAll('a')).find(function (link) {
-      return link.textContent.trim() === 'Contact';
-    });
-    const signupLink = createSignupLink(isSignupPage());
-    if (contactLink) insertAfter(contactLink, signupLink);
-    else nav.appendChild(signupLink);
-  }
-
   function addToolsLinkToFooter() {
     const heading = Array.from(document.querySelectorAll('footer h4')).find(function (item) {
       return item.textContent.trim().toLowerCase() === 'quick links';
@@ -130,7 +118,6 @@
 
   function ensureNavigation() {
     document.querySelectorAll('nav.desktop-nav, nav.mobile-nav').forEach(addToolsLinkToNav);
-    document.querySelectorAll('nav.desktop-nav, nav.mobile-nav').forEach(addSignupLinkToNav);
     addToolsLinkToFooter();
   }
 
@@ -496,6 +483,7 @@
 
   function initializeSiteSections() {
     loadArrowCleanup();
+    loadAuthScripts();
     ensureNavigation();
     ensureHomeContent();
     ensureLessonsLibraryLink();

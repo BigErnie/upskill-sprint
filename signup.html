@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign Up | UpSkill Sprint Consulting</title>
+<meta name="description" content="Get new practical statistics and quality lessons delivered to your inbox. Free, no spam, unsubscribe anytime.">
+<link rel="canonical" href="https://upskillsprint.com/signup.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sign Up | UpSkill Sprint Consulting">
+<meta property="og:description" content="Get new practical statistics and quality lessons delivered to your inbox.">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<meta property="og:url" content="https://upskillsprint.com/signup.html">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+  <script src="/theme.js"></script>
+  <script src="/site-sections.js"></script>
+</head>
+<body>
+  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+  <header class="site">
+    <a href="index.html" class="brand">
+      <img src="assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+      <span>UpSkill Sprint Consulting</span>
+    </a>
+    <nav class="desktop-nav">
+      <a href="start-here.html">Start Here</a>
+      <a href="lessons.html">Lessons</a>
+      <a href="services.html">Services</a>
+      <a href="request-topic.html">Request a Topic</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+    </nav>
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1f26" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <a href="lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+  </header>
+  <nav class="mobile-nav">
+    <a href="start-here.html">Start Here</a>
+    <a href="lessons.html">Lessons</a>
+    <a href="services.html">Services</a>
+    <a href="request-topic.html">Request a Topic</a>
+    <a href="about.html">About</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+<!--
+  UPSKILLSPRINT_SNIPPET_META
+  Name: Email Signup Block
+  Form name: signup (registered with Netlify Forms at deploy time)
+  Contract: site CSS custom properties (style.css), single IIFE, stable IDs
+            (uss-signup-*), no inline handlers, honeypot spam trap, no-JS
+            fallback via native POST to /thank-you.html.
+  Drop-in: paste this entire block into the <body> of any static HTML page
+           (site pages or lesson pages). Requires the page to load style.css,
+           which every page on the site already does.
+-->
+<section class="section tint" id="uss-signup" aria-labelledby="uss-signup-heading">
+  <style id="uss-signup-styles">
+    /* Scoped to #uss-signup only. Colors come from the site theme variables
+       in style.css, so light/dark mode is handled automatically. Fallbacks
+       match the light palette in case a variable is ever missing. */
+    #uss-signup { text-align: center; }
+    #uss-signup .wrap { max-width: 640px; }
+    #uss-signup-form {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+    #uss-signup-email {
+      padding: 13px 16px;
+      border-radius: var(--radius, 6px);
+      border: 1px solid var(--line, #e3e7ee);
+      background: var(--card, #ffffff);
+      color: var(--ink, #101828);
+      font-size: 14.5px;
+      font-family: inherit;
+      width: 100%;
+      max-width: 280px;
+      transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+    }
+    #uss-signup-email::placeholder { color: var(--muted, #667085); }
+    #uss-signup-status {
+      margin: 16px 0 0;
+      font-size: 14.5px;
+      color: var(--muted, #667085);
+      min-height: 1.4em;
+    }
+    #uss-signup-status.uss-signup-status-success {
+      color: var(--teal, #0e7490);
+      font-weight: 600;
+    }
+    #uss-signup.uss-signup-done #uss-signup-form { display: none; }
+  </style>
+
+  <div class="wrap">
+    <p class="eyebrow">Stay sharp</p>
+    <h2 id="uss-signup-heading" style="font-size:26px;margin:0 0 14px;">Get new lessons in your inbox</h2>
+    <p style="font-size:15.5px;color:var(--muted);margin:0 0 28px;">Practical statistics and quality lessons for CSSBB and CQE prep. No spam, unsubscribe anytime.</p>
+
+    <form id="uss-signup-form" name="signup" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thank-you.html">
+      <input type="hidden" name="form-name" value="signup">
+      <input type="hidden" id="uss-signup-source" name="source" value="">
+      <div class="honeypot" aria-hidden="true"><label>Don't fill this out<input tabindex="-1" autocomplete="off" name="bot-field"></label></div>
+      <label class="sr-only" for="uss-signup-email">Email address</label>
+      <input id="uss-signup-email" type="email" name="email" required placeholder="you@email.com" autocomplete="email" inputmode="email">
+      <button type="submit" class="btn btn-teal" id="uss-signup-submit">Sign me up</button>
+    </form>
+
+    <p id="uss-signup-status" role="status" aria-live="polite"></p>
+  </div>
+
+  <script id="uss-signup-script">
+    /* Email Signup Block — progressive enhancement.
+       Without JavaScript the form still submits natively to Netlify and
+       redirects to /thank-you.html. With JavaScript we submit in place and
+       show an inline confirmation instead. */
+    (function () {
+      'use strict';
+
+      var root = document.getElementById('uss-signup');
+      var form = document.getElementById('uss-signup-form');
+      var email = document.getElementById('uss-signup-email');
+      var source = document.getElementById('uss-signup-source');
+      var status = document.getElementById('uss-signup-status');
+      var submit = document.getElementById('uss-signup-submit');
+      if (!root || !form || !email || !status || !submit) return;
+
+      // Record which page produced the signup (visible per-submission in
+      // the Netlify Forms dashboard).
+      if (source) {
+        source.value = window.location.pathname || '';
+      }
+
+      function setStatus(message, isSuccess) {
+        status.textContent = message;
+        if (isSuccess) {
+          status.classList.add('uss-signup-status-success');
+        } else {
+          status.classList.remove('uss-signup-status-success');
+        }
+      }
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var data = new FormData(form);
+        var encoded = [];
+        data.forEach(function (value, key) {
+          encoded.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+        });
+
+        submit.disabled = true;
+        setStatus('Signing you up\u2026', false);
+
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: encoded.join('&')
+        }).then(function (response) {
+          if (!response.ok) throw new Error('Request failed: ' + response.status);
+          root.classList.add('uss-signup-done');
+          setStatus("You're on the list. Watch your inbox for new lessons.", true);
+        }).catch(function () {
+          submit.disabled = false;
+          setStatus("That didn't go through. Check your connection and try again.", false);
+        });
+      });
+    })();
+  </script>
+</section>
+  <footer class="site">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom:14px;">
+            <img src="assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+            <span>UpSkill Sprint Consulting</span>
+          </div>
+          <p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, process improvement, and business problem-solving.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="start-here.html">Start Here</a>
+          <a href="lessons.html">Lessons</a>
+          <a href="services.html">Services</a>
+          <a href="request-topic.html">Request a Topic</a>
+          <a href="about.html">About</a>
+          <a href="faq.html">FAQ</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Topics</h4>
+          <a href="lessons.html#data-analytics">Data Analytics</a>
+          <a href="lessons.html#quality-engineering">Quality Engineering</a>
+          <a href="lessons.html#lean-six-sigma">Lean Six Sigma</a>
+          <a href="lessons.html#power-bi-excel-sql">Power BI, Excel &amp; SQL</a>
+          <a href="lessons.html#business-decision-making">Business Decision-Making</a>
+          <a href="lessons.html#ai-for-work">AI for Work</a>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <a href="mailto:skillsprintconsulting@gmail.com">skillsprintconsulting@gmail.com</a>
+          <p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 UpSkill Sprint Consulting</span>
+      <div><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Use</a></div>
+    </div>
+  </footer><script src="/contrast-fix.js"></script>
+</body>
+</html>

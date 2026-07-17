@@ -2,6 +2,7 @@
   'use strict';
 
   const TOOLS_PATH = '/engineering-tools.html';
+  const SIGNUP_PATH = '/signup.html';
   const MATERIAL_CHECKER_PATH = '/tools/material-specification-compliance-checker.html';
   const CALCULATOR_PATH = '/tools/engineering-statistics-calculator.html';
   const UNIT_CONVERTER_PATH = '/tools/unit-converter.html';
@@ -56,6 +57,10 @@
     return pathEndsWith(TOOLS_PATH) || pathEndsWith('/engineering-tools');
   }
 
+  function isSignupPage() {
+    return pathEndsWith(SIGNUP_PATH) || pathEndsWith('/signup');
+  }
+
   function isLessonsPage() {
     return pathEndsWith('/lessons.html') || pathEndsWith('/lessons');
   }
@@ -89,6 +94,24 @@
     else nav.appendChild(toolsLink);
   }
 
+  function createSignupLink(currentPage) {
+    const link = document.createElement('a');
+    link.href = SIGNUP_PATH;
+    link.textContent = 'Sign Up';
+    if (currentPage) link.setAttribute('aria-current', 'page');
+    return link;
+  }
+
+  function addSignupLinkToNav(nav) {
+    if (!nav || nav.querySelector('a[href*="signup.html"], a[href="/signup"]')) return;
+    const contactLink = Array.from(nav.querySelectorAll('a')).find(function (link) {
+      return link.textContent.trim() === 'Contact';
+    });
+    const signupLink = createSignupLink(isSignupPage());
+    if (contactLink) insertAfter(contactLink, signupLink);
+    else nav.appendChild(signupLink);
+  }
+
   function addToolsLinkToFooter() {
     const heading = Array.from(document.querySelectorAll('footer h4')).find(function (item) {
       return item.textContent.trim().toLowerCase() === 'quick links';
@@ -107,6 +130,7 @@
 
   function ensureNavigation() {
     document.querySelectorAll('nav.desktop-nav, nav.mobile-nav').forEach(addToolsLinkToNav);
+    document.querySelectorAll('nav.desktop-nav, nav.mobile-nav').forEach(addSignupLinkToNav);
     addToolsLinkToFooter();
   }
 

@@ -4,6 +4,6 @@
    browser. Data protection comes from Row Level Security policies on
    the database, never from hiding this key. */
 window.UPSKILLSPRINT_SUPABASE_CONFIG = {
-  url: 'YOUR_SUPABASE_PROJECT_URL',
-  anonKey: 'YOUR_SUPABASE_ANON_KEY'
+  url: 'https://prerurzpikodzbnezvgz.supabase.co',
+  anonKey: 'sb_publishable_CagbT4_UPEi95EieYdq4nw_TdKQ4fqH'
 };

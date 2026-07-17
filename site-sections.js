@@ -23,6 +23,17 @@
     document.head.appendChild(script);
   }
 
+  function loadAuthScripts() {
+    const AUTH_SCRIPTS = ['/supabase-config.js', '/vendor/supabase.js', '/auth.js'];
+    AUTH_SCRIPTS.forEach(function (path) {
+      if (document.querySelector('script[src="' + path + '"]')) return;
+      const script = document.createElement('script');
+      script.src = path;
+      script.async = false; /* preserve execution order */
+      document.head.appendChild(script);
+    });
+  }
+
   function installArrowCleanupWriteHook() {
     if (Document.prototype.__upskillArrowCleanupWriteHookInstalled) return;
 
@@ -472,6 +483,7 @@
 
   function initializeSiteSections() {
     loadArrowCleanup();
+    loadAuthScripts();
     ensureNavigation();
     ensureHomeContent();
     ensureLessonsLibraryLink();

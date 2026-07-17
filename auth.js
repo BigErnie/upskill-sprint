@@ -77,6 +77,7 @@
 
   window.UpskillAuth = {
     isConfigured: isConfigured,
+    getClient: getClient,
     getUser: getUser,
     signUp: function (email, password) {
       return requireClient().then(function (authClient) {

@@ -43,6 +43,13 @@
 </ul>
 <p style="font-size: 15.5px; line-height: 1.65;">You can send this content in <strong>any format that's easiest for you</strong> &mdash; a doc, plain notes, or bullet points &mdash; and Claude will build the page in this structure. <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">lesson-template.html</code> in the project root is a ready-to-copy blank version.</p>
 <div style="margin:20px 0;padding:16px 20px;background:#f6f5f2;border-left:3px solid #0e7490;border-radius:4px;">
+  <p style="font-size:14px;font-weight:700;margin:0 0 8px;color:#0e7490;">Progress tracking (accounts)</p>
+  <p style="font-size:14.5px;line-height:1.6;margin:0 0 10px;">Signed-in learners get automatic progress saving on every lesson page &mdash; no per-lesson setup required. The site-wide <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">progress.js</code> controller injects the progress card and records quiz scores. To report a score explicitly (the preferred method for all new lessons), dispatch this event from the quiz's grading code whenever the learner checks their answers:</p>
+  <p style="font-size:13.5px;line-height:1.6;margin:0 0 10px;background:#eee7d8;padding:10px 14px;border-radius:4px;"><code>document.dispatchEvent(new CustomEvent('upskill-quiz-result', { detail: { score: 4, total: 5 } }));</code></p>
+  <p style="font-size:14.5px;line-height:1.6;margin:0;">If the event is not dispatched, a fallback observer parses "4 out of 5"-style text from the quiz score element (<code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">#quiz-score</code> or any element whose id ends in <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">quiz-score</code>), so existing lessons keep working unchanged. The best score per lesson is kept automatically.</p>
+</div>
+
+<div style="margin:20px 0;padding:16px 20px;background:#f6f5f2;border-left:3px solid #0e7490;border-radius:4px;">
   <p style="font-size:14px;font-weight:700;margin:0 0 8px;color:#0e7490;">Design reference</p>
   <p style="font-size:14.5px;line-height:1.6;margin:0;">The full color system, badge colors per track, and copy-ready component markup (callouts, step-list, quiz, objectives) live in <code style="background:#eee7d8;padding:2px 6px;border-radius:4px;font-size:13.5px;">upskillsprint_lesson_theme_reference.html</code>. Every new lesson should reuse these components rather than introducing new ones.</p>
 </div>

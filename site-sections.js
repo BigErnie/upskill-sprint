@@ -24,7 +24,7 @@
   }
 
   function loadAuthScripts() {
-    const AUTH_SCRIPTS = ['/supabase-config.js', '/vendor/supabase.js', '/auth.js'];
+    const AUTH_SCRIPTS = ['/supabase-config.js', '/vendor/supabase.js', '/auth.js', '/progress.js'];
     AUTH_SCRIPTS.forEach(function (path) {
       if (document.querySelector('script[src="' + path + '"]')) return;
       const script = document.createElement('script');

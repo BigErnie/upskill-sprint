@@ -448,6 +448,56 @@ footer.lesson-footer {
   a { color: #000 !important; text-decoration: none; }
 }
 
+/* ============ Lesson-specific: legacy-stylesheet overrides ============ */
+/* lessons-theme.css (legacy family) hardcodes light colours and hides
+   .quiz-feedback; these rules re-assert the token-based design so both
+   light and dark mode render correctly. */
+.lesson-wrapper .callout {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--info);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  margin: 1rem 0;
+}
+.lesson-wrapper .callout.tip { border-left-color: var(--success); }
+.lesson-wrapper .callout.warn { border-left-color: var(--warning); }
+.lesson-wrapper .quiz-feedback { display: block; }
+.lesson-wrapper .quiz-feedback[hidden] { display: none; }
+.lesson-wrapper .quiz-option { background: var(--surface); color: var(--ink); }
+
+/* ============ Lesson-specific: numbered steps ============ */
+.cap-steps {
+  counter-reset: cap-step;
+  list-style: none;
+  margin: 0.8rem 0;
+  padding: 0;
+}
+.cap-steps li {
+  counter-increment: cap-step;
+  position: relative;
+  padding-left: 2.5rem;
+  margin: 0.7rem 0;
+}
+.cap-steps li::before {
+  content: counter(cap-step);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+html[data-theme="dark"] .cap-steps li::before { color: #0b1220; }
+
 /* ============ Lesson-specific: capability explorer ============ */
 .cap-readouts {
   display: grid;
@@ -709,7 +759,7 @@ footer.lesson-footer {
 <!-- EDIT: Procedure -->
 <section id="procedure" aria-labelledby="procedure-h">
   <h2 id="procedure-h">How to run a capability study, step by step</h2>
-  <ol class="step-list">
+  <ol class="cap-steps">
     <li><strong>Confirm the process is stable first.</strong> Run a control chart (see
       <a href="/lessons/control-charts-explained">Control Charts Explained</a>). Capability numbers from an unstable
       process are fiction &mdash; the spread you measure today won&rsquo;t be the spread you get tomorrow.</li>
@@ -732,7 +782,7 @@ footer.lesson-footer {
     <p>A packing line fills 500&nbsp;g coffee bags with a spec of <strong>500 &plusmn; 6&nbsp;g</strong>
       (LSL&nbsp;=&nbsp;494, USL&nbsp;=&nbsp;506). Sixty bags from a stable run give a mean of
       <strong>&mu; = 501.2&nbsp;g</strong> and a standard deviation of <strong>&sigma; = 1.5&nbsp;g</strong>.</p>
-    <ol class="step-list">
+    <ol class="cap-steps">
       <li><strong>Specification width:</strong> 506 &minus; 494 = <strong>12&nbsp;g</strong>.</li>
       <li><strong>Natural spread:</strong> 6&sigma; = 6 &times; 1.5 = <strong>9&nbsp;g</strong>.</li>
       <li><strong>C<sub>p</sub></strong> = 12 / 9 = <strong>1.33</strong>. Potential looks healthy: the goalposts are a third wider than the scatter.</li>
@@ -861,7 +911,7 @@ footer.lesson-footer {
   <h3>Excel use cases</h3>
   <div class="panel">
     <p>With data in <code>A2:A61</code>, and <code>E1</code>&nbsp;=&nbsp;LSL, <code>E2</code>&nbsp;=&nbsp;USL:</p>
-    <ol class="step-list">
+    <ol class="cap-steps">
       <li><strong>Mean and spread:</strong> <code>=AVERAGE(A2:A61)</code> in <code>E4</code>, <code>=STDEV.S(A2:A61)</code> in <code>E5</code>.</li>
       <li><strong>C<sub>p</sub>:</strong> <code>=(E2-E1)/(6*E5)</code> &mdash; the coffee-bag data returns 1.33.</li>
       <li><strong>C<sub>pk</sub>:</strong> <code>=MIN((E2-E4)/(3*E5), (E4-E1)/(3*E5))</code> &mdash; returns 1.07, flagging the off-centre fill.</li>
@@ -949,7 +999,7 @@ footer.lesson-footer {
     </div>
     <p id="practice-feedback" role="status" aria-live="polite"></p>
     <div id="practice-working" hidden>
-      <ol class="step-list">
+      <ol class="cap-steps">
         <li>Spec width = 10.5 &minus; 9.5 = 1.0&nbsp;mm; natural spread = 6 &times; 0.12 = 0.72&nbsp;mm.</li>
         <li><strong>C<sub>p</sub></strong> = 1.0 / 0.72 = <strong>1.39</strong>.</li>
         <li>Upper side: (10.5 &minus; 10.1) / 0.36 = 1.11; lower side: (10.1 &minus; 9.5) / 0.36 = 1.67.</li>

@@ -1,4 +1,4 @@
-name: Export lessons snapshot
+name: Apply root cause lesson update
 
 on:
   pull_request:
@@ -10,16 +10,109 @@ on:
       - '.github/workflows/export-lessons-snapshot.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  export:
+  apply:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Upload lessons snapshot
-        uses: actions/upload-artifact@v4
         with:
-          name: lessons-snapshot
-          path: lessons.html
-          retention-days: 1
+          ref: test
+          fetch-depth: 0
+
+      - name: Write lesson and update registration
+        run: |
+          cat .github/rca-payload/part-* | base64 -d | gzip -d > lessons/root-cause-analysis-5-whys-fishbone.html
+          python3 <<'PY'
+          from pathlib import Path
+
+          lessons_path = Path("lessons.html")
+          lessons = lessons_path.read_text(encoding="utf-8")
+          old = '''            <a class="lesson-row" href="lessons/root-cause-analysis-5-whys-fishbone.html" data-lesson-item data-topic="quality-engineering" data-level="beginner" data-interactive="false" data-search="root cause analysis 5 whys fishbone quality engineering causes">
+              <div>
+                <div class="lesson-meta"><span>Beginner</span><span>6 min read</span></div>
+                <h3>Root Cause Analysis: 5 Whys vs Fishbone Diagram</h3>
+                <p>Two practical ways to move from visible symptoms to the causes behind a recurring problem.</p>
+              </div>
+              <span class="lesson-action">Start lesson <span class="lesson-arrow" aria-hidden="true">&rarr;</span></span>
+            </a>'''
+          new = '''            <a class="lesson-row" href="/lessons/root-cause-analysis-5-whys-fishbone" data-lesson-item data-topic="quality-engineering" data-level="beginner" data-interactive="true" data-search="root cause analysis 5 whys five whys fishbone diagram ishikawa cause and effect 6M cause validation corrective action quality engineering problem solving ASQ CSSBB CQE interactive">
+              <div>
+                <div class="lesson-meta"><span>Beginner</span><span>Interactive</span><span>22 min read</span></div>
+                <h3>Root Cause Analysis: 5 Whys vs Fishbone Diagram</h3>
+                <p>Build a 5 Whys chain, populate a live fishbone diagram, and decide which tool fits the problem.</p>
+              </div>
+              <span class="lesson-action">Start lesson</span>
+            </a>'''
+          if lessons.count(old) != 1:
+              raise SystemExit(f"Expected one placeholder lesson row, found {lessons.count(old)}")
+          lessons_path.write_text(lessons.replace(old, new), encoding="utf-8")
+
+          sitemap_path = Path("sitemap.xml")
+          sitemap = sitemap_path.read_text(encoding="utf-8")
+          old_url = "https://upskillsprint.com/lessons/root-cause-analysis-5-whys-fishbone.html"
+          new_url = "https://upskillsprint.com/lessons/root-cause-analysis-5-whys-fishbone"
+          if sitemap.count(old_url) != 1:
+              raise SystemExit(f"Expected one legacy sitemap URL, found {sitemap.count(old_url)}")
+          sitemap_path.write_text(
+              sitemap.replace(
+                  f"<url><loc>{old_url}</loc><priority>0.7</priority></url>",
+                  f"<url><loc>{new_url}</loc><priority>0.8</priority></url>"
+              ),
+              encoding="utf-8"
+          )
+          PY
+
+      - name: Validate lesson contract
+        run: |
+          test "$(sha256sum lessons/root-cause-analysis-5-whys-fishbone.html | cut -d' ' -f1)" = "80f9bb42bd7dc375a53eb070237c17d300078b88c7dfd3084c056aea630aafaa"
+          node <<'NODE'
+          const fs = require('node:fs');
+          const html = fs.readFileSync('lessons/root-cause-analysis-5-whys-fishbone.html', 'utf8');
+          const required = [
+            'UPSKILLSPRINT_LESSON_META',
+            'data-lesson-page="true"',
+            'id="learning-objectives"',
+            'id="key-concepts"',
+            'id="terminology"',
+            'id="interactives"',
+            'id="procedure"',
+            'id="worked-example"',
+            'id="mistakes"',
+            'id="software"',
+            'id="practice"',
+            'id="quiz"',
+            'id="summary"',
+            'id="references"',
+            'upskill-quiz-result',
+            'Back to Quality Engineering',
+            '/theme.js',
+            '/site-sections.js'
+          ];
+          for (const token of required) {
+            if (!html.includes(token)) throw new Error(`Missing required token: ${token}`);
+          }
+          const quizCount = (html.match(/class="quiz-q"/g) || []).length;
+          if (quizCount !== 5) throw new Error(`Expected 5 quiz questions, found ${quizCount}`);
+          if (/onclick\s*=/.test(html)) throw new Error('Inline event handler remains.');
+          if (/class="step-list"/.test(html)) throw new Error('Legacy step-list class remains.');
+          const index = fs.readFileSync('lessons.html', 'utf8');
+          if (!index.includes('href="/lessons/root-cause-analysis-5-whys-fishbone"')) throw new Error('Clean lesson registration missing.');
+          if (!index.includes('data-interactive="true" data-search="root cause analysis')) throw new Error('Interactive filter metadata missing.');
+          const sitemap = fs.readFileSync('sitemap.xml', 'utf8');
+          if (!sitemap.includes('/lessons/root-cause-analysis-5-whys-fishbone</loc>')) throw new Error('Clean sitemap URL missing.');
+          if (sitemap.includes('/lessons/root-cause-analysis-5-whys-fishbone.html</loc>')) throw new Error('Legacy sitemap URL remains.');
+          console.log('Root cause lesson validation passed.');
+          NODE
+
+      - name: Commit lesson and remove temporary payload
+        run: |
+          rm -rf .github/rca-payload
+          rm -f .github/workflows/export-lessons-snapshot.yml
+          git config user.name "upskillsprint-agent"
+          git config user.email "upskillsprint-agent@users.noreply.github.com"
+          git add -A
+          git commit -m "Add interactive root cause analysis lesson"
+          git push origin HEAD:test

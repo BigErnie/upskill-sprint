@@ -663,13 +663,26 @@
     .references-list { padding-left: 1.2rem; }
     .references-list li { margin: 0.6rem 0; }
     .lesson-footer {
-      margin-top: 3.5rem;
-      padding: 1.3rem;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--surface-soft);
-      text-align: center;
-    }
+  margin-top: 3.5rem;
+  padding: 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-soft);
+}
+.lesson-footer-nav {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+  gap: 1.25rem;
+  align-items: end;
+}
+.back-category-link {
+  justify-self: start;
+  font-weight: 800;
+  text-decoration: none;
+}
+.back-category-link:hover { text-decoration: underline; }
+.lesson-footer-next { text-align: right; }
+.lesson-footer-next p { margin: 0.4rem 0 0; }
 
     .visually-hidden {
       position: absolute;
@@ -698,6 +711,8 @@
       .editor-actions, .quiz-actions { display: grid; grid-template-columns: 1fr; }
       .editor-actions .button, .quiz-actions .button { width: 100%; }
       .stat-grid { grid-template-columns: 1fr 1fr; }
+      .lesson-footer-nav { grid-template-columns: 1fr; align-items: start; }
+      .lesson-footer-next { text-align: left; }
     }
     @media (max-width: 430px) {
       .lesson-sitebar .header-cta { display: none; }
@@ -705,6 +720,35 @@
       .segmented { grid-template-columns: 1fr; }
       .segmented button + button { border-top: 1px solid var(--line); border-left: 0; }
     }
+    @media print {
+  :root {
+    --paper: #ffffff;
+    --surface: #ffffff;
+    --surface-soft: #f5f7fa;
+    --ink: #101828;
+    --ink-soft: #344054;
+    --muted: #667085;
+    --line: #cfd6df;
+    --shadow: transparent;
+  }
+  html, body { background: var(--paper) !important; color: var(--ink) !important; }
+  body { font-size: 10.5pt; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .site, .mobile-nav, .skip-link, nav.lesson-toc, .interactive-controls,
+  .editor-panel, .quiz-actions, .lesson-footer { display: none !important; }
+  main#lesson-content { width: 100%; margin: 0; padding: 0; }
+  .lesson-hero { margin: 0 0 1.2rem; box-shadow: none; break-after: avoid-page; }
+  .lesson-wrapper > section { margin: 1.5rem 0; }
+  .panel, .concept-card, .concept-figure, .interactive-shell, .chart-card,
+  .insight-card, .quiz-shell, .quiz-q, .summary-item, .practice-step {
+    box-shadow: none !important;
+    break-inside: avoid-page;
+  }
+  .table-scroll { overflow: visible; }
+  table { min-width: 0; font-size: 9pt; }
+  a { color: var(--ink); text-decoration: underline; }
+  #pareto-chart { max-height: 6.8in; }
+}
+
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -724,6 +768,7 @@
     <nav class="desktop-nav" aria-label="Primary navigation">
       <a href="/start-here.html">Start Here</a>
       <a href="/lessons.html" aria-current="page">Lessons</a>
+      <a href="/engineering-tools.html">Engineering Tools</a>
       <a href="/services.html">Services</a>
       <a href="/request-topic.html">Request a Topic</a>
       <a href="/about.html">About</a>
@@ -740,6 +785,7 @@
   <nav class="mobile-nav" aria-label="Mobile navigation">
     <a href="/start-here.html">Start Here</a>
     <a href="/lessons.html">Lessons</a>
+    <a href="/engineering-tools.html">Engineering Tools</a>
     <a href="/services.html">Services</a>
     <a href="/request-topic.html">Request a Topic</a>
     <a href="/about.html">About</a>
@@ -1228,9 +1274,14 @@
       </section>
 
       <footer class="lesson-footer">
-        <strong>Next step:</strong> Use the largest validated category as the problem statement for a focused root-cause analysis.
-        <p><a href="/lessons/root-cause-analysis-5-whys-fishbone.html">Continue to Root Cause Analysis: 5 Whys vs Fishbone Diagram →</a></p>
-      </footer>
+  <div class="lesson-footer-nav">
+    <a class="back-category-link" href="/lessons#quality-engineering">Back to Quality Engineering</a>
+    <div class="lesson-footer-next">
+      <strong>Next step:</strong> Use the largest validated category as the problem statement for a focused root-cause analysis.
+      <p><a href="/lessons/root-cause-analysis-5-whys-fishbone">Continue to Root Cause Analysis: 5 Whys vs Fishbone Diagram</a></p>
+    </div>
+  </div>
+</footer>
     </article>
   </main>
 

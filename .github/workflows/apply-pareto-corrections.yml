@@ -25,8 +25,6 @@ jobs:
 
           lesson_path = Path('lessons/understanding-pareto-chart.html')
           library_path = Path('lessons.html')
-          workflow_path = Path('.github/workflows/apply-pareto-corrections.yml')
-
           lesson = lesson_path.read_text(encoding='utf-8')
 
           def replace_once(text, old, new, label):
@@ -40,24 +38,24 @@ jobs:
               lesson,
               '      <a href="/lessons.html" aria-current="page">Lessons</a>\n      <a href="/services.html">Services</a>',
               '      <a href="/lessons.html" aria-current="page">Lessons</a>\n      <a href="/engineering-tools.html">Engineering Tools</a>\n      <a href="/services.html">Services</a>',
-              'desktop Engineering Tools insertion'
+              'desktop navigation'
           )
           lesson = replace_once(
               lesson,
               '    <a href="/lessons.html">Lessons</a>\n    <a href="/services.html">Services</a>',
               '    <a href="/lessons.html">Lessons</a>\n    <a href="/engineering-tools.html">Engineering Tools</a>\n    <a href="/services.html">Services</a>',
-              'mobile Engineering Tools insertion'
+              'mobile navigation'
           )
 
-          old_footer_css = '''    .lesson-footer {
+          old_css = """    .lesson-footer {
               margin-top: 3.5rem;
               padding: 1.3rem;
               border: 1px solid var(--line);
               border-radius: 14px;
               background: var(--surface-soft);
               text-align: center;
-            }'''
-          new_footer_css = '''    .lesson-footer {
+            }""".replace('              ', '      ')
+          new_css = """    .lesson-footer {
               margin-top: 3.5rem;
               padding: 1.3rem;
               border: 1px solid var(--line);
@@ -77,25 +75,17 @@ jobs:
             }
             .back-category-link:hover { text-decoration: underline; }
             .lesson-footer-next { text-align: right; }
-            .lesson-footer-next p { margin: 0.4rem 0 0; }'''
-          lesson = replace_once(lesson, old_footer_css, new_footer_css, 'lesson footer CSS')
+            .lesson-footer-next p { margin: 0.4rem 0 0; }""".replace('            ', '    ').replace('              ', '      ')
+          lesson = replace_once(lesson, old_css, new_css, 'lesson footer styles')
 
-          lesson = replace_once(
-              lesson,
-              '''      .editor-actions, .quiz-actions { display: grid; grid-template-columns: 1fr; }
+          mobile_old = """      .editor-actions, .quiz-actions { display: grid; grid-template-columns: 1fr; }
               .editor-actions .button, .quiz-actions .button { width: 100%; }
-              .stat-grid { grid-template-columns: 1fr 1fr; }''',
-              '''      .editor-actions, .quiz-actions { display: grid; grid-template-columns: 1fr; }
-              .editor-actions .button, .quiz-actions .button { width: 100%; }
-              .stat-grid { grid-template-columns: 1fr 1fr; }
-              .lesson-footer-nav { grid-template-columns: 1fr; align-items: start; }
-              .lesson-footer-next { text-align: left; }''',
-              'mobile footer rules'
-          )
+              .stat-grid { grid-template-columns: 1fr 1fr; }""".replace('              ', '      ')
+          mobile_new = mobile_old + "\n      .lesson-footer-nav { grid-template-columns: 1fr; align-items: start; }\n      .lesson-footer-next { text-align: left; }"
+          lesson = replace_once(lesson, mobile_old, mobile_new, 'mobile lesson footer rules')
 
-          reduced_motion = '''    @media (prefers-reduced-motion: reduce) {
-              html { scroll-behavior: auto; }'''
-          print_rules = '''    @media print {
+          marker = "    @media (prefers-reduced-motion: reduce) {\n      html { scroll-behavior: auto; }"
+          print_css = """    @media print {
               :root {
                 --paper: #ffffff;
                 --surface: #ffffff;
@@ -124,15 +114,15 @@ jobs:
               #pareto-chart { max-height: 6.8in; }
             }
 
-          ''' + reduced_motion
+          """.replace('              ', '      ') + marker
           if '@media print {' not in lesson:
-              lesson = replace_once(lesson, reduced_motion, print_rules, 'print stylesheet insertion')
+              lesson = replace_once(lesson, marker, print_css, 'print styles')
 
-          old_footer_html = '''      <footer class="lesson-footer">
+          old_footer = """      <footer class="lesson-footer">
                 <strong>Next step:</strong> Use the largest validated category as the problem statement for a focused root-cause analysis.
                 <p><a href="/lessons/root-cause-analysis-5-whys-fishbone.html">Continue to Root Cause Analysis: 5 Whys vs Fishbone Diagram →</a></p>
-              </footer>'''
-          new_footer_html = '''      <footer class="lesson-footer">
+              </footer>""".replace('                ', '        ').replace('              ', '      ')
+          new_footer = """      <footer class="lesson-footer">
                 <div class="lesson-footer-nav">
                   <a class="back-category-link" href="/lessons#quality-engineering">Back to Quality Engineering</a>
                   <div class="lesson-footer-next">
@@ -140,8 +130,8 @@ jobs:
                     <p><a href="/lessons/root-cause-analysis-5-whys-fishbone">Continue to Root Cause Analysis: 5 Whys vs Fishbone Diagram</a></p>
                   </div>
                 </div>
-              </footer>'''
-          lesson = replace_once(lesson, old_footer_html, new_footer_html, 'lesson footer HTML')
+              </footer>""".replace('                    ', '          ').replace('                  ', '        ').replace('                ', '      ').replace('              ', '      ')
+          lesson = replace_once(lesson, old_footer, new_footer, 'lesson footer markup')
           lesson_path.write_text(lesson, encoding='utf-8')
 
           library = library_path.read_text(encoding='utf-8')
@@ -150,24 +140,20 @@ jobs:
           row = library[row_start:row_end]
           row = row.replace('href="lessons/understanding-pareto-chart.html"', 'href="/lessons/understanding-pareto-chart"')
           row = row.replace('<span class="lesson-action">Start lesson <span class="lesson-arrow" aria-hidden="true">&rarr;</span></span>', '<span class="lesson-action">Start lesson</span>')
-          library = library[:row_start] + row + library[row_end:]
-          library_path.write_text(library, encoding='utf-8')
+          library_path.write_text(library[:row_start] + row + library[row_end:], encoding='utf-8')
 
           assert 'Back to Quality Engineering' in lesson
           assert '@media print {' in lesson
-          assert 'Engineering Tools' in lesson
-          assert 'Understanding Pareto Chart →' not in lesson
+          assert lesson.count('Engineering Tools') >= 2
           assert 'Fishbone Diagram →' not in lesson
-          assert 'href="/lessons/understanding-pareto-chart"' in library
-
-          workflow_path.unlink()
+          assert 'href="/lessons/understanding-pareto-chart"' in library_path.read_text(encoding='utf-8')
           PY
 
-      - name: Commit corrected lesson to branch
+      - name: Commit corrected lesson
         shell: bash
         run: |
           git config user.name "upskillsprint-agent"
           git config user.email "upskillsprint-agent@users.noreply.github.com"
-          git add lessons/understanding-pareto-chart.html lessons.html .github/workflows/apply-pareto-corrections.yml
+          git add lessons/understanding-pareto-chart.html lessons.html
           git commit -m "Correct Pareto lesson integration and print layout"
           git push origin HEAD:lesson/pareto-fix

@@ -1,0 +1,22 @@
+name: Export lessons snapshot
+
+on:
+  push:
+    branches: [test]
+    paths:
+      - '.github/workflows/export-lessons-snapshot.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload lessons snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: lessons-snapshot
+          path: lessons.html
+          retention-days: 1

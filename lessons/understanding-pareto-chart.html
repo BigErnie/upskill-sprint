@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- UPSKILLSPRINT_LESSON_META
+{
+  "title": "Understanding Pareto Chart",
+  "slug": "understanding-pareto-chart",
+  "category": "Quality Engineering",
+  "category_slug": "quality-engineering",
+  "level": "Beginner",
+  "estimated_minutes": 18,
+  "interactive": true,
+  "card_title": "Understanding Pareto Chart",
+  "card_description": "Build, interpret, and challenge a Pareto chart with a live visual sandbox that compares frequency with financial impact.",
+  "search_keywords": [
+    "pareto chart",
+    "pareto analysis",
+    "80/20 rule",
+    "vital few",
+    "cumulative percentage",
+    "quality tools",
+    "quality engineering",
+    "defect prioritization",
+    "weighted pareto",
+    "cost of poor quality",
+    "excel pareto chart",
+    "minitab pareto chart",
+    "asq cssbb",
+    "asq cqe"
+  ],
+  "suggested_github_path": "lessons/understanding-pareto-chart.html"
+}
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Understanding Pareto Chart | UpSkill Sprint Consulting</title>
+  <meta name="description" content="An interactive visual lesson on building and interpreting Pareto charts, cumulative percentage, the 80/20 principle, weighted Pareto analysis, Excel, and Minitab.">
+  <link rel="canonical" href="https://upskillsprint.com/lessons/understanding-pareto-chart">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Understanding Pareto Chart | UpSkill Sprint Consulting">
+  <meta property="og:description" content="Build, interpret, and challenge a Pareto chart with a live visual sandbox that compares frequency with financial impact.">
+  <meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+  <meta property="og:url" content="https://upskillsprint.com/lessons/understanding-pareto-chart">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/lessons-theme.css">
+  <style>
+    :root {
+      --paper: #ffffff;
+      --surface: #ffffff;
+      --surface-soft: #f5f7fa;
+      --card: #ffffff;
+      --tint: #f5f7fa;
+      --ink: #101828;
+      --ink-soft: #344054;
+      --muted: #667085;
+      --line: #e3e7ee;
+      --navy: #0f2a43;
+      --teal: #0e7490;
+      --teal-dark: #0a5a70;
+      --amber: #c46f00;
+      --success: #237a4b;
+      --warning: #a96300;
+      --danger: #b42318;
+      --info: #2f6fb0;
+      --shade-1: #ccebf0;
+      --shade-2: #e4f4f6;
+      --shade-3: #f1f9fa;
+      --on-dark: #ffffff;
+      --on-dark-soft: #e8f3f6;
+      --glass: rgba(255, 255, 255, 0.12);
+      --glass-line: rgba(255, 255, 255, 0.28);
+      --shadow: rgba(15, 42, 67, 0.09);
+      --chart-grid: #d9e0e8;
+      --chart-bar: #0e7490;
+      --chart-bar-focus: #c46f00;
+      --chart-line: #237a4b;
+      --chart-point: #ffffff;
+      --chart-threshold: #b42318;
+      --focus-ring: #c46f00;
+    }
+
+    html[data-theme="dark"] {
+      --paper: #0b1220;
+      --surface: #111c2d;
+      --surface-soft: #0f1a2b;
+      --card: #111c2d;
+      --tint: #0f1a2b;
+      --ink: #f4f7fb;
+      --ink-soft: #d2dbea;
+      --muted: #a9b6c8;
+      --line: #2b3b50;
+      --navy: #102a43;
+      --teal: #2bb7c9;
+      --teal-dark: #67d4df;
+      --amber: #f0b95a;
+      --success: #58c48a;
+      --warning: #e9a94a;
+      --danger: #e57368;
+      --info: #6ea3d8;
+      --shade-1: #173946;
+      --shade-2: #142f3a;
+      --shade-3: #102731;
+      --on-dark: #ffffff;
+      --on-dark-soft: #e8f3f6;
+      --glass: rgba(255, 255, 255, 0.11);
+      --glass-line: rgba(255, 255, 255, 0.24);
+      --shadow: rgba(0, 0, 0, 0.24);
+      --chart-grid: #32445a;
+      --chart-bar: #2bb7c9;
+      --chart-bar-focus: #f0b95a;
+      --chart-line: #58c48a;
+      --chart-point: #0b1220;
+      --chart-threshold: #e57368;
+      --focus-ring: #f0b95a;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.68;
+    }
+    h1, h2, h3, h4 {
+      color: var(--ink);
+      font-family: "Source Serif 4", Georgia, serif;
+      font-weight: 600;
+      line-height: 1.22;
+    }
+    h1 { margin: 0.35rem 0 0.7rem; font-size: clamp(2rem, 5vw, 3.25rem); }
+    h2 { margin: 0 0 1rem; font-size: clamp(1.5rem, 3vw, 2rem); }
+    h3 { margin: 0 0 0.65rem; font-size: 1.2rem; }
+    p { margin: 0.72rem 0; }
+    a { color: var(--teal-dark); }
+    strong { color: var(--ink); }
+    button, input, select { font: inherit; }
+    button, select, input[type="range"], input[type="checkbox"], input[type="radio"] { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 3px;
+    }
+    code {
+      padding: 0.08rem 0.34rem;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      z-index: 100;
+      padding: 0.7rem 1rem;
+      border-radius: 0 0 8px 0;
+      background: var(--navy);
+      color: var(--on-dark);
+    }
+    .skip-link:focus { left: 0; }
+
+    .lesson-sitebar .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+    .lesson-sitebar .header-cta { padding: 0.6rem 0.9rem; font-size: 0.78rem; }
+    .lesson-sitebar .mobile-menu-btn { color: var(--ink); }
+
+    main#lesson-content {
+      width: min(1080px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1rem 0 4rem;
+    }
+    article.lesson-wrapper { display: block; }
+    .lesson-wrapper > section { margin: 3.2rem 0; scroll-margin-top: 92px; }
+
+    .lesson-hero {
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+      padding: clamp(1.6rem, 4vw, 3.3rem);
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--navy), var(--teal));
+      color: var(--on-dark);
+      box-shadow: 0 18px 44px var(--shadow);
+    }
+    .lesson-hero::after {
+      content: "";
+      position: absolute;
+      right: -5rem;
+      bottom: -7rem;
+      width: 19rem;
+      height: 19rem;
+      border: 2rem solid var(--glass);
+      border-radius: 50%;
+    }
+    .lesson-hero > * { position: relative; z-index: 1; }
+    .lesson-hero h1, .lesson-hero strong { color: var(--on-dark); }
+    .lesson-eyebrow {
+      margin: 0;
+      color: var(--on-dark-soft);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .lesson-meta-row { display: flex; flex-wrap: wrap; gap: 0.55rem; margin: 0.8rem 0 1rem; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.28rem 0.75rem;
+      border: 1px solid var(--glass-line);
+      border-radius: 999px;
+      background: var(--glass);
+      color: var(--on-dark);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .pill.accent { background: var(--on-dark); color: var(--navy); }
+    .lesson-lede { max-width: 68ch; margin: 0; color: var(--on-dark-soft); font-size: clamp(1.04rem, 2vw, 1.2rem); }
+    .why-it-matters {
+      max-width: 78ch;
+      margin-top: 1.2rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--glass-line);
+      border-left: 4px solid var(--amber);
+      border-radius: 0 10px 10px 0;
+      background: var(--glass);
+      color: var(--on-dark);
+    }
+
+    nav.lesson-toc {
+      margin: 1.6rem 0;
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+    nav.lesson-toc h2 {
+      margin: 0 0 0.55rem;
+      color: var(--muted);
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    nav.lesson-toc ol {
+      margin: 0;
+      padding-left: 1.25rem;
+      columns: 2;
+      column-gap: 2rem;
+    }
+    nav.lesson-toc li { break-inside: avoid; margin: 0.28rem 0; }
+    nav.lesson-toc a { text-decoration: none; }
+    nav.lesson-toc a:hover { text-decoration: underline; }
+
+    .section-intro { max-width: 76ch; color: var(--muted); }
+    .panel {
+      padding: 1.2rem 1.3rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+    .grid-2, .grid-3, .stat-grid, .software-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    }
+    .concept-card {
+      min-height: 100%;
+      padding: 1.15rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+    .concept-number {
+      display: inline-grid;
+      width: 2.25rem;
+      height: 2.25rem;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--shade-1);
+      color: var(--teal-dark);
+      font-weight: 800;
+    }
+    .concept-card p { margin-bottom: 0; color: var(--muted); }
+
+    .lesson-wrapper .callout {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--info);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+    }
+    .lesson-wrapper .callout.tip { border-left-color: var(--success); }
+    .lesson-wrapper .callout.warn { border-left-color: var(--warning); }
+    .lesson-wrapper .callout.danger { border-left-color: var(--danger); }
+
+    .objectives-list { margin: 0; padding-left: 1.25rem; }
+    .objectives-list li { margin: 0.45rem 0; }
+    .objectives-list li::marker { color: var(--teal); font-weight: 800; }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      width: 100%;
+      min-width: 660px;
+      border-collapse: collapse;
+      background: var(--surface);
+    }
+    caption { padding: 0 0 0.55rem; color: var(--muted); text-align: left; font-size: 0.88rem; }
+    th, td {
+      padding: 0.68rem 0.75rem;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--navy); color: var(--on-dark); }
+    tbody tr:nth-child(even) { background: var(--surface-soft); }
+
+    .formula-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.65rem;
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--teal);
+      border-radius: 12px;
+      background: var(--surface);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.05rem;
+    }
+    .formula-strip .equals { color: var(--muted); font-family: "Work Sans", Arial, sans-serif; }
+    .fraction {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.1;
+    }
+    .fraction span:first-child { padding: 0 0.3rem 0.12rem; border-bottom: 1px solid var(--ink); }
+    .fraction span:last-child { padding: 0.12rem 0.3rem 0; }
+
+    .concept-figure {
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+    .concept-figure svg { display: block; }
+    .svg-axis { stroke: var(--line); stroke-width: 2; }
+    .svg-bar-main { fill: var(--chart-bar-focus); }
+    .svg-bar-secondary { fill: var(--chart-bar); }
+    .svg-cumulative { fill: none; stroke: var(--chart-line); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+    .svg-dot { fill: var(--chart-point); stroke: var(--chart-line); stroke-width: 4; }
+    .svg-guide { stroke: var(--chart-threshold); stroke-width: 3; stroke-dasharray: 10 8; }
+    .svg-text { fill: var(--ink); font-family: "Work Sans", Arial, sans-serif; font-size: 24px; }
+    .svg-small { fill: var(--muted); font-family: "Work Sans", Arial, sans-serif; font-size: 18px; }
+
+    .interactive-shell {
+      padding: clamp(1rem, 3vw, 1.5rem);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface-soft);
+    }
+    .interactive-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      gap: 0.9rem;
+      align-items: end;
+      margin-bottom: 1rem;
+    }
+    .control-group { display: grid; gap: 0.4rem; }
+    .control-group > span, .control-group > label:first-child {
+      color: var(--ink-soft);
+      font-size: 0.79rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .control-group select,
+    .editor-table input {
+      width: 100%;
+      min-height: 44px;
+      padding: 0.58rem 0.68rem;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+    .range-row { display: grid; grid-template-columns: 1fr auto; gap: 0.6rem; align-items: center; }
+    .range-row input { width: 100%; accent-color: var(--teal); }
+    .range-row output { min-width: 3.4rem; color: var(--teal-dark); font-weight: 800; text-align: right; }
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+    }
+    .segmented button {
+      min-height: 44px;
+      padding: 0.55rem 0.7rem;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .segmented button + button { border-left: 1px solid var(--line); }
+    .segmented button[aria-pressed="true"] { background: var(--teal); color: var(--on-dark); }
+    .toggle-row {
+      display: flex;
+      min-height: 44px;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0.7rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .toggle-row input { width: 1.1rem; height: 1.1rem; accent-color: var(--teal); }
+
+    .chart-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(250px, 0.9fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .chart-card, .insight-card {
+      min-width: 0;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+    .chart-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.35rem;
+    }
+    .chart-header p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .button {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.58rem 0.85rem;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 750;
+    }
+    .button.primary { border-color: var(--teal); background: var(--teal); color: var(--on-dark); }
+    .button.danger { color: var(--danger); }
+    .button:hover { transform: translateY(-1px); }
+    #pareto-chart { display: block; overflow: visible; }
+    .chart-grid-line { stroke: var(--chart-grid); stroke-width: 1; }
+    .chart-axis-line { stroke: var(--ink-soft); stroke-width: 1.5; }
+    .chart-bar { fill: var(--chart-bar); opacity: 0.92; }
+    .chart-bar.vital { fill: var(--chart-bar-focus); }
+    .chart-cumulative { fill: none; stroke: var(--chart-line); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    .chart-point { fill: var(--chart-point); stroke: var(--chart-line); stroke-width: 3; }
+    .chart-threshold { stroke: var(--chart-threshold); stroke-width: 2; stroke-dasharray: 8 7; }
+    .chart-text { fill: var(--ink); font-family: "Work Sans", Arial, sans-serif; font-size: 14px; }
+    .chart-text.small { fill: var(--muted); font-size: 12px; }
+    .chart-text.threshold { fill: var(--chart-threshold); font-weight: 800; }
+    .chart-value { fill: var(--ink); font-family: "Work Sans", Arial, sans-serif; font-size: 12px; font-weight: 800; }
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.1rem;
+      margin-top: 0.35rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    .legend-item { display: inline-flex; align-items: center; gap: 0.38rem; }
+    .legend-swatch { width: 0.85rem; height: 0.85rem; border-radius: 3px; background: var(--chart-bar); }
+    .legend-swatch.vital { background: var(--chart-bar-focus); }
+    .legend-line { width: 1.5rem; border-top: 3px solid var(--chart-line); }
+    .legend-threshold { width: 1.5rem; border-top: 2px dashed var(--chart-threshold); }
+
+    .insight-card { border-top: 5px solid var(--amber); }
+    .insight-kicker {
+      margin: 0 0 0.3rem;
+      color: var(--amber);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 1rem 0; }
+    .stat-tile {
+      padding: 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-soft);
+    }
+    .stat-tile span { display: block; color: var(--muted); font-size: 0.75rem; }
+    .stat-tile strong { display: block; font-size: 1.25rem; }
+    .vital-list { margin: 0; padding-left: 1.2rem; }
+    .vital-list li { margin: 0.35rem 0; }
+    .insight-text { color: var(--muted); font-size: 0.92rem; }
+
+    .editor-panel { margin-top: 1rem; }
+    .editor-panel h3 { margin-bottom: 0.2rem; }
+    .editor-panel > p { margin-top: 0; color: var(--muted); font-size: 0.9rem; }
+    .editor-table { min-width: 720px; }
+    .editor-table td { vertical-align: middle; }
+    .editor-table .row-number { width: 2.5rem; color: var(--muted); text-align: center; }
+    .editor-table .remove-cell { width: 5.5rem; text-align: center; }
+    .editor-table .button { width: 100%; min-height: 40px; padding: 0.4rem 0.55rem; }
+    .editor-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 0.85rem; }
+    .source-order-note { min-height: 1.5rem; margin-top: 0.7rem; color: var(--muted); font-size: 0.84rem; }
+
+    .numbered-process {
+      counter-reset: process;
+      display: grid;
+      gap: 0.8rem;
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .numbered-process li {
+      counter-increment: process;
+      position: relative;
+      min-height: 3rem;
+      padding: 0.85rem 1rem 0.85rem 3.8rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .numbered-process li::before {
+      content: counter(process);
+      position: absolute;
+      left: 0.85rem;
+      top: 0.75rem;
+      display: grid;
+      width: 2.15rem;
+      height: 2.15rem;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--teal);
+      color: var(--on-dark);
+      font-weight: 800;
+    }
+
+    .mistake-card { border-top: 4px solid var(--warning); }
+    .mistake-card h3 { display: flex; align-items: center; gap: 0.45rem; }
+    .mistake-card p { color: var(--muted); }
+
+    .software-path {
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      font-weight: 750;
+    }
+    .software-note { color: var(--muted); font-size: 0.9rem; }
+
+    .practice-card {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+      gap: 0.9rem;
+    }
+    .practice-step {
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .practice-step span {
+      display: inline-grid;
+      width: 2rem;
+      height: 2rem;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--shade-1);
+      color: var(--teal-dark);
+      font-weight: 800;
+    }
+
+    .quiz-shell {
+      padding: clamp(1rem, 3vw, 1.5rem);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-soft);
+    }
+    .quiz-q {
+      margin: 0 0 1rem;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .quiz-q legend { padding: 0 0.25rem; color: var(--ink); font-weight: 800; }
+    .quiz-options { display: grid; gap: 0.55rem; margin-top: 0.8rem; }
+    .lesson-wrapper .quiz-option {
+      display: flex;
+      min-height: 44px;
+      align-items: flex-start;
+      gap: 0.65rem;
+      padding: 0.72rem 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+    .lesson-wrapper .quiz-option:hover { border-color: var(--teal); }
+    .lesson-wrapper .quiz-option input { margin-top: 0.27rem; accent-color: var(--teal); }
+    .lesson-wrapper .quiz-feedback {
+      display: block;
+      margin-top: 0.7rem;
+      padding: 0.7rem 0.8rem;
+      border-radius: 8px;
+      background: var(--surface-soft);
+      color: var(--ink);
+    }
+    .lesson-wrapper .quiz-feedback[hidden] { display: none; }
+    .quiz-feedback.correct { border-left: 4px solid var(--success); }
+    .quiz-feedback.incorrect { border-left: 4px solid var(--danger); }
+    .quiz-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+    #quiz-score { margin: 0; color: var(--ink); font-weight: 800; }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      gap: 0.8rem;
+    }
+    .summary-item {
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .summary-item strong { display: block; margin-bottom: 0.25rem; color: var(--teal-dark); }
+
+    .references-list { padding-left: 1.2rem; }
+    .references-list li { margin: 0.6rem 0; }
+    .lesson-footer {
+      margin-top: 3.5rem;
+      padding: 1.3rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface-soft);
+      text-align: center;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 860px) {
+      .chart-layout { grid-template-columns: 1fr; }
+      .chart-header { flex-direction: column; }
+      .chart-header .button { width: 100%; }
+    }
+    @media (max-width: 700px) {
+      main#lesson-content { width: min(100% - 1rem, 1080px); }
+      nav.lesson-toc ol { columns: 1; }
+      .lesson-wrapper > section { margin: 2.6rem 0; }
+      .lesson-hero { border-radius: 14px; }
+      .interactive-shell { padding: 0.75rem; }
+      .chart-card, .insight-card { padding: 0.75rem; }
+      .editor-actions, .quiz-actions { display: grid; grid-template-columns: 1fr; }
+      .editor-actions .button, .quiz-actions .button { width: 100%; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 430px) {
+      .lesson-sitebar .header-cta { display: none; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .segmented { grid-template-columns: 1fr; }
+      .segmented button + button { border-top: 1px solid var(--line); border-left: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+  <script src="/theme.js"></script>
+  <script src="/site-sections.js"></script>
+</head>
+<body data-lesson-page="true" data-category="quality-engineering" data-level="beginner" data-interactive="true">
+  <a class="skip-link" href="#lesson-content">Skip to lesson content</a>
+  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+  <header class="site lesson-sitebar">
+    <a href="/index.html" class="brand">
+      <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+      <span>UpSkill Sprint Consulting</span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="/start-here.html">Start Here</a>
+      <a href="/lessons.html" aria-current="page">Lessons</a>
+      <a href="/services.html">Services</a>
+      <a href="/request-topic.html">Request a Topic</a>
+      <a href="/about.html">About</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <a href="/lessons.html" class="btn btn-teal header-cta">Browse lessons</a>
+      <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </label>
+    </div>
+  </header>
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="/start-here.html">Start Here</a>
+    <a href="/lessons.html">Lessons</a>
+    <a href="/services.html">Services</a>
+    <a href="/request-topic.html">Request a Topic</a>
+    <a href="/about.html">About</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="/contact.html">Contact</a>
+  </nav>
+
+  <main id="lesson-content">
+    <article class="lesson-wrapper">
+      <header class="lesson-hero">
+        <p class="lesson-eyebrow">Quality Engineering · Beginner · 18 min read</p>
+        <h1>Understanding Pareto Chart</h1>
+        <div class="lesson-meta-row" aria-label="Lesson features">
+          <span class="pill accent">Interactive</span>
+          <span class="pill">Excel</span>
+          <span class="pill">Minitab</span>
+          <span class="pill">ASQ CSSBB / CQE</span>
+        </div>
+        <p class="lesson-lede">Learn how a Pareto chart turns a long problem list into a defensible priority—then use the live sandbox to see how the answer changes when you rank by frequency instead of financial impact.</p>
+        <div class="why-it-matters"><strong>Why this matters at work:</strong> Teams often spread effort across too many problems. A properly constructed Pareto chart identifies where concentrated action is most likely to produce the largest improvement—but only when the categories, measure, and time window are chosen carefully.</div>
+      </header>
+
+      <nav class="lesson-toc" aria-label="Lesson contents">
+        <h2>Lesson contents</h2>
+        <ol>
+          <li><a href="#learning-objectives">Learning objectives</a></li>
+          <li><a href="#key-concepts">Key concepts</a></li>
+          <li><a href="#terminology">Terminology</a></li>
+          <li><a href="#interactives">Interactive Pareto lab</a></li>
+          <li><a href="#procedure">Build one correctly</a></li>
+          <li><a href="#worked-example">Worked example</a></li>
+          <li><a href="#mistakes">Common mistakes</a></li>
+          <li><a href="#software">Excel and Minitab</a></li>
+          <li><a href="#practice">Practice challenge</a></li>
+          <li><a href="#quiz">Knowledge check</a></li>
+          <li><a href="#summary">Summary</a></li>
+          <li><a href="#references">References</a></li>
+        </ol>
+      </nav>
+
+      <section id="learning-objectives">
+        <h2>Learning objectives</h2>
+        <div class="panel">
+          <ul class="objectives-list">
+            <li>Explain what the descending bars and cumulative percentage line communicate.</li>
+            <li>Calculate category percentage and cumulative percentage from summarized data.</li>
+            <li>Identify the “vital few” without treating 80% as an inflexible law.</li>
+            <li>Recognize when a weighted Pareto based on cost, severity, or time is more useful than a frequency Pareto.</li>
+            <li>Create and interpret a Pareto chart in Excel and Minitab.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="key-concepts">
+        <h2>Key concepts</h2>
+        <p class="section-intro">A Pareto chart is not merely a bar chart. Its power comes from three features working together: a consistent measure, descending order, and a cumulative contribution line.</p>
+        <div class="grid-3">
+          <article class="concept-card">
+            <span class="concept-number">1</span>
+            <h3>Rank the categories</h3>
+            <p>Bars are ordered from the largest contribution to the smallest. This makes the dominant categories immediately visible.</p>
+          </article>
+          <article class="concept-card">
+            <span class="concept-number">2</span>
+            <h3>Accumulate the contribution</h3>
+            <p>The cumulative line shows how much of the total is explained as each category is added from left to right.</p>
+          </article>
+          <article class="concept-card">
+            <span class="concept-number">3</span>
+            <h3>Focus improvement effort</h3>
+            <p>The first categories that reach a practical threshold—often near 80%—form the initial investigation and improvement focus.</p>
+          </article>
+        </div>
+
+        <div class="concept-figure" aria-label="Simplified Pareto chart anatomy">
+          <svg viewBox="0 0 900 410" style="width:100%;height:auto;" role="img" aria-labelledby="concept-title concept-desc">
+            <title id="concept-title">Anatomy of a Pareto chart</title>
+            <desc id="concept-desc">Descending bars, a rising cumulative line, and an eighty percent reference line identify the priority categories.</desc>
+            <line class="svg-axis" x1="90" y1="330" x2="830" y2="330"/>
+            <line class="svg-axis" x1="90" y1="55" x2="90" y2="330"/>
+            <line class="svg-guide" x1="90" y1="110" x2="830" y2="110"/>
+            <rect class="svg-bar-main" x="130" y="95" width="90" height="235" rx="8"/>
+            <rect class="svg-bar-main" x="250" y="145" width="90" height="185" rx="8"/>
+            <rect class="svg-bar-main" x="370" y="205" width="90" height="125" rx="8"/>
+            <rect class="svg-bar-secondary" x="490" y="245" width="90" height="85" rx="8"/>
+            <rect class="svg-bar-secondary" x="610" y="275" width="90" height="55" rx="8"/>
+            <rect class="svg-bar-secondary" x="730" y="300" width="70" height="30" rx="8"/>
+            <path class="svg-cumulative" d="M175 235 L295 165 L415 115 L535 85 L655 67 L765 55"/>
+            <circle class="svg-dot" cx="175" cy="235" r="8"/>
+            <circle class="svg-dot" cx="295" cy="165" r="8"/>
+            <circle class="svg-dot" cx="415" cy="115" r="8"/>
+            <circle class="svg-dot" cx="535" cy="85" r="8"/>
+            <circle class="svg-dot" cx="655" cy="67" r="8"/>
+            <circle class="svg-dot" cx="765" cy="55" r="8"/>
+            <text class="svg-text" x="112" y="375">Largest</text>
+            <text class="svg-text" x="684" y="375">Smallest</text>
+            <text class="svg-small" x="705" y="100">80% guide</text>
+            <text class="svg-small" x="420" y="35">Cumulative contribution</text>
+            <text class="svg-small" x="110" y="78">Descending category totals</text>
+          </svg>
+        </div>
+
+        <div class="callout tip"><strong>The 80/20 principle is a prioritization heuristic, not a guarantee.</strong> Your data may show 65/20, 90/40, or a nearly flat distribution. The chart should reveal the concentration that actually exists—not force the data to match 80/20.</div>
+      </section>
+
+      <section id="terminology">
+        <h2>Terminology and calculations</h2>
+        <div class="table-scroll">
+          <table>
+            <caption>Core terms used when constructing and interpreting a Pareto chart.</caption>
+            <thead>
+              <tr><th>Term</th><th>Meaning</th><th>Interpretation</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Category</td><td>A mutually understandable defect, cause, complaint, delay, or loss classification.</td><td>Categories must use consistent definitions or the ranking will be unreliable.</td></tr>
+              <tr><td>Frequency</td><td>The number of occurrences in each category.</td><td>Use when every occurrence has approximately comparable consequence.</td></tr>
+              <tr><td>Weighted value</td><td>Frequency multiplied by cost, severity, time, or another impact weight.</td><td>Use when frequent minor issues and rare major issues should not be treated as equal.</td></tr>
+              <tr><td>Category percentage</td><td>The category value divided by the total value.</td><td>Shows the individual contribution of one category.</td></tr>
+              <tr><td>Cumulative percentage</td><td>The running total of category percentages after descending sorting.</td><td>Shows how quickly the major categories explain the total.</td></tr>
+              <tr><td>Vital few</td><td>The first categories that collectively reach the selected focus threshold.</td><td>These become the first candidates for validation, root-cause analysis, and improvement.</td></tr>
+              <tr><td>Useful many</td><td>The remaining lower-contribution categories.</td><td>They are not unimportant; they are simply lower priority for the current decision.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="formula-strip" aria-label="Pareto percentage formula">
+          <strong>Category percentage</strong>
+          <span class="equals">=</span>
+          <span class="fraction"><span>Category value</span><span>Total of all category values</span></span>
+          <span>× 100%</span>
+          <span class="equals">and</span>
+          <strong>Cumulative percentage</strong>
+          <span class="equals">= running sum of the sorted category percentages</span>
+        </div>
+      </section>
+
+      <section id="interactives">
+        <h2>Interactive Pareto lab</h2>
+        <p class="section-intro">Change the scenario, edit the data, move the focus threshold, and switch between frequency and financial impact. The chart re-sorts automatically so you can see how the priority decision changes.</p>
+        <div class="interactive-shell">
+          <div class="interactive-controls">
+            <div class="control-group">
+              <label for="scenario-select">Scenario</label>
+              <select id="scenario-select">
+                <option value="manufacturing">Manufacturing defects</option>
+                <option value="complaints">Customer complaints</option>
+                <option value="maintenance">Maintenance failures</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <span>Rank bars by</span>
+              <div class="segmented" role="group" aria-label="Ranking metric">
+                <button type="button" data-metric="count" aria-pressed="true">Frequency</button>
+                <button type="button" data-metric="cost" aria-pressed="false">Financial impact</button>
+              </div>
+            </div>
+            <div class="control-group">
+              <label for="threshold-range">Focus threshold</label>
+              <div class="range-row">
+                <input id="threshold-range" type="range" min="60" max="95" step="5" value="80">
+                <output id="threshold-output" for="threshold-range">80%</output>
+              </div>
+            </div>
+            <div class="control-group">
+              <span>Chart display</span>
+              <label class="toggle-row" for="line-toggle"><input id="line-toggle" type="checkbox" checked> Show cumulative line</label>
+            </div>
+          </div>
+
+          <div class="chart-layout">
+            <div class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <h3 id="chart-heading">Manufacturing defects by frequency</h3>
+                  <p id="chart-subtitle">Bars are sorted from largest to smallest. The line shows cumulative percentage.</p>
+                </div>
+                <button class="button" type="button" id="shuffle-button">Shuffle source rows</button>
+              </div>
+              <svg id="pareto-chart" viewBox="0 0 920 520" style="width:100%;height:auto;" role="img" aria-labelledby="pareto-svg-title pareto-svg-desc">
+                <title id="pareto-svg-title">Interactive Pareto chart</title>
+                <desc id="pareto-svg-desc">A live Pareto chart that ranks the editable categories and displays cumulative percentage.</desc>
+                <g id="chart-grid-layer"></g>
+                <g id="chart-threshold-layer"></g>
+                <g id="chart-bar-layer"></g>
+                <g id="chart-line-layer"></g>
+                <g id="chart-axis-layer"></g>
+              </svg>
+              <div class="chart-legend" aria-label="Chart legend">
+                <span class="legend-item"><span class="legend-swatch vital"></span>Focus categories</span>
+                <span class="legend-item"><span class="legend-swatch"></span>Remaining categories</span>
+                <span class="legend-item"><span class="legend-line"></span>Cumulative percentage</span>
+                <span class="legend-item"><span class="legend-threshold"></span>Selected threshold</span>
+              </div>
+            </div>
+
+            <aside class="insight-card" aria-live="polite">
+              <p class="insight-kicker">Live interpretation</p>
+              <h3 id="focus-heading">The vital few</h3>
+              <div class="stat-grid">
+                <div class="stat-tile"><span>Total value</span><strong id="total-value">0</strong></div>
+                <div class="stat-tile"><span>Categories to threshold</span><strong id="vital-count">0</strong></div>
+                <div class="stat-tile"><span>Share reached</span><strong id="share-reached">0%</strong></div>
+                <div class="stat-tile"><span>Category share</span><strong id="category-share">0%</strong></div>
+              </div>
+              <ol class="vital-list" id="vital-list"></ol>
+              <p class="insight-text" id="interpretation-text"></p>
+            </aside>
+          </div>
+
+          <div class="editor-panel">
+            <h3>Edit the source data</h3>
+            <p>Occurrence count drives the frequency Pareto. Financial impact is calculated as occurrences × impact per occurrence.</p>
+            <div class="table-scroll">
+              <table class="editor-table">
+                <caption>Editable categories used by the live Pareto chart.</caption>
+                <thead>
+                  <tr><th>#</th><th>Category</th><th>Occurrences</th><th>Impact per occurrence ($)</th><th>Remove</th></tr>
+                </thead>
+                <tbody id="editor-rows"></tbody>
+              </table>
+            </div>
+            <div class="editor-actions">
+              <button class="button primary" type="button" id="add-category-button">Add category</button>
+              <button class="button" type="button" id="reset-button">Reset scenario</button>
+            </div>
+            <p class="source-order-note" id="source-order-note" role="status"></p>
+          </div>
+        </div>
+
+        <div class="callout warn"><strong>Analysis caution:</strong> A frequency Pareto and a cost-weighted Pareto can identify different priorities. A defect that occurs often but is inexpensive may dominate the count chart, while a less frequent but costly failure may dominate the financial-impact chart. Always state the ranking measure in the chart title.</div>
+      </section>
+
+      <section id="procedure">
+        <h2>How to build a Pareto chart correctly</h2>
+        <ol class="numbered-process">
+          <li><strong>Define the decision question.</strong> Decide whether you are prioritizing frequency, downtime, scrap weight, COPQ, customer impact, severity, or another outcome.</li>
+          <li><strong>Set the scope.</strong> Use one clearly defined population, process, product family, plant, and time window. Mixing unlike populations can hide the true pattern.</li>
+          <li><strong>Create consistent categories.</strong> Use mutually understandable labels and avoid duplicates such as “Scratch,” “Scratches,” and “Surface Scratch.”</li>
+          <li><strong>Summarize the chosen measure.</strong> Count occurrences or sum the weighted value for every category.</li>
+          <li><strong>Sort descending.</strong> Place the largest category first and the smallest last. “Other” should be used carefully and kept visible as the final category when categories are combined.</li>
+          <li><strong>Calculate percentages.</strong> Divide each category by the grand total, then calculate the running cumulative percentage.</li>
+          <li><strong>Draw and label the chart.</strong> Bars use the left axis; the cumulative line uses the percentage axis. The chart title must identify the metric and scope.</li>
+          <li><strong>Validate before acting.</strong> Stratify by shift, product, supplier, machine, or time; then use root-cause tools to investigate the priority categories. A Pareto chart ranks problems—it does not prove causes.</li>
+        </ol>
+      </section>
+
+      <section id="worked-example">
+        <h2>Worked example: manufacturing defects</h2>
+        <p class="section-intro">A quality engineer summarizes 128 defects from one month. The categories are sorted by frequency before percentages are calculated.</p>
+        <div class="table-scroll">
+          <table>
+            <caption>Frequency Pareto calculations for the default manufacturing scenario.</caption>
+            <thead>
+              <tr><th>Rank</th><th>Defect category</th><th>Count</th><th>Category %</th><th>Cumulative %</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Surface scratches</td><td>42</td><td>32.8%</td><td>32.8%</td></tr>
+              <tr><td>2</td><td>Weld defects</td><td>31</td><td>24.2%</td><td>57.0%</td></tr>
+              <tr><td>3</td><td>Dimension out of tolerance</td><td>20</td><td>15.6%</td><td>72.7%</td></tr>
+              <tr><td>4</td><td>Label errors</td><td>17</td><td>13.3%</td><td>85.9%</td></tr>
+              <tr><td>5</td><td>Packaging damage</td><td>11</td><td>8.6%</td><td>94.5%</td></tr>
+              <tr><td>6</td><td>Other</td><td>7</td><td>5.5%</td><td>100.0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid-2">
+          <div class="callout tip"><strong>Interpretation:</strong> The first four categories account for approximately 85.9% of defects. The team should begin by validating and investigating these categories rather than launching six improvement projects at once.</div>
+          <div class="callout"><strong>Do not overstate the result:</strong> The chart does not say that eliminating four categories will automatically remove 85.9% of future defects. It says those categories contributed 85.9% of the measured defects in this defined data window.</div>
+        </div>
+      </section>
+
+      <section id="mistakes">
+        <h2>Common mistakes and analytical cautions</h2>
+        <div class="grid-2">
+          <article class="panel mistake-card">
+            <h3>Unsorted bars</h3>
+            <p>A regular category chart is not a Pareto chart unless the values are arranged from largest to smallest.</p>
+          </article>
+          <article class="panel mistake-card">
+            <h3>Mixing incompatible measures</h3>
+            <p>Do not mix counts, dollars, tonnes, and minutes in one ranking. Every bar must use the same unit.</p>
+          </article>
+          <article class="panel mistake-card">
+            <h3>Too much “Other”</h3>
+            <p>If “Other” becomes one of the largest bars, the categories are not actionable enough. Reclassify the underlying records before deciding priorities.</p>
+          </article>
+          <article class="panel mistake-card">
+            <h3>Ignoring exposure</h3>
+            <p>Counts can mislead when production volume differs greatly. Compare rates or create separate Pareto charts by product, line, supplier, or period.</p>
+          </article>
+          <article class="panel mistake-card">
+            <h3>Treating 80% as a pass/fail rule</h3>
+            <p>The threshold supports focus; it does not define statistical significance or prove that the remaining categories can be ignored.</p>
+          </article>
+          <article class="panel mistake-card">
+            <h3>Confusing frequency with risk</h3>
+            <p>A low-frequency safety, regulatory, or catastrophic failure may require immediate action even when it appears at the far right of the chart.</p>
+          </article>
+        </div>
+        <div class="callout danger"><strong>Risk override:</strong> Never use Pareto ranking alone to defer a critical safety, environmental, legal, or product-integrity issue. Severity and detectability may override frequency.</div>
+      </section>
+
+      <section id="software">
+        <h2>Statistics implementation: Excel and Minitab</h2>
+        <p class="section-intro">The fastest software method depends on whether you have raw event-level records or an already summarized category table.</p>
+
+        <h3>1. Excel functions</h3>
+        <div class="table-scroll">
+          <table>
+            <caption>Useful Excel functions for preparing a Pareto chart.</caption>
+            <thead>
+              <tr><th>Function</th><th>Syntax</th><th>Purpose</th><th>When to use</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>COUNTIF</code></td><td><code>=COUNTIF(range, criteria)</code></td><td>Counts raw records matching one category.</td><td>Use when each row is one defect, complaint, or event.</td></tr>
+              <tr><td><code>COUNTIFS</code></td><td><code>=COUNTIFS(criteria_range1, criteria1, ...)</code></td><td>Counts a category with additional filters.</td><td>Use to create a Pareto for a specific line, month, shift, or product.</td></tr>
+              <tr><td><code>SUMIF</code></td><td><code>=SUMIF(range, criteria, sum_range)</code></td><td>Sums one impact measure by category.</td><td>Use for cost, downtime, scrap weight, or another weighted value.</td></tr>
+              <tr><td><code>SUMIFS</code></td><td><code>=SUMIFS(sum_range, criteria_range1, criteria1, ...)</code></td><td>Sums impact with multiple filters.</td><td>Use for scoped weighted Pareto analysis.</td></tr>
+              <tr><td><code>SORTBY</code></td><td><code>=SORTBY(array, by_array, -1)</code></td><td>Sorts the category table in descending order.</td><td>Use in Excel 2021, Excel 2024, or Microsoft 365 for a dynamic sorted table.</td></tr>
+              <tr><td><code>SUM</code></td><td><code>=SUM(number1, ...)</code></td><td>Calculates the grand total and running cumulative total.</td><td>Use in every Pareto calculation.</td></tr>
+              <tr><td><code>SCAN</code></td><td><code>=SCAN(0, array, LAMBDA(a,b,a+b))</code></td><td>Returns every intermediate running total in one spilled array.</td><td>Use in Microsoft 365 or Excel 2024 for a dynamic cumulative series.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2. Excel use cases</h3>
+        <div class="software-grid">
+          <div class="panel">
+            <h3>Raw event counts</h3>
+            <p>Raw category labels in <code>A2:A500</code>; summary labels in <code>E2:E8</code>.</p>
+            <p><code>=COUNTIF($A$2:$A$500,E2)</code></p>
+            <p class="software-note">Copy down to count every category.</p>
+          </div>
+          <div class="panel">
+            <h3>Weighted cost</h3>
+            <p>Category in column A and event cost in column C.</p>
+            <p><code>=SUMIFS($C$2:$C$500,$A$2:$A$500,E2)</code></p>
+            <p class="software-note">Use the resulting totals for a cost-weighted Pareto.</p>
+          </div>
+          <div class="panel">
+            <h3>Dynamic descending sort</h3>
+            <p>Categories in E and totals in F.</p>
+            <p><code>=SORTBY(E2:F8,F2:F8,-1)</code></p>
+            <p class="software-note">The spilled result stays sorted when source values change.</p>
+          </div>
+          <div class="panel">
+            <h3>Cumulative percentage</h3>
+            <p>Sorted totals begin in <code>J2</code>.</p>
+            <p><code>=SUM($J$2:J2)/SUM($J$2:$J$8)</code></p>
+            <p class="software-note">Copy down and format as Percentage.</p>
+          </div>
+        </div>
+        <div class="callout tip"><strong>Built-in Excel chart:</strong> Select a text category column and its numeric values, then choose <strong>Insert › Insert Statistic Chart › Pareto</strong>. For a fully controlled report, a combo chart using sorted columns plus a cumulative-percentage line on the secondary axis is often easier to audit.</div>
+
+        <h3>3. Minitab navigation</h3>
+        <div class="software-path">Stat › Quality Tools › Pareto Chart</div>
+        <div class="grid-2">
+          <div class="panel">
+            <h3>Raw event-level data</h3>
+            <p>Place the defect or event label column in <strong>Defects or attribute data in</strong>. Leave the frequency field blank because each row represents one occurrence.</p>
+          </div>
+          <div class="panel">
+            <h3>Summarized data</h3>
+            <p>Enter the category-name column in <strong>Defects or attribute data in</strong> and the count or weighted-value column in <strong>Frequencies in</strong>.</p>
+          </div>
+          <div class="panel">
+            <h3>Stratified analysis</h3>
+            <p>Use <strong>BY variable in</strong> to create separate Pareto charts by shift, line, supplier, product, or other grouping variable.</p>
+          </div>
+          <div class="panel">
+            <h3>Combining small categories</h3>
+            <p>Use <strong>Combine remaining defects into one category after this percent</strong> only when the combined “Other” category will remain interpretable.</p>
+          </div>
+        </div>
+
+        <h3>4. ASQ CSSBB / CQE exam tips</h3>
+        <div class="table-scroll">
+          <table>
+            <caption>Exam-focused interpretation rules.</caption>
+            <thead>
+              <tr><th>Exam cue</th><th>Best response</th><th>Reason</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>“Prioritize the most frequent defect categories”</td><td>Pareto chart</td><td>It ranks categorical counts from largest to smallest.</td></tr>
+              <tr><td>“Identify the root cause”</td><td>Do not choose Pareto alone</td><td>Pareto identifies priority categories; fishbone, 5 Whys, designed experiments, or other analysis investigates causes.</td></tr>
+              <tr><td>“Rare defects have very different costs”</td><td>Weighted Pareto</td><td>Frequency alone may not represent business impact.</td></tr>
+              <tr><td>“Compare the same defects across shifts”</td><td>Stratified or multiple Pareto charts</td><td>An aggregate chart can hide different patterns by shift.</td></tr>
+              <tr><td>“The top bars do not reach exactly 80%”</td><td>Use the observed cumulative pattern</td><td>The 80/20 relationship is a heuristic, not a required mathematical result.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="practice">
+        <h2>Practice challenge</h2>
+        <p class="section-intro">Use a real process problem, not a perfectly prepared classroom dataset.</p>
+        <div class="practice-card">
+          <div class="practice-step"><span>1</span><h3>Collect</h3><p>Gather at least 30 recent events from one clearly defined process and time period.</p></div>
+          <div class="practice-step"><span>2</span><h3>Clean</h3><p>Standardize category names and inspect every record currently classified as “Other.”</p></div>
+          <div class="practice-step"><span>3</span><h3>Compare</h3><p>Build one Pareto by frequency and a second by cost, downtime, or another relevant impact measure.</p></div>
+          <div class="practice-step"><span>4</span><h3>Decide</h3><p>Write one sentence naming the first investigation target and one caution that limits the conclusion.</p></div>
+        </div>
+      </section>
+
+      <section id="quiz">
+        <h2>Check your understanding</h2>
+        <div class="quiz-shell">
+          <fieldset class="quiz-q" data-q="1" data-answer="b">
+            <legend>1. What makes a Pareto chart different from an ordinary category bar chart?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q1" value="a"> It always contains exactly five bars.</label>
+              <label class="quiz-option"><input type="radio" name="q1" value="b"> Bars are sorted descending and paired with cumulative contribution.</label>
+              <label class="quiz-option"><input type="radio" name="q1" value="c"> It can only display percentages, never counts.</label>
+            </div>
+            <div class="quiz-feedback" hidden data-correct="Correct. Descending order and cumulative contribution are the defining visual features." data-incorrect="Not quite. A Pareto chart ranks categories from largest to smallest and normally includes cumulative contribution."></div>
+          </fieldset>
+
+          <fieldset class="quiz-q" data-q="2" data-answer="c">
+            <legend>2. Which statement about the 80/20 principle is most accurate?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q2" value="a"> Every valid Pareto chart must show exactly 80% from 20% of categories.</label>
+              <label class="quiz-option"><input type="radio" name="q2" value="b"> Categories below the 80% line are proven to be unimportant.</label>
+              <label class="quiz-option"><input type="radio" name="q2" value="c"> It is a prioritization heuristic; the observed concentration may differ.</label>
+            </div>
+            <div class="quiz-feedback" hidden data-correct="Correct. The 80/20 pattern is a useful heuristic, not a required result." data-incorrect="Review the key-concepts section. The data determine the actual concentration; 80/20 is not a rigid law."></div>
+          </fieldset>
+
+          <fieldset class="quiz-q" data-q="3" data-answer="a">
+            <legend>3. A rare defect costs far more than a frequent minor defect. Which approach is most appropriate?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q3" value="a"> Compare a frequency Pareto with a cost-weighted Pareto.</label>
+              <label class="quiz-option"><input type="radio" name="q3" value="b"> Delete the rare defect because it will not reach the 80% line.</label>
+              <label class="quiz-option"><input type="radio" name="q3" value="c"> Sort the categories alphabetically.</label>
+            </div>
+            <div class="quiz-feedback" hidden data-correct="Correct. Comparing frequency and weighted impact reveals whether the priority changes." data-incorrect="Not quite. When consequence differs, weight the categories by cost, severity, time, or another defensible impact measure."></div>
+          </fieldset>
+
+          <fieldset class="quiz-q" data-q="4" data-answer="b">
+            <legend>4. What should happen after the Pareto chart identifies the largest defect category?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q4" value="a"> Assume the category label is the verified root cause.</label>
+              <label class="quiz-option"><input type="radio" name="q4" value="b"> Validate the data, stratify where useful, and perform root-cause analysis.</label>
+              <label class="quiz-option"><input type="radio" name="q4" value="c"> Stop collecting data because the ranking is final.</label>
+            </div>
+            <div class="quiz-feedback" hidden data-correct="Correct. Pareto identifies where to investigate; it does not establish causation." data-incorrect="The chart is a prioritization tool, not proof of cause. Validate and investigate before implementing corrective action."></div>
+          </fieldset>
+
+          <fieldset class="quiz-q" data-q="5" data-answer="c">
+            <legend>5. Why can a large “Other” bar be a problem?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q5" value="a"> “Other” is forbidden in every Pareto chart.</label>
+              <label class="quiz-option"><input type="radio" name="q5" value="b"> It makes the cumulative line mathematically impossible.</label>
+              <label class="quiz-option"><input type="radio" name="q5" value="c"> It can hide important, actionable categories inside an uninformative group.</label>
+            </div>
+            <div class="quiz-feedback" hidden data-correct="Correct. A dominant “Other” category means the classification needs refinement before priorities are selected." data-incorrect="Review the common-mistakes section. “Other” is acceptable only when it does not conceal actionable categories."></div>
+          </fieldset>
+
+          <div class="quiz-actions">
+            <button class="button primary" type="button" id="check-quiz-button">Check answers</button>
+            <button class="button" type="button" id="retry-quiz-button">Try again</button>
+            <p id="quiz-score" role="status">Your score: 0 out of 5.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="summary">
+        <h2>Summary</h2>
+        <div class="summary-grid">
+          <div class="summary-item"><strong>Sort first</strong>Descending order is essential; otherwise the chart does not show priority clearly.</div>
+          <div class="summary-item"><strong>Use one measure</strong>Every bar must represent the same unit—count, dollars, time, weight, or another consistent value.</div>
+          <div class="summary-item"><strong>Read the cumulative line</strong>It shows how quickly the leading categories explain the total.</div>
+          <div class="summary-item"><strong>Challenge the ranking</strong>Compare frequency with cost, severity, exposure, and stratified views when the decision warrants it.</div>
+          <div class="summary-item"><strong>Investigate next</strong>A Pareto chart prioritizes the problem; it does not prove the underlying root cause.</div>
+        </div>
+      </section>
+
+      <section id="references">
+        <h2>References</h2>
+        <ol class="references-list">
+          <li><a href="https://support.microsoft.com/en-us/office/create-a-pareto-chart-a1512496-6dba-4743-9ab1-df5012972856">Microsoft Support: Create a Pareto chart</a>.</li>
+          <li><a href="https://support.microsoft.com/en-us/excel/functions/sortby-function">Microsoft Support: SORTBY function</a>.</li>
+          <li><a href="https://support.microsoft.com/en-us/excel/scan-function">Microsoft Support: SCAN function</a>.</li>
+          <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/quality-and-process-improvement/quality-tools/how-to/pareto-chart/before-you-start/overview/">Minitab Support: Overview for Pareto Chart</a>.</li>
+          <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/quality-and-process-improvement/quality-tools/how-to/pareto-chart/perform-the-analysis/enter-your-data/">Minitab Support: Enter your data for Pareto Chart</a>.</li>
+          <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/quality-and-process-improvement/quality-tools/how-to/pareto-chart/before-you-start/example-of-a-weighted-pareto-chart/">Minitab Support: Example of a weighted Pareto Chart</a>.</li>
+        </ol>
+      </section>
+
+      <footer class="lesson-footer">
+        <strong>Next step:</strong> Use the largest validated category as the problem statement for a focused root-cause analysis.
+        <p><a href="/lessons/root-cause-analysis-5-whys-fishbone.html">Continue to Root Cause Analysis: 5 Whys vs Fishbone Diagram →</a></p>
+      </footer>
+    </article>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div class="brand">
+            <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+            <span>UpSkill Sprint Consulting</span>
+          </div>
+          <p>Practical learning for quality, data, process improvement, and business problem-solving.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="/index.html">Home</a>
+          <a href="/start-here.html">Start Here</a>
+          <a href="/lessons.html">Lessons</a>
+          <a href="/services.html">Services</a>
+          <a href="/request-topic.html">Request a Topic</a>
+        </div>
+        <div>
+          <h4>Topics</h4>
+          <a href="/lessons.html#quality-engineering">Quality Engineering</a>
+          <a href="/lessons.html#lean-six-sigma">Lean Six Sigma</a>
+          <a href="/lessons.html#statistics">Statistics</a>
+          <a href="/lessons.html#power-bi-excel-sql">Excel, Power BI &amp; SQL</a>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <a href="mailto:skillsprintconsulting@gmail.com">skillsprintconsulting@gmail.com</a>
+          <p>Saskatchewan, Canada</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 UpSkill Sprint Consulting</span>
+      <div><a href="/privacy.html">Privacy Policy</a><a href="/terms.html">Terms of Use</a></div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var SVG_NS = "http://www.w3.org/2000/svg";
+      var scenarioSelect = document.getElementById("scenario-select");
+      var thresholdRange = document.getElementById("threshold-range");
+      var thresholdOutput = document.getElementById("threshold-output");
+      var lineToggle = document.getElementById("line-toggle");
+      var metricButtons = Array.prototype.slice.call(document.querySelectorAll("[data-metric]"));
+      var shuffleButton = document.getElementById("shuffle-button");
+      var addCategoryButton = document.getElementById("add-category-button");
+      var resetButton = document.getElementById("reset-button");
+      var editorRows = document.getElementById("editor-rows");
+      var sourceOrderNote = document.getElementById("source-order-note");
+      var chartHeading = document.getElementById("chart-heading");
+      var chartSubtitle = document.getElementById("chart-subtitle");
+      var chartGridLayer = document.getElementById("chart-grid-layer");
+      var chartThresholdLayer = document.getElementById("chart-threshold-layer");
+      var chartBarLayer = document.getElementById("chart-bar-layer");
+      var chartLineLayer = document.getElementById("chart-line-layer");
+      var chartAxisLayer = document.getElementById("chart-axis-layer");
+      var totalValue = document.getElementById("total-value");
+      var vitalCount = document.getElementById("vital-count");
+      var shareReached = document.getElementById("share-reached");
+      var categoryShare = document.getElementById("category-share");
+      var vitalList = document.getElementById("vital-list");
+      var interpretationText = document.getElementById("interpretation-text");
+      var checkQuizButton = document.getElementById("check-quiz-button");
+      var retryQuizButton = document.getElementById("retry-quiz-button");
+      var quizScore = document.getElementById("quiz-score");
+
+      var presets = {
+        manufacturing: {
+          label: "Manufacturing defects",
+          rows: [
+            { name: "Surface scratches", count: 42, impact: 180 },
+            { name: "Weld defects", count: 31, impact: 850 },
+            { name: "Dimension out of tolerance", count: 20, impact: 320 },
+            { name: "Label errors", count: 17, impact: 45 },
+            { name: "Packaging damage", count: 11, impact: 95 },
+            { name: "Other", count: 7, impact: 120 }
+          ]
+        },
+        complaints: {
+          label: "Customer complaints",
+          rows: [
+            { name: "Late delivery", count: 55, impact: 220 },
+            { name: "Damaged shipment", count: 33, impact: 680 },
+            { name: "Incorrect paperwork", count: 24, impact: 85 },
+            { name: "Wrong quantity", count: 18, impact: 520 },
+            { name: "Technical performance", count: 12, impact: 1250 },
+            { name: "Other", count: 9, impact: 110 }
+          ]
+        },
+        maintenance: {
+          label: "Maintenance failures",
+          rows: [
+            { name: "Sensor failure", count: 29, impact: 900 },
+            { name: "Hydraulic leak", count: 21, impact: 1450 },
+            { name: "Bearing failure", count: 14, impact: 3100 },
+            { name: "Electrical trip", count: 12, impact: 2400 },
+            { name: "Lubrication issue", count: 10, impact: 700 },
+            { name: "Other", count: 8, impact: 500 }
+          ]
+        }
+      };
+
+      var state = {
+        scenario: "manufacturing",
+        metric: "count",
+        threshold: 80,
+        showLine: true,
+        rows: cloneRows(presets.manufacturing.rows)
+      };
+
+      function cloneRows(rows) {
+        return rows.map(function (row) {
+          return { name: row.name, count: row.count, impact: row.impact };
+        });
+      }
+
+      function createSvgElement(tag, attributes, text) {
+        var element = document.createElementNS(SVG_NS, tag);
+        Object.keys(attributes || {}).forEach(function (key) {
+          element.setAttribute(key, String(attributes[key]));
+        });
+        if (typeof text === "string") {
+          element.textContent = text;
+        }
+        return element;
+      }
+
+      function clearNode(node) {
+        while (node.firstChild) {
+          node.removeChild(node.firstChild);
+        }
+      }
+
+      function sanitizeNumber(value, fallback) {
+        var number = Number(value);
+        if (!Number.isFinite(number) || number < 0) {
+          return fallback;
+        }
+        return number;
+      }
+
+      function metricValue(row) {
+        return state.metric === "cost" ? row.count * row.impact : row.count;
+      }
+
+      function formatMetric(value) {
+        if (state.metric === "cost") {
+          return new Intl.NumberFormat("en-CA", {
+            style: "currency",
+            currency: "CAD",
+            maximumFractionDigits: 0
+          }).format(value);
+        }
+        return new Intl.NumberFormat("en-CA", { maximumFractionDigits: 1 }).format(value);
+      }
+
+      function shortMetric(value) {
+        if (state.metric === "cost") {
+          if (value >= 1000000) { return "$" + (value / 1000000).toFixed(1) + "M"; }
+          if (value >= 1000) { return "$" + (value / 1000).toFixed(1) + "k"; }
+          return "$" + Math.round(value);
+        }
+        return new Intl.NumberFormat("en-CA", { maximumFractionDigits: 0 }).format(value);
+      }
+
+      function scenarioLabel() {
+        return presets[state.scenario].label;
+      }
+
+      function getSortedData() {
+        var usable = state.rows.filter(function (row) {
+          return row.name.trim() !== "" && metricValue(row) > 0;
+        }).map(function (row) {
+          return {
+            name: row.name.trim(),
+            count: row.count,
+            impact: row.impact,
+            value: metricValue(row)
+          };
+        });
+
+        usable.sort(function (a, b) {
+          if (b.value !== a.value) { return b.value - a.value; }
+          return a.name.localeCompare(b.name);
+        });
+
+        var total = usable.reduce(function (sum, row) { return sum + row.value; }, 0);
+        var running = 0;
+        usable.forEach(function (row) {
+          row.percent = total > 0 ? row.value / total * 100 : 0;
+          running += row.percent;
+          row.cumulative = running;
+        });
+        return { rows: usable, total: total };
+      }
+
+      function renderEditor() {
+        clearNode(editorRows);
+        state.rows.forEach(function (row, index) {
+          var tr = document.createElement("tr");
+          var numberCell = document.createElement("td");
+          var nameCell = document.createElement("td");
+          var countCell = document.createElement("td");
+          var impactCell = document.createElement("td");
+          var removeCell = document.createElement("td");
+          var nameInput = document.createElement("input");
+          var countInput = document.createElement("input");
+          var impactInput = document.createElement("input");
+          var removeButton = document.createElement("button");
+
+          numberCell.className = "row-number";
+          numberCell.textContent = String(index + 1);
+          nameInput.type = "text";
+          nameInput.value = row.name;
+          nameInput.setAttribute("aria-label", "Category name row " + (index + 1));
+          nameInput.dataset.index = String(index);
+          nameInput.dataset.field = "name";
+
+          countInput.type = "number";
+          countInput.min = "0";
+          countInput.step = "1";
+          countInput.value = String(row.count);
+          countInput.setAttribute("aria-label", "Occurrences for " + row.name);
+          countInput.dataset.index = String(index);
+          countInput.dataset.field = "count";
+
+          impactInput.type = "number";
+          impactInput.min = "0";
+          impactInput.step = "1";
+          impactInput.value = String(row.impact);
+          impactInput.setAttribute("aria-label", "Impact per occurrence for " + row.name);
+          impactInput.dataset.index = String(index);
+          impactInput.dataset.field = "impact";
+
+          removeButton.type = "button";
+          removeButton.className = "button danger";
+          removeButton.textContent = "Remove";
+          removeButton.dataset.removeIndex = String(index);
+          removeButton.disabled = state.rows.length <= 2;
+          removeButton.setAttribute("aria-label", "Remove " + row.name);
+
+          nameCell.appendChild(nameInput);
+          countCell.appendChild(countInput);
+          impactCell.appendChild(impactInput);
+          removeCell.className = "remove-cell";
+          removeCell.appendChild(removeButton);
+          tr.appendChild(numberCell);
+          tr.appendChild(nameCell);
+          tr.appendChild(countCell);
+          tr.appendChild(impactCell);
+          tr.appendChild(removeCell);
+          editorRows.appendChild(tr);
+        });
+      }
+
+      function appendText(layer, x, y, text, className, anchor) {
+        layer.appendChild(createSvgElement("text", {
+          x: x,
+          y: y,
+          "class": className || "chart-text",
+          "text-anchor": anchor || "start"
+        }, text));
+      }
+
+      function truncateLabel(label, maxLength) {
+        return label.length > maxLength ? label.slice(0, maxLength - 1) + "…" : label;
+      }
+
+      function renderChart() {
+        clearNode(chartGridLayer);
+        clearNode(chartThresholdLayer);
+        clearNode(chartBarLayer);
+        clearNode(chartLineLayer);
+        clearNode(chartAxisLayer);
+
+        var result = getSortedData();
+        var rows = result.rows;
+        var total = result.total;
+        var width = 920;
+        var height = 520;
+        var margin = { top: 55, right: 72, bottom: 135, left: 82 };
+        var plotWidth = width - margin.left - margin.right;
+        var plotHeight = height - margin.top - margin.bottom;
+        var maxValue = rows.reduce(function (max, row) { return Math.max(max, row.value); }, 0);
+        var axisMax = maxValue > 0 ? maxValue * 1.12 : 1;
+        var band = rows.length > 0 ? plotWidth / rows.length : plotWidth;
+        var barWidth = Math.max(20, Math.min(90, band * 0.66));
+        var thresholdY = margin.top + plotHeight * (1 - state.threshold / 100);
+        var vitalIndex = rows.findIndex(function (row) { return row.cumulative >= state.threshold; });
+        if (vitalIndex < 0 && rows.length > 0) { vitalIndex = rows.length - 1; }
+
+        chartHeading.textContent = scenarioLabel() + " by " + (state.metric === "cost" ? "financial impact" : "frequency");
+        chartSubtitle.textContent = state.metric === "cost"
+          ? "Financial impact = occurrences × impact per occurrence."
+          : "Bars are sorted by occurrence count. The line shows cumulative percentage.";
+
+        for (var gridIndex = 0; gridIndex <= 5; gridIndex += 1) {
+          var fraction = gridIndex / 5;
+          var gridY = margin.top + plotHeight - plotHeight * fraction;
+          chartGridLayer.appendChild(createSvgElement("line", {
+            x1: margin.left,
+            y1: gridY,
+            x2: width - margin.right,
+            y2: gridY,
+            "class": "chart-grid-line"
+          }));
+          appendText(chartAxisLayer, margin.left - 12, gridY + 5, shortMetric(axisMax * fraction), "chart-text small", "end");
+          appendText(chartAxisLayer, width - margin.right + 12, gridY + 5, Math.round(fraction * 100) + "%", "chart-text small", "start");
+        }
+
+        chartAxisLayer.appendChild(createSvgElement("line", {
+          x1: margin.left,
+          y1: margin.top + plotHeight,
+          x2: width - margin.right,
+          y2: margin.top + plotHeight,
+          "class": "chart-axis-line"
+        }));
+        chartAxisLayer.appendChild(createSvgElement("line", {
+          x1: margin.left,
+          y1: margin.top,
+          x2: margin.left,
+          y2: margin.top + plotHeight,
+          "class": "chart-axis-line"
+        }));
+        appendText(chartAxisLayer, margin.left, 26, state.metric === "cost" ? "Financial impact (CAD)" : "Occurrences", "chart-text", "start");
+        appendText(chartAxisLayer, width - margin.right, 26, "Cumulative %", "chart-text", "end");
+
+        chartThresholdLayer.appendChild(createSvgElement("line", {
+          x1: margin.left,
+          y1: thresholdY,
+          x2: width - margin.right,
+          y2: thresholdY,
+          "class": "chart-threshold"
+        }));
+        appendText(chartThresholdLayer, width - margin.right - 4, thresholdY - 8, state.threshold + "% focus", "chart-text threshold", "end");
+
+        var linePoints = [];
+        rows.forEach(function (row, index) {
+          var centerX = margin.left + band * index + band / 2;
+          var barHeight = row.value / axisMax * plotHeight;
+          var barY = margin.top + plotHeight - barHeight;
+          var cumulativeY = margin.top + plotHeight * (1 - row.cumulative / 100);
+          var bar = createSvgElement("rect", {
+            x: centerX - barWidth / 2,
+            y: barY,
+            width: barWidth,
+            height: Math.max(0, barHeight),
+            rx: 6,
+            "class": index <= vitalIndex ? "chart-bar vital" : "chart-bar"
+          });
+          var title = createSvgElement("title", {}, row.name + ": " + formatMetric(row.value) + ", cumulative " + row.cumulative.toFixed(1) + "%");
+          bar.appendChild(title);
+          chartBarLayer.appendChild(bar);
+          appendText(chartBarLayer, centerX, Math.max(margin.top + 14, barY - 8), shortMetric(row.value), "chart-value", "middle");
+
+          var label = createSvgElement("text", {
+            x: centerX,
+            y: margin.top + plotHeight + 24,
+            "class": "chart-text small",
+            "text-anchor": "end",
+            transform: "rotate(-38 " + centerX + " " + (margin.top + plotHeight + 24) + ")"
+          }, truncateLabel(row.name, 24));
+          chartAxisLayer.appendChild(label);
+          linePoints.push(centerX + "," + cumulativeY);
+
+          if (state.showLine) {
+            chartLineLayer.appendChild(createSvgElement("circle", {
+              cx: centerX,
+              cy: cumulativeY,
+              r: 6,
+              "class": "chart-point"
+            }));
+          }
+        });
+
+        if (state.showLine && linePoints.length > 1) {
+          chartLineLayer.insertBefore(createSvgElement("polyline", {
+            points: linePoints.join(" "),
+            "class": "chart-cumulative"
+          }), chartLineLayer.firstChild);
+        }
+
+        renderInsights(rows, total, vitalIndex);
+      }
+
+      function renderInsights(rows, total, vitalIndex) {
+        clearNode(vitalList);
+        var vitalRows = vitalIndex >= 0 ? rows.slice(0, vitalIndex + 1) : [];
+        var reached = vitalRows.length > 0 ? vitalRows[vitalRows.length - 1].cumulative : 0;
+        var share = rows.length > 0 ? vitalRows.length / rows.length * 100 : 0;
+
+        totalValue.textContent = formatMetric(total);
+        vitalCount.textContent = String(vitalRows.length);
+        shareReached.textContent = reached.toFixed(1) + "%";
+        categoryShare.textContent = share.toFixed(0) + "%";
+
+        vitalRows.forEach(function (row) {
+          var li = document.createElement("li");
+          li.textContent = row.name + " — " + row.percent.toFixed(1) + "%";
+          vitalList.appendChild(li);
+        });
+
+        if (rows.length === 0) {
+          interpretationText.textContent = "Enter at least one category with a positive value to build the chart.";
+        } else if (vitalRows.length === 1) {
+          interpretationText.textContent = "One category alone reaches the selected focus threshold. Verify the classification and investigate whether this category is specific enough to act on.";
+        } else if (share <= 30) {
+          interpretationText.textContent = "A small share of categories explains most of the selected measure. This is a strongly concentrated Pareto pattern.";
+        } else if (share <= 55) {
+          interpretationText.textContent = "The leading categories show useful concentration, but the pattern is not an exact 80/20 split. Use the observed cumulative result.";
+        } else {
+          interpretationText.textContent = "The distribution is relatively flat. Consider stratifying the data or ranking by another impact measure before selecting a project.";
+        }
+      }
+
+      function renderAll() {
+        thresholdOutput.textContent = state.threshold + "%";
+        metricButtons.forEach(function (button) {
+          button.setAttribute("aria-pressed", String(button.dataset.metric === state.metric));
+        });
+        lineToggle.checked = state.showLine;
+        renderEditor();
+        renderChart();
+      }
+
+      scenarioSelect.addEventListener("change", function () {
+        state.scenario = scenarioSelect.value;
+        state.rows = cloneRows(presets[state.scenario].rows);
+        sourceOrderNote.textContent = "Loaded the " + presets[state.scenario].label.toLowerCase() + " example.";
+        renderAll();
+      });
+
+      thresholdRange.addEventListener("input", function () {
+        state.threshold = Number(thresholdRange.value);
+        thresholdOutput.textContent = state.threshold + "%";
+        renderChart();
+      });
+
+      lineToggle.addEventListener("change", function () {
+        state.showLine = lineToggle.checked;
+        renderChart();
+      });
+
+      metricButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          state.metric = button.dataset.metric;
+          metricButtons.forEach(function (item) {
+            item.setAttribute("aria-pressed", String(item === button));
+          });
+          renderChart();
+        });
+      });
+
+      editorRows.addEventListener("input", function (event) {
+        var input = event.target;
+        if (!input.dataset.field) { return; }
+        var index = Number(input.dataset.index);
+        var field = input.dataset.field;
+        if (!state.rows[index]) { return; }
+        if (field === "name") {
+          state.rows[index].name = input.value;
+        } else {
+          state.rows[index][field] = sanitizeNumber(input.value, 0);
+        }
+        sourceOrderNote.textContent = "Chart updated from your edited values.";
+        renderChart();
+      });
+
+      editorRows.addEventListener("click", function (event) {
+        var button = event.target.closest("[data-remove-index]");
+        if (!button) { return; }
+        var index = Number(button.dataset.removeIndex);
+        if (state.rows.length <= 2 || !state.rows[index]) { return; }
+        var removedName = state.rows[index].name;
+        state.rows.splice(index, 1);
+        sourceOrderNote.textContent = "Removed " + removedName + ".";
+        renderAll();
+      });
+
+      addCategoryButton.addEventListener("click", function () {
+        if (state.rows.length >= 10) {
+          sourceOrderNote.textContent = "The sandbox supports up to 10 categories for readable labels.";
+          return;
+        }
+        state.rows.push({ name: "New category", count: 5, impact: 100 });
+        sourceOrderNote.textContent = "Added a new category. Edit its values in the table.";
+        renderAll();
+      });
+
+      resetButton.addEventListener("click", function () {
+        state.rows = cloneRows(presets[state.scenario].rows);
+        sourceOrderNote.textContent = "Scenario data restored to its starting values.";
+        renderAll();
+      });
+
+      shuffleButton.addEventListener("click", function () {
+        for (var index = state.rows.length - 1; index > 0; index -= 1) {
+          var randomIndex = Math.floor(Math.random() * (index + 1));
+          var temporary = state.rows[index];
+          state.rows[index] = state.rows[randomIndex];
+          state.rows[randomIndex] = temporary;
+        }
+        sourceOrderNote.textContent = "Source rows were shuffled, but the Pareto chart stayed in descending order because sorting is part of the analysis.";
+        renderAll();
+      });
+
+      checkQuizButton.addEventListener("click", function () {
+        var questions = Array.prototype.slice.call(document.querySelectorAll(".quiz-q"));
+        var answered = 0;
+        var score = 0;
+
+        questions.forEach(function (question) {
+          var selected = question.querySelector("input[type='radio']:checked");
+          var feedback = question.querySelector(".quiz-feedback");
+          feedback.hidden = false;
+          feedback.classList.remove("correct", "incorrect");
+
+          if (!selected) {
+            feedback.textContent = "Choose an answer before checking the quiz.";
+            feedback.classList.add("incorrect");
+            return;
+          }
+
+          answered += 1;
+          if (selected.value === question.dataset.answer) {
+            score += 1;
+            feedback.textContent = feedback.dataset.correct;
+            feedback.classList.add("correct");
+          } else {
+            feedback.textContent = feedback.dataset.incorrect;
+            feedback.classList.add("incorrect");
+          }
+        });
+
+        quizScore.textContent = "Your score: " + score + " out of " + questions.length + ".";
+        if (answered === questions.length) {
+          document.dispatchEvent(new CustomEvent("upskill-quiz-result", {
+            detail: { score: score, total: questions.length }
+          }));
+        }
+      });
+
+      retryQuizButton.addEventListener("click", function () {
+        document.querySelectorAll(".quiz-q input[type='radio']").forEach(function (input) {
+          input.checked = false;
+        });
+        document.querySelectorAll(".quiz-feedback").forEach(function (feedback) {
+          feedback.hidden = true;
+          feedback.classList.remove("correct", "incorrect");
+          feedback.textContent = "";
+        });
+        quizScore.textContent = "Your score: 0 out of 5.";
+      });
+
+      renderAll();
+    }());
+  </script>
+</body>
+</html>

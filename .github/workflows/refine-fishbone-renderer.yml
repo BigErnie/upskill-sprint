@@ -1,0 +1,132 @@
+name: Refine fishbone renderer
+
+on:
+  push:
+    branches: [test]
+    paths:
+      - '.github/workflows/refine-fishbone-renderer.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  refine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: test
+          fetch-depth: 0
+
+      - name: Tighten text wrapping and overflow handling
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('lessons/root-cause-analysis-5-whys-fishbone.html')
+          source = path.read_text(encoding='utf-8')
+
+          old = '''      function wrapText(text, maxChars) {
+                var words = String(text || "").trim().split(/\\s+/);
+                var lines = [];
+                var current = "";
+                words.forEach(function (word) {
+                  var candidate = current ? current + " " + word : word;
+                  if (candidate.length > maxChars && current) {
+                    lines.push(current);
+                    current = word;
+                  } else {
+                    current = candidate;
+                  }
+                });
+                if (current) lines.push(current);
+                return lines.slice(0, 3);
+              }
+
+              function appendMultilineText(parent, x, y, text, className, anchor, maxChars) {
+          '''
+          new = '''      function wrapText(text, maxChars, maxLines) {
+                var words = String(text || "").trim().split(/\\s+/);
+                var lines = [];
+                var current = "";
+                words.forEach(function (word) {
+                  var candidate = current ? current + " " + word : word;
+                  if (candidate.length > maxChars && current) {
+                    lines.push(current);
+                    current = word;
+                  } else {
+                    current = candidate;
+                  }
+                });
+                if (current) lines.push(current);
+                return lines.slice(0, maxLines || 3);
+              }
+
+              function appendMultilineText(parent, x, y, text, className, anchor, maxChars, maxLines) {
+          '''
+          if source.count(old) != 1:
+              raise SystemExit(f'Expected one text-wrap function, found {source.count(old)}')
+          source = source.replace(old, new)
+
+          old = '        wrapText(text, maxChars || 22).forEach(function (line, index) {'
+          new = '        wrapText(text, maxChars || 22, maxLines).forEach(function (line, index) {'
+          if source.count(old) != 1:
+              raise SystemExit(f'Expected one wrapText call, found {source.count(old)}')
+          source = source.replace(old, new)
+
+          old = '''          "start",
+                    30
+                  );'''
+          new = '''          "start",
+                    30,
+                    2
+                  );'''
+          if source.count(old) != 1:
+              raise SystemExit(f'Expected one fishbone cause text call, found {source.count(old)}')
+          source = source.replace(old, new)
+
+          overflow = re.compile(r'''\n          if \(causes\.length > visibleLimit && selected && fishboneViewMode === "focused"\) \{.*?\n          \}''', re.S)
+          match = overflow.search(source)
+          if not match:
+              raise SystemExit('Focused overflow block not found')
+          source = source[:match.start()] + source[match.end():]
+
+          old = '          fishboneViewStatus.textContent = "Focused on " + selectedCategory + " · " + fishboneState[selectedCategory].length + " candidate cause" + (fishboneState[selectedCategory].length === 1 ? "" : "s") + ". Click another branch to inspect it.";'
+          new = '''          var selectedCount = fishboneState[selectedCategory].length;
+                    var visibleCount = Math.min(selectedCount, 4);
+                    fishboneViewStatus.textContent = "Focused on " + selectedCategory + " · showing " + visibleCount + " of " + selectedCount + " candidate cause" + (selectedCount === 1 ? "" : "s") + ". Click another branch to inspect it.";'''
+          if source.count(old) != 1:
+              raise SystemExit(f'Expected one focused status line, found {source.count(old)}')
+          source = source.replace(old, new)
+
+          path.write_text(source, encoding='utf-8')
+          PY
+
+      - name: Validate JavaScript and lesson contract
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+          source = Path('lessons/root-cause-analysis-5-whys-fishbone.html').read_text(encoding='utf-8')
+          blocks = re.findall(r'<script>(.*?)</script>', source, re.S)
+          if len(blocks) != 1:
+              raise SystemExit(f'Expected one inline script, found {len(blocks)}')
+          Path('/tmp/rca-inline.js').write_text(blocks[0], encoding='utf-8')
+          if source.count('class="quiz-q"') != 5:
+              raise SystemExit('Quiz contract changed')
+          if 'onclick=' in source:
+              raise SystemExit('Inline handler introduced')
+          if 'id="fishbone-focus-mode"' not in source or 'id="fishbone-overview-mode"' not in source:
+              raise SystemExit('Fishbone display controls missing')
+          PY
+          node --check /tmp/rca-inline.js
+
+      - name: Commit refinement and remove temporary workflow
+        run: |
+          rm -f .github/workflows/refine-fishbone-renderer.yml
+          git config user.name "upskillsprint-agent"
+          git config user.email "upskillsprint-agent@users.noreply.github.com"
+          git add -A
+          git commit -m "Refine fishbone cause text wrapping"
+          git push origin HEAD:test

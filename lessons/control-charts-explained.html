@@ -1,187 +1,1330 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- UPSKILLSPRINT_LESSON_META
+{
+  "title": "Control Charts, Explained",
+  "slug": "control-charts-explained",
+  "category": "Lean Six Sigma",
+  "category_slug": "lean-six-sigma",
+  "level": "Intermediate",
+  "estimated_minutes": 15,
+  "interactive": true,
+  "card_title": "Control Charts, Explained",
+  "card_description": "Separate real process shifts from noise with a live control chart simulator, the detection rules, and Excel & Minitab how-tos.",
+  "search_keywords": [
+    "control chart",
+    "control charts",
+    "spc",
+    "statistical process control",
+    "i-mr chart",
+    "xbar r",
+    "common cause",
+    "special cause",
+    "control limits",
+    "western electric rules",
+    "nelson rules",
+    "tampering",
+    "minitab",
+    "stability",
+    "in control"
+  ],
+  "suggested_github_path": "lessons/control-charts-explained.html"
+}
+-->
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- EDIT: Lesson metadata -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control Charts, Explained | UpSkill Sprint Consulting</title>
-<meta name="description" content="Spot real process shifts versus normal variation before they become defects.">
-<link rel="canonical" href="https://upskillsprint.com/lessons/control-charts-explained.html">
+<meta name="description" content="An interactive lesson on control charts: common vs special cause variation, control limits, the detection rules, I-MR charts, and how to build them in Excel and Minitab.">
+<link rel="canonical" href="https://upskillsprint.com/lessons/control-charts-explained">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Control Charts, Explained | UpSkill Sprint Consulting">
-<meta property="og:description" content="Spot real process shifts versus normal variation before they become defects.">
+<meta property="og:description" content="Separate real process shifts from noise: a live control chart simulator, the detection rules, and Excel & Minitab how-tos.">
 <meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
-<meta property="og:url" content="https://upskillsprint.com/lessons/control-charts-explained.html">
+<meta property="og:url" content="https://upskillsprint.com/lessons/control-charts-explained">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css">
-<link rel="stylesheet" href="../lessons-theme.css">
-  <script src="/theme.js"></script>
-  <script src="/site-sections.js"></script>
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/lessons-theme.css">
+
+<!-- EDIT: Lesson styles (single style block) -->
+<style>
+
+/* ============ Design tokens ============ */
+:root {
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #f5f7fa;
+  --card: #ffffff;
+  --tint: #f5f7fa;
+  --ink: #101828;
+  --ink-soft: #344054;
+  --muted: #667085;
+  --line: #e3e7ee;
+  --navy: #0f2a43;
+  --teal: #0e7490;
+  --teal-dark: #0a5a70;
+  --amber: #d97706;
+  --success: #2e8b57;
+  --warning: #b97a17;
+  --danger: #bf3b2b;
+  --info: #2f6fb0;
+  --shade-1: rgba(15, 139, 141, 0.42);
+  --shade-2: rgba(15, 139, 141, 0.22);
+  --shade-3: rgba(15, 139, 141, 0.10);
+  --focus-ring: 3px solid var(--amber);
+}
+html[data-theme="dark"] {
+  --paper: #0b1220;
+  --surface: #111c2d;
+  --surface-soft: #0f1a2b;
+  --card: #111c2d;
+  --tint: #0f1a2b;
+  --ink: #f4f7fb;
+  --ink-soft: #d2dbea;
+  --muted: #a9b6c8;
+  --line: #2b3b50;
+  --navy: #102a43;
+  --teal: #2bb7c9;
+  --teal-dark: #67d4df;
+  --amber: #f0c36a;
+  --success: #58c48a;
+  --warning: #e9a94a;
+  --danger: #e57368;
+  --info: #6ea3d8;
+  --shade-1: rgba(62, 196, 198, 0.45);
+  --shade-2: rgba(62, 196, 198, 0.24);
+  --shade-3: rgba(62, 196, 198, 0.11);
+}
+
+/* ============ Base ============ */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Work Sans', Arial, sans-serif;
+  line-height: 1.65;
+  font-size: 1.02rem;
+}
+h1, h2, h3, h4 { color: var(--ink); line-height: 1.25; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin: 0.4em 0; }
+h2 { font-size: clamp(1.45rem, 3vw, 1.85rem); margin-top: 0; border-bottom: 2px solid var(--amber); display: inline-block; padding-bottom: 0.15em; }
+h3 { font-size: 1.15rem; }
+p { margin: 0.7em 0; }
+a { color: var(--teal-dark); }
+code {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+  font-size: 0.92em;
+  color: var(--ink);
+}
+strong { color: var(--ink); }
+
+/* Visible focus for keyboard users */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, [role="switch"]:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--navy);
+  color: #fff;
+  padding: 0.6em 1em;
+  z-index: 100;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* ============ SITE INTEGRATION: Header ============ */
+header.site.lesson-sitebar { z-index: 50; }
+.lesson-sitebar .header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.lesson-sitebar .theme-control { flex-shrink: 0; }
+
+/* ============ Layout ============ */
+main#lesson-content { max-width: 980px; margin: 0 auto; padding: 1rem 1rem 4rem; }
+article.lesson-wrapper { display: block; }
+section { margin: 2.8rem 0; scroll-margin-top: 92px; }
+
+/* Lesson hero */
+.lesson-hero {
+  padding: 2.2rem clamp(1.15rem, 4vw, 2.7rem);
+  margin-top: 1.2rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--navy), var(--teal));
+  color: #fff;
+}
+.lesson-hero h1,
+.lesson-hero strong { color: #fff; }
+.lesson-meta-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.7rem 0; }
+.pill {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.24);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.pill.accent { background: #fff; color: var(--navy); border-color: #fff; }
+.lesson-lede { font-size: 1.12rem; color: #e0f2fe; max-width: 68ch; }
+.why-it-matters {
+  border-left: 4px solid var(--amber);
+  background: rgba(255,255,255,0.1);
+  padding: 0.8rem 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-top: 1rem;
+  color: #fff;
+}
+
+/* Table of contents */
+nav.lesson-toc {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1.7rem 0;
+  box-shadow: 0 4px 14px rgba(15,42,67,0.05);
+}
+nav.lesson-toc h2 { border: none; font-size: 1rem; margin: 0 0 0.4rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+nav.lesson-toc ol { margin: 0; padding-left: 1.2rem; columns: 2; column-gap: 2rem; }
+nav.lesson-toc li { margin: 0.25rem 0; break-inside: avoid; }
+nav.lesson-toc a { text-decoration: none; }
+nav.lesson-toc a:hover { text-decoration: underline; }
+@media (max-width: 620px) { nav.lesson-toc ol { columns: 1; } }
+
+/* Cards & panels */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+}
+.callout { border-left: 4px solid var(--info); }
+.callout.tip { border-left-color: var(--success); }
+.callout.warn { border-left-color: var(--warning); }
+
+/* Objectives */
+.objectives-list { padding-left: 1.3rem; }
+.objectives-list li { margin: 0.45rem 0; }
+.objectives-list li::marker { color: var(--teal); font-weight: 700; }
+
+/* Terminology & tables */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { border-collapse: collapse; width: 100%; min-width: 540px; background: var(--surface); }
+caption { text-align: left; color: var(--muted); font-size: 0.88rem; padding: 0.3rem 0; }
+th, td { border: 1px solid var(--line); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
+th { background: var(--navy); color: #fff; }
+tbody tr:nth-child(even) { background: var(--surface-soft); }
+
+/* ============ Formula display (CSS stacked fractions) ============ */
+.formula-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--teal);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+}
+.math {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  color: var(--ink);
+}
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 0.15em; }
+.frac .top { padding: 0 0.35em 0.1em; border-bottom: 1.5px solid var(--ink); }
+.frac .bottom { padding: 0.1em 0.35em 0; }
+.sup { font-size: 0.72em; vertical-align: super; }
+.sym-list { list-style: none; padding-left: 0; margin: 0.8rem 0 0; }
+.sym-list li { padding: 0.25rem 0; border-bottom: 1px dashed var(--line); }
+.sym-list li:last-child { border-bottom: none; }
+.sym { font-family: Georgia, serif; font-weight: 700; color: var(--teal-dark); padding-right: 0.4rem; }
+
+/* ============ SVG figures ============ */
+figure { margin: 1.4rem 0; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; }
+.fig-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0.8rem; }
+
+/* ============ Interactive controls ============ */
+.tool {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--teal);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+}
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.9rem 1.4rem; margin: 0.8rem 0; }
+.control label { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
+.control input[type="range"] { width: 100%; accent-color: var(--teal); min-height: 32px; }
+.control input[type="number"] {
+  width: 100%;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 1rem;
+}
+.value-readout { font-variant-numeric: tabular-nums; color: var(--teal-dark); font-weight: 700; }
+.btn {
+  appearance: none;
+  border: 1px solid var(--teal-dark);
+  background: var(--teal);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+html[data-theme="dark"] .btn { color: #07111e; }
+.btn.secondary { background: var(--surface-soft); color: var(--ink); border-color: var(--line); }
+html[data-theme="dark"] .btn.secondary { color: var(--ink); }
+.btn:hover { filter: brightness(1.05); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.8rem; }
+.result-box {
+  margin-top: 1rem;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+}
+.result-big { font-size: 1.35rem; font-weight: 700; color: var(--teal-dark); font-variant-numeric: tabular-nums; }
+.error-msg { color: var(--danger); font-weight: 600; margin-top: 0.6rem; }
+.method-note { font-size: 0.88rem; color: var(--muted); margin-top: 0.6rem; }
+
+/* Reveal panels */
+.reveal-panel { margin-top: 0.9rem; }
+.reveal-body {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  margin-top: 0.6rem;
+  background: var(--surface-soft);
+}
+[hidden] { display: none !important; }
+
+/* Mistake cards */
+.mistake { border-left: 4px solid var(--danger); background: var(--surface); border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin: 0.9rem 0; }
+.mistake h4 { margin: 0 0 0.3rem; }
+.tag { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; padding: 0.1rem 0.45rem; margin-left: 0.4rem; background: var(--surface-soft); border: 1px solid var(--line); color: var(--ink-soft); }
+
+/* ============ Quiz ============ */
+.quiz-q { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; margin: 1rem 0; }
+.quiz-q fieldset { border: none; margin: 0; padding: 0; }
+.quiz-q legend { font-weight: 700; padding: 0; margin-bottom: 0.5rem; }
+.quiz-option {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin: 0.3rem 0;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.quiz-option span { color: var(--ink); }
+.quiz-option:hover { background: var(--surface-soft); border-color: var(--teal); }
+.quiz-option:focus-within { border-color: var(--teal); box-shadow: 0 0 0 3px var(--shade-3); }
+.quiz-option input[type="radio"] {
+  margin-top: 0.25rem;
+  accent-color: var(--teal);
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+}
+html[data-theme="dark"] .quiz-option {
+  background: var(--surface-soft);
+  color: var(--ink);
+  border-color: var(--line);
+}
+html[data-theme="dark"] .quiz-option:hover,
+html[data-theme="dark"] .quiz-option:focus-within {
+  background: var(--surface);
+  border-color: var(--teal);
+}
+html[data-theme="dark"] .quiz-option span { color: var(--ink); }
+.quiz-q.correct { border-color: var(--success); box-shadow: inset 4px 0 0 var(--success); }
+.quiz-q.incorrect { border-color: var(--danger); box-shadow: inset 4px 0 0 var(--danger); }
+.quiz-feedback { margin-top: 0.6rem; padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.95rem; }
+.quiz-feedback.ok { background: var(--shade-3); border: 1px solid var(--success); }
+.quiz-feedback.no { background: var(--surface-soft); border: 1px solid var(--danger); }
+.quiz-status { font-weight: 700; }
+.quiz-status.ok { color: var(--success); }
+.quiz-status.no { color: var(--danger); }
+#quiz-score { font-size: 1.15rem; font-weight: 700; margin-top: 0.5rem; }
+
+/* Summary */
+.takeaways { padding-left: 1.3rem; }
+.takeaways li { margin: 0.45rem 0; }
+.remember {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+html[data-theme="dark"] .remember { background: var(--surface-soft); color: var(--ink); border: 1px solid var(--line); }
+
+/* Footer */
+footer.lesson-footer {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  padding: 1.2rem max(1rem, calc((100vw - 980px) / 2));
+  font-size: 0.9rem;
+}
+.footer-inner { display: flex; justify-content: space-between; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.footer-back { font-weight: 700; text-decoration: none; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Small screens */
+@media (max-width: 520px) {
+  .brand span { font-size: 0.9rem; }
+  .header-note { display: none; }
+  body { font-size: 0.98rem; }
+}
+
+/* ============ Responsive and print refinements ============ */
+.table-scroll { max-width: 100%; }
+@media (max-width: 700px) {
+  main#lesson-content { padding-inline: 0.8rem; }
+  .lesson-hero { border-radius: 10px; padding: 1.55rem 1rem; }
+  .lesson-meta-row { gap: 0.38rem; }
+  .pill { font-size: 0.77rem; }
+  .panel, .tool, .quiz-q { padding: 0.95rem; }
+  .formula-box { padding: 0.85rem; }
+  .math { font-size: 1.08rem; }
+  .btn-row { flex-direction: column; }
+  .btn-row .btn { width: 100%; }
+}
+@media (max-width: 480px) {
+  .table-scroll { margin-inline: -0.35rem; padding-inline: 0.35rem; }
+  table { min-width: 500px; }
+}
+@media print {
+  header.site.lesson-sitebar,
+  .skip-link,
+  .theme-control,
+  .btn-row,
+  #quiz-submit,
+  #quiz-reset,
+  footer.lesson-footer { display: none !important; }
+  body { background: #fff !important; color: #000 !important; font-size: 10.5pt; }
+  main#lesson-content { max-width: none; padding: 0; }
+  .lesson-hero { background: none !important; color: #000 !important; border: 1px solid #999; }
+  .lesson-hero h1, .lesson-hero strong, .lesson-hero .lesson-lede, .lesson-hero .why-it-matters { color: #000 !important; }
+  .panel, .tool, .formula-box, .quiz-q, .fig-panel, nav.lesson-toc { box-shadow: none !important; break-inside: avoid; }
+  a { color: #000 !important; text-decoration: none; }
+}
+
+/* ============ Lesson-specific: legacy-stylesheet overrides ============ */
+/* lessons-theme.css (legacy family) hardcodes light colours and hides
+   .quiz-feedback; these rules re-assert the token-based design so both
+   light and dark mode render correctly. */
+.lesson-wrapper .callout {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--info);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  margin: 1rem 0;
+}
+.lesson-wrapper .callout.tip { border-left-color: var(--success); }
+.lesson-wrapper .callout.warn { border-left-color: var(--warning); }
+.lesson-wrapper .quiz-feedback { display: block; }
+.lesson-wrapper .quiz-feedback[hidden] { display: none; }
+.lesson-wrapper .quiz-option { background: var(--surface); color: var(--ink); }
+
+/* ============ Lesson-specific: numbered steps ============ */
+.num-steps {
+  counter-reset: num-step;
+  list-style: none;
+  margin: 0.8rem 0;
+  padding: 0;
+}
+.num-steps li {
+  counter-increment: num-step;
+  position: relative;
+  padding-left: 2.5rem;
+  margin: 0.7rem 0;
+}
+.num-steps li::before {
+  content: counter(num-step);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+html[data-theme="dark"] .num-steps li::before { color: #0b1220; }
+
+
+
+/* ============ Lesson-specific: readouts & verdict (shared pattern) ============ */
+.cap-readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.7rem;
+  margin: 0.9rem 0 0.3rem;
+}
+.cap-readout {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  text-align: center;
+}
+.cap-readout .cap-label { font-size: 0.8rem; color: var(--muted); display: block; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; }
+.cap-readout .cap-value { font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.cap-verdict { font-weight: 700; margin-top: 0.6rem; }
+.cap-verdict.ok { color: var(--success); }
+.cap-verdict.warn { color: var(--warning); }
+.cap-verdict.no { color: var(--danger); }
+
+</style>
+
+<script src="/theme.js"></script>
+<script src="/site-sections.js"></script>
 </head>
-<body>
-  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
-  <header class="site">
-    <a href="../index.html" class="brand">
-      <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
-      <span>UpSkill Sprint Consulting</span>
-    </a>
-    <nav class="desktop-nav">
-      <a href="../start-here.html">Start Here</a>
-      <a href="../lessons.html" aria-current="page">Lessons</a>
-      <a href="../services.html">Services</a>
-      <a href="../request-topic.html">Request a Topic</a>
-      <a href="../about.html">About</a>
-      <a href="../faq.html">FAQ</a>
-      <a href="../contact.html">Contact</a>
-    </nav>
-    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1f26" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-    </label>
-    <a href="../lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
-  </header>
-  <nav class="mobile-nav">
-    <a href="../start-here.html">Start Here</a>
-    <a href="../lessons.html">Lessons</a>
-    <a href="../services.html">Services</a>
-    <a href="../request-topic.html">Request a Topic</a>
-    <a href="../about.html">About</a>
-    <a href="../faq.html">FAQ</a>
-    <a href="../contact.html">Contact</a>
+<body
+  data-lesson-page="true"
+  data-category="lean-six-sigma"
+  data-level="intermediate"
+  data-interactive="true"
+>
+<a class="skip-link" href="#lesson-content">Skip to lesson content</a>
+
+<!-- SITE INTEGRATION: Header -->
+<input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+<header class="site lesson-sitebar">
+  <a class="brand" href="/">
+    <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+    <span>UpSkill Sprint Consulting</span>
+  </a>
+  <nav class="desktop-nav" aria-label="Primary navigation">
+    <a href="/start-here">Start Here</a>
+    <a href="/lessons" aria-current="page">Lessons</a>
+    <a href="/engineering-tools">Engineering Tools</a>
+    <a href="/services">Services</a>
+    <a href="/request-topic">Request a Topic</a>
+    <a href="/about">About</a>
+    <a href="/faq">FAQ</a>
+    <a href="/contact">Contact</a>
   </nav>
+  <div class="header-actions">
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <div class="theme-control" aria-label="Colour theme">
+      <svg class="theme-icon theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+      <button type="button" class="theme-toggle" data-theme-toggle="true" role="switch" aria-checked="false" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="sr-only">Toggle dark and light mode</span></button>
+      <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </div>
+  </div>
+</header>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="/start-here">Start Here</a>
+  <a href="/lessons" aria-current="page">Lessons</a>
+  <a href="/engineering-tools">Engineering Tools</a>
+  <a href="/services">Services</a>
+  <a href="/request-topic">Request a Topic</a>
+  <a href="/about">About</a>
+  <a href="/faq">FAQ</a>
+  <a href="/contact">Contact</a>
+</nav>
 
-  <section class="section" style="padding-bottom:8px;">
-    <div class="wrap" style="max-width:760px;">
-      <p class="eyebrow">Intermediate &middot; 12 min read &middot; Minitab</p>
-      <h1 style="font-size:32px;margin:0 0 16px;">Control Charts, Explained</h1>
-      <p style="font-size:16px;line-height:1.65;color:var(--ink-soft);margin:0;"><strong>What you will learn:</strong> how to tell the difference between normal process variation and a real problem.</p>
-      <div class="badge-row">
-        <span class="badge badge-lss">Lean Six Sigma</span>
+
+<main id="lesson-content">
+<article class="lesson-wrapper">
+
+<!-- EDIT: Hero -->
+<div class="lesson-hero">
+  <p class="eyebrow">Lean Six Sigma &middot; Intermediate &middot; 15 min read</p>
+  <h1>Control Charts, Explained</h1>
+  <span class="pill accent">Lean Six Sigma</span>
+  <p class="lesson-lede">
+    Every process wiggles. The skill is knowing which wiggles are just noise &mdash; and which are the process telling you
+    something changed. A control chart is the tool that makes that call for you: it draws the boundaries of normal
+    variation, so real shifts stand out before they become defects.
+  </p>
+  <p class="why-it-matters"><strong>Why this matters at work:</strong> without a control chart, teams either overreact to
+    noise (adjusting a healthy process and making it worse) or underreact to real change (finding out from customer
+    complaints). Control charts are the workhorse of the DMAIC Control phase, the gateway to
+    capability analysis, and a guaranteed topic on the ASQ CSSBB and CQE exams.</p>
+</div>
+
+<nav class="lesson-toc" aria-label="Lesson contents">
+  <strong>In this lesson</strong>
+  <ul>
+    <li><a href="#learning-objectives">Learning objectives</a></li>
+    <li><a href="#key-concepts">Two kinds of variation</a></li>
+    <li><a href="#anatomy">Anatomy of a control chart</a></li>
+    <li><a href="#chart-simulator">Interactive: control chart simulator</a></li>
+    <li><a href="#detection-rules">The detection rules</a></li>
+    <li><a href="#chart-types">Choosing the right chart</a></li>
+    <li><a href="#procedure">How to build an I-MR chart</a></li>
+    <li><a href="#worked-example">Worked example</a></li>
+    <li><a href="#limits-vs-specs">Control limits are not spec limits</a></li>
+    <li><a href="#mistakes">Common mistakes</a></li>
+    <li><a href="#software">Statistics implementation: Excel &amp; Minitab</a></li>
+    <li><a href="#practice">Try it yourself</a></li>
+    <li><a href="#quiz">Check your understanding</a></li>
+    <li><a href="#summary">Final summary</a></li>
+  </ul>
+</nav>
+
+<!-- EDIT: Learning objectives -->
+<section id="learning-objectives" aria-labelledby="objectives-h">
+  <h2 id="objectives-h">By the end, you should be able to</h2>
+  <ul class="objectives-list">
+    <li><strong>Distinguish</strong> common-cause variation (noise) from special-cause variation (signal), and explain why each demands a different response.</li>
+    <li><strong>Read</strong> a control chart: centre line, control limits, and the classic out-of-control patterns.</li>
+    <li><strong>Compute</strong> I-MR control limits from data and build the chart in Excel and Minitab.</li>
+    <li><strong>Explain</strong> why control limits and specification limits are completely different things.</li>
+  </ul>
+</section>
+
+<!-- EDIT: Prerequisites -->
+<section id="prerequisites" aria-labelledby="prereq-h">
+  <h2 id="prereq-h">Before you start</h2>
+  <p>You&rsquo;ll get the most from this lesson after
+    <a href="/lessons/statistics/the-normal-distribution-meet-the-bell-curve">The Normal Distribution: Meet the Bell Curve</a> &mdash;
+    control limits are the &plusmn;3&sigma; idea applied over time. Its partner lesson,
+    <a href="/lessons/lean-six-sigma/process-capability-cp-and-cpk">Process Capability (C<sub>p</sub> &amp; C<sub>pk</sub>)</a>,
+    is the natural next step: capability asks &ldquo;does the process fit the spec?&rdquo;, while control charts ask
+    &ldquo;is the process staying itself?&rdquo; &mdash; and capability is only meaningful once this lesson&rsquo;s answer is yes.</p>
+</section>
+
+<!-- EDIT: Key concepts -->
+<section id="key-concepts" aria-labelledby="concepts-h">
+  <h2 id="concepts-h">Two kinds of variation</h2>
+  <div class="panel">
+    <h3>Common cause &mdash; the noise</h3>
+    <p>The everyday wiggle built into how the process works: tiny differences in material, temperature, timing, technique.
+      It&rsquo;s always present, it&rsquo;s stable, and it&rsquo;s predictable <em>as a band</em> even though individual points aren&rsquo;t.
+      Responding to individual common-cause wiggles is called <strong>tampering</strong> &mdash; and it adds variation.</p>
+  </div>
+  <div class="panel">
+    <h3>Special cause &mdash; the signal</h3>
+    <p>Something outside the usual system: a new material lot, a worn tool, a changed setting, a new operator&rsquo;s method.
+      Special causes are assignable &mdash; you can find them &mdash; and they&rsquo;re exactly what you <em>should</em> chase, quickly,
+      while the trail is fresh.</p>
+  </div>
+  <div class="callout tip">
+    <strong>One sentence to remember:</strong> react to <em>signals</em> by investigating the cause; react to <em>noise</em>
+    only by improving the whole system. Confusing the two is the most expensive mistake in process management.
+  </div>
+</section>
+
+<!-- EDIT: Anatomy -->
+<section id="anatomy" aria-labelledby="anatomy-h">
+  <h2 id="anatomy-h">Anatomy of a control chart</h2>
+  <p>A control chart is your measurement plotted in time order, with three horizontal lines:</p>
+  <ul class="objectives-list">
+    <li><strong>Centre line (CL)</strong> &mdash; the process average.</li>
+    <li><strong>Upper and lower control limits (UCL, LCL)</strong> &mdash; drawn at &plusmn;3&sigma; of the plotted statistic.
+      For a stable process, 99.73% of points fall between them, so a point outside is a genuine rarity &mdash; a signal, not noise.</li>
+  </ul>
+  <p>The limits are computed <strong>from the process&rsquo;s own data</strong> &mdash; they are the voice of the process.
+    Nobody chooses them, and that&rsquo;s the point: the chart defines &ldquo;normal for this process&rdquo; and then flags departures from it.</p>
+</section>
+
+<!-- EDIT: Interactive simulator -->
+<section id="chart-simulator" aria-labelledby="simulator-h">
+  <h2 id="simulator-h">Interactive: control chart simulator</h2>
+  <p>Below is an individuals chart for a stable process. Use the buttons to inject different kinds of trouble and watch
+    how the chart catches each one &mdash; flagged points turn red, and the status line names the rule that fired.</p>
+  <div class="tool" aria-label="Control chart simulator">
+    <div class="btn-row">
+      <button type="button" class="btn" id="sim-stable">Stable process</button>
+      <button type="button" class="btn secondary" id="sim-outlier">Inject an outlier</button>
+      <button type="button" class="btn secondary" id="sim-shift">Inject a shift</button>
+      <button type="button" class="btn secondary" id="sim-trend">Inject a trend</button>
+    </div>
+    <div class="fig-panel">
+      <svg id="sim-svg" viewBox="0 0 700 320" role="img" aria-label="Individuals control chart with centre line and control limits; out-of-control points are highlighted" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+        <line id="sim-ucl" x1="40" y1="0" x2="690" y2="0" stroke="var(--danger)" stroke-width="2" stroke-dasharray="7 5"></line>
+        <line id="sim-cl" x1="40" y1="0" x2="690" y2="0" stroke="var(--teal)" stroke-width="2"></line>
+        <line id="sim-lcl" x1="40" y1="0" x2="690" y2="0" stroke="var(--danger)" stroke-width="2" stroke-dasharray="7 5"></line>
+        <text id="sim-ucl-label" x="44" y="0" font-size="12.5" fill="var(--danger)" font-weight="700">UCL</text>
+        <text id="sim-cl-label" x="44" y="0" font-size="12.5" fill="var(--teal)" font-weight="700">CL</text>
+        <text id="sim-lcl-label" x="44" y="0" font-size="12.5" fill="var(--danger)" font-weight="700">LCL</text>
+        <polyline id="sim-line" points="" fill="none" stroke="var(--muted)" stroke-width="1.5"></polyline>
+        <g id="sim-points"></g>
+      </svg>
+    </div>
+    <p class="cap-verdict ok" id="sim-status" role="status" aria-live="polite">Stable: all points inside the limits with no suspicious patterns. This is what &ldquo;in control&rdquo; looks like &mdash; leave it alone.</p>
+  </div>
+</section>
+
+<!-- EDIT: Detection rules -->
+<section id="detection-rules" aria-labelledby="rules-h">
+  <h2 id="rules-h">The detection rules</h2>
+  <p>A point beyond a limit is the loudest signal, but not the only one. Patterns <em>inside</em> the limits can also be
+    too unlikely to be chance. The three rules this lesson&rsquo;s simulator uses are the classics:</p>
+  <div class="table-scroll">
+    <table>
+      <caption>Core out-of-control tests (from the Western Electric / Nelson rule sets)</caption>
+      <thead>
+        <tr><th scope="col">Rule</th><th scope="col">Pattern</th><th scope="col">What it usually means</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Rule 1</td><td>Any point beyond the &plusmn;3&sigma; control limits</td><td>A sudden special cause: a mistake, a broken tool, a bad lot</td></tr>
+        <tr><td>Rule 2</td><td>Eight (or more) consecutive points on the same side of the centre line</td><td>The process mean has shifted to a new level</td></tr>
+        <tr><td>Rule 3</td><td>Six (or more) consecutive points steadily rising or falling</td><td>A drift: tool wear, temperature creep, gradual contamination</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Software (and the full rule sets) add more patterns, but these three catch the overwhelming majority of real-world
+    signals &mdash; and they&rsquo;re the ones exams ask about.</p>
+</section>
+
+<!-- EDIT: Chart types -->
+<section id="chart-types" aria-labelledby="types-h">
+  <h2 id="types-h">Choosing the right chart</h2>
+  <p>The chart type follows from two questions: <em>what kind of data?</em> and <em>how is it collected?</em></p>
+  <div class="table-scroll">
+    <table>
+      <caption>The common control charts and when to use them</caption>
+      <thead>
+        <tr><th scope="col">Chart</th><th scope="col">Data type</th><th scope="col">Use when</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>I-MR (individuals &amp; moving range)</td><td>Continuous, one value at a time</td><td>Slow or one-at-a-time processes: daily yields, batch results, monthly metrics</td></tr>
+        <tr><td>X&#772;-R (average &amp; range)</td><td>Continuous, small subgroups</td><td>Samples of 2&ndash;8 taken together, e.g. five parts each hour</td></tr>
+        <tr><td>X&#772;-S (average &amp; standard deviation)</td><td>Continuous, larger subgroups</td><td>Subgroups of 9 or more, where S beats R as a spread estimate</td></tr>
+        <tr><td>p / np</td><td>Attribute: defective units (yes/no)</td><td>Fraction (p) or count (np) of defective items per sample</td></tr>
+        <tr><td>c / u</td><td>Attribute: defect counts</td><td>Number of defects per unit &mdash; c for constant sample size, u for varying</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>This lesson works with the <strong>I-MR chart</strong> throughout: it&rsquo;s the most broadly useful, and every other
+    variables chart is the same idea with subgroups.</p>
+</section>
+
+<!-- EDIT: Procedure -->
+<section id="procedure" aria-labelledby="procedure-h">
+  <h2 id="procedure-h">How to build an I-MR chart</h2>
+  <ol class="num-steps">
+    <li><strong>Collect 20&ndash;25 individual measurements</strong> in time order from routine operation &mdash; no cherry-picking good days.</li>
+    <li><strong>Compute the moving ranges:</strong> MR<sub>i</sub> = |x<sub>i</sub> &minus; x<sub>i&minus;1</sub>|, the gap between each point and the previous one.</li>
+    <li><strong>Average both:</strong> the process mean x&#772; and the mean moving range M&#772;R.</li>
+    <li><strong>Compute the limits</strong> for the individuals chart:
+      <strong>UCL = x&#772; + 2.66 &times; M&#772;R</strong> and <strong>LCL = x&#772; &minus; 2.66 &times; M&#772;R</strong>
+      (2.66 converts the average moving range into a 3&sigma; distance). The MR chart&rsquo;s own upper limit is 3.267 &times; M&#772;R.</li>
+    <li><strong>Plot, then apply the rules.</strong> If signals appear, find and fix their causes and recompute the limits from clean data.</li>
+    <li><strong>Extend the limits forward</strong> and judge every new point against them &mdash; the chart is now a live alarm system, not a report.</li>
+  </ol>
+</section>
+
+<!-- EDIT: Worked example -->
+<section id="worked-example" aria-labelledby="example-h">
+  <h2 id="example-h">Worked example: daily fill weights</h2>
+  <div class="panel">
+    <p>The coffee-bag line from the capability lesson weighs one bag each morning. Twenty-five days give a mean of
+      <strong>x&#772; = 500.4&nbsp;g</strong> and an average moving range of <strong>M&#772;R = 1.2&nbsp;g</strong>.</p>
+    <ol class="num-steps">
+      <li><strong>UCL</strong> = 500.4 + 2.66 &times; 1.2 = 500.4 + 3.19 = <strong>503.59&nbsp;g</strong>.</li>
+      <li><strong>LCL</strong> = 500.4 &minus; 3.19 = <strong>497.21&nbsp;g</strong>.</li>
+      <li>On day 26 the bag weighs <strong>504.1&nbsp;g</strong> &mdash; above the UCL. Rule 1 fires.</li>
+      <li>Investigation the same morning finds a new operator zeroed the filler against the wrong tare weight. Ten minutes to fix &mdash;
+        instead of a week of overfilled bags discovered at month-end stock-take.</li>
+    </ol>
+    <p><strong>Notice:</strong> 504.1&nbsp;g is still <em>inside the specification</em> (506&nbsp;g). The chart caught the
+      change while product was still good &mdash; that early warning is the entire value of control charting.</p>
+  </div>
+</section>
+
+<!-- EDIT: Limits vs specs -->
+<section id="limits-vs-specs" aria-labelledby="lvs-h">
+  <h2 id="lvs-h">Control limits are not spec limits</h2>
+  <div class="table-scroll">
+    <table>
+      <caption>The distinction exams (and auditors) love to test</caption>
+      <thead>
+        <tr><th scope="col"></th><th scope="col">Control limits</th><th scope="col">Specification limits</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Set by</strong></td><td>The process&rsquo;s own data (&plusmn;3&sigma;)</td><td>The customer, drawing, or regulation</td></tr>
+        <tr><td><strong>Question answered</strong></td><td>&ldquo;Has the process changed?&rdquo;</td><td>&ldquo;Is this unit acceptable?&rdquo;</td></tr>
+        <tr><td><strong>Voice of&hellip;</strong></td><td>The process</td><td>The customer</td></tr>
+        <tr><td><strong>Drawn on the chart?</strong></td><td>Yes &mdash; they define the chart</td><td>No &mdash; specs belong in capability analysis</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip">
+    <strong>The two tools together:</strong> a control chart proves the process is <em>stable</em>; a
+    <a href="/lessons/lean-six-sigma/process-capability-cp-and-cpk">capability study</a> then asks whether that stable
+    process is <em>good enough</em> for the spec. In control &ne; capable &mdash; a process can be perfectly stable at
+    producing 10% scrap.
+  </div>
+</section>
+
+<!-- EDIT: Common mistakes -->
+<section id="mistakes" aria-labelledby="mistakes-h">
+  <h2 id="mistakes-h">Common mistakes</h2>
+  <div class="callout warn">
+    <strong>Drawing spec limits on the control chart.</strong> It invites judging stability by customer limits &mdash; two
+    unrelated questions. Keep specs in the capability analysis where they belong.
+  </div>
+  <div class="callout warn">
+    <strong>Tampering.</strong> Adjusting the process after every point that isn&rsquo;t exactly on target treats noise as
+    signal &mdash; and provably <em>increases</em> variation. If no rule fires, hands off.
+  </div>
+  <div class="callout warn">
+    <strong>Recalculating limits with every new batch of data.</strong> Limits are a fixed yardstick from a known-stable
+    period. Recompute them only after a deliberate, verified process change &mdash; otherwise the chart slowly learns to
+    accept degradation.
+  </div>
+  <div class="callout warn">
+    <strong>Declaring victory at &ldquo;in control.&rdquo;</strong> Stability means <em>consistent</em>, not <em>good</em>.
+    The follow-up question is always capability.
+  </div>
+</section>
+
+<!-- EDIT: Statistics Implementation (Excel & Minitab) -->
+<section id="software" aria-labelledby="software-h">
+  <h2 id="software-h">Statistics implementation: Excel and Minitab</h2>
+  <p>Software should confirm and speed up what you now understand &mdash; not replace the thinking.</p>
+
+  <h3>Excel functions</h3>
+  <p>Excel has no built-in control chart, but an I-MR chart is a few formulas plus a line chart:</p>
+  <div class="table-scroll">
+    <table>
+      <caption>Excel functions for I-MR control charts (Formulas &rsaquo; More Functions &rsaquo; Statistical)</caption>
+      <thead>
+        <tr><th scope="col">Function</th><th scope="col">Syntax</th><th scope="col">Purpose</th><th scope="col">When to use</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>AVERAGE</code></td>
+          <td><code>=AVERAGE(range)</code></td>
+          <td>Centre line x&#772; and the mean moving range M&#772;R</td>
+          <td>Always &mdash; both averages the limits are built from</td>
+        </tr>
+        <tr>
+          <td><code>ABS</code></td>
+          <td><code>=ABS(A3-A2)</code></td>
+          <td>Each moving range |x<sub>i</sub> &minus; x<sub>i&minus;1</sub>|</td>
+          <td>Filled down beside the data to create the MR column</td>
+        </tr>
+        <tr>
+          <td><code>STDEV.S</code></td>
+          <td><code>=STDEV.S(range)</code></td>
+          <td>Overall sample standard deviation</td>
+          <td>Sanity checks only &mdash; chart limits use M&#772;R &times; 2.66, <em>not</em> 3 &times; STDEV.S, because the moving range estimates short-term variation</td>
+        </tr>
+        <tr>
+          <td><code>MAX</code> / <code>MIN</code></td>
+          <td><code>=MAX(range)</code>, <code>=MIN(range)</code></td>
+          <td>Quick scan of extremes</td>
+          <td>Spotting Rule-1 candidates before charting</td>
+        </tr>
+        <tr>
+          <td><code>COUNTIF</code></td>
+          <td><code>=COUNTIF(range,"&gt;"&amp;UCL)</code></td>
+          <td>Count of points beyond a limit</td>
+          <td>Flagging Rule-1 violations automatically</td>
+        </tr>
+        <tr>
+          <td><code>IF</code></td>
+          <td><code>=IF(OR(A2&gt;UCL,A2&lt;LCL),A2,NA())</code></td>
+          <td>A helper column of only the violating points</td>
+          <td>Plotting signals as a separate red series on the chart</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Excel use cases</h3>
+  <div class="panel">
+    <p>With 25 measurements in <code>A2:A26</code>:</p>
+    <ol class="num-steps">
+      <li><strong>Moving ranges:</strong> in <code>B3</code> enter <code>=ABS(A3-A2)</code> and fill down to <code>B26</code>.</li>
+      <li><strong>Averages:</strong> <code>=AVERAGE(A2:A26)</code> in <code>E1</code> (x&#772;), <code>=AVERAGE(B3:B26)</code> in <code>E2</code> (M&#772;R).</li>
+      <li><strong>Limits:</strong> <code>=E1+2.66*E2</code> (UCL) and <code>=E1-2.66*E2</code> (LCL) &mdash; the fill-weight data gives 503.59 and 497.21.</li>
+      <li><strong>The chart:</strong> plot column A as a line; add three flat series for CL/UCL/LCL; add the IF helper column as a
+        markers-only series in red. New rows extend the chart into a live monitor.</li>
+    </ol>
+  </div>
+
+  <h3>Minitab navigation</h3>
+  <div class="table-scroll">
+    <table>
+      <caption>Minitab menu paths for control charts</caption>
+      <thead>
+        <tr><th scope="col">Menu path</th><th scope="col">What it gives you</th><th scope="col">When to choose it</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Stat &rsaquo; Control Charts &rsaquo; Variables Charts for Individuals &rsaquo; I-MR</strong></td>
+          <td>The individuals and moving-range pair used throughout this lesson</td>
+          <td>Your default for one-at-a-time continuous data</td>
+        </tr>
+        <tr>
+          <td><strong>Stat &rsaquo; Control Charts &rsaquo; Variables Charts for Subgroups &rsaquo; Xbar-R</strong></td>
+          <td>Averages and ranges of small subgroups</td>
+          <td>Samples of 2&ndash;8 collected together (switch to Xbar-S for 9+)</td>
+        </tr>
+        <tr>
+          <td><strong>Stat &rsaquo; Control Charts &rsaquo; Attributes Charts &rsaquo; P / NP / C / U</strong></td>
+          <td>Charts for defectives and defect counts</td>
+          <td>Pass/fail or count data instead of measurements</td>
+        </tr>
+        <tr>
+          <td><strong>Stat &rsaquo; Quality Tools &rsaquo; Capability Sixpack &rsaquo; Normal</strong></td>
+          <td>Control charts, normality check, and capability in one view</td>
+          <td>The stability-then-capability workflow in a single command</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>In the I-MR dialog, enter the data column, then open <strong>I-MR Options &rsaquo; Tests</strong> and select which
+    detection rules to apply &mdash; &ldquo;Perform all tests for special causes&rdquo; enables the full Nelson set. Minitab
+    marks each violating point with the number of the test that fired.</p>
+
+  <h3>Exam tips (ASQ CSSBB / CQE)</h3>
+  <div class="callout tip">
+    <ul>
+      <li><strong>Know the I-MR constants cold:</strong> UCL/LCL = x&#772; &plusmn; <strong>2.66</strong> M&#772;R, and the MR chart&rsquo;s
+        UCL = <strong>3.267</strong> M&#772;R. For X&#772;-R charts, limits use A<sub>2</sub>, D<sub>3</sub>, D<sub>4</sub> from the
+        constants table the exam provides &mdash; practice reading that table quickly.</li>
+      <li><strong>Control vs spec limits</strong> is a near-guaranteed question: control limits come from the process (&plusmn;3&sigma;),
+        spec limits from the customer, and specs never appear on a control chart.</li>
+      <li><strong>&ldquo;In control&rdquo; &ne; &ldquo;capable&rdquo;</strong> &mdash; and stability is the prerequisite for
+        capability analysis, not the other way round.</li>
+      <li><strong>Chart selection follows data type:</strong> continuous &rarr; I-MR / X&#772;-R / X&#772;-S by subgroup size;
+        defectives (yes/no) &rarr; p or np; defect counts &rarr; c or u. Expect at least one &ldquo;which chart?&rdquo; scenario.</li>
+      <li><strong>Tampering (over-adjustment)</strong> increases variation &mdash; Deming&rsquo;s funnel experiment is the
+        classic reference if the question names it.</li>
+      <li><strong>Rules:</strong> memorise the big three &mdash; 1 beyond 3&sigma;, 8 in a row one side, 6 trending &mdash; and
+        recognise that patterns inside the limits can still be signals.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- EDIT: Practice activity -->
+<section id="practice" aria-labelledby="practice-h">
+  <h2 id="practice-h">Try it yourself</h2>
+  <div class="callout tip">
+    <p><strong>A lab logs one purity result per batch.</strong> Twenty-four batches give
+      <strong>x&#772; = 50.0</strong> and <strong>M&#772;R = 1.2</strong>. Compute the individuals-chart limits to two decimal places.</p>
+    <div class="controls">
+      <div class="control">
+        <label for="practice-ucl">Your UCL:</label>
+        <input type="number" id="practice-ucl" step="0.01" inputmode="decimal" aria-describedby="practice-h">
+      </div>
+      <div class="control">
+        <label for="practice-lcl">Your LCL:</label>
+        <input type="number" id="practice-lcl" step="0.01" inputmode="decimal" aria-describedby="practice-h">
       </div>
     </div>
-  </section>
-
-  <section class="section" style="padding:24px 0 0;">
-    <div class="wrap" style="max-width:760px;">
-      <h2 style="font-size:20px;margin:0 0 14px;">By the end, you should be able to</h2>
-      <div class="card">
-        <ul class="lesson-objectives">
-          <li>Read a basic control chart.</li>
-          <li>Explain the difference between normal variation and a real shift.</li>
-          <li>Decide when a data point deserves investigation.</li>
-        </ul>
-      </div>
+    <div class="btn-row">
+      <button type="button" class="btn" id="practice-check">Check my answers</button>
+      <button type="button" class="btn secondary" id="practice-reveal">Show the working</button>
     </div>
-  </section>
-
-  <section class="section" style="padding:32px 0 0;">
-    <div class="wrap" style="max-width:760px;">
-      <h2 style="font-size:20px;margin:0 0 12px;">Why this matters at work</h2>
-      <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);">Every process has some natural up-and-down. Reacting to every wiggle wastes time; ignoring a real shift lets defects slip through. Control charts give you a clear line between "normal" and "something changed."</p>
-
-      <h2 style="font-size:20px;margin:32px 0 12px;">Simple explanation</h2>
-      <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);">Plot your data over time against a center line and control limits.</p>
-      <div class="callout callout-formula">
-        <strong>Center line:</strong> the process average.<br>
-        <strong>Control limits:</strong> roughly &plusmn;3 standard deviations from the average.<br>
-        Points inside the limits, moving randomly, are normal variation. A point outside the limits &mdash; or a clear trend &mdash; signals a real change worth investigating.
-      </div>
-
-      <h2 style="font-size:20px;margin:32px 0 12px;">Real workplace example</h2>
-      <div class="example-box">
-        <h3 style="font-size:17px;margin:0 0 10px;">A call center's handle time jumps</h3>
-        <p style="font-size:15px;line-height:1.65;color:var(--ink-soft);margin:0 0 16px;">Average handle time normally bounces between 4 and 6 minutes every day.</p>
-        <ol class="step-list">
-          <li><div><strong>Normal day:</strong> handle time sits between 4&ndash;6 minutes &mdash; inside the control limits, no action needed.</div></li>
-          <li><div><strong>Signal:</strong> handle time jumps to 9 minutes for three days straight, above the upper control limit.</div></li>
-          <li><div><strong>Investigate:</strong> something changed &mdash; new system, new staff, new process &mdash; and it deserves a look.</div></li>
-        </ol>
-      </div>
-
-      <h2 style="font-size:20px;margin:32px 0 12px;">Common mistake</h2>
-      <div class="callout callout-warning">
-        <strong>Watch out for:</strong> reacting to every single up-and-down point as if it were a real problem. That's normal variation &mdash; chasing it wastes time and can make the process worse.
-      </div>
-
-      <h2 style="font-size:20px;margin:32px 0 12px;">Try it yourself</h2>
-      <div class="callout callout-practice">
-        Take 15&ndash;20 recent data points for something you track (handle time, defect count, response time). Plot them on a simple line chart with the average marked. Do any points look like outliers, or is it all normal noise?
-      </div>
+    <p id="practice-feedback" role="status" aria-live="polite"></p>
+    <div id="practice-working" hidden>
+      <ol class="num-steps">
+        <li>2.66 &times; M&#772;R = 2.66 &times; 1.2 = 3.19.</li>
+        <li><strong>UCL</strong> = 50.0 + 3.19 = <strong>53.19</strong>.</li>
+        <li><strong>LCL</strong> = 50.0 &minus; 3.19 = <strong>46.81</strong>.</li>
+        <li>A batch at 53.5 would fire Rule 1 &mdash; investigate before the next batch runs.</li>
+      </ol>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="section" style="padding:32px 0 0;">
-    <div class="wrap" style="max-width:760px;">
-      <h2 style="font-size:20px;margin:0 0 14px;">Check your understanding</h2>
-      <div class="quiz">
-        <h3>A single data point falls just slightly below yesterday's value, still well within the control limits. What should you do?</h3>
-        <button class="quiz-option" onclick="checkQuiz(this, false)">Launch an investigation immediately</button>
-        <button class="quiz-option" onclick="checkQuiz(this, true)">Nothing — that's normal variation</button>
-        <button class="quiz-option" onclick="checkQuiz(this, false)">Recalculate the control limits</button>
-        <div class="quiz-feedback"></div>
-      </div>
-    </div>
-  </section>
+<!-- EDIT: Quiz -->
+<section id="quiz" aria-labelledby="quiz-h">
+  <h2 id="quiz-h">Check your understanding</h2>
+  <p>Five questions. Pick an answer for each, then press <strong>Check my answers</strong>.</p>
 
-  <section class="section tint" style="margin-top:48px;">
-    <div class="wrap" style="max-width:760px;">
-      <h2 style="font-size:20px;margin:0 0 12px;">Next lesson</h2>
-      <a href="../lessons.html#lean-six-sigma" style="font-family:'Source Serif 4',serif;font-size:19px;font-weight:600;">Back to the Lean Six Sigma lessons &rarr;</a>
+  <form id="quiz-form">
+    <div class="quiz-q" data-q="q1" data-answer="c">
+      <fieldset>
+        <legend>1. A healthy process wiggles between its control limits with no pattern. The right response is to&hellip;</legend>
+        <label class="quiz-option"><input type="radio" name="q1" value="a"><span>Adjust the process after each point to keep it exactly on target</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="b"><span>Investigate every point above the centre line</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="c"><span>Leave it alone &mdash; reacting to common-cause noise (tampering) adds variation</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="d"><span>Widen the control limits so fewer points look worrying</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
     </div>
-  </section>
 
-  <footer class="site">
-    <div class="wrap">
-      <div class="footer-grid">
-        <div>
-          <div class="brand" style="margin-bottom:14px;">
-            <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
-            <span>UpSkill Sprint Consulting</span>
-          </div>
-          <p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, process improvement, and business problem-solving.</p>
-        </div>
-        <div>
-          <h4>Quick Links</h4>
-          <a href="../index.html">Home</a>
-          <a href="../start-here.html">Start Here</a>
-          <a href="../lessons.html">Lessons</a>
-          <a href="../services.html">Services</a>
-          <a href="../request-topic.html">Request a Topic</a>
-          <a href="../about.html">About</a>
-          <a href="../faq.html">FAQ</a>
-          <a href="../contact.html">Contact</a>
-        </div>
-        <div>
-          <h4>Topics</h4>
-          <a href="../lessons.html#data-analytics">Data Analytics</a>
-          <a href="../lessons.html#quality-engineering">Quality Engineering</a>
-          <a href="../lessons.html#lean-six-sigma">Lean Six Sigma</a>
-          <a href="../lessons.html#power-bi-excel-sql">Power BI, Excel &amp; SQL</a>
-          <a href="../lessons.html#business-decision-making">Business Decision-Making</a>
-          <a href="../lessons.html#ai-for-work">AI for Work</a>
-        </div>
-        <div>
-          <h4>Contact</h4>
-          <a href="mailto:skillsprintconsulting@gmail.com">skillsprintconsulting@gmail.com</a>
-          <p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p>
-        </div>
-      </div>
+    <div class="quiz-q" data-q="q2" data-answer="b">
+      <fieldset>
+        <legend>2. Nine consecutive points sit above the centre line, all inside the limits. What does the chart say?</legend>
+        <label class="quiz-option"><input type="radio" name="q2" value="a"><span>Nothing &mdash; only points beyond the limits are signals</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="b"><span>The process mean has likely shifted &mdash; a run this long on one side is too unlikely to be chance</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="c"><span>The control limits were computed wrong</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="d"><span>The data cannot be normally distributed</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
     </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 UpSkill Sprint Consulting</span>
-      <div><a href="../privacy.html">Privacy Policy</a><a href="../terms.html">Terms of Use</a></div>
+
+    <div class="quiz-q" data-q="q3" data-answer="a">
+      <fieldset>
+        <legend>3. For an I-MR chart with x&#772; = 20.0 and M&#772;R = 1.5, the UCL for individuals is&hellip;</legend>
+        <label class="quiz-option"><input type="radio" name="q3" value="a"><span>20.0 + 2.66 &times; 1.5 = 23.99</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="b"><span>20.0 + 3 &times; 1.5 = 24.50</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="c"><span>20.0 + 1.5 = 21.50</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="d"><span>Whatever the customer&rsquo;s USL is</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
     </div>
-  </footer>
-  <script>
-    function checkQuiz(button, isCorrect) {
-      const quiz = button.closest('.quiz');
-      const feedback = quiz.querySelector('.quiz-feedback');
-      feedback.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
-      feedback.textContent = isCorrect
-        ? 'Correct. That matches the logic from the lesson.'
-        : 'Not quite — review the section above and try again.';
+
+    <div class="quiz-q" data-q="q4" data-answer="d">
+      <fieldset>
+        <legend>4. Control limits differ from specification limits because control limits&hellip;</legend>
+        <label class="quiz-option"><input type="radio" name="q4" value="a"><span>Are set tighter than specs as a safety margin</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="b"><span>Are negotiated with the customer</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="c"><span>Define which units are acceptable to ship</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="d"><span>Come from the process&rsquo;s own data and answer &ldquo;has the process changed?&rdquo;, not &ldquo;is this unit acceptable?&rdquo;</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="quiz-q" data-q="q5" data-answer="b">
+      <fieldset>
+        <legend>5. A process is in control. Does that mean it meets the customer&rsquo;s specification?</legend>
+        <label class="quiz-option"><input type="radio" name="q5" value="a"><span>Yes &mdash; in control means defect-free</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="b"><span>Not necessarily &mdash; stability means consistent, not good; a capability study answers the spec question</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="c"><span>Yes, provided the chart uses all the detection rules</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="d"><span>No &mdash; in-control processes never meet specifications</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="quiz-check">Check my answers</button>
+      <button type="button" class="btn secondary" id="quiz-reset">Try again</button>
+    </div>
+    <p id="quiz-score" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<!-- EDIT: Summary -->
+<section id="summary" aria-labelledby="summary-h">
+  <h2 id="summary-h">Final summary</h2>
+  <ul class="objectives-list">
+    <li><strong>Common cause</strong> is the built-in noise; <strong>special cause</strong> is an assignable change. Each demands the opposite response.</li>
+    <li>A control chart plots data in time order against <strong>CL and &plusmn;3&sigma; control limits</strong> computed from the process itself.</li>
+    <li>The big three rules: <strong>beyond a limit, 8 one side, 6 trending</strong> &mdash; patterns inside the limits can be signals too.</li>
+    <li>I-MR limits: <strong>x&#772; &plusmn; 2.66 &times; M&#772;R</strong>; chart choice follows data type and subgrouping.</li>
+    <li><strong>Control limits are the voice of the process; spec limits the voice of the customer</strong> &mdash; never draw specs on the chart.</li>
+    <li><strong>In control &ne; capable:</strong> stability first, then a capability study.</li>
+  </ul>
+  <div class="remember">
+    <strong>If you remember one thing:</strong> the chart&rsquo;s job is to tell you <em>when to act and when to leave the
+    process alone</em> &mdash; and doing either at the wrong time makes things worse.
+  </div>
+</section>
+
+<!-- EDIT: References -->
+<section id="references" aria-labelledby="references-h">
+  <h2 id="references-h">References &amp; further reading</h2>
+  <ul>
+    <li>NIST/SEMATECH e-Handbook of Statistical Methods &mdash; Univariate and Multivariate Control Charts:
+      <a href="https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc3.htm" rel="noopener">itl.nist.gov/div898/handbook</a></li>
+    <li>ASQ Quality Resources &mdash; Control Chart:
+      <a href="https://asq.org/quality-resources/control-chart" rel="noopener">asq.org/quality-resources/control-chart</a></li>
+    <li>Montgomery, D. C., <em>Introduction to Statistical Quality Control</em> &mdash; the standard reference on SPC and the control chart constants.</li>
+  </ul>
+</section>
+
+</article>
+</main>
+
+<footer class="lesson-footer">
+  <div class="footer-inner">
+    <a class="footer-back" href="/lessons#lean-six-sigma">Back to Lean Six Sigma</a>
+    <span>&copy; UpSkill Sprint Consulting &middot; Lean Six Sigma lesson library</span>
+  </div>
+</footer>
+
+<!-- EDIT: Lesson JavaScript (single script block, IIFE, no globals) -->
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Simulator ---------- */
+
+  var CL = 50, SIGMA = 1.2;
+  var UCL = CL + 3 * SIGMA, LCL = CL - 3 * SIGMA;
+  var SVG = { left: 40, right: 690, top: 30, bottom: 300, yMin: CL - 5 * SIGMA, yMax: CL + 5 * SIGMA };
+  var POINTS = 25;
+
+  /* Deterministic pseudo-random stream (LCG) so scenarios always render the same. */
+  function makeRandom(seed) {
+    var state = seed;
+    return function () {
+      state = (state * 1664525 + 1013904223) % 4294967296;
+      return state / 4294967296;
+    };
+  }
+  function gaussian(random) {
+    var u = Math.max(random(), 1e-9);
+    var v = Math.max(random(), 1e-9);
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+
+  function baseSeries(seed) {
+    var random = makeRandom(seed);
+    var values = [];
+    for (var i = 0; i < POINTS; i++) values.push(CL + 0.85 * SIGMA * gaussian(random));
+    return values;
+  }
+
+  function scenario(kind) {
+    var values = baseSeries(20260717);
+    if (kind === "outlier") values[16] = CL + 3.8 * SIGMA;
+    if (kind === "shift") for (var i = 15; i < POINTS; i++) values[i] = CL + 1.6 * SIGMA + 0.5 * SIGMA * gaussian(makeRandom(99 + i));
+    if (kind === "trend") for (var j = 17; j < POINTS; j++) values[j] = values[16] + (j - 16) * 0.55 * SIGMA;
+    return values;
+  }
+
+  /* ---------- Rule detection ---------- */
+
+  function detectSignals(values) {
+    var flagged = values.map(function () { return false; });
+    var rules = [];
+
+    values.forEach(function (value, i) {
+      if (value > UCL || value < LCL) { flagged[i] = true; if (rules.indexOf(1) === -1) rules.push(1); }
+    });
+
+    for (var i = 7; i < values.length; i++) {
+      var slice = values.slice(i - 7, i + 1);
+      var above = slice.every(function (v) { return v > CL; });
+      var below = slice.every(function (v) { return v < CL; });
+      if (above || below) {
+        for (var k = i - 7; k <= i; k++) flagged[k] = true;
+        if (rules.indexOf(2) === -1) rules.push(2);
+      }
     }
-  </script>
-<script src="/contrast-fix.js"></script>
+
+    for (var j = 5; j < values.length; j++) {
+      var rising = true, falling = true;
+      for (var m = j - 4; m <= j; m++) {
+        if (values[m] <= values[m - 1]) rising = false;
+        if (values[m] >= values[m - 1]) falling = false;
+      }
+      if (rising || falling) {
+        for (var n = j - 5; n <= j; n++) flagged[n] = true;
+        if (rules.indexOf(3) === -1) rules.push(3);
+      }
+    }
+    return { flagged: flagged, rules: rules.sort() };
+  }
+
+  /* ---------- Rendering ---------- */
+
+  function toY(value) {
+    return SVG.bottom - (value - SVG.yMin) / (SVG.yMax - SVG.yMin) * (SVG.bottom - SVG.top);
+  }
+  function toX(index) {
+    return SVG.left + 14 + index * (SVG.right - SVG.left - 24) / (POINTS - 1);
+  }
+
+  var statusEl = document.getElementById("sim-status");
+  var pointsGroup = document.getElementById("sim-points");
+  var lineEl = document.getElementById("sim-line");
+
+  var RULE_TEXT = {
+    1: "Rule 1 (point beyond a 3\u03c3 limit) \u2014 a sudden special cause; investigate that point's circumstances now",
+    2: "Rule 2 (8+ consecutive points one side of the centre line) \u2014 the mean has shifted to a new level",
+    3: "Rule 3 (6+ points steadily trending) \u2014 a drift such as tool wear or temperature creep"
+  };
+
+  function render(kind) {
+    ["ucl", "cl", "lcl"].forEach(function (key) {
+      var value = key === "ucl" ? UCL : key === "cl" ? CL : LCL;
+      var y = toY(value);
+      var line = document.getElementById("sim-" + key);
+      line.setAttribute("y1", y);
+      line.setAttribute("y2", y);
+      document.getElementById("sim-" + key + "-label").setAttribute("y", y - 6);
+    });
+
+    var values = scenario(kind);
+    var result = detectSignals(values);
+
+    lineEl.setAttribute("points", values.map(function (v, i) { return toX(i) + "," + toY(v); }).join(" "));
+
+    pointsGroup.textContent = "";
+    values.forEach(function (value, i) {
+      var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("cx", toX(i));
+      circle.setAttribute("cy", toY(value));
+      circle.setAttribute("r", result.flagged[i] ? 6 : 4);
+      circle.setAttribute("fill", result.flagged[i] ? "var(--danger)" : "var(--teal)");
+      if (result.flagged[i]) circle.setAttribute("data-flagged", "true");
+      pointsGroup.appendChild(circle);
+    });
+
+    if (result.rules.length === 0) {
+      statusEl.className = "cap-verdict ok";
+      statusEl.textContent = "Stable: all points inside the limits with no suspicious patterns. This is what \u201cin control\u201d looks like \u2014 leave it alone.";
+    } else {
+      statusEl.className = "cap-verdict no";
+      statusEl.textContent = "Signal detected \u2014 " + result.rules.map(function (r) { return RULE_TEXT[r]; }).join(". Also: ") + ".";
+    }
+  }
+
+  document.getElementById("sim-stable").addEventListener("click", function () { render("stable"); });
+  document.getElementById("sim-outlier").addEventListener("click", function () { render("outlier"); });
+  document.getElementById("sim-shift").addEventListener("click", function () { render("shift"); });
+  document.getElementById("sim-trend").addEventListener("click", function () { render("trend"); });
+
+  render("stable");
+
+  /* ---------- Practice ---------- */
+
+  var PRACTICE = { ucl: 53.19, lcl: 46.81, tolerance: 0.02 };
+  var practiceUcl = document.getElementById("practice-ucl");
+  var practiceLcl = document.getElementById("practice-lcl");
+  var practiceFeedback = document.getElementById("practice-feedback");
+
+  document.getElementById("practice-check").addEventListener("click", function () {
+    var ucl = parseFloat(practiceUcl.value);
+    var lcl = parseFloat(practiceLcl.value);
+    if (isNaN(ucl) || isNaN(lcl)) {
+      practiceFeedback.textContent = "Enter a value for both limits first.";
+      practiceFeedback.className = "quiz-status no";
+      return;
+    }
+    var uclRight = Math.abs(ucl - PRACTICE.ucl) <= PRACTICE.tolerance;
+    var lclRight = Math.abs(lcl - PRACTICE.lcl) <= PRACTICE.tolerance;
+    if (uclRight && lclRight) {
+      practiceFeedback.textContent = "Both correct \u2014 UCL 53.19 and LCL 46.81. The chart is ready to monitor the next batch.";
+      practiceFeedback.className = "quiz-status ok";
+    } else {
+      practiceFeedback.textContent = (uclRight ? "UCL is right. " : "") + (lclRight ? "LCL is right. " : "") +
+        "Remember: x\u0304 \u00b1 2.66 \u00d7 M\u0304R \u2014 the multiplier is 2.66, not 3.";
+      practiceFeedback.className = "quiz-status no";
+    }
+  });
+
+  document.getElementById("practice-reveal").addEventListener("click", function () {
+    var working = document.getElementById("practice-working");
+    working.hidden = !working.hidden;
+  });
+
+  /* ---------- Quiz ---------- */
+
+  var EXPLANATIONS = {
+    q1: "With no signals, the wiggle is common cause. Adjusting anyway is tampering \u2014 Deming showed it adds variation.",
+    q2: "That's Rule 2: a run of 8+ on one side is far too unlikely under a stable mean \u2014 the level has shifted, even with every point inside the limits.",
+    q3: "I-MR limits use the moving-range estimate: x\u0304 \u00b1 2.66 \u00d7 M\u0304R = 20.0 + 3.99 = 23.99.",
+    q4: "Control limits are computed from process data and detect change; spec limits come from the customer and judge units. Different questions, different tools.",
+    q5: "Stability means the process is consistently itself \u2014 which could be consistently out of spec. Capability analysis answers the spec question.",
+  };
+
+  var quizQuestions = Array.prototype.slice.call(document.querySelectorAll(".quiz-q"));
+  var quizScore = document.getElementById("quiz-score");
+
+  document.getElementById("quiz-check").addEventListener("click", function () {
+    var score = 0;
+    var answered = 0;
+    quizQuestions.forEach(function (question) {
+      var name = question.getAttribute("data-q");
+      var correct = question.getAttribute("data-answer");
+      var chosen = question.querySelector("input[name=\"" + name + "\"]:checked");
+      var feedback = question.querySelector("[data-feedback]");
+      question.classList.remove("correct", "incorrect");
+      if (!chosen) {
+        feedback.hidden = false;
+        feedback.className = "quiz-feedback no";
+        feedback.textContent = "Pick an answer for this one.";
+        return;
+      }
+      answered++;
+      var isRight = chosen.value === correct;
+      if (isRight) score++;
+      question.classList.add(isRight ? "correct" : "incorrect");
+      feedback.hidden = false;
+      feedback.className = "quiz-feedback " + (isRight ? "ok" : "no");
+      feedback.textContent = (isRight ? "Correct. " : "Not quite. ") + EXPLANATIONS[name];
+    });
+
+    if (answered < quizQuestions.length) {
+      quizScore.className = "quiz-status no";
+      quizScore.textContent = "You've answered " + answered + " of " + quizQuestions.length + " \u2014 finish the rest, then check again.";
+      return;
+    }
+
+    quizScore.className = "quiz-status " + (score >= 4 ? "ok" : "no");
+    quizScore.textContent = "Your score: " + score + " out of " + quizQuestions.length + ". " +
+      (score === 5 ? "Fully in control \u2014 no signals anywhere." :
+       score >= 4 ? "Strong \u2014 one wobble inside the limits." :
+       score >= 3 ? "A shift detected \u2014 revisit the rules and the limits-vs-specs table." :
+       "Out of control \u2014 re-run the simulator section, then try again.");
+
+    /* Site progress tracking (see lesson contract): report the result explicitly. */
+    document.dispatchEvent(new CustomEvent("upskill-quiz-result", {
+      detail: { score: score, total: quizQuestions.length }
+    }));
+  });
+
+  document.getElementById("quiz-reset").addEventListener("click", function () {
+    quizQuestions.forEach(function (question) {
+      question.classList.remove("correct", "incorrect");
+      var feedback = question.querySelector("[data-feedback]");
+      feedback.hidden = true;
+      feedback.textContent = "";
+      Array.prototype.forEach.call(question.querySelectorAll("input[type=radio]"), function (radio) {
+        radio.checked = false;
+      });
+    });
+    quizScore.textContent = "";
+    quizScore.className = "";
+  });
+})();
+</script>
 </body>
 </html>

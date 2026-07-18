@@ -1,186 +1,1204 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- UPSKILLSPRINT_LESSON_META
+{
+  "title": "What Is Lean Six Sigma?",
+  "slug": "what-is-lean-six-sigma",
+  "category": "Lean Six Sigma",
+  "category_slug": "lean-six-sigma",
+  "level": "Beginner",
+  "estimated_minutes": 12,
+  "interactive": true,
+  "card_title": "What Is Lean Six Sigma?",
+  "card_description": "A plain-language, interactive introduction: the eight wastes, DMAIC, sigma levels, and belts.",
+  "search_keywords": [
+    "lean six sigma",
+    "what is lean six sigma",
+    "dmaic",
+    "eight wastes",
+    "downtime",
+    "waste",
+    "variation",
+    "kaizen",
+    "gemba",
+    "belts",
+    "green belt",
+    "black belt",
+    "dpmo",
+    "sigma level",
+    "continuous improvement"
+  ],
+  "suggested_github_path": "lessons/what-is-lean-six-sigma.html"
+}
+-->
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- EDIT: Lesson metadata -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>What Is Lean Six Sigma? | UpSkill Sprint Consulting</title>
-<meta name="description" content="A plain-language introduction to reducing waste, variation, and recurring workplace problems.">
-<link rel="canonical" href="https://upskillsprint.com/lessons/what-is-lean-six-sigma.html">
+<meta name="description" content="A plain-language, interactive introduction to Lean Six Sigma: what Lean and Six Sigma each target, the eight wastes, the DMAIC roadmap, sigma levels, and belt roles.">
+<link rel="canonical" href="https://upskillsprint.com/lessons/what-is-lean-six-sigma">
 <meta property="og:type" content="article">
 <meta property="og:title" content="What Is Lean Six Sigma? | UpSkill Sprint Consulting">
-<meta property="og:description" content="A plain-language introduction to reducing waste, variation, and recurring workplace problems.">
+<meta property="og:description" content="A plain-language, interactive introduction to Lean Six Sigma: the eight wastes, DMAIC, sigma levels, and belts.">
 <meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
-<meta property="og:url" content="https://upskillsprint.com/lessons/what-is-lean-six-sigma.html">
+<meta property="og:url" content="https://upskillsprint.com/lessons/what-is-lean-six-sigma">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../style.css">
-<link rel="stylesheet" href="../lessons-theme.css">
-  <script src="/theme.js"></script>
-  <script src="/site-sections.js"></script>
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/lessons-theme.css">
+
+<!-- EDIT: Lesson styles (single style block) -->
+<style>
+
+/* ============ Design tokens ============ */
+:root {
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #f5f7fa;
+  --card: #ffffff;
+  --tint: #f5f7fa;
+  --ink: #101828;
+  --ink-soft: #344054;
+  --muted: #667085;
+  --line: #e3e7ee;
+  --navy: #0f2a43;
+  --teal: #0e7490;
+  --teal-dark: #0a5a70;
+  --amber: #d97706;
+  --success: #2e8b57;
+  --warning: #b97a17;
+  --danger: #bf3b2b;
+  --info: #2f6fb0;
+  --shade-1: rgba(15, 139, 141, 0.42);
+  --shade-2: rgba(15, 139, 141, 0.22);
+  --shade-3: rgba(15, 139, 141, 0.10);
+  --focus-ring: 3px solid var(--amber);
+}
+html[data-theme="dark"] {
+  --paper: #0b1220;
+  --surface: #111c2d;
+  --surface-soft: #0f1a2b;
+  --card: #111c2d;
+  --tint: #0f1a2b;
+  --ink: #f4f7fb;
+  --ink-soft: #d2dbea;
+  --muted: #a9b6c8;
+  --line: #2b3b50;
+  --navy: #102a43;
+  --teal: #2bb7c9;
+  --teal-dark: #67d4df;
+  --amber: #f0c36a;
+  --success: #58c48a;
+  --warning: #e9a94a;
+  --danger: #e57368;
+  --info: #6ea3d8;
+  --shade-1: rgba(62, 196, 198, 0.45);
+  --shade-2: rgba(62, 196, 198, 0.24);
+  --shade-3: rgba(62, 196, 198, 0.11);
+}
+
+/* ============ Base ============ */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Work Sans', Arial, sans-serif;
+  line-height: 1.65;
+  font-size: 1.02rem;
+}
+h1, h2, h3, h4 { color: var(--ink); line-height: 1.25; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin: 0.4em 0; }
+h2 { font-size: clamp(1.45rem, 3vw, 1.85rem); margin-top: 0; border-bottom: 2px solid var(--amber); display: inline-block; padding-bottom: 0.15em; }
+h3 { font-size: 1.15rem; }
+p { margin: 0.7em 0; }
+a { color: var(--teal-dark); }
+code {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+  font-size: 0.92em;
+  color: var(--ink);
+}
+strong { color: var(--ink); }
+
+/* Visible focus for keyboard users */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, [role="switch"]:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--navy);
+  color: #fff;
+  padding: 0.6em 1em;
+  z-index: 100;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* ============ SITE INTEGRATION: Header ============ */
+header.site.lesson-sitebar { z-index: 50; }
+.lesson-sitebar .header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.lesson-sitebar .theme-control { flex-shrink: 0; }
+
+/* ============ Layout ============ */
+main#lesson-content { max-width: 980px; margin: 0 auto; padding: 1rem 1rem 4rem; }
+article.lesson-wrapper { display: block; }
+section { margin: 2.8rem 0; scroll-margin-top: 92px; }
+
+/* Lesson hero */
+.lesson-hero {
+  padding: 2.2rem clamp(1.15rem, 4vw, 2.7rem);
+  margin-top: 1.2rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--navy), var(--teal));
+  color: #fff;
+}
+.lesson-hero h1,
+.lesson-hero strong { color: #fff; }
+.lesson-meta-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.7rem 0; }
+.pill {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.24);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.pill.accent { background: #fff; color: var(--navy); border-color: #fff; }
+.lesson-lede { font-size: 1.12rem; color: #e0f2fe; max-width: 68ch; }
+.why-it-matters {
+  border-left: 4px solid var(--amber);
+  background: rgba(255,255,255,0.1);
+  padding: 0.8rem 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-top: 1rem;
+  color: #fff;
+}
+
+/* Table of contents */
+nav.lesson-toc {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1.7rem 0;
+  box-shadow: 0 4px 14px rgba(15,42,67,0.05);
+}
+nav.lesson-toc h2 { border: none; font-size: 1rem; margin: 0 0 0.4rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+nav.lesson-toc ol { margin: 0; padding-left: 1.2rem; columns: 2; column-gap: 2rem; }
+nav.lesson-toc li { margin: 0.25rem 0; break-inside: avoid; }
+nav.lesson-toc a { text-decoration: none; }
+nav.lesson-toc a:hover { text-decoration: underline; }
+@media (max-width: 620px) { nav.lesson-toc ol { columns: 1; } }
+
+/* Cards & panels */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+}
+.callout { border-left: 4px solid var(--info); }
+.callout.tip { border-left-color: var(--success); }
+.callout.warn { border-left-color: var(--warning); }
+
+/* Objectives */
+.objectives-list { padding-left: 1.3rem; }
+.objectives-list li { margin: 0.45rem 0; }
+.objectives-list li::marker { color: var(--teal); font-weight: 700; }
+
+/* Terminology & tables */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { border-collapse: collapse; width: 100%; min-width: 540px; background: var(--surface); }
+caption { text-align: left; color: var(--muted); font-size: 0.88rem; padding: 0.3rem 0; }
+th, td { border: 1px solid var(--line); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
+th { background: var(--navy); color: #fff; }
+tbody tr:nth-child(even) { background: var(--surface-soft); }
+
+/* ============ Formula display (CSS stacked fractions) ============ */
+.formula-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--teal);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+}
+.math {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  color: var(--ink);
+}
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 0.15em; }
+.frac .top { padding: 0 0.35em 0.1em; border-bottom: 1.5px solid var(--ink); }
+.frac .bottom { padding: 0.1em 0.35em 0; }
+.sup { font-size: 0.72em; vertical-align: super; }
+.sym-list { list-style: none; padding-left: 0; margin: 0.8rem 0 0; }
+.sym-list li { padding: 0.25rem 0; border-bottom: 1px dashed var(--line); }
+.sym-list li:last-child { border-bottom: none; }
+.sym { font-family: Georgia, serif; font-weight: 700; color: var(--teal-dark); padding-right: 0.4rem; }
+
+/* ============ SVG figures ============ */
+figure { margin: 1.4rem 0; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; }
+.fig-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0.8rem; }
+
+/* ============ Interactive controls ============ */
+.tool {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--teal);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+}
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.9rem 1.4rem; margin: 0.8rem 0; }
+.control label { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
+.control input[type="range"] { width: 100%; accent-color: var(--teal); min-height: 32px; }
+.control input[type="number"] {
+  width: 100%;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 1rem;
+}
+.value-readout { font-variant-numeric: tabular-nums; color: var(--teal-dark); font-weight: 700; }
+.btn {
+  appearance: none;
+  border: 1px solid var(--teal-dark);
+  background: var(--teal);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+html[data-theme="dark"] .btn { color: #07111e; }
+.btn.secondary { background: var(--surface-soft); color: var(--ink); border-color: var(--line); }
+html[data-theme="dark"] .btn.secondary { color: var(--ink); }
+.btn:hover { filter: brightness(1.05); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.8rem; }
+.result-box {
+  margin-top: 1rem;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+}
+.result-big { font-size: 1.35rem; font-weight: 700; color: var(--teal-dark); font-variant-numeric: tabular-nums; }
+.error-msg { color: var(--danger); font-weight: 600; margin-top: 0.6rem; }
+.method-note { font-size: 0.88rem; color: var(--muted); margin-top: 0.6rem; }
+
+/* Reveal panels */
+.reveal-panel { margin-top: 0.9rem; }
+.reveal-body {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  margin-top: 0.6rem;
+  background: var(--surface-soft);
+}
+[hidden] { display: none !important; }
+
+/* Mistake cards */
+.mistake { border-left: 4px solid var(--danger); background: var(--surface); border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin: 0.9rem 0; }
+.mistake h4 { margin: 0 0 0.3rem; }
+.tag { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; padding: 0.1rem 0.45rem; margin-left: 0.4rem; background: var(--surface-soft); border: 1px solid var(--line); color: var(--ink-soft); }
+
+/* ============ Quiz ============ */
+.quiz-q { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; margin: 1rem 0; }
+.quiz-q fieldset { border: none; margin: 0; padding: 0; }
+.quiz-q legend { font-weight: 700; padding: 0; margin-bottom: 0.5rem; }
+.quiz-option {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin: 0.3rem 0;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.quiz-option span { color: var(--ink); }
+.quiz-option:hover { background: var(--surface-soft); border-color: var(--teal); }
+.quiz-option:focus-within { border-color: var(--teal); box-shadow: 0 0 0 3px var(--shade-3); }
+.quiz-option input[type="radio"] {
+  margin-top: 0.25rem;
+  accent-color: var(--teal);
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+}
+html[data-theme="dark"] .quiz-option {
+  background: var(--surface-soft);
+  color: var(--ink);
+  border-color: var(--line);
+}
+html[data-theme="dark"] .quiz-option:hover,
+html[data-theme="dark"] .quiz-option:focus-within {
+  background: var(--surface);
+  border-color: var(--teal);
+}
+html[data-theme="dark"] .quiz-option span { color: var(--ink); }
+.quiz-q.correct { border-color: var(--success); box-shadow: inset 4px 0 0 var(--success); }
+.quiz-q.incorrect { border-color: var(--danger); box-shadow: inset 4px 0 0 var(--danger); }
+.quiz-feedback { margin-top: 0.6rem; padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.95rem; }
+.quiz-feedback.ok { background: var(--shade-3); border: 1px solid var(--success); }
+.quiz-feedback.no { background: var(--surface-soft); border: 1px solid var(--danger); }
+.quiz-status { font-weight: 700; }
+.quiz-status.ok { color: var(--success); }
+.quiz-status.no { color: var(--danger); }
+#quiz-score { font-size: 1.15rem; font-weight: 700; margin-top: 0.5rem; }
+
+/* Summary */
+.takeaways { padding-left: 1.3rem; }
+.takeaways li { margin: 0.45rem 0; }
+.remember {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+html[data-theme="dark"] .remember { background: var(--surface-soft); color: var(--ink); border: 1px solid var(--line); }
+
+/* Footer */
+footer.lesson-footer {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  padding: 1.2rem max(1rem, calc((100vw - 980px) / 2));
+  font-size: 0.9rem;
+}
+.footer-inner { display: flex; justify-content: space-between; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.footer-back { font-weight: 700; text-decoration: none; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Small screens */
+@media (max-width: 520px) {
+  .brand span { font-size: 0.9rem; }
+  .header-note { display: none; }
+  body { font-size: 0.98rem; }
+}
+
+/* ============ Responsive and print refinements ============ */
+.table-scroll { max-width: 100%; }
+@media (max-width: 700px) {
+  main#lesson-content { padding-inline: 0.8rem; }
+  .lesson-hero { border-radius: 10px; padding: 1.55rem 1rem; }
+  .lesson-meta-row { gap: 0.38rem; }
+  .pill { font-size: 0.77rem; }
+  .panel, .tool, .quiz-q { padding: 0.95rem; }
+  .formula-box { padding: 0.85rem; }
+  .math { font-size: 1.08rem; }
+  .btn-row { flex-direction: column; }
+  .btn-row .btn { width: 100%; }
+}
+@media (max-width: 480px) {
+  .table-scroll { margin-inline: -0.35rem; padding-inline: 0.35rem; }
+  table { min-width: 500px; }
+}
+@media print {
+  header.site.lesson-sitebar,
+  .skip-link,
+  .theme-control,
+  .btn-row,
+  #quiz-submit,
+  #quiz-reset,
+  footer.lesson-footer { display: none !important; }
+  body { background: #fff !important; color: #000 !important; font-size: 10.5pt; }
+  main#lesson-content { max-width: none; padding: 0; }
+  .lesson-hero { background: none !important; color: #000 !important; border: 1px solid #999; }
+  .lesson-hero h1, .lesson-hero strong, .lesson-hero .lesson-lede, .lesson-hero .why-it-matters { color: #000 !important; }
+  .panel, .tool, .formula-box, .quiz-q, .fig-panel, nav.lesson-toc { box-shadow: none !important; break-inside: avoid; }
+  a { color: #000 !important; text-decoration: none; }
+}
+
+/* ============ Lesson-specific: legacy-stylesheet overrides ============ */
+/* lessons-theme.css (legacy family) hardcodes light colours and hides
+   .quiz-feedback; these rules re-assert the token-based design so both
+   light and dark mode render correctly. */
+.lesson-wrapper .callout {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--info);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  margin: 1rem 0;
+}
+.lesson-wrapper .callout.tip { border-left-color: var(--success); }
+.lesson-wrapper .callout.warn { border-left-color: var(--warning); }
+.lesson-wrapper .quiz-feedback { display: block; }
+.lesson-wrapper .quiz-feedback[hidden] { display: none; }
+.lesson-wrapper .quiz-option { background: var(--surface); color: var(--ink); }
+
+/* ============ Lesson-specific: numbered steps ============ */
+.num-steps {
+  counter-reset: num-step;
+  list-style: none;
+  margin: 0.8rem 0;
+  padding: 0;
+}
+.num-steps li {
+  counter-increment: num-step;
+  position: relative;
+  padding-left: 2.5rem;
+  margin: 0.7rem 0;
+}
+.num-steps li::before {
+  content: counter(num-step);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+html[data-theme="dark"] .num-steps li::before { color: #0b1220; }
+
+
+
+/* ============ Lesson-specific: readouts & verdict (shared pattern) ============ */
+.cap-readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.7rem;
+  margin: 0.9rem 0 0.3rem;
+}
+.cap-readout {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  text-align: center;
+}
+.cap-readout .cap-label { font-size: 0.8rem; color: var(--muted); display: block; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; }
+.cap-readout .cap-value { font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.cap-verdict { font-weight: 700; margin-top: 0.6rem; }
+.cap-verdict.ok { color: var(--success); }
+.cap-verdict.warn { color: var(--warning); }
+.cap-verdict.no { color: var(--danger); }
+
+/* ============ Lesson-specific: eight wastes explorer ============ */
+.waste-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.waste-btn {
+  padding: 0.7rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.waste-btn:hover { border-color: var(--teal); }
+.waste-btn[aria-pressed="true"] {
+  border-color: var(--teal);
+  background: var(--shade-3);
+  font-weight: 600;
+}
+.waste-btn strong { color: var(--teal); }
+.waste-example { color: var(--muted); font-size: 0.95rem; margin: 0.35rem 0 0; }
+
+</style>
+
+<script src="/theme.js"></script>
+<script src="/site-sections.js"></script>
 </head>
-<body>
-  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
-  <header class="site">
-    <a href="../index.html" class="brand">
-      <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
-      <span>UpSkill Sprint Consulting</span>
-    </a>
-    <nav class="desktop-nav">
-      <a href="../start-here.html">Start Here</a>
-      <a href="../lessons.html" aria-current="page">Lessons</a>
-      <a href="../services.html">Services</a>
-      <a href="../request-topic.html">Request a Topic</a>
-      <a href="../about.html">About</a>
-      <a href="../faq.html">FAQ</a>
-      <a href="../contact.html">Contact</a>
-    </nav>
-    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1c1f26" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-    </label>
-    <a href="../lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
-  </header>
-  <nav class="mobile-nav">
-    <a href="../start-here.html">Start Here</a>
-    <a href="../lessons.html">Lessons</a>
-    <a href="../services.html">Services</a>
-    <a href="../request-topic.html">Request a Topic</a>
-    <a href="../about.html">About</a>
-    <a href="../faq.html">FAQ</a>
-    <a href="../contact.html">Contact</a>
+<body
+  data-lesson-page="true"
+  data-category="lean-six-sigma"
+  data-level="beginner"
+  data-interactive="true"
+>
+<a class="skip-link" href="#lesson-content">Skip to lesson content</a>
+
+<!-- SITE INTEGRATION: Header -->
+<input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+<header class="site lesson-sitebar">
+  <a class="brand" href="/">
+    <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+    <span>UpSkill Sprint Consulting</span>
+  </a>
+  <nav class="desktop-nav" aria-label="Primary navigation">
+    <a href="/start-here">Start Here</a>
+    <a href="/lessons" aria-current="page">Lessons</a>
+    <a href="/engineering-tools">Engineering Tools</a>
+    <a href="/services">Services</a>
+    <a href="/request-topic">Request a Topic</a>
+    <a href="/about">About</a>
+    <a href="/faq">FAQ</a>
+    <a href="/contact">Contact</a>
   </nav>
+  <div class="header-actions">
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <div class="theme-control" aria-label="Colour theme">
+      <svg class="theme-icon theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+      <button type="button" class="theme-toggle" data-theme-toggle="true" role="switch" aria-checked="false" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="sr-only">Toggle dark and light mode</span></button>
+      <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </div>
+  </div>
+</header>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="/start-here">Start Here</a>
+  <a href="/lessons" aria-current="page">Lessons</a>
+  <a href="/engineering-tools">Engineering Tools</a>
+  <a href="/services">Services</a>
+  <a href="/request-topic">Request a Topic</a>
+  <a href="/about">About</a>
+  <a href="/faq">FAQ</a>
+  <a href="/contact">Contact</a>
+</nav>
 
-  <section class="section" style="padding-bottom:8px;">
-    <div class="wrap" style="max-width:760px;">
-      <p class="eyebrow">Beginner &middot; 10 min read</p>
-      <h1 style="font-size:32px;margin:0 0 16px;">What Is Lean Six Sigma?</h1>
-      <p style="font-size:16px;line-height:1.65;color:var(--ink-soft);margin:0;"><strong>What you will learn:</strong> the core idea behind Lean Six Sigma and why it matters at work.</p>
-      <div class="badge-row">
-        <span class="badge badge-lss">Lean Six Sigma</span>
+
+<main id="lesson-content">
+<article class="lesson-wrapper">
+
+<!-- EDIT: Hero -->
+<div class="lesson-hero">
+  <p class="eyebrow">Lean Six Sigma &middot; Beginner &middot; 12 min read</p>
+  <h1>What Is Lean Six Sigma?</h1>
+  <span class="pill accent">Lean Six Sigma</span>
+  <p class="lesson-lede">
+    Lean Six Sigma is a practical method for making work faster and more consistent: <strong>Lean</strong> removes the
+    waste that slows work down, and <strong>Six Sigma</strong> removes the variation that makes results unpredictable.
+    Together they give teams a shared, evidence-based way to fix the problems that keep coming back.
+  </p>
+  <p class="why-it-matters"><strong>Why this matters at work:</strong> every workplace has processes that are slower,
+    messier, or less reliable than anyone wants &mdash; and most fixes don&rsquo;t stick because they treat symptoms.
+    Lean Six Sigma is the most widely used improvement framework in industry, and its vocabulary (DMAIC, the eight wastes,
+    belts, sigma levels) shows up in job postings, project charters, and the ASQ certification exams.</p>
+</div>
+
+<nav class="lesson-toc" aria-label="Lesson contents">
+  <strong>In this lesson</strong>
+  <ul>
+    <li><a href="#learning-objectives">Learning objectives</a></li>
+    <li><a href="#key-concepts">Lean and Six Sigma: two halves of one idea</a></li>
+    <li><a href="#terminology">Terminology</a></li>
+    <li><a href="#wastes-explorer">Interactive: the eight wastes</a></li>
+    <li><a href="#sigma-explorer">Interactive: what &ldquo;sigma level&rdquo; means</a></li>
+    <li><a href="#dmaic">DMAIC: the improvement roadmap</a></li>
+    <li><a href="#worked-example">Worked example</a></li>
+    <li><a href="#belts">Belts: who does what</a></li>
+    <li><a href="#mistakes">Common misconceptions</a></li>
+    <li><a href="#next-steps">Where the statistics comes in</a></li>
+    <li><a href="#practice">Try it yourself</a></li>
+    <li><a href="#quiz">Check your understanding</a></li>
+    <li><a href="#summary">Final summary</a></li>
+  </ul>
+</nav>
+
+<!-- EDIT: Learning objectives -->
+<section id="learning-objectives" aria-labelledby="objectives-h">
+  <h2 id="objectives-h">By the end, you should be able to</h2>
+  <ul class="objectives-list">
+    <li><strong>Explain</strong> what Lean targets (waste), what Six Sigma targets (variation), and why they work best together.</li>
+    <li><strong>Name</strong> the eight wastes and spot them in an office or factory process.</li>
+    <li><strong>Walk through</strong> the five DMAIC phases and say what each one produces.</li>
+    <li><strong>Describe</strong> what a sigma level means and what the belt levels are for.</li>
+  </ul>
+</section>
+
+<!-- EDIT: Key concepts -->
+<section id="key-concepts" aria-labelledby="concepts-h">
+  <h2 id="concepts-h">Lean and Six Sigma: two halves of one idea</h2>
+  <div class="panel">
+    <h3>Lean &mdash; the war on waste</h3>
+    <p>Born on the Toyota production line, Lean asks one question of every step in a process: <em>does the customer
+      actually value this?</em> Anything else &mdash; waiting, rework, extra motion, piles of half-finished work &mdash; is
+      <strong>waste</strong>, and waste is what makes work slow. Lean&rsquo;s goal is <strong>flow</strong>: value moving to the
+      customer with as few interruptions as possible.</p>
+  </div>
+  <div class="panel">
+    <h3>Six Sigma &mdash; the war on variation</h3>
+    <p>Developed at Motorola and made famous at GE, Six Sigma attacks a different enemy: <strong>inconsistency</strong>.
+      A process that averages fine but swings wildly still produces defects, missed deadlines, and unhappy customers.
+      Six Sigma uses data and statistics to find <em>why</em> results vary, then removes those causes so the process
+      becomes predictable.</p>
+  </div>
+  <p><strong>Put together:</strong> Lean makes the process <em>fast</em>, Six Sigma makes it <em>reliable</em>. A process
+    that is quick but erratic frustrates customers; one that is consistent but slow loses them. Lean Six Sigma pursues
+    both at once, using a shared project roadmap (DMAIC) and a shared rule: <strong>decisions follow data, not opinions.</strong></p>
+  <div class="callout tip">
+    <strong>One sentence to remember:</strong> Lean removes the steps that shouldn&rsquo;t happen at all;
+    Six Sigma makes the steps that remain happen the same way every time.
+  </div>
+</section>
+
+<!-- EDIT: Terminology -->
+<section id="terminology" aria-labelledby="terms-h">
+  <h2 id="terms-h">Terminology</h2>
+  <div class="table-scroll">
+    <table>
+      <caption>The vocabulary you&rsquo;ll hear in every Lean Six Sigma conversation</caption>
+      <thead>
+        <tr><th scope="col">Term</th><th scope="col">Meaning</th><th scope="col">Plain-language version</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CTQ</td><td>Critical to quality</td><td>The few things the customer truly cares about</td></tr>
+        <tr><td>Defect</td><td>Any outcome outside customer requirements</td><td>A result the customer would reject</td></tr>
+        <tr><td>DPMO</td><td>Defects per million opportunities</td><td>The defect rate, scaled up so small rates are visible</td></tr>
+        <tr><td>Sigma level</td><td>How many &sigma; fit between the process mean and the nearest limit</td><td>A single score for process quality (higher is better)</td></tr>
+        <tr><td>DMAIC</td><td>Define, Measure, Analyze, Improve, Control</td><td>The five-phase project roadmap</td></tr>
+        <tr><td>Gemba</td><td>&ldquo;The real place&rdquo; (Japanese)</td><td>Go watch the actual work, don&rsquo;t improve from a desk</td></tr>
+        <tr><td>Kaizen</td><td>Continuous improvement</td><td>Many small fixes beat one giant one</td></tr>
+        <tr><td>Belt</td><td>Yellow / Green / Black / Master Black</td><td>Levels of training and project responsibility</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- EDIT: Interactive wastes explorer -->
+<section id="wastes-explorer" aria-labelledby="wastes-h">
+  <h2 id="wastes-h">Interactive: the eight wastes</h2>
+  <p>Lean names eight wastes, remembered by the acronym <strong>DOWNTIME</strong>. Click each one to see what it means
+    and what it looks like in both an office and a factory.</p>
+  <div class="tool" aria-label="Eight wastes explorer">
+    <div class="waste-grid" role="group" aria-label="Choose a waste">
+      <button type="button" class="waste-btn" data-waste="defects" aria-pressed="false"><strong>D</strong>efects</button>
+      <button type="button" class="waste-btn" data-waste="overproduction" aria-pressed="false"><strong>O</strong>verproduction</button>
+      <button type="button" class="waste-btn" data-waste="waiting" aria-pressed="false"><strong>W</strong>aiting</button>
+      <button type="button" class="waste-btn" data-waste="nonutilized" aria-pressed="false"><strong>N</strong>on-utilized talent</button>
+      <button type="button" class="waste-btn" data-waste="transportation" aria-pressed="false"><strong>T</strong>ransportation</button>
+      <button type="button" class="waste-btn" data-waste="inventory" aria-pressed="false"><strong>I</strong>nventory</button>
+      <button type="button" class="waste-btn" data-waste="motion" aria-pressed="false"><strong>M</strong>otion</button>
+      <button type="button" class="waste-btn" data-waste="extraprocessing" aria-pressed="false"><strong>E</strong>xtra processing</button>
+    </div>
+    <div class="panel" id="waste-detail" aria-live="polite">
+      <h3 id="waste-name">Pick a waste above</h3>
+      <p id="waste-definition">Each card explains the waste and shows one office example and one factory example.</p>
+      <p id="waste-office" class="waste-example"></p>
+      <p id="waste-factory" class="waste-example"></p>
+    </div>
+  </div>
+</section>
+
+<!-- EDIT: Interactive sigma level explorer -->
+<section id="sigma-explorer" aria-labelledby="sigma-h">
+  <h2 id="sigma-h">Interactive: what &ldquo;sigma level&rdquo; means</h2>
+  <p>The &ldquo;Six Sigma&rdquo; name is a quality target: fit six standard deviations between the process average and
+    the nearest customer limit. Slide the level and watch the defect rate collapse &mdash; the scale is why companies chase
+    higher sigma. (The numbers use the industry-standard 1.5&sigma; long-term shift convention.)</p>
+  <div class="tool" aria-label="Sigma level explorer">
+    <div class="controls">
+      <div class="control">
+        <label for="sigma-level">Sigma level: <output id="sigma-level-out">3.0</output></label>
+        <input type="range" id="sigma-level" min="1" max="6" step="0.1" value="3">
       </div>
     </div>
-  </section>
+    <div class="cap-readouts">
+      <div class="cap-readout"><span class="cap-label">Defects per million</span><span class="cap-value" id="sigma-dpmo">66,807</span></div>
+      <div class="cap-readout"><span class="cap-label">Yield</span><span class="cap-value" id="sigma-yield">93.32%</span></div>
+    </div>
+    <p id="sigma-context" role="status" aria-live="polite">At 3 sigma, roughly 66,807 of every million deliveries go wrong &mdash; about 1 in 15. Most struggling processes live here.</p>
+  </div>
+</section>
 
-  <section class="section" style="padding:24px 0 0;">
-    <div class="wrap" style="max-width:760px;">
-      <h2 style="font-size:20px;margin:0 0 14px;">By the end, you should be able to</h2>
-      <div class="card">
-        <ul class="lesson-objectives">
-          <li>Explain what Lean Six Sigma is in plain language.</li>
-          <li>Tell the difference between "waste" and "variation."</li>
-          <li>Spot a real workplace situation where it applies.</li>
-        </ul>
+<!-- EDIT: DMAIC -->
+<section id="dmaic" aria-labelledby="dmaic-h">
+  <h2 id="dmaic-h">DMAIC: the improvement roadmap</h2>
+  <p>Every Lean Six Sigma project follows the same five phases. The discipline of the sequence is the point &mdash;
+    it stops teams from jumping to solutions before they understand the problem.</p>
+  <ol class="num-steps">
+    <li><strong>Define</strong> &mdash; agree on the problem, the customer impact, the goal, and the scope. Output: a one-page project charter.</li>
+    <li><strong>Measure</strong> &mdash; collect data on how the process performs today. Output: a trustworthy baseline (and often a surprise).</li>
+    <li><strong>Analyze</strong> &mdash; use the data to find the root causes of waste and variation, not the symptoms. Output: verified causes.</li>
+    <li><strong>Improve</strong> &mdash; design, pilot, and prove solutions that attack those root causes. Output: a demonstrated improvement.</li>
+    <li><strong>Control</strong> &mdash; lock the gains in with standards, training, and monitoring (control charts live here). Output: an improvement that lasts.</li>
+  </ol>
+  <div class="callout warn">
+    <strong>The classic failure mode:</strong> skipping from Define straight to Improve &mdash; &ldquo;we already know the
+    answer.&rdquo; If the answer were really known, the problem wouldn&rsquo;t keep coming back.
+  </div>
+</section>
+
+<!-- EDIT: Worked example -->
+<section id="worked-example" aria-labelledby="example-h">
+  <h2 id="example-h">Worked example: the invoice-error project</h2>
+  <div class="panel">
+    <p>A finance team reworks about <strong>18% of invoices</strong> because of errors, delaying payments and irritating suppliers.</p>
+    <ol class="num-steps">
+      <li><strong>Define:</strong> &ldquo;Reduce invoice rework from 18% to under 5% in 90 days.&rdquo; The CTQ is <em>right first time</em>.</li>
+      <li><strong>Measure:</strong> two weeks of tallies show the error rate is really 21% &mdash; and 70% of errors are wrong purchase-order numbers.</li>
+      <li><strong>Analyze:</strong> going to the gemba reveals the ordering system shows PO numbers in a different format than the invoice template expects &mdash; a process problem, not a people problem.</li>
+      <li><strong>Improve:</strong> the template now auto-fills the PO number from the system. A four-week pilot cuts rework to 4%.</li>
+      <li><strong>Control:</strong> the fix becomes the standard template, new-starter training is updated, and a monthly chart watches the error rate so drift is caught early.</li>
+    </ol>
+    <p><strong>Notice what made it work:</strong> the team measured before analyzing (the real rate and the biggest cause were both surprises),
+      found a root cause by watching the actual work, and finished with a control so the gain would stick.</p>
+  </div>
+</section>
+
+<!-- EDIT: Belts -->
+<section id="belts" aria-labelledby="belts-h">
+  <h2 id="belts-h">Belts: who does what</h2>
+  <div class="table-scroll">
+    <table>
+      <caption>Typical Lean Six Sigma roles (naming varies slightly by organisation)</caption>
+      <thead>
+        <tr><th scope="col">Belt</th><th scope="col">Typical role</th><th scope="col">Time on improvement work</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Yellow Belt</td><td>Team member: understands the basics, supports projects, spots waste locally</td><td>A few hours per project</td></tr>
+        <tr><td>Green Belt</td><td>Leads smaller projects in their own area while doing their day job</td><td>Part-time</td></tr>
+        <tr><td>Black Belt (ASQ CSSBB)</td><td>Leads major cross-functional projects; coaches Green Belts; deep statistical toolkit</td><td>Often full-time</td></tr>
+        <tr><td>Master Black Belt</td><td>Trains Belts, selects projects, connects the programme to business strategy</td><td>Full-time</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- EDIT: Misconceptions -->
+<section id="mistakes" aria-labelledby="mistakes-h">
+  <h2 id="mistakes-h">Common misconceptions</h2>
+  <div class="callout warn">
+    <strong>&ldquo;Lean means doing more with fewer people.&rdquo;</strong> Lean removes wasted <em>work</em>, not workers.
+    Programmes that use it as a layoff tool destroy the trust that improvement depends on &mdash; and the eighth waste is
+    literally <em>non-utilized talent</em>.
+  </div>
+  <div class="callout warn">
+    <strong>&ldquo;It only applies to manufacturing.&rdquo;</strong> Hospitals cut waiting times, banks cut processing
+    errors, and software teams cut rework with exactly the same ideas. Anywhere work flows through steps, waste and
+    variation hide in it.
+  </div>
+  <div class="callout warn">
+    <strong>&ldquo;Six Sigma means literally 3.4 defects per million, always.&rdquo;</strong> The 3.4 DPMO figure is the
+    conventional benchmark for a 6&sigma; process (with the 1.5&sigma; shift). The real goal is matching process
+    capability to what the customer needs &mdash; some processes are fine at 4&sigma;, others (aviation, medication doses) need far more.
+  </div>
+  <div class="callout warn">
+    <strong>&ldquo;The tools are the method.&rdquo;</strong> Running a fishbone or a control chart isn&rsquo;t improvement.
+    The method is the discipline: define the problem, measure reality, find causes, prove the fix, control the gain.
+  </div>
+</section>
+
+<!-- EDIT: Next steps -->
+<section id="next-steps" aria-labelledby="next-h">
+  <h2 id="next-h">Where the statistics comes in</h2>
+  <p>Measure, Analyze, and Control are powered by statistics, and this library covers the core tools:
+    start with <a href="/lessons/statistics/the-normal-distribution-meet-the-bell-curve">the normal distribution</a>,
+    then see how a process compares to its specification with
+    <a href="/lessons/lean-six-sigma/process-capability-cp-and-cpk">process capability (C<sub>p</sub> &amp; C<sub>pk</sub>)</a>,
+    and how the Control phase watches a process over time with
+    <a href="/lessons/control-charts-explained">control charts</a>.</p>
+</section>
+
+<!-- EDIT: Practice activity -->
+<section id="practice" aria-labelledby="practice-h">
+  <h2 id="practice-h">Try it yourself</h2>
+  <div class="callout tip">
+    <p><strong>Name that waste.</strong> Match each scenario to the waste it best illustrates, then check your answers.</p>
+    <div class="controls">
+      <div class="control">
+        <label for="practice-s1">1. A report is printed, signed, scanned, and re-typed into another system.</label>
+        <select id="practice-s1">
+          <option value="">Choose a waste&hellip;</option>
+          <option value="extraprocessing">Extra processing</option>
+          <option value="waiting">Waiting</option>
+          <option value="inventory">Inventory</option>
+          <option value="motion">Motion</option>
+        </select>
+      </div>
+      <div class="control">
+        <label for="practice-s2">2. Approved purchase requests sit in a queue for four days before anyone acts.</label>
+        <select id="practice-s2">
+          <option value="">Choose a waste&hellip;</option>
+          <option value="defects">Defects</option>
+          <option value="waiting">Waiting</option>
+          <option value="overproduction">Overproduction</option>
+          <option value="transportation">Transportation</option>
+        </select>
+      </div>
+      <div class="control">
+        <label for="practice-s3">3. The team prints 500 brochures for an event that needs 120, &ldquo;just in case.&rdquo;</label>
+        <select id="practice-s3">
+          <option value="">Choose a waste&hellip;</option>
+          <option value="motion">Motion</option>
+          <option value="nonutilized">Non-utilized talent</option>
+          <option value="overproduction">Overproduction</option>
+          <option value="waiting">Waiting</option>
+        </select>
       </div>
     </div>
-  </section>
-
-  <section class="section" style="padding:32px 0 0;">
-    <div class="wrap" style="max-width:760px;">
-      <h2 style="font-size:20px;margin:0 0 12px;">Why this matters at work</h2>
-      <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);">Lean Six Sigma combines two ideas: removing waste (Lean) and reducing variation (Six Sigma). Together, they give you a structured way to make a process more reliable and less wasteful &mdash; whether that process is a factory line, a claims queue, or a monthly report.</p>
-
-      <h2 style="font-size:20px;margin:32px 0 12px;">Simple explanation</h2>
-      <p style="font-size:15.5px;line-height:1.7;color:var(--ink-soft);">Lean asks a simple question, and Six Sigma asks a different one. Most real improvement projects use a bit of both.</p>
-      <div class="callout callout-formula">
-        <strong>Lean:</strong> "Is this step adding value, or is it waste?"<br>
-        <strong>Six Sigma:</strong> "How much does this process vary, and can we make it more consistent?"
-      </div>
-
-      <h2 style="font-size:20px;margin:32px 0 12px;">Real workplace example</h2>
-      <div class="example-box">
-        <h3 style="font-size:17px;margin:0 0 10px;">Order processing time swings from 2 to 9 days</h3>
-        <p style="font-size:15px;line-height:1.65;color:var(--ink-soft);margin:0 0 16px;">A team notices order processing time ranges from 2 to 9 days with no clear reason.</p>
-        <ol class="step-list">
-          <li><div><strong>Step 1:</strong> Map every step in the order process, start to finish.</div></li>
-          <li><div><strong>Step 2:</strong> Measure how long each step actually takes, across several orders.</div></li>
-          <li><div><strong>Step 3:</strong> Target the single biggest source of delay first, instead of guessing.</div></li>
-        </ol>
-      </div>
-
-      <h2 style="font-size:20px;margin:32px 0 12px;">Common mistake</h2>
-      <div class="callout callout-warning">
-        <strong>Watch out for:</strong> jumping straight to a fix before mapping the process. Without data on where time is actually lost, teams often "fix" a step that wasn't the real problem.
-      </div>
-
-      <h2 style="font-size:20px;margin:32px 0 12px;">Try it yourself</h2>
-      <div class="callout callout-practice">
-        Pick one recurring task you do. List every step. Mark each step as "value-adding" or "waste." You'll likely find at least one step you can cut.
-      </div>
+    <div class="btn-row">
+      <button type="button" class="btn" id="practice-check">Check my answers</button>
     </div>
-  </section>
+    <p id="practice-feedback" role="status" aria-live="polite"></p>
+  </div>
+</section>
 
-  <section class="section" style="padding:32px 0 0;">
-    <div class="wrap" style="max-width:760px;">
-      <h2 style="font-size:20px;margin:0 0 14px;">Check your understanding</h2>
-      <div class="quiz">
-        <h3>Six Sigma is primarily focused on reducing what?</h3>
-        <button class="quiz-option" onclick="checkQuiz(this, false)">Employee headcount</button>
-        <button class="quiz-option" onclick="checkQuiz(this, true)">Variation in a process</button>
-        <button class="quiz-option" onclick="checkQuiz(this, false)">Marketing spend</button>
-        <div class="quiz-feedback"></div>
-      </div>
-    </div>
-  </section>
+<!-- EDIT: Quiz -->
+<section id="quiz" aria-labelledby="quiz-h">
+  <h2 id="quiz-h">Check your understanding</h2>
+  <p>Five questions. Pick an answer for each, then press <strong>Check my answers</strong>.</p>
 
-  <section class="section tint" style="margin-top:48px;">
-    <div class="wrap" style="max-width:760px;">
-      <h2 style="font-size:20px;margin:0 0 12px;">Next lesson</h2>
-      <a href="control-charts-explained.html" style="font-family:'Source Serif 4',serif;font-size:19px;font-weight:600;">Control Charts, Explained &rarr;</a>
+  <form id="quiz-form">
+    <div class="quiz-q" data-q="q1" data-answer="b">
+      <fieldset>
+        <legend>1. What does Lean primarily target, and what does Six Sigma primarily target?</legend>
+        <label class="quiz-option"><input type="radio" name="q1" value="a"><span>Lean targets cost; Six Sigma targets headcount</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="b"><span>Lean targets waste and speed of flow; Six Sigma targets variation and consistency</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="c"><span>Lean targets variation; Six Sigma targets waste</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="d"><span>They target the same thing under different brand names</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
     </div>
-  </section>
 
-  <footer class="site">
-    <div class="wrap">
-      <div class="footer-grid">
-        <div>
-          <div class="brand" style="margin-bottom:14px;">
-            <img src="../assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
-            <span>UpSkill Sprint Consulting</span>
-          </div>
-          <p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, process improvement, and business problem-solving.</p>
-        </div>
-        <div>
-          <h4>Quick Links</h4>
-          <a href="../index.html">Home</a>
-          <a href="../start-here.html">Start Here</a>
-          <a href="../lessons.html">Lessons</a>
-          <a href="../services.html">Services</a>
-          <a href="../request-topic.html">Request a Topic</a>
-          <a href="../about.html">About</a>
-          <a href="../faq.html">FAQ</a>
-          <a href="../contact.html">Contact</a>
-        </div>
-        <div>
-          <h4>Topics</h4>
-          <a href="../lessons.html#data-analytics">Data Analytics</a>
-          <a href="../lessons.html#quality-engineering">Quality Engineering</a>
-          <a href="../lessons.html#lean-six-sigma">Lean Six Sigma</a>
-          <a href="../lessons.html#power-bi-excel-sql">Power BI, Excel &amp; SQL</a>
-          <a href="../lessons.html#business-decision-making">Business Decision-Making</a>
-          <a href="../lessons.html#ai-for-work">AI for Work</a>
-        </div>
-        <div>
-          <h4>Contact</h4>
-          <a href="mailto:skillsprintconsulting@gmail.com">skillsprintconsulting@gmail.com</a>
-          <p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p>
-        </div>
-      </div>
+    <div class="quiz-q" data-q="q2" data-answer="c">
+      <fieldset>
+        <legend>2. Which of these is one of the eight wastes?</legend>
+        <label class="quiz-option"><input type="radio" name="q2" value="a"><span>Variation</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="b"><span>Measurement</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="c"><span>Overproduction</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="d"><span>Standardisation</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
     </div>
-    <div class="footer-bottom">
-      <span>&copy; 2026 UpSkill Sprint Consulting</span>
-      <div><a href="../privacy.html">Privacy Policy</a><a href="../terms.html">Terms of Use</a></div>
+
+    <div class="quiz-q" data-q="q3" data-answer="d">
+      <fieldset>
+        <legend>3. Put the DMAIC phases in order.</legend>
+        <label class="quiz-option"><input type="radio" name="q3" value="a"><span>Define &rarr; Analyze &rarr; Measure &rarr; Improve &rarr; Control</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="b"><span>Measure &rarr; Define &rarr; Analyze &rarr; Control &rarr; Improve</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="c"><span>Define &rarr; Measure &rarr; Improve &rarr; Analyze &rarr; Control</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="d"><span>Define &rarr; Measure &rarr; Analyze &rarr; Improve &rarr; Control</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
     </div>
-  </footer>
-  <script>
-    function checkQuiz(button, isCorrect) {
-      const quiz = button.closest('.quiz');
-      const feedback = quiz.querySelector('.quiz-feedback');
-      feedback.className = 'quiz-feedback ' + (isCorrect ? 'correct' : 'incorrect');
-      feedback.textContent = isCorrect
-        ? 'Correct. That matches the logic from the lesson.'
-        : 'Not quite — review the section above and try again.';
+
+    <div class="quiz-q" data-q="q4" data-answer="a">
+      <fieldset>
+        <legend>4. A team jumps straight from naming the problem to installing their favourite solution. Which phases did they skip?</legend>
+        <label class="quiz-option"><input type="radio" name="q4" value="a"><span>Measure and Analyze &mdash; so they never verified the real baseline or the root cause</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="b"><span>Control only &mdash; the rest is optional</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="c"><span>Define &mdash; problems don&rsquo;t need defining</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="d"><span>None &mdash; experienced teams can skip phases safely</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="quiz-q" data-q="q5" data-answer="c">
+      <fieldset>
+        <legend>5. Roughly how many defects per million opportunities does a Six Sigma (6&sigma;) process produce, using the standard convention?</legend>
+        <label class="quiz-option"><input type="radio" name="q5" value="a"><span>66,807</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="b"><span>6,210</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="c"><span>3.4</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="d"><span>Exactly zero</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="quiz-check">Check my answers</button>
+      <button type="button" class="btn secondary" id="quiz-reset">Try again</button>
+    </div>
+    <p id="quiz-score" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<!-- EDIT: Summary -->
+<section id="summary" aria-labelledby="summary-h">
+  <h2 id="summary-h">Final summary</h2>
+  <ul class="objectives-list">
+    <li><strong>Lean</strong> removes waste so value flows quickly; <strong>Six Sigma</strong> removes variation so results are consistent.</li>
+    <li>The <strong>eight wastes (DOWNTIME)</strong> give you a checklist for spotting non-value work in any process.</li>
+    <li><strong>DMAIC</strong> &mdash; Define, Measure, Analyze, Improve, Control &mdash; is the roadmap, and its sequence is the discipline.</li>
+    <li><strong>Sigma level</strong> turns a defect rate into one score; 6&sigma; corresponds to about 3.4 DPMO.</li>
+    <li><strong>Belts</strong> describe training and project responsibility, from Yellow (team member) to Master Black Belt (programme leader).</li>
+    <li>The method works anywhere work flows through steps &mdash; offices, hospitals, and software as much as factories.</li>
+  </ul>
+  <div class="remember">
+    <strong>If you remember one thing:</strong> Lean Six Sigma is not a toolbox, it&rsquo;s a discipline &mdash;
+    understand the problem with data <em>before</em> fixing it, and control the gain <em>after</em>.
+  </div>
+</section>
+
+<!-- EDIT: References -->
+<section id="references" aria-labelledby="references-h">
+  <h2 id="references-h">References &amp; further reading</h2>
+  <ul>
+    <li>ASQ Quality Resources &mdash; What Is Six Sigma?:
+      <a href="https://asq.org/quality-resources/six-sigma" rel="noopener">asq.org/quality-resources/six-sigma</a></li>
+    <li>ASQ Quality Resources &mdash; What Is Lean?:
+      <a href="https://asq.org/quality-resources/lean" rel="noopener">asq.org/quality-resources/lean</a></li>
+    <li>Womack, J. P. &amp; Jones, D. T., <em>Lean Thinking</em> &mdash; the classic introduction to Lean principles.</li>
+    <li>George, M. L., <em>Lean Six Sigma</em> &mdash; the standard text on combining the two methods.</li>
+  </ul>
+</section>
+
+</article>
+</main>
+
+<footer class="lesson-footer">
+  <div class="footer-inner">
+    <a class="footer-back" href="/lessons#lean-six-sigma">Back to Lean Six Sigma</a>
+    <span>&copy; UpSkill Sprint Consulting &middot; Lean Six Sigma lesson library</span>
+  </div>
+</footer>
+
+<!-- EDIT: Lesson JavaScript (single script block, IIFE, no globals) -->
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Maths helpers ---------- */
+
+  function phi(z) {
+    var sign = z < 0 ? -1 : 1;
+    var x = Math.abs(z) / Math.sqrt(2);
+    var t = 1 / (1 + 0.3275911 * x);
+    var y = 1 - ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+    return 0.5 * (1 + sign * y);
+  }
+
+  /* ---------- Eight wastes explorer ---------- */
+
+  var WASTES = {
+    defects: {
+      name: "Defects",
+      definition: "Work that is wrong and must be scrapped or redone. Rework is the most expensive waste because you pay for the same work twice.",
+      office: "Office: an invoice with the wrong PO number bounces back and is corrected by three people.",
+      factory: "Factory: parts machined out of tolerance are scrapped or sent back for rework."
+    },
+    overproduction: {
+      name: "Overproduction",
+      definition: "Making more, sooner, or faster than the next step needs. Lean calls it the worst waste because it creates most of the others.",
+      office: "Office: producing a 40-page weekly report when the decision needs one chart.",
+      factory: "Factory: running a full batch ahead of orders, which then sits as stock."
+    },
+    waiting: {
+      name: "Waiting",
+      definition: "Idle time while people or work wait for information, approvals, materials, or machines.",
+      office: "Office: a contract waits four days in an approval queue for a two-minute signature.",
+      factory: "Factory: operators idle while a machine is changed over or material is late."
+    },
+    nonutilized: {
+      name: "Non-utilized talent",
+      definition: "Failing to use people's skills, knowledge, and ideas \u2014 the waste added by Lean Six Sigma to Toyota's original seven.",
+      office: "Office: the person who processes the form daily is never asked how to fix it.",
+      factory: "Factory: operators see the cause of defects but have no channel to raise it."
+    },
+    transportation: {
+      name: "Transportation",
+      definition: "Moving work or materials between locations without adding value.",
+      office: "Office: a document forwarded through five inboxes before reaching the decision-maker.",
+      factory: "Factory: parts shuttled between buildings because sequential steps sit far apart."
+    },
+    inventory: {
+      name: "Inventory",
+      definition: "Piles of work or material waiting to be used \u2014 including queues of unfinished tasks. Inventory hides problems and ties up cash.",
+      office: "Office: a backlog of 300 unprocessed applications sitting in a shared inbox.",
+      factory: "Factory: weeks of raw material and half-finished assemblies crowding the floor."
+    },
+    motion: {
+      name: "Motion",
+      definition: "Unnecessary movement by people \u2014 walking, searching, clicking \u2014 within their work.",
+      office: "Office: re-entering the same customer data across three systems.",
+      factory: "Factory: walking to a shared tool cabinet forty times a shift."
+    },
+    extraprocessing: {
+      name: "Extra processing",
+      definition: "Doing more work, or more precise work, than the customer values.",
+      office: "Office: a report printed, signed, scanned, and re-typed into another system.",
+      factory: "Factory: polishing a surface the customer never sees to a mirror finish."
     }
-  </script>
-<script src="/contrast-fix.js"></script>
+  };
+
+  var wasteButtons = Array.prototype.slice.call(document.querySelectorAll(".waste-btn"));
+  var wasteName = document.getElementById("waste-name");
+  var wasteDefinition = document.getElementById("waste-definition");
+  var wasteOffice = document.getElementById("waste-office");
+  var wasteFactory = document.getElementById("waste-factory");
+
+  wasteButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      var waste = WASTES[button.getAttribute("data-waste")];
+      wasteButtons.forEach(function (other) { other.setAttribute("aria-pressed", other === button ? "true" : "false"); });
+      wasteName.textContent = waste.name;
+      wasteDefinition.textContent = waste.definition;
+      wasteOffice.textContent = waste.office;
+      wasteFactory.textContent = waste.factory;
+    });
+  });
+
+  /* ---------- Sigma level explorer ---------- */
+
+  var sigmaInput = document.getElementById("sigma-level");
+  var sigmaOut = document.getElementById("sigma-level-out");
+  var dpmoEl = document.getElementById("sigma-dpmo");
+  var yieldEl = document.getElementById("sigma-yield");
+  var contextEl = document.getElementById("sigma-context");
+
+  function sigmaContext(level, dpmo) {
+    if (level >= 5.9) return "At 6 sigma, about 3.4 of every million deliveries go wrong \u2014 world-class territory, and the origin of the name.";
+    if (level >= 5) return "At " + level.toFixed(1) + " sigma, failures are rare enough that customers may never see one \u2014 roughly " + Math.round(dpmo) + " per million.";
+    if (level >= 4) return "At " + level.toFixed(1) + " sigma \u2014 typical of good companies \u2014 roughly " + Math.round(dpmo).toLocaleString("en-US") + " of every million deliveries still go wrong.";
+    if (level >= 3) return "At " + level.toFixed(1) + " sigma, roughly " + Math.round(dpmo).toLocaleString("en-US") + " of every million deliveries go wrong \u2014 about 1 in " + Math.max(2, Math.round(1e6 / dpmo)) + ". Most struggling processes live here.";
+    return "Below 3 sigma, defects are a daily fact of life: roughly " + Math.round(dpmo).toLocaleString("en-US") + " per million, or about 1 in " + Math.max(2, Math.round(1e6 / dpmo)) + " deliveries.";
+  }
+
+  function renderSigma() {
+    var level = parseFloat(sigmaInput.value);
+    var dpmo = (1 - phi(level - 1.5)) * 1e6;
+    var yieldPct = 100 - dpmo / 1e4;
+    sigmaOut.textContent = level.toFixed(1);
+    dpmoEl.textContent = dpmo < 10 ? dpmo.toFixed(1) : Math.round(dpmo).toLocaleString("en-US");
+    yieldEl.textContent = (yieldPct >= 99.9999 ? yieldPct.toFixed(5) : yieldPct >= 99.9 ? yieldPct.toFixed(4) : yieldPct.toFixed(2)) + "%";
+    contextEl.textContent = sigmaContext(level, dpmo);
+  }
+
+  sigmaInput.addEventListener("input", renderSigma);
+  renderSigma();
+
+  /* ---------- Practice ---------- */
+
+  var PRACTICE_ANSWERS = { "practice-s1": "extraprocessing", "practice-s2": "waiting", "practice-s3": "overproduction" };
+  var practiceFeedback = document.getElementById("practice-feedback");
+
+  document.getElementById("practice-check").addEventListener("click", function () {
+    var ids = Object.keys(PRACTICE_ANSWERS);
+    var chosen = ids.map(function (id) { return document.getElementById(id).value; });
+    if (chosen.some(function (value) { return !value; })) {
+      practiceFeedback.textContent = "Choose a waste for all three scenarios first.";
+      practiceFeedback.className = "quiz-status no";
+      return;
+    }
+    var right = ids.filter(function (id) { return document.getElementById(id).value === PRACTICE_ANSWERS[id]; }).length;
+    if (right === 3) {
+      practiceFeedback.textContent = "All three correct \u2014 extra processing, waiting, overproduction. You're seeing with Lean eyes.";
+      practiceFeedback.className = "quiz-status ok";
+    } else {
+      practiceFeedback.textContent = right + " of 3 correct. Hint: think about what the customer would pay for in each scenario, then try again.";
+      practiceFeedback.className = "quiz-status no";
+    }
+  });
+
+  /* ---------- Quiz ---------- */
+
+  var EXPLANATIONS = {
+    q1: "Lean pursues flow by removing waste; Six Sigma pursues consistency by removing variation. Together: fast AND reliable.",
+    q2: "Overproduction \u2014 the O in DOWNTIME \u2014 is a named waste; variation is Six Sigma's target, not one of the eight wastes.",
+    q3: "Define, Measure, Analyze, Improve, Control \u2014 and the sequence is the discipline.",
+    q4: "Skipping Measure and Analyze means the baseline and root cause were never verified \u2014 the classic reason fixes don't stick.",
+    q5: "With the standard 1.5\u03c3 shift convention, a 6\u03c3 process produces about 3.4 defects per million opportunities."
+  };
+
+  var quizQuestions = Array.prototype.slice.call(document.querySelectorAll(".quiz-q"));
+  var quizScore = document.getElementById("quiz-score");
+
+  document.getElementById("quiz-check").addEventListener("click", function () {
+    var score = 0;
+    var answered = 0;
+    quizQuestions.forEach(function (question) {
+      var name = question.getAttribute("data-q");
+      var correct = question.getAttribute("data-answer");
+      var chosen = question.querySelector("input[name=\"" + name + "\"]:checked");
+      var feedback = question.querySelector("[data-feedback]");
+      question.classList.remove("correct", "incorrect");
+      if (!chosen) {
+        feedback.hidden = false;
+        feedback.className = "quiz-feedback no";
+        feedback.textContent = "Pick an answer for this one.";
+        return;
+      }
+      answered++;
+      var isRight = chosen.value === correct;
+      if (isRight) score++;
+      question.classList.add(isRight ? "correct" : "incorrect");
+      feedback.hidden = false;
+      feedback.className = "quiz-feedback " + (isRight ? "ok" : "no");
+      feedback.textContent = (isRight ? "Correct. " : "Not quite. ") + EXPLANATIONS[name];
+    });
+
+    if (answered < quizQuestions.length) {
+      quizScore.className = "quiz-status no";
+      quizScore.textContent = "You've answered " + answered + " of " + quizQuestions.length + " \u2014 finish the rest, then check again.";
+      return;
+    }
+
+    quizScore.className = "quiz-status " + (score >= 4 ? "ok" : "no");
+    quizScore.textContent = "Your score: " + score + " out of " + quizQuestions.length + ". " +
+      (score === 5 ? "Black Belt instincts." :
+       score >= 4 ? "Solid \u2014 you have the foundations." :
+       score >= 3 ? "Getting there \u2014 revisit DMAIC and the wastes." :
+       "Worth a re-read \u2014 start with the two-halves idea and DMAIC.");
+
+    /* Site progress tracking (see lesson contract): report the result explicitly. */
+    document.dispatchEvent(new CustomEvent("upskill-quiz-result", {
+      detail: { score: score, total: quizQuestions.length }
+    }));
+  });
+
+  document.getElementById("quiz-reset").addEventListener("click", function () {
+    quizQuestions.forEach(function (question) {
+      question.classList.remove("correct", "incorrect");
+      var feedback = question.querySelector("[data-feedback]");
+      feedback.hidden = true;
+      feedback.textContent = "";
+      Array.prototype.forEach.call(question.querySelectorAll("input[type=radio]"), function (radio) {
+        radio.checked = false;
+      });
+    });
+    quizScore.textContent = "";
+    quizScore.className = "";
+  });
+})();
+</script>
 </body>
 </html>

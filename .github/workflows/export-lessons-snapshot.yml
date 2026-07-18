@@ -1,6 +1,9 @@
 name: Export lessons snapshot
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/export-lessons-snapshot.yml'
   push:
     branches: [test]
     paths:

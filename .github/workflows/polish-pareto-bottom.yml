@@ -176,3 +176,5 @@ jobs:
           git add lessons/understanding-pareto-chart.html .github/workflows/polish-pareto-bottom.yml
           git commit -m "Polish Pareto lesson summary and footer layout"
           git push origin HEAD:test
+
+# Triggered after workflow registration.

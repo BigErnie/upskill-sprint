@@ -39,6 +39,18 @@
       description: 'See how the normal connects to the Weibull, lognormal, t, binomial and more — with a live Central Limit Theorem simulator.'
     },
     {
+      marker: 'data-process-capability',
+      sectionId: 'lean-six-sigma',
+      path: '/lessons/lean-six-sigma/process-capability-cp-and-cpk',
+      topic: 'lean-six-sigma',
+      level: 'beginner',
+      interactive: 'true',
+      search: 'process capability cp cpk capability index specification limits usl lsl voice of customer voice of process six sigma capability analysis 1.33 ppk pp minitab excel lean six sigma beginner interactive',
+      meta: '<span>Beginner</span><span>Interactive</span><span>15 min</span>',
+      title: 'Process Capability: Will Your Process Meet the Spec?',
+      description: 'Learn Cp and Cpk with a live capability explorer: specs, spread, centering, the 1.33 benchmark, and Excel & Minitab how-tos.'
+    },
+    {
       marker: 'data-introduction-doe',
       sectionId: 'lean-six-sigma',
       path: '/lessons/introduction-to-design-of-experiment-doe',

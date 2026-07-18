@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- UPSKILLSPRINT_LESSON_META
+{
+  "title": "Process Capability: Will Your Process Meet the Spec?",
+  "slug": "process-capability-cp-and-cpk",
+  "category": "Lean Six Sigma",
+  "category_slug": "lean-six-sigma",
+  "level": "Beginner",
+  "estimated_minutes": 15,
+  "interactive": true,
+  "card_title": "Process Capability (Cp & Cpk)",
+  "card_description": "Learn Cp and Cpk with a live capability explorer: specs, spread, centering, and what the numbers really mean.",
+  "search_keywords": [
+    "process capability",
+    "cp",
+    "cpk",
+    "capability index",
+    "specification limits",
+    "usl",
+    "lsl",
+    "voice of the customer",
+    "voice of the process",
+    "six sigma",
+    "capability analysis",
+    "1.33"
+  ],
+  "suggested_github_path": "lessons/lean-six-sigma/process-capability-cp-and-cpk.html"
+}
+-->
+<head>
+<!-- EDIT: Lesson metadata -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Process Capability: Will Your Process Meet the Spec? | UpSkill Sprint Consulting</title>
+<meta name="description" content="A beginner-friendly, interactive lesson on process capability: specification limits, Cp, Cpk, the 1.33 benchmark, and how to run a capability study in Excel and Minitab.">
+<link rel="canonical" href="https://upskillsprint.com/lessons/lean-six-sigma/process-capability-cp-and-cpk">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Process Capability: Will Your Process Meet the Spec? | UpSkill Sprint Consulting">
+<meta property="og:description" content="A beginner-friendly, interactive lesson on process capability: specification limits, Cp, Cpk, and the 1.33 benchmark.">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<meta property="og:url" content="https://upskillsprint.com/lessons/lean-six-sigma/process-capability-cp-and-cpk">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/lessons-theme.css">
+
+<!-- EDIT: Lesson styles (single style block) -->
+<style>
+/* ============ Design tokens ============ */
+:root {
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #f5f7fa;
+  --card: #ffffff;
+  --tint: #f5f7fa;
+  --ink: #101828;
+  --ink-soft: #344054;
+  --muted: #667085;
+  --line: #e3e7ee;
+  --navy: #0f2a43;
+  --teal: #0e7490;
+  --teal-dark: #0a5a70;
+  --amber: #d97706;
+  --success: #2e8b57;
+  --warning: #b97a17;
+  --danger: #bf3b2b;
+  --info: #2f6fb0;
+  --shade-1: rgba(15, 139, 141, 0.42);
+  --shade-2: rgba(15, 139, 141, 0.22);
+  --shade-3: rgba(15, 139, 141, 0.10);
+  --focus-ring: 3px solid var(--amber);
+}
+html[data-theme="dark"] {
+  --paper: #0b1220;
+  --surface: #111c2d;
+  --surface-soft: #0f1a2b;
+  --card: #111c2d;
+  --tint: #0f1a2b;
+  --ink: #f4f7fb;
+  --ink-soft: #d2dbea;
+  --muted: #a9b6c8;
+  --line: #2b3b50;
+  --navy: #102a43;
+  --teal: #2bb7c9;
+  --teal-dark: #67d4df;
+  --amber: #f0c36a;
+  --success: #58c48a;
+  --warning: #e9a94a;
+  --danger: #e57368;
+  --info: #6ea3d8;
+  --shade-1: rgba(62, 196, 198, 0.45);
+  --shade-2: rgba(62, 196, 198, 0.24);
+  --shade-3: rgba(62, 196, 198, 0.11);
+}
+
+/* ============ Base ============ */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Work Sans', Arial, sans-serif;
+  line-height: 1.65;
+  font-size: 1.02rem;
+}
+h1, h2, h3, h4 { color: var(--ink); line-height: 1.25; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin: 0.4em 0; }
+h2 { font-size: clamp(1.45rem, 3vw, 1.85rem); margin-top: 0; border-bottom: 2px solid var(--amber); display: inline-block; padding-bottom: 0.15em; }
+h3 { font-size: 1.15rem; }
+p { margin: 0.7em 0; }
+a { color: var(--teal-dark); }
+code {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+  font-size: 0.92em;
+  color: var(--ink);
+}
+strong { color: var(--ink); }
+
+/* Visible focus for keyboard users */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, [role="switch"]:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--navy);
+  color: #fff;
+  padding: 0.6em 1em;
+  z-index: 100;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* ============ SITE INTEGRATION: Header ============ */
+header.site.lesson-sitebar { z-index: 50; }
+.lesson-sitebar .header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.lesson-sitebar .theme-control { flex-shrink: 0; }
+
+/* ============ Layout ============ */
+main#lesson-content { max-width: 980px; margin: 0 auto; padding: 1rem 1rem 4rem; }
+article.lesson-wrapper { display: block; }
+section { margin: 2.8rem 0; scroll-margin-top: 92px; }
+
+/* Lesson hero */
+.lesson-hero {
+  padding: 2.2rem clamp(1.15rem, 4vw, 2.7rem);
+  margin-top: 1.2rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--navy), var(--teal));
+  color: #fff;
+}
+.lesson-hero h1,
+.lesson-hero strong { color: #fff; }
+.lesson-meta-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.7rem 0; }
+.pill {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.24);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.pill.accent { background: #fff; color: var(--navy); border-color: #fff; }
+.lesson-lede { font-size: 1.12rem; color: #e0f2fe; max-width: 68ch; }
+.why-it-matters {
+  border-left: 4px solid var(--amber);
+  background: rgba(255,255,255,0.1);
+  padding: 0.8rem 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-top: 1rem;
+  color: #fff;
+}
+
+/* Table of contents */
+nav.lesson-toc {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin: 1.7rem 0;
+  box-shadow: 0 4px 14px rgba(15,42,67,0.05);
+}
+nav.lesson-toc h2 { border: none; font-size: 1rem; margin: 0 0 0.4rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+nav.lesson-toc ol { margin: 0; padding-left: 1.2rem; columns: 2; column-gap: 2rem; }
+nav.lesson-toc li { margin: 0.25rem 0; break-inside: avoid; }
+nav.lesson-toc a { text-decoration: none; }
+nav.lesson-toc a:hover { text-decoration: underline; }
+@media (max-width: 620px) { nav.lesson-toc ol { columns: 1; } }
+
+/* Cards & panels */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+}
+.callout { border-left: 4px solid var(--info); }
+.callout.tip { border-left-color: var(--success); }
+.callout.warn { border-left-color: var(--warning); }
+
+/* Objectives */
+.objectives-list { padding-left: 1.3rem; }
+.objectives-list li { margin: 0.45rem 0; }
+.objectives-list li::marker { color: var(--teal); font-weight: 700; }
+
+/* Terminology & tables */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { border-collapse: collapse; width: 100%; min-width: 540px; background: var(--surface); }
+caption { text-align: left; color: var(--muted); font-size: 0.88rem; padding: 0.3rem 0; }
+th, td { border: 1px solid var(--line); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
+th { background: var(--navy); color: #fff; }
+tbody tr:nth-child(even) { background: var(--surface-soft); }
+
+/* ============ Formula display (CSS stacked fractions) ============ */
+.formula-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--teal);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+}
+.math {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  color: var(--ink);
+}
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; margin: 0 0.15em; }
+.frac .top { padding: 0 0.35em 0.1em; border-bottom: 1.5px solid var(--ink); }
+.frac .bottom { padding: 0.1em 0.35em 0; }
+.sup { font-size: 0.72em; vertical-align: super; }
+.sym-list { list-style: none; padding-left: 0; margin: 0.8rem 0 0; }
+.sym-list li { padding: 0.25rem 0; border-bottom: 1px dashed var(--line); }
+.sym-list li:last-child { border-bottom: none; }
+.sym { font-family: Georgia, serif; font-weight: 700; color: var(--teal-dark); padding-right: 0.4rem; }
+
+/* ============ SVG figures ============ */
+figure { margin: 1.4rem 0; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; }
+.fig-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0.8rem; }
+
+/* ============ Interactive controls ============ */
+.tool {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--teal);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+}
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.9rem 1.4rem; margin: 0.8rem 0; }
+.control label { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
+.control input[type="range"] { width: 100%; accent-color: var(--teal); min-height: 32px; }
+.control input[type="number"] {
+  width: 100%;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 1rem;
+}
+.value-readout { font-variant-numeric: tabular-nums; color: var(--teal-dark); font-weight: 700; }
+.btn {
+  appearance: none;
+  border: 1px solid var(--teal-dark);
+  background: var(--teal);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+html[data-theme="dark"] .btn { color: #07111e; }
+.btn.secondary { background: var(--surface-soft); color: var(--ink); border-color: var(--line); }
+html[data-theme="dark"] .btn.secondary { color: var(--ink); }
+.btn:hover { filter: brightness(1.05); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.8rem; }
+.result-box {
+  margin-top: 1rem;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+}
+.result-big { font-size: 1.35rem; font-weight: 700; color: var(--teal-dark); font-variant-numeric: tabular-nums; }
+.error-msg { color: var(--danger); font-weight: 600; margin-top: 0.6rem; }
+.method-note { font-size: 0.88rem; color: var(--muted); margin-top: 0.6rem; }
+
+/* Reveal panels */
+.reveal-panel { margin-top: 0.9rem; }
+.reveal-body {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  margin-top: 0.6rem;
+  background: var(--surface-soft);
+}
+[hidden] { display: none !important; }
+
+/* Mistake cards */
+.mistake { border-left: 4px solid var(--danger); background: var(--surface); border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin: 0.9rem 0; }
+.mistake h4 { margin: 0 0 0.3rem; }
+.tag { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 4px; padding: 0.1rem 0.45rem; margin-left: 0.4rem; background: var(--surface-soft); border: 1px solid var(--line); color: var(--ink-soft); }
+
+/* ============ Quiz ============ */
+.quiz-q { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; margin: 1rem 0; }
+.quiz-q fieldset { border: none; margin: 0; padding: 0; }
+.quiz-q legend { font-weight: 700; padding: 0; margin-bottom: 0.5rem; }
+.quiz-option {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin: 0.3rem 0;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.quiz-option span { color: var(--ink); }
+.quiz-option:hover { background: var(--surface-soft); border-color: var(--teal); }
+.quiz-option:focus-within { border-color: var(--teal); box-shadow: 0 0 0 3px var(--shade-3); }
+.quiz-option input[type="radio"] {
+  margin-top: 0.25rem;
+  accent-color: var(--teal);
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+}
+html[data-theme="dark"] .quiz-option {
+  background: var(--surface-soft);
+  color: var(--ink);
+  border-color: var(--line);
+}
+html[data-theme="dark"] .quiz-option:hover,
+html[data-theme="dark"] .quiz-option:focus-within {
+  background: var(--surface);
+  border-color: var(--teal);
+}
+html[data-theme="dark"] .quiz-option span { color: var(--ink); }
+.quiz-q.correct { border-color: var(--success); box-shadow: inset 4px 0 0 var(--success); }
+.quiz-q.incorrect { border-color: var(--danger); box-shadow: inset 4px 0 0 var(--danger); }
+.quiz-feedback { margin-top: 0.6rem; padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.95rem; }
+.quiz-feedback.ok { background: var(--shade-3); border: 1px solid var(--success); }
+.quiz-feedback.no { background: var(--surface-soft); border: 1px solid var(--danger); }
+.quiz-status { font-weight: 700; }
+.quiz-status.ok { color: var(--success); }
+.quiz-status.no { color: var(--danger); }
+#quiz-score { font-size: 1.15rem; font-weight: 700; margin-top: 0.5rem; }
+
+/* Summary */
+.takeaways { padding-left: 1.3rem; }
+.takeaways li { margin: 0.45rem 0; }
+.remember {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+html[data-theme="dark"] .remember { background: var(--surface-soft); color: var(--ink); border: 1px solid var(--line); }
+
+/* Footer */
+footer.lesson-footer {
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  padding: 1.2rem max(1rem, calc((100vw - 980px) / 2));
+  font-size: 0.9rem;
+}
+.footer-inner { display: flex; justify-content: space-between; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.footer-back { font-weight: 700; text-decoration: none; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Small screens */
+@media (max-width: 520px) {
+  .brand span { font-size: 0.9rem; }
+  .header-note { display: none; }
+  body { font-size: 0.98rem; }
+}
+
+/* ============ Responsive and print refinements ============ */
+.table-scroll { max-width: 100%; }
+@media (max-width: 700px) {
+  main#lesson-content { padding-inline: 0.8rem; }
+  .lesson-hero { border-radius: 10px; padding: 1.55rem 1rem; }
+  .lesson-meta-row { gap: 0.38rem; }
+  .pill { font-size: 0.77rem; }
+  .panel, .tool, .quiz-q { padding: 0.95rem; }
+  .formula-box { padding: 0.85rem; }
+  .math { font-size: 1.08rem; }
+  .btn-row { flex-direction: column; }
+  .btn-row .btn { width: 100%; }
+}
+@media (max-width: 480px) {
+  .table-scroll { margin-inline: -0.35rem; padding-inline: 0.35rem; }
+  table { min-width: 500px; }
+}
+@media print {
+  header.site.lesson-sitebar,
+  .skip-link,
+  .theme-control,
+  .btn-row,
+  #quiz-submit,
+  #quiz-reset,
+  footer.lesson-footer { display: none !important; }
+  body { background: #fff !important; color: #000 !important; font-size: 10.5pt; }
+  main#lesson-content { max-width: none; padding: 0; }
+  .lesson-hero { background: none !important; color: #000 !important; border: 1px solid #999; }
+  .lesson-hero h1, .lesson-hero strong, .lesson-hero .lesson-lede, .lesson-hero .why-it-matters { color: #000 !important; }
+  .panel, .tool, .formula-box, .quiz-q, .fig-panel, nav.lesson-toc { box-shadow: none !important; break-inside: avoid; }
+  a { color: #000 !important; text-decoration: none; }
+}
+
+/* ============ Lesson-specific: legacy-stylesheet overrides ============ */
+/* lessons-theme.css (legacy family) hardcodes light colours and hides
+   .quiz-feedback; these rules re-assert the token-based design so both
+   light and dark mode render correctly. */
+.lesson-wrapper .callout {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--info);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  margin: 1rem 0;
+}
+.lesson-wrapper .callout.tip { border-left-color: var(--success); }
+.lesson-wrapper .callout.warn { border-left-color: var(--warning); }
+.lesson-wrapper .quiz-feedback { display: block; }
+.lesson-wrapper .quiz-feedback[hidden] { display: none; }
+.lesson-wrapper .quiz-option { background: var(--surface); color: var(--ink); }
+
+/* ============ Lesson-specific: numbered steps ============ */
+.cap-steps {
+  counter-reset: cap-step;
+  list-style: none;
+  margin: 0.8rem 0;
+  padding: 0;
+}
+.cap-steps li {
+  counter-increment: cap-step;
+  position: relative;
+  padding-left: 2.5rem;
+  margin: 0.7rem 0;
+}
+.cap-steps li::before {
+  content: counter(cap-step);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+html[data-theme="dark"] .cap-steps li::before { color: #0b1220; }
+
+/* ============ Lesson-specific: capability explorer ============ */
+.cap-readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.7rem;
+  margin: 0.9rem 0 0.3rem;
+}
+.cap-readout {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  text-align: center;
+}
+.cap-readout .cap-label { font-size: 0.8rem; color: var(--muted); display: block; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; }
+.cap-readout .cap-value { font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.cap-verdict { font-weight: 700; margin-top: 0.6rem; }
+.cap-verdict.ok { color: var(--success); }
+.cap-verdict.warn { color: var(--warning); }
+.cap-verdict.no { color: var(--danger); }
+.cap-value.ok { color: var(--success); }
+.cap-value.warn { color: var(--warning); }
+.cap-value.no { color: var(--danger); }
+</style>
+
+<script src="/theme.js"></script>
+<script src="/site-sections.js"></script>
+</head>
+<body
+  data-lesson-page="true"
+  data-category="lean-six-sigma"
+  data-level="beginner"
+  data-interactive="true"
+>
+<a class="skip-link" href="#lesson-content">Skip to lesson content</a>
+
+<!-- SITE INTEGRATION: Header -->
+<input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+<header class="site lesson-sitebar">
+  <a class="brand" href="/">
+    <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+    <span>UpSkill Sprint Consulting</span>
+  </a>
+  <nav class="desktop-nav" aria-label="Primary navigation">
+    <a href="/start-here">Start Here</a>
+    <a href="/lessons" aria-current="page">Lessons</a>
+    <a href="/engineering-tools">Engineering Tools</a>
+    <a href="/services">Services</a>
+    <a href="/request-topic">Request a Topic</a>
+    <a href="/about">About</a>
+    <a href="/faq">FAQ</a>
+    <a href="/contact">Contact</a>
+  </nav>
+  <div class="header-actions">
+    <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </label>
+    <div class="theme-control" aria-label="Colour theme">
+      <svg class="theme-icon theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+      <button type="button" class="theme-toggle" data-theme-toggle="true" role="switch" aria-checked="false" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="sr-only">Toggle dark and light mode</span></button>
+      <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </div>
+  </div>
+</header>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="/start-here">Start Here</a>
+  <a href="/lessons" aria-current="page">Lessons</a>
+  <a href="/engineering-tools">Engineering Tools</a>
+  <a href="/services">Services</a>
+  <a href="/request-topic">Request a Topic</a>
+  <a href="/about">About</a>
+  <a href="/faq">FAQ</a>
+  <a href="/contact">Contact</a>
+</nav>
+
+<main id="lesson-content">
+<article class="lesson-wrapper">
+
+<!-- EDIT: Hero -->
+<div class="lesson-hero">
+  <p class="eyebrow">Lean Six Sigma &middot; Beginner &middot; 15 min read</p>
+  <h1>Process Capability: Will Your Process Meet the Spec?</h1>
+  <span class="pill accent">Lean Six Sigma</span>
+  <p class="lesson-lede">
+    Your customer sets the goalposts. Your process kicks the ball. Process capability measures &mdash; with two simple
+    numbers, C<sub>p</sub> and C<sub>pk</sub> &mdash; whether your process can reliably land inside those goalposts.
+  </p>
+  <p class="why-it-matters"><strong>Why this matters at work:</strong> capability indices are the standard language
+    between suppliers and customers. A contract that says &ldquo;maintain C<sub>pk</sub> &ge; 1.33&rdquo; is a precise,
+    testable promise about defect rates &mdash; and knowing how to compute and read these numbers is a core skill for
+    quality roles and a guaranteed topic on the ASQ CSSBB and CQE exams.</p>
+</div>
+
+<nav class="lesson-toc" aria-label="Lesson contents">
+  <strong>In this lesson</strong>
+  <ul>
+    <li><a href="#learning-objectives">Learning objectives</a></li>
+    <li><a href="#key-concepts">Two voices: customer and process</a></li>
+    <li><a href="#terminology">Terminology</a></li>
+    <li><a href="#core-formula">The formulas: C<sub>p</sub> and C<sub>pk</sub></a></li>
+    <li><a href="#capability-explorer">Interactive: capability explorer</a></li>
+    <li><a href="#procedure">How to run a capability study</a></li>
+    <li><a href="#worked-example">Worked example</a></li>
+    <li><a href="#interpretation">Reading the numbers</a></li>
+    <li><a href="#mistakes">Common mistakes</a></li>
+    <li><a href="#software">Statistics implementation: Excel &amp; Minitab</a></li>
+    <li><a href="#practice">Try it yourself</a></li>
+    <li><a href="#quiz">Check your understanding</a></li>
+    <li><a href="#summary">Final summary</a></li>
+  </ul>
+</nav>
+
+<!-- EDIT: Learning objectives -->
+<section id="learning-objectives" aria-labelledby="objectives-h">
+  <h2 id="objectives-h">By the end, you should be able to</h2>
+  <ul class="objectives-list">
+    <li><strong>Explain</strong> what process capability compares: the customer&rsquo;s specification width against the process&rsquo;s natural spread.</li>
+    <li><strong>Calculate</strong> C<sub>p</sub> and C<sub>pk</sub> from a mean, a standard deviation, and specification limits.</li>
+    <li><strong>Interpret</strong> the results against the common benchmarks (1.00, 1.33, 1.67) and spot an off-centre process.</li>
+    <li><strong>Run</strong> a capability analysis in Excel and Minitab and know which menu option to pick.</li>
+  </ul>
+</section>
+
+<!-- EDIT: Prerequisites -->
+<section id="prerequisites" aria-labelledby="prereq-h">
+  <h2 id="prereq-h">Before you start</h2>
+  <p>This lesson builds directly on
+    <a href="/lessons/statistics/the-normal-distribution-meet-the-bell-curve">The Normal Distribution: Meet the Bell Curve</a>.
+    You should be comfortable with the mean &mu;, the standard deviation &sigma;, and the idea that almost all values of a
+    normal process fall within &plusmn;3&sigma; of the mean. That &ldquo;&plusmn;3&sigma;&rdquo; span &mdash; 6&sigma; wide in total &mdash; is the
+    star of this lesson.</p>
+</section>
+
+<!-- EDIT: Key concepts -->
+<section id="key-concepts" aria-labelledby="concepts-h">
+  <h2 id="concepts-h">Two voices: the customer and the process</h2>
+  <p>Every capability question is a conversation between two voices:</p>
+  <div class="panel">
+    <h3>Voice of the customer &mdash; the specification</h3>
+    <p>The customer (or the drawing, or the regulation) states what is acceptable: a <strong>lower specification limit
+      (LSL)</strong> and an <strong>upper specification limit (USL)</strong>. A coffee roaster promising
+      &ldquo;500&nbsp;g &plusmn;&nbsp;6&nbsp;g&rdquo; has set LSL&nbsp;=&nbsp;494&nbsp;g and USL&nbsp;=&nbsp;506&nbsp;g.
+      The distance between them, USL&nbsp;&minus;&nbsp;LSL, is the <strong>specification width</strong> &mdash; the width of the goalposts.</p>
+  </div>
+  <div class="panel">
+    <h3>Voice of the process &mdash; the natural spread</h3>
+    <p>The process doesn&rsquo;t care what the drawing says. It produces values with its own mean &mu; and standard
+      deviation &sigma;. For a stable, roughly normal process, essentially all output (99.73%) lands within
+      <strong>&mu; &plusmn; 3&sigma;</strong> &mdash; a natural spread that is <strong>6&sigma; wide</strong>.</p>
+  </div>
+  <p><strong>Capability is the comparison of the two widths.</strong> If the goalposts (spec width) are much wider than the
+    ball&rsquo;s scatter (6&sigma;), nearly everything lands in-spec. If the scatter is as wide as the goalposts &mdash; or the
+    aim is off-centre &mdash; defects follow.</p>
+  <div class="callout tip">
+    <strong>One sentence to remember:</strong> C<sub>p</sub> asks &ldquo;is the spread small enough?&rdquo; and
+    C<sub>pk</sub> asks &ldquo;is the spread small enough <em>where the process is actually aimed</em>?&rdquo;
+  </div>
+</section>
+
+<!-- EDIT: Terminology -->
+<section id="terminology" aria-labelledby="terms-h">
+  <h2 id="terms-h">Terminology</h2>
+  <div class="table-scroll">
+    <table>
+      <caption>The words you&rsquo;ll meet in every capability discussion</caption>
+      <thead>
+        <tr><th scope="col">Term</th><th scope="col">Meaning</th><th scope="col">Plain-language version</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>LSL / USL</td><td>Lower / upper specification limit</td><td>The goalposts set by the customer</td></tr>
+        <tr><td>Specification width</td><td>USL &minus; LSL</td><td>How far apart the goalposts are</td></tr>
+        <tr><td>Natural process spread</td><td>6&sigma; (from &mu;&nbsp;&minus;&nbsp;3&sigma; to &mu;&nbsp;+&nbsp;3&sigma;)</td><td>How widely the process scatters its output</td></tr>
+        <tr><td>C<sub>p</sub></td><td>Potential capability</td><td>Could the process fit, if perfectly centred?</td></tr>
+        <tr><td>C<sub>pk</sub></td><td>Actual capability</td><td>Does it fit, given where it&rsquo;s actually aimed?</td></tr>
+        <tr><td>P<sub>p</sub> / P<sub>pk</sub></td><td>Performance indices (overall &sigma;)</td><td>Same idea, computed with long-term variation</td></tr>
+        <tr><td>Stable / in control</td><td>Only common-cause variation present</td><td>The process behaves the same way over time</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- EDIT: Core formulas -->
+<section id="core-formula" aria-labelledby="formula-h">
+  <h2 id="formula-h">The formulas: C<sub>p</sub> and C<sub>pk</sub></h2>
+  <div class="formula-box" role="img" aria-label="C p equals U S L minus L S L, divided by six sigma">
+    <strong>C<sub>p</sub> = (USL &minus; LSL) / 6&sigma;</strong>
+  </div>
+  <p>C<sub>p</sub> is a simple ratio of the two widths: specification width on top, natural process spread underneath.
+    C<sub>p</sub>&nbsp;=&nbsp;1 means the goalposts and the scatter are exactly the same width &mdash; the process barely fits, with
+    zero room for error. C<sub>p</sub>&nbsp;=&nbsp;2 means the goalposts are twice as wide as the scatter. But C<sub>p</sub> has a
+    blind spot: <strong>it completely ignores where the process is centred.</strong> A process aimed way off-target can still
+    have a beautiful C<sub>p</sub>.</p>
+  <div class="formula-box" role="img" aria-label="C p k equals the minimum of: U S L minus mu over three sigma, and mu minus L S L over three sigma">
+    <strong>C<sub>pk</sub> = min&nbsp;[ (USL &minus; &mu;) / 3&sigma; ,&nbsp; (&mu; &minus; LSL) / 3&sigma; ]</strong>
+  </div>
+  <p>C<sub>pk</sub> fixes the blind spot. It measures the distance from the process mean to the <em>nearest</em> spec limit,
+    in units of 3&sigma;, and reports the worse side. If the process is perfectly centred, C<sub>pk</sub>&nbsp;=&nbsp;C<sub>p</sub>.
+    The further the mean drifts toward a limit, the lower C<sub>pk</sub> falls &mdash; even while C<sub>p</sub> stays put.
+    That gap between the two numbers is itself a diagnosis:</p>
+  <div class="callout">
+    <strong>C<sub>p</sub> high but C<sub>pk</sub> low?</strong> The spread is fine &mdash; the process is simply off-centre.
+    Re-aim it (usually the cheap fix). <strong>Both low?</strong> The spread itself is too wide &mdash; you have a variation-reduction
+    project on your hands (the expensive fix).
+  </div>
+</section>
+
+<!-- EDIT: Interactive capability explorer -->
+<section id="capability-explorer" aria-labelledby="explorer-h">
+  <h2 id="explorer-h">Interactive: capability explorer</h2>
+  <p>Move the sliders and watch both indices react. Try this experiment: leave the spread alone and slide the
+    <strong>mean</strong> off-centre &mdash; C<sub>p</sub> won&rsquo;t budge, but C<sub>pk</sub> will sink. Then re-centre the mean and
+    widen <strong>&sigma;</strong> instead &mdash; now both fall together.</p>
+  <div class="tool" aria-label="Capability explorer tool">
+    <div class="controls">
+      <div class="control">
+        <label for="cap-lsl">LSL: <output id="cap-lsl-out">94.0</output></label>
+        <input type="range" id="cap-lsl" min="90" max="99" step="0.5" value="94" aria-describedby="explorer-h">
+      </div>
+      <div class="control">
+        <label for="cap-usl">USL: <output id="cap-usl-out">106.0</output></label>
+        <input type="range" id="cap-usl" min="101" max="110" step="0.5" value="106" aria-describedby="explorer-h">
+      </div>
+      <div class="control">
+        <label for="cap-mean">Process mean &mu;: <output id="cap-mean-out">100.0</output></label>
+        <input type="range" id="cap-mean" min="94" max="106" step="0.1" value="100">
+      </div>
+      <div class="control">
+        <label for="cap-sigma">Process &sigma;: <output id="cap-sigma-out">1.5</output></label>
+        <input type="range" id="cap-sigma" min="0.5" max="4" step="0.1" value="1.5">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn secondary" id="cap-reset">Reset to a centred 1.33 process</button>
+      <button type="button" class="btn secondary" id="cap-offcentre">Show an off-centre process</button>
+    </div>
+    <div class="fig-panel">
+      <svg id="cap-svg" viewBox="0 0 700 300" role="img" aria-label="Bell curve of the process with specification limits marked; the areas outside the limits are shaded" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;">
+        <line x1="0" y1="270" x2="700" y2="270" stroke="var(--line)" stroke-width="1.5"></line>
+        <path id="cap-curve" d="" fill="var(--shade-3)" stroke="var(--teal)" stroke-width="2.5"></path>
+        <path id="cap-oos-left" d="" fill="var(--shade-1)" stroke="none"></path>
+        <path id="cap-oos-right" d="" fill="var(--shade-1)" stroke="none"></path>
+        <line id="cap-lsl-line" x1="0" y1="30" x2="0" y2="270" stroke="var(--danger)" stroke-width="2.5" stroke-dasharray="6 4"></line>
+        <line id="cap-usl-line" x1="0" y1="30" x2="0" y2="270" stroke="var(--danger)" stroke-width="2.5" stroke-dasharray="6 4"></line>
+        <line id="cap-mean-line" x1="0" y1="55" x2="0" y2="270" stroke="var(--amber)" stroke-width="2"></line>
+        <text id="cap-lsl-label" x="0" y="22" text-anchor="middle" font-size="14" fill="var(--danger)" font-weight="700">LSL</text>
+        <text id="cap-usl-label" x="0" y="22" text-anchor="middle" font-size="14" fill="var(--danger)" font-weight="700">USL</text>
+        <text id="cap-mean-label" x="0" y="48" text-anchor="middle" font-size="13" fill="var(--amber)" font-weight="700">&mu;</text>
+      </svg>
+    </div>
+    <div class="cap-readouts">
+      <div class="cap-readout"><span class="cap-label">C<sub>p</sub></span><span class="cap-value" id="cap-cp">1.33</span></div>
+      <div class="cap-readout"><span class="cap-label">C<sub>pk</sub></span><span class="cap-value" id="cap-cpk">1.33</span></div>
+      <div class="cap-readout"><span class="cap-label">Out of spec</span><span class="cap-value" id="cap-oos">&asymp; 63 ppm</span></div>
+    </div>
+    <p class="cap-verdict ok" id="cap-verdict" role="status" aria-live="polite">Capable: C<sub>pk</sub> meets the common 1.33 benchmark.</p>
+  </div>
+</section>
+
+<!-- EDIT: Procedure -->
+<section id="procedure" aria-labelledby="procedure-h">
+  <h2 id="procedure-h">How to run a capability study, step by step</h2>
+  <ol class="cap-steps">
+    <li><strong>Confirm the process is stable first.</strong> Run a control chart (see
+      <a href="/lessons/control-charts-explained">Control Charts Explained</a>). Capability numbers from an unstable
+      process are fiction &mdash; the spread you measure today won&rsquo;t be the spread you get tomorrow.</li>
+    <li><strong>Check the data are roughly normal.</strong> A histogram or normal probability plot is enough at this level.
+      Strongly skewed data need a transformation or a different method before the formulas apply.</li>
+    <li><strong>Collect enough data.</strong> Aim for at least 30 measurements &mdash; 50 to 125 is better &mdash; taken across a
+      representative stretch of production, not one lucky hour.</li>
+    <li><strong>Compute &mu; and &sigma;.</strong> Use the sample mean and sample standard deviation (or an estimate from a
+      control chart&rsquo;s subgroups &mdash; that distinction becomes C<sub>pk</sub> vs P<sub>pk</sub> later).</li>
+    <li><strong>Apply the formulas.</strong> C<sub>p</sub> from the two widths; C<sub>pk</sub> from the nearest-limit distance.</li>
+    <li><strong>Interpret and act.</strong> Compare against the agreed benchmark, then diagnose: centring problem, spread
+      problem, or both.</li>
+  </ol>
+</section>
+
+<!-- EDIT: Worked example -->
+<section id="worked-example" aria-labelledby="example-h">
+  <h2 id="example-h">Worked example: the coffee bag line</h2>
+  <div class="panel">
+    <p>A packing line fills 500&nbsp;g coffee bags with a spec of <strong>500 &plusmn; 6&nbsp;g</strong>
+      (LSL&nbsp;=&nbsp;494, USL&nbsp;=&nbsp;506). Sixty bags from a stable run give a mean of
+      <strong>&mu; = 501.2&nbsp;g</strong> and a standard deviation of <strong>&sigma; = 1.5&nbsp;g</strong>.</p>
+    <ol class="cap-steps">
+      <li><strong>Specification width:</strong> 506 &minus; 494 = <strong>12&nbsp;g</strong>.</li>
+      <li><strong>Natural spread:</strong> 6&sigma; = 6 &times; 1.5 = <strong>9&nbsp;g</strong>.</li>
+      <li><strong>C<sub>p</sub></strong> = 12 / 9 = <strong>1.33</strong>. Potential looks healthy: the goalposts are a third wider than the scatter.</li>
+      <li><strong>Upper side:</strong> (506 &minus; 501.2) / (3 &times; 1.5) = 4.8 / 4.5 = <strong>1.07</strong>.</li>
+      <li><strong>Lower side:</strong> (501.2 &minus; 494) / 4.5 = 7.2 / 4.5 = <strong>1.60</strong>.</li>
+      <li><strong>C<sub>pk</sub></strong> = min(1.07, 1.60) = <strong>1.07</strong>.</li>
+    </ol>
+    <p><strong>The story the two numbers tell:</strong> the spread is fine (C<sub>p</sub>&nbsp;=&nbsp;1.33), but the line is
+      overfilling by 1.2&nbsp;g on average, pushing output toward the upper limit and dragging C<sub>pk</sub> down to 1.07 &mdash;
+      below the 1.33 benchmark. The fix isn&rsquo;t a costly variation-reduction project; it&rsquo;s re-targeting the filler back
+      to 500&nbsp;g. Centre it, and C<sub>pk</sub> rises to meet C<sub>p</sub> at 1.33 &mdash; and the overfill give-away stops too.</p>
+  </div>
+</section>
+
+<!-- EDIT: Interpretation -->
+<section id="interpretation" aria-labelledby="interp-h">
+  <h2 id="interp-h">Reading the numbers</h2>
+  <div class="table-scroll">
+    <table>
+      <caption>Common C<sub>pk</sub> benchmarks (two-sided specs, normal, stable process)</caption>
+      <thead>
+        <tr><th scope="col">C<sub>pk</sub></th><th scope="col">Roughly how many out of spec</th><th scope="col">Typical reading</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>&lt; 1.00</td><td>More than ~2,700 ppm</td><td>Not capable &mdash; the process cannot reliably hold the spec</td></tr>
+        <tr><td>1.00</td><td>~2,700 ppm (centred)</td><td>Barely fits &mdash; any drift creates defects immediately</td></tr>
+        <tr><td>1.33</td><td>~63 ppm</td><td>The classic minimum most customers require</td></tr>
+        <tr><td>1.67</td><td>~0.6 ppm</td><td>Strong &mdash; typical target for safety-critical characteristics</td></tr>
+        <tr><td>2.00</td><td>~0.002 ppm</td><td>&ldquo;Six Sigma&rdquo; capability with the mean on target</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip">
+    <strong>Why 1.33?</strong> It means the nearest spec limit sits 4&sigma; away from the mean (because 4/3&nbsp;=&nbsp;1.33) &mdash;
+    a full extra &sigma; of safety margin beyond &ldquo;barely fits.&rdquo; That buffer absorbs the small drifts every real process has.
+  </div>
+  <p>One more distinction you&rsquo;ll meet immediately in software: <strong>C<sub>pk</sub> vs P<sub>pk</sub></strong>.
+    C<sub>pk</sub> uses the <em>within-subgroup</em> (short-term) &sigma; estimated from a control chart; P<sub>pk</sub> uses the
+    <em>overall</em> (long-term) standard deviation of all the data. P<sub>pk</sub> is usually a little lower, because long-term
+    data picks up the small shifts between subgroups. Minitab prints both &mdash; now you know why they differ.</p>
+</section>
+
+<!-- EDIT: Common mistakes -->
+<section id="mistakes" aria-labelledby="mistakes-h">
+  <h2 id="mistakes-h">Common mistakes</h2>
+  <div class="callout warn">
+    <strong>Computing capability on an unstable process.</strong> If the control chart shows special causes, the &sigma; you
+    measured is a moving target and the index is meaningless. Stability first, capability second &mdash; always.
+  </div>
+  <div class="callout warn">
+    <strong>Quoting C<sub>p</sub> when the process is off-centre.</strong> C<sub>p</sub> is blind to centring. Reporting
+    &ldquo;C<sub>p</sub>&nbsp;=&nbsp;1.6, we&rsquo;re fine&rdquo; while C<sub>pk</sub> is 0.7 hides a real defect stream. Report both;
+    act on C<sub>pk</sub>.
+  </div>
+  <div class="callout warn">
+    <strong>Forcing the formulas onto non-normal data.</strong> The ppm predictions in the table assume a normal shape.
+    Cycle-time and flatness data, for example, are often skewed &mdash; transform first or use a non-normal capability method.
+  </div>
+  <div class="callout warn">
+    <strong>Confusing 6&sigma; in the denominator with &ldquo;Six Sigma&rdquo; the programme.</strong> The 6&sigma; in
+    C<sub>p</sub> is simply the width of the natural spread. &ldquo;Six Sigma quality&rdquo; refers to specs sitting six
+    standard deviations from the mean &mdash; C<sub>p</sub>&nbsp;=&nbsp;2.0 territory.
+  </div>
+</section>
+
+<!-- EDIT: Statistics Implementation (Excel & Minitab) -->
+<section id="software" aria-labelledby="software-h">
+  <h2 id="software-h">Statistics implementation: Excel and Minitab</h2>
+  <p>Software should confirm and speed up what you now understand &mdash; not replace the thinking.</p>
+
+  <h3>Excel functions</h3>
+  <p>Excel has no built-in C<sub>p</sub>/C<sub>pk</sub> function &mdash; you assemble them from these pieces:</p>
+  <div class="table-scroll">
+    <table>
+      <caption>Excel functions for capability analysis (Formulas &rsaquo; More Functions &rsaquo; Statistical)</caption>
+      <thead>
+        <tr><th scope="col">Function</th><th scope="col">Syntax</th><th scope="col">Purpose</th><th scope="col">When to use</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>AVERAGE</code></td>
+          <td><code>=AVERAGE(range)</code></td>
+          <td>Process mean &mu;</td>
+          <td>Always &mdash; the first ingredient of every capability formula</td>
+        </tr>
+        <tr>
+          <td><code>STDEV.S</code></td>
+          <td><code>=STDEV.S(range)</code></td>
+          <td>Sample standard deviation</td>
+          <td>Your default: measurement data is a sample of the process, not the whole population</td>
+        </tr>
+        <tr>
+          <td><code>STDEV.P</code></td>
+          <td><code>=STDEV.P(range)</code></td>
+          <td>Population standard deviation</td>
+          <td>Only when the range truly is the entire population &mdash; rare in capability work</td>
+        </tr>
+        <tr>
+          <td><code>MIN</code></td>
+          <td><code>=MIN(a, b)</code></td>
+          <td>Picks the worse side</td>
+          <td>The &ldquo;min&rdquo; in the C<sub>pk</sub> formula: nearest-limit side wins</td>
+        </tr>
+        <tr>
+          <td><code>NORM.DIST</code></td>
+          <td><code>=NORM.DIST(x, mean, sd, TRUE)</code></td>
+          <td>Probability of a value below x</td>
+          <td>Estimating the out-of-spec fraction below the LSL</td>
+        </tr>
+        <tr>
+          <td><code>NORM.S.DIST</code></td>
+          <td><code>=NORM.S.DIST(z, TRUE)</code></td>
+          <td>Same, from a z-score</td>
+          <td>When you&rsquo;ve already standardised (z = (limit &minus; &mu;)/&sigma;)</td>
+        </tr>
+        <tr>
+          <td><code>COUNTIFS</code></td>
+          <td><code>=COUNTIFS(range,"&lt;"&amp;LSL) + COUNTIFS(range,"&gt;"&amp;USL)</code></td>
+          <td>Actual out-of-spec count</td>
+          <td>Sanity-checking the model&rsquo;s ppm prediction against the raw data</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Excel use cases</h3>
+  <div class="panel">
+    <p>With data in <code>A2:A61</code>, and <code>E1</code>&nbsp;=&nbsp;LSL, <code>E2</code>&nbsp;=&nbsp;USL:</p>
+    <ol class="cap-steps">
+      <li><strong>Mean and spread:</strong> <code>=AVERAGE(A2:A61)</code> in <code>E4</code>, <code>=STDEV.S(A2:A61)</code> in <code>E5</code>.</li>
+      <li><strong>C<sub>p</sub>:</strong> <code>=(E2-E1)/(6*E5)</code> &mdash; the coffee-bag data returns 1.33.</li>
+      <li><strong>C<sub>pk</sub>:</strong> <code>=MIN((E2-E4)/(3*E5), (E4-E1)/(3*E5))</code> &mdash; returns 1.07, flagging the off-centre fill.</li>
+      <li><strong>Predicted out-of-spec:</strong> <code>=NORM.DIST(E1,E4,E5,TRUE) + (1-NORM.DIST(E2,E4,E5,TRUE))</code>,
+        formatted as a percentage (multiply by 1,000,000 for ppm).</li>
+    </ol>
+  </div>
+
+  <h3>Minitab navigation</h3>
+  <div class="table-scroll">
+    <table>
+      <caption>Minitab menu paths for capability analysis</caption>
+      <thead>
+        <tr><th scope="col">Menu path</th><th scope="col">What it gives you</th><th scope="col">When to choose it</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Stat &rsaquo; Quality Tools &rsaquo; Capability Analysis &rsaquo; Normal</strong></td>
+          <td>The classic single report: histogram with spec limits, C<sub>p</sub>/C<sub>pk</sub> (within) and P<sub>p</sub>/P<sub>pk</sub> (overall), plus expected ppm</td>
+          <td>Your standard choice once stability is already confirmed &mdash; the report customers expect</td>
+        </tr>
+        <tr>
+          <td><strong>Stat &rsaquo; Quality Tools &rsaquo; Capability Sixpack &rsaquo; Normal</strong></td>
+          <td>Control charts, normality plot, and capability in one six-panel view</td>
+          <td>Best first run: it checks the stability and normality assumptions <em>and</em> the capability together</td>
+        </tr>
+        <tr>
+          <td><strong>Stat &rsaquo; Quality Tools &rsaquo; Capability Analysis &rsaquo; Nonnormal</strong></td>
+          <td>Capability using a fitted distribution (e.g. Weibull, lognormal)</td>
+          <td>When the normality check fails and a transformation isn&rsquo;t appropriate</td>
+        </tr>
+        <tr>
+          <td><strong>Graph &rsaquo; Probability Plot</strong></td>
+          <td>Quick normality check on its own</td>
+          <td>Fast assumption screening before any capability run</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>In the dialog, enter your data column, the subgroup size (enter <code>1</code> for individual measurements), and the
+    LSL/USL. Minitab estimates the within-subgroup &sigma; for C<sub>pk</sub> and the overall &sigma; for P<sub>pk</sub> &mdash;
+    which is exactly why the two sets of indices differ on the report.</p>
+
+  <h3>Exam tips (ASQ CSSBB / CQE)</h3>
+  <div class="callout tip">
+    <ul>
+      <li><strong>Memorise both formulas cold.</strong> Exam questions hand you &mu;, &sigma;, LSL, USL and expect C<sub>p</sub>
+        and C<sub>pk</sub> in under a minute. Practice until the coffee-bag example takes you 30 seconds.</li>
+      <li><strong>Know the signature patterns:</strong> C<sub>p</sub>&nbsp;=&nbsp;C<sub>pk</sub> &rArr; perfectly centred;
+        C<sub>p</sub>&nbsp;&gt;&nbsp;C<sub>pk</sub> &rArr; off-centre; C<sub>pk</sub> can never exceed C<sub>p</sub>.
+        A negative C<sub>pk</sub> means the mean is outside a spec limit.</li>
+      <li><strong>One-sided specs:</strong> with only a USL, C<sub>pk</sub>&nbsp;=&nbsp;(USL&nbsp;&minus;&nbsp;&mu;)/3&sigma; and
+        C<sub>p</sub> is undefined &mdash; a favourite exam trap.</li>
+      <li><strong>Short-term vs long-term:</strong> C<sub>p</sub>/C<sub>pk</sub> pair with within-subgroup (short-term) &sigma;;
+        P<sub>p</sub>/P<sub>pk</sub> with overall (long-term) &sigma;. Questions about &ldquo;which index uses which sigma&rdquo;
+        appear on both exams.</li>
+      <li><strong>Benchmarks:</strong> 1.00 &asymp; 2,700 ppm, 1.33 &asymp; 63 ppm, 1.67 &asymp; 0.6 ppm (centred, two-sided).
+        Knowing 1.33 &hArr; &ldquo;4&sigma; to the nearest limit&rdquo; lets you re-derive the rest.</li>
+      <li><strong>Prerequisites are testable:</strong> &ldquo;What must be true before a capability study?&rdquo; &mdash;
+        stability (in control) and approximate normality. Stability always comes first.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- EDIT: Practice activity -->
+<section id="practice" aria-labelledby="practice-h">
+  <h2 id="practice-h">Try it yourself</h2>
+  <div class="callout tip">
+    <p><strong>A machining line cuts shafts to a diameter spec of 10.0 &plusmn; 0.5&nbsp;mm</strong>
+      (LSL&nbsp;=&nbsp;9.5, USL&nbsp;=&nbsp;10.5). A stable run gives <strong>&mu; = 10.1&nbsp;mm</strong> and
+      <strong>&sigma; = 0.12&nbsp;mm</strong>. Compute both indices to two decimal places.</p>
+    <div class="controls">
+      <div class="control">
+        <label for="practice-cp">Your C<sub>p</sub>:</label>
+        <input type="number" id="practice-cp" step="0.01" inputmode="decimal" aria-describedby="practice-h">
+      </div>
+      <div class="control">
+        <label for="practice-cpk">Your C<sub>pk</sub>:</label>
+        <input type="number" id="practice-cpk" step="0.01" inputmode="decimal" aria-describedby="practice-h">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn" id="practice-check">Check my answers</button>
+      <button type="button" class="btn secondary" id="practice-reveal">Show the working</button>
+    </div>
+    <p id="practice-feedback" role="status" aria-live="polite"></p>
+    <div id="practice-working" hidden>
+      <ol class="cap-steps">
+        <li>Spec width = 10.5 &minus; 9.5 = 1.0&nbsp;mm; natural spread = 6 &times; 0.12 = 0.72&nbsp;mm.</li>
+        <li><strong>C<sub>p</sub></strong> = 1.0 / 0.72 = <strong>1.39</strong>.</li>
+        <li>Upper side: (10.5 &minus; 10.1) / 0.36 = 1.11; lower side: (10.1 &minus; 9.5) / 0.36 = 1.67.</li>
+        <li><strong>C<sub>pk</sub></strong> = min(1.11, 1.67) = <strong>1.11</strong> &mdash; the spread is fine, the aim is 0.1&nbsp;mm high.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- EDIT: Quiz -->
+<section id="quiz" aria-labelledby="quiz-h">
+  <h2 id="quiz-h">Check your understanding</h2>
+  <p>Five questions. Pick an answer for each, then press <strong>Check my answers</strong>.</p>
+
+  <form id="quiz-form">
+    <div class="quiz-q" data-q="q1" data-answer="c">
+      <fieldset>
+        <legend>1. What does C<sub>p</sub> compare?</legend>
+        <label class="quiz-option"><input type="radio" name="q1" value="a"><span>The process mean against the specification target</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="b"><span>The number of defects against the number of opportunities</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="c"><span>The specification width against the natural 6&sigma; process spread</span></label>
+        <label class="quiz-option"><input type="radio" name="q1" value="d"><span>Short-term variation against long-term variation</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="quiz-q" data-q="q2" data-answer="b">
+      <fieldset>
+        <legend>2. A process has C<sub>p</sub> = 1.60 but C<sub>pk</sub> = 0.70. What is the most likely diagnosis?</legend>
+        <label class="quiz-option"><input type="radio" name="q2" value="a"><span>The spread is far too wide for the specification</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="b"><span>The spread is fine, but the process is aimed well off-centre</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="c"><span>The data must be non-normal</span></label>
+        <label class="quiz-option"><input type="radio" name="q2" value="d"><span>The specification limits were entered backwards</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="quiz-q" data-q="q3" data-answer="a">
+      <fieldset>
+        <legend>3. LSL = 20, USL = 30, &mu; = 27, &sigma; = 1. What is C<sub>pk</sub>?</legend>
+        <label class="quiz-option"><input type="radio" name="q3" value="a"><span>1.00 &mdash; min(3/3, 7/3) uses the nearer upper limit</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="b"><span>1.67 &mdash; the spec width divided by 6&sigma;</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="c"><span>2.33 &mdash; min uses the further limit</span></label>
+        <label class="quiz-option"><input type="radio" name="q3" value="d"><span>3.00 &mdash; the distance to the nearest limit</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="quiz-q" data-q="q4" data-answer="d">
+      <fieldset>
+        <legend>4. What must be confirmed <em>before</em> a capability study is meaningful?</legend>
+        <label class="quiz-option"><input type="radio" name="q4" value="a"><span>C<sub>pk</sub> is above 1.33</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="b"><span>The sample contains at least 1,000 measurements</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="c"><span>The mean exactly equals the specification target</span></label>
+        <label class="quiz-option"><input type="radio" name="q4" value="d"><span>The process is stable (in control) and the data are roughly normal</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="quiz-q" data-q="q5" data-answer="b">
+      <fieldset>
+        <legend>5. Why is C<sub>pk</sub> &ge; 1.33 the classic customer requirement rather than 1.00?</legend>
+        <label class="quiz-option"><input type="radio" name="q5" value="a"><span>1.33 is the value at which the process becomes normally distributed</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="b"><span>It puts the nearest spec limit 4&sigma; from the mean, leaving a safety margin for the drifts every real process has</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="c"><span>It guarantees exactly zero defects</span></label>
+        <label class="quiz-option"><input type="radio" name="q5" value="d"><span>It is required by law in most industries</span></label>
+      </fieldset>
+      <div class="quiz-feedback" data-feedback hidden></div>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="quiz-check">Check my answers</button>
+      <button type="button" class="btn secondary" id="quiz-reset">Try again</button>
+    </div>
+    <p id="quiz-score" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<!-- EDIT: Summary -->
+<section id="summary" aria-labelledby="summary-h">
+  <h2 id="summary-h">Final summary</h2>
+  <ul class="objectives-list">
+    <li>Capability compares the <strong>voice of the customer</strong> (spec width) with the <strong>voice of the process</strong> (6&sigma; spread).</li>
+    <li><strong>C<sub>p</sub> = (USL &minus; LSL) / 6&sigma;</strong> measures potential; it ignores centring.</li>
+    <li><strong>C<sub>pk</sub> = min[(USL &minus; &mu;)/3&sigma;, (&mu; &minus; LSL)/3&sigma;]</strong> measures reality; it reports the worse side.</li>
+    <li>A gap between them is a diagnosis: <strong>re-aim</strong> if only C<sub>pk</sub> is low, <strong>reduce variation</strong> if both are.</li>
+    <li>Benchmarks: <strong>1.00</strong> barely fits, <strong>1.33</strong> the classic requirement, <strong>1.67</strong> safety-critical territory.</li>
+    <li><strong>Stability first, capability second</strong> &mdash; and check normality before trusting the ppm predictions.</li>
+  </ul>
+  <div class="remember">
+    <strong>If you remember one thing:</strong> C<sub>p</sub> asks whether the process <em>could</em> fit the spec;
+    C<sub>pk</sub> tells you whether it actually <em>does</em>. Report both &mdash; the gap between them tells you what to fix.
+  </div>
+</section>
+
+<!-- EDIT: References -->
+<section id="references" aria-labelledby="references-h">
+  <h2 id="references-h">References &amp; further reading</h2>
+  <ul>
+    <li>NIST/SEMATECH e-Handbook of Statistical Methods &mdash; Process Capability:
+      <a href="https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm" rel="noopener">itl.nist.gov/div898/handbook</a></li>
+    <li>ASQ Quality Resources &mdash; Process Capability (Cp, Cpk):
+      <a href="https://asq.org/quality-resources/process-capability" rel="noopener">asq.org/quality-resources</a></li>
+    <li>Montgomery, D. C., <em>Introduction to Statistical Quality Control</em> &mdash; the standard reference chapter on capability indices.</li>
+  </ul>
+</section>
+
+</article>
+</main>
+
+<footer class="lesson-footer">
+  <div class="footer-inner">
+    <a class="footer-back" href="/lessons#lean-six-sigma">Back to Lean Six Sigma</a>
+    <span>&copy; UpSkill Sprint Consulting &middot; Lean Six Sigma lesson library</span>
+  </div>
+</footer>
+
+<!-- EDIT: Lesson JavaScript (single script block, IIFE, no globals) -->
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Maths helpers ---------- */
+
+  function normalPdf(x, mu, sigma) {
+    var zz = (x - mu) / sigma;
+    return Math.exp(-0.5 * zz * zz) / (sigma * Math.sqrt(2 * Math.PI));
+  }
+
+  // Standard normal CDF, Phi(z), Abramowitz & Stegun 26.2.17 (|error| < 7.5e-8)
+  function phi(z) {
+    var sign = z < 0 ? -1 : 1;
+    var x = Math.abs(z) / Math.sqrt(2);
+    var t = 1 / (1 + 0.3275911 * x);
+    var y = 1 - ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x);
+    return 0.5 * (1 + sign * y);
+  }
+
+  function fmt(value, decimals) {
+    return Number(value).toFixed(decimals);
+  }
+
+  /* ---------- Capability explorer ---------- */
+
+  var lslInput = document.getElementById("cap-lsl");
+  var uslInput = document.getElementById("cap-usl");
+  var meanInput = document.getElementById("cap-mean");
+  var sigmaInput = document.getElementById("cap-sigma");
+  var lslOut = document.getElementById("cap-lsl-out");
+  var uslOut = document.getElementById("cap-usl-out");
+  var meanOut = document.getElementById("cap-mean-out");
+  var sigmaOut = document.getElementById("cap-sigma-out");
+  var cpEl = document.getElementById("cap-cp");
+  var cpkEl = document.getElementById("cap-cpk");
+  var oosEl = document.getElementById("cap-oos");
+  var verdictEl = document.getElementById("cap-verdict");
+
+  var SVG = { width: 700, height: 300, baseline: 270, top: 60, xMin: 88, xMax: 112 };
+
+  function toSvgX(x) {
+    return (x - SVG.xMin) / (SVG.xMax - SVG.xMin) * SVG.width;
+  }
+
+  function curvePoints(mu, sigma, fromX, toX) {
+    var peak = normalPdf(mu, mu, sigma);
+    var points = [];
+    var steps = 120;
+    for (var i = 0; i <= steps; i++) {
+      var x = fromX + (toX - fromX) * i / steps;
+      var y = SVG.baseline - (normalPdf(x, mu, sigma) / peak) * (SVG.baseline - SVG.top);
+      points.push(toSvgX(x) + "," + y);
+    }
+    return points;
+  }
+
+  function areaPath(mu, sigma, fromX, toX) {
+    if (toX <= fromX) return "";
+    var points = curvePoints(mu, sigma, fromX, toX);
+    return "M" + toSvgX(fromX) + "," + SVG.baseline + " L" + points.join(" L") +
+      " L" + toSvgX(toX) + "," + SVG.baseline + " Z";
+  }
+
+  function classify(cpk) {
+    if (cpk >= 1.33) return "ok";
+    if (cpk >= 1.0) return "warn";
+    return "no";
+  }
+
+  function formatOos(fraction) {
+    var ppm = fraction * 1e6;
+    if (ppm < 1) return "< 1 ppm";
+    if (ppm < 10000) return "\u2248 " + Math.round(ppm) + " ppm";
+    return "\u2248 " + fmt(fraction * 100, 1) + "%";
+  }
+
+  function renderExplorer() {
+    var lsl = parseFloat(lslInput.value);
+    var usl = parseFloat(uslInput.value);
+    var mu = parseFloat(meanInput.value);
+    var sigma = parseFloat(sigmaInput.value);
+
+    lslOut.textContent = fmt(lsl, 1);
+    uslOut.textContent = fmt(usl, 1);
+    meanOut.textContent = fmt(mu, 1);
+    sigmaOut.textContent = fmt(sigma, 1);
+
+    var cp = (usl - lsl) / (6 * sigma);
+    var cpk = Math.min((usl - mu) / (3 * sigma), (mu - lsl) / (3 * sigma));
+    var oos = phi((lsl - mu) / sigma) + (1 - phi((usl - mu) / sigma));
+
+    document.getElementById("cap-curve").setAttribute("d",
+      "M" + toSvgX(SVG.xMin) + "," + SVG.baseline + " L" + curvePoints(mu, sigma, SVG.xMin, SVG.xMax).join(" L") +
+      " L" + toSvgX(SVG.xMax) + "," + SVG.baseline + " Z");
+    document.getElementById("cap-oos-left").setAttribute("d", areaPath(mu, sigma, SVG.xMin, Math.min(lsl, SVG.xMax)));
+    document.getElementById("cap-oos-right").setAttribute("d", areaPath(mu, sigma, Math.max(usl, SVG.xMin), SVG.xMax));
+
+    ["lsl", "usl", "mean"].forEach(function (key) {
+      var value = key === "lsl" ? lsl : key === "usl" ? usl : mu;
+      var x = toSvgX(value);
+      var line = document.getElementById("cap-" + key + "-line");
+      line.setAttribute("x1", x);
+      line.setAttribute("x2", x);
+      document.getElementById("cap-" + key + "-label").setAttribute("x", x);
+    });
+
+    var band = classify(cpk);
+    cpEl.textContent = fmt(cp, 2);
+    cpkEl.textContent = fmt(cpk, 2);
+    cpkEl.className = "cap-value " + band;
+    oosEl.textContent = formatOos(oos);
+
+    verdictEl.className = "cap-verdict " + band;
+    if (band === "ok") {
+      verdictEl.innerHTML = cpk >= 1.67
+        ? "Excellent: C<sub>pk</sub> \u2265 1.67 \u2014 strong margin, safety-critical territory."
+        : "Capable: C<sub>pk</sub> meets the common 1.33 benchmark.";
+    } else if (band === "warn") {
+      verdictEl.innerHTML = "Marginal: C<sub>pk</sub> is between 1.00 and 1.33 \u2014 it fits today, but any drift creates defects.";
+    } else {
+      verdictEl.innerHTML = (cp >= 1.33 && cpk < 1.0)
+        ? "Not capable \u2014 but C<sub>p</sub> is healthy: the spread is fine, the process is off-centre. Re-aim it."
+        : "Not capable: the natural spread is too wide for this specification.";
+    }
+  }
+
+  [lslInput, uslInput, meanInput, sigmaInput].forEach(function (input) {
+    input.addEventListener("input", renderExplorer);
+  });
+
+  document.getElementById("cap-reset").addEventListener("click", function () {
+    lslInput.value = 94; uslInput.value = 106; meanInput.value = 100; sigmaInput.value = 1.5;
+    renderExplorer();
+  });
+
+  document.getElementById("cap-offcentre").addEventListener("click", function () {
+    lslInput.value = 94; uslInput.value = 106; meanInput.value = 103.5; sigmaInput.value = 1.5;
+    renderExplorer();
+  });
+
+  renderExplorer();
+
+  /* ---------- Practice activity ---------- */
+
+  var PRACTICE = { cp: 1.39, cpk: 1.11, tolerance: 0.02 };
+  var practiceCp = document.getElementById("practice-cp");
+  var practiceCpk = document.getElementById("practice-cpk");
+  var practiceFeedback = document.getElementById("practice-feedback");
+
+  document.getElementById("practice-check").addEventListener("click", function () {
+    var cpAnswer = parseFloat(practiceCp.value);
+    var cpkAnswer = parseFloat(practiceCpk.value);
+    if (isNaN(cpAnswer) || isNaN(cpkAnswer)) {
+      practiceFeedback.textContent = "Enter a value for both indices first.";
+      practiceFeedback.className = "quiz-status no";
+      return;
+    }
+    var cpRight = Math.abs(cpAnswer - PRACTICE.cp) <= PRACTICE.tolerance;
+    var cpkRight = Math.abs(cpkAnswer - PRACTICE.cpk) <= PRACTICE.tolerance;
+    if (cpRight && cpkRight) {
+      practiceFeedback.textContent = "Both correct \u2014 Cp \u2248 1.39 and Cpk \u2248 1.11. You spotted the off-centre aim.";
+      practiceFeedback.className = "quiz-status ok";
+    } else if (cpRight) {
+      practiceFeedback.textContent = "Cp is right. For Cpk, take the distance from \u03bc to the NEARER limit and divide by 3\u03c3.";
+      practiceFeedback.className = "quiz-status no";
+    } else if (cpkRight) {
+      practiceFeedback.textContent = "Cpk is right. For Cp, divide the full spec width by 6\u03c3 (six, not three).";
+      practiceFeedback.className = "quiz-status no";
+    } else {
+      practiceFeedback.textContent = "Not yet \u2014 check that Cp uses 6\u03c3 and Cpk uses the nearer limit over 3\u03c3, then try again or show the working.";
+      practiceFeedback.className = "quiz-status no";
+    }
+  });
+
+  document.getElementById("practice-reveal").addEventListener("click", function () {
+    var working = document.getElementById("practice-working");
+    working.hidden = !working.hidden;
+  });
+
+  /* ---------- Quiz ---------- */
+
+  var EXPLANATIONS = {
+    q1: "Cp is a ratio of two widths: the specification width (USL \u2212 LSL) over the natural 6\u03c3 spread of the process.",
+    q2: "Cpk can only fall below Cp when the mean sits off-centre; a large gap between the two is the classic off-centre signature.",
+    q3: "The nearer limit is the USL: (30 \u2212 27)/3 = 1.00. The lower side gives 7/3 \u2248 2.33, but min() reports the worse side.",
+    q4: "Capability assumes the spread you measured is the spread you'll keep getting \u2014 which requires stability \u2014 and the ppm predictions assume rough normality.",
+    q5: "Cpk = 1.33 puts the nearest limit 4\u03c3 away, one full \u03c3 of buffer beyond \u2018barely fits\u2019, absorbing everyday drift."
+  };
+
+  var quizQuestions = Array.prototype.slice.call(document.querySelectorAll(".quiz-q"));
+  var quizScore = document.getElementById("quiz-score");
+
+  document.getElementById("quiz-check").addEventListener("click", function () {
+    var score = 0;
+    var answered = 0;
+    quizQuestions.forEach(function (question) {
+      var name = question.getAttribute("data-q");
+      var correct = question.getAttribute("data-answer");
+      var chosen = question.querySelector("input[name=\"" + name + "\"]:checked");
+      var feedback = question.querySelector("[data-feedback]");
+      question.classList.remove("correct", "incorrect");
+      if (!chosen) {
+        feedback.hidden = false;
+        feedback.className = "quiz-feedback no";
+        feedback.textContent = "Pick an answer for this one.";
+        return;
+      }
+      answered++;
+      var isRight = chosen.value === correct;
+      if (isRight) score++;
+      question.classList.add(isRight ? "correct" : "incorrect");
+      feedback.hidden = false;
+      feedback.className = "quiz-feedback " + (isRight ? "ok" : "no");
+      feedback.textContent = (isRight ? "Correct. " : "Not quite. ") + EXPLANATIONS[name];
+    });
+
+    if (answered < quizQuestions.length) {
+      quizScore.className = "quiz-status no";
+      quizScore.textContent = "You've answered " + answered + " of " + quizQuestions.length + " \u2014 finish the rest, then check again.";
+      return;
+    }
+
+    quizScore.className = "quiz-status " + (score >= 4 ? "ok" : "no");
+    quizScore.textContent = "Your score: " + score + " out of " + quizQuestions.length + ". " +
+      (score === 5 ? "Fully capable \u2014 Cpk 2.0 performance." :
+       score >= 4 ? "Comfortably above the 1.33 benchmark." :
+       score >= 3 ? "Marginal \u2014 revisit the formulas section and re-run." :
+       "Off-centre \u2014 re-read the worked example, then try again.");
+
+    /* Site progress tracking (see lesson contract): report the result explicitly. */
+    document.dispatchEvent(new CustomEvent("upskill-quiz-result", {
+      detail: { score: score, total: quizQuestions.length }
+    }));
+  });
+
+  document.getElementById("quiz-reset").addEventListener("click", function () {
+    quizQuestions.forEach(function (question) {
+      question.classList.remove("correct", "incorrect");
+      var feedback = question.querySelector("[data-feedback]");
+      feedback.hidden = true;
+      feedback.textContent = "";
+      Array.prototype.forEach.call(question.querySelectorAll("input[type=radio]"), function (radio) {
+        radio.checked = false;
+      });
+    });
+    quizScore.textContent = "";
+    quizScore.className = "";
+  });
+})();
+</script>
+</body>
+</html>

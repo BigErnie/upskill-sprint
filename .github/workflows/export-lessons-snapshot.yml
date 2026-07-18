@@ -4,10 +4,6 @@ on:
   pull_request:
     paths:
       - '.github/workflows/export-lessons-snapshot.yml'
-  push:
-    branches: [test]
-    paths:
-      - '.github/workflows/export-lessons-snapshot.yml'
 
 permissions:
   contents: write
@@ -21,23 +17,66 @@ jobs:
           ref: test
           fetch-depth: 0
 
-      - name: Write lesson and update registration
+      - name: Generate and validate lesson
         run: |
-          cat .github/rca-payload/part-* | base64 -d | gzip -d > lessons/root-cause-analysis-5-whys-fishbone.html
           python3 <<'PY'
           from pathlib import Path
+          import base64
+          import gzip
+          import hashlib
+          import re
+
+          parts = sorted(Path(".github/rca-payload").glob("part-*"))
+          if len(parts) != 6:
+              raise SystemExit(f"Expected 6 payload parts, found {len(parts)}")
+          encoded = "".join(part.read_text(encoding="utf-8").strip() for part in parts)
+          lesson_bytes = gzip.decompress(base64.b64decode(encoded, validate=True))
+          digest = hashlib.sha256(lesson_bytes).hexdigest()
+          expected_digest = "80f9bb42bd7dc375a53eb070237c17d300078b88c7dfd3084c056aea630aafaa"
+          if digest != expected_digest:
+              raise SystemExit(f"Lesson digest mismatch: {digest}")
+          lesson_path = Path("lessons/root-cause-analysis-5-whys-fishbone.html")
+          lesson_path.write_bytes(lesson_bytes)
+          html = lesson_bytes.decode("utf-8")
+
+          required = [
+              "UPSKILLSPRINT_LESSON_META",
+              'data-lesson-page="true"',
+              'id="learning-objectives"',
+              'id="key-concepts"',
+              'id="terminology"',
+              'id="interactives"',
+              'id="procedure"',
+              'id="worked-example"',
+              'id="mistakes"',
+              'id="software"',
+              'id="practice"',
+              'id="quiz"',
+              'id="summary"',
+              'id="references"',
+              "upskill-quiz-result",
+              "Back to Quality Engineering",
+              "/theme.js",
+              "/site-sections.js",
+          ]
+          missing = [token for token in required if token not in html]
+          if missing:
+              raise SystemExit(f"Missing lesson tokens: {missing}")
+          if html.count('class="quiz-q"') != 5:
+              raise SystemExit("Lesson must contain exactly five quiz questions.")
+          if re.search(r'onclick\s*=', html):
+              raise SystemExit("Inline event handler remains.")
+          if 'class="step-list"' in html:
+              raise SystemExit("Legacy step-list class remains.")
 
           lessons_path = Path("lessons.html")
           lessons = lessons_path.read_text(encoding="utf-8")
-          old = '''            <a class="lesson-row" href="lessons/root-cause-analysis-5-whys-fishbone.html" data-lesson-item data-topic="quality-engineering" data-level="beginner" data-interactive="false" data-search="root cause analysis 5 whys fishbone quality engineering causes">
-              <div>
-                <div class="lesson-meta"><span>Beginner</span><span>6 min read</span></div>
-                <h3>Root Cause Analysis: 5 Whys vs Fishbone Diagram</h3>
-                <p>Two practical ways to move from visible symptoms to the causes behind a recurring problem.</p>
-              </div>
-              <span class="lesson-action">Start lesson <span class="lesson-arrow" aria-hidden="true">&rarr;</span></span>
-            </a>'''
-          new = '''            <a class="lesson-row" href="/lessons/root-cause-analysis-5-whys-fishbone" data-lesson-item data-topic="quality-engineering" data-level="beginner" data-interactive="true" data-search="root cause analysis 5 whys five whys fishbone diagram ishikawa cause and effect 6M cause validation corrective action quality engineering problem solving ASQ CSSBB CQE interactive">
+          pattern = re.compile(
+              r'            <a class="lesson-row" href="lessons/root-cause-analysis-5-whys-fishbone\.html".*?'
+              r'            </a>',
+              re.S,
+          )
+          replacement = '''            <a class="lesson-row" href="/lessons/root-cause-analysis-5-whys-fishbone" data-lesson-item data-topic="quality-engineering" data-level="beginner" data-interactive="true" data-search="root cause analysis 5 whys five whys fishbone diagram ishikawa cause and effect 6M cause validation corrective action quality engineering problem solving ASQ CSSBB CQE interactive">
               <div>
                 <div class="lesson-meta"><span>Beginner</span><span>Interactive</span><span>22 min read</span></div>
                 <h3>Root Cause Analysis: 5 Whys vs Fishbone Diagram</h3>
@@ -45,66 +84,31 @@ jobs:
               </div>
               <span class="lesson-action">Start lesson</span>
             </a>'''
-          if lessons.count(old) != 1:
-              raise SystemExit(f"Expected one placeholder lesson row, found {lessons.count(old)}")
-          lessons_path.write_text(lessons.replace(old, new), encoding="utf-8")
+          lessons, replacements = pattern.subn(replacement, lessons, count=1)
+          if replacements != 1:
+              raise SystemExit(f"Expected one placeholder row replacement, found {replacements}")
+          lessons_path.write_text(lessons, encoding="utf-8")
 
           sitemap_path = Path("sitemap.xml")
           sitemap = sitemap_path.read_text(encoding="utf-8")
-          old_url = "https://upskillsprint.com/lessons/root-cause-analysis-5-whys-fishbone.html"
-          new_url = "https://upskillsprint.com/lessons/root-cause-analysis-5-whys-fishbone"
-          if sitemap.count(old_url) != 1:
-              raise SystemExit(f"Expected one legacy sitemap URL, found {sitemap.count(old_url)}")
-          sitemap_path.write_text(
-              sitemap.replace(
-                  f"<url><loc>{old_url}</loc><priority>0.7</priority></url>",
-                  f"<url><loc>{new_url}</loc><priority>0.8</priority></url>"
-              ),
-              encoding="utf-8"
-          )
-          PY
+          legacy_entry = "<url><loc>https://upskillsprint.com/lessons/root-cause-analysis-5-whys-fishbone.html</loc><priority>0.7</priority></url>"
+          clean_entry = "<url><loc>https://upskillsprint.com/lessons/root-cause-analysis-5-whys-fishbone</loc><priority>0.8</priority></url>"
+          if sitemap.count(legacy_entry) != 1:
+              raise SystemExit(f"Expected one legacy sitemap entry, found {sitemap.count(legacy_entry)}")
+          sitemap_path.write_text(sitemap.replace(legacy_entry, clean_entry), encoding="utf-8")
 
-      - name: Validate lesson contract
-        run: |
-          test "$(sha256sum lessons/root-cause-analysis-5-whys-fishbone.html | cut -d' ' -f1)" = "80f9bb42bd7dc375a53eb070237c17d300078b88c7dfd3084c056aea630aafaa"
-          node <<'NODE'
-          const fs = require('node:fs');
-          const html = fs.readFileSync('lessons/root-cause-analysis-5-whys-fishbone.html', 'utf8');
-          const required = [
-            'UPSKILLSPRINT_LESSON_META',
-            'data-lesson-page="true"',
-            'id="learning-objectives"',
-            'id="key-concepts"',
-            'id="terminology"',
-            'id="interactives"',
-            'id="procedure"',
-            'id="worked-example"',
-            'id="mistakes"',
-            'id="software"',
-            'id="practice"',
-            'id="quiz"',
-            'id="summary"',
-            'id="references"',
-            'upskill-quiz-result',
-            'Back to Quality Engineering',
-            '/theme.js',
-            '/site-sections.js'
-          ];
-          for (const token of required) {
-            if (!html.includes(token)) throw new Error(`Missing required token: ${token}`);
-          }
-          const quizCount = (html.match(/class="quiz-q"/g) || []).length;
-          if (quizCount !== 5) throw new Error(`Expected 5 quiz questions, found ${quizCount}`);
-          if (/onclick\s*=/.test(html)) throw new Error('Inline event handler remains.');
-          if (/class="step-list"/.test(html)) throw new Error('Legacy step-list class remains.');
-          const index = fs.readFileSync('lessons.html', 'utf8');
-          if (!index.includes('href="/lessons/root-cause-analysis-5-whys-fishbone"')) throw new Error('Clean lesson registration missing.');
-          if (!index.includes('data-interactive="true" data-search="root cause analysis')) throw new Error('Interactive filter metadata missing.');
-          const sitemap = fs.readFileSync('sitemap.xml', 'utf8');
-          if (!sitemap.includes('/lessons/root-cause-analysis-5-whys-fishbone</loc>')) throw new Error('Clean sitemap URL missing.');
-          if (sitemap.includes('/lessons/root-cause-analysis-5-whys-fishbone.html</loc>')) throw new Error('Legacy sitemap URL remains.');
-          console.log('Root cause lesson validation passed.');
-          NODE
+          final_index = lessons_path.read_text(encoding="utf-8")
+          final_sitemap = sitemap_path.read_text(encoding="utf-8")
+          if 'href="/lessons/root-cause-analysis-5-whys-fishbone"' not in final_index:
+              raise SystemExit("Clean lesson registration missing.")
+          if 'data-interactive="true" data-search="root cause analysis' not in final_index:
+              raise SystemExit("Interactive filter metadata missing.")
+          if "/lessons/root-cause-analysis-5-whys-fishbone</loc>" not in final_sitemap:
+              raise SystemExit("Clean sitemap URL missing.")
+          if "/lessons/root-cause-analysis-5-whys-fishbone.html</loc>" in final_sitemap:
+              raise SystemExit("Legacy sitemap URL remains.")
+          print("Root cause lesson generation and validation passed.")
+          PY
 
       - name: Commit lesson and remove temporary payload
         run: |

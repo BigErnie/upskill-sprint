@@ -647,20 +647,23 @@
     .quiz-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
     #quiz-score { margin: 0; color: var(--ink); font-weight: 800; }
 
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-      gap: 0.8rem;
-    }
-    .summary-item {
-      padding: 1rem;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--surface);
-    }
-    .summary-item strong { display: block; margin-bottom: 0.25rem; color: var(--teal-dark); }
+    .summary-list {
+  max-width: 76ch;
+  margin: 0;
+  padding-left: 1.35rem;
+}
+.summary-list li {
+  margin: 0.72rem 0;
+  padding-left: 0.3rem;
+  color: var(--ink);
+}
+.summary-list li::marker {
+  color: var(--teal);
+  font-size: 1.05em;
+}
+.summary-list strong { color: var(--teal-dark); }
 
-    .references-list { padding-left: 1.2rem; }
+.references-list { padding-left: 1.2rem; }
     .references-list li { margin: 0.6rem 0; }
     .lesson-footer {
   margin-top: 3.5rem;
@@ -739,7 +742,7 @@
   .lesson-hero { margin: 0 0 1.2rem; box-shadow: none; break-after: avoid-page; }
   .lesson-wrapper > section { margin: 1.5rem 0; }
   .panel, .concept-card, .concept-figure, .interactive-shell, .chart-card,
-  .insight-card, .quiz-shell, .quiz-q, .summary-item, .practice-step {
+  .insight-card, .quiz-shell, .quiz-q, .summary-list li, .practice-step {
     box-shadow: none !important;
     break-inside: avoid-page;
   }
@@ -1251,15 +1254,15 @@
       </section>
 
       <section id="summary">
-        <h2>Summary</h2>
-        <div class="summary-grid">
-          <div class="summary-item"><strong>Sort first</strong>Descending order is essential; otherwise the chart does not show priority clearly.</div>
-          <div class="summary-item"><strong>Use one measure</strong>Every bar must represent the same unit—count, dollars, time, weight, or another consistent value.</div>
-          <div class="summary-item"><strong>Read the cumulative line</strong>It shows how quickly the leading categories explain the total.</div>
-          <div class="summary-item"><strong>Challenge the ranking</strong>Compare frequency with cost, severity, exposure, and stratified views when the decision warrants it.</div>
-          <div class="summary-item"><strong>Investigate next</strong>A Pareto chart prioritizes the problem; it does not prove the underlying root cause.</div>
-        </div>
-      </section>
+  <h2>Summary</h2>
+  <ul class="summary-list">
+    <li><strong>Sort first:</strong> Descending order is essential; otherwise the chart does not show priority clearly.</li>
+    <li><strong>Use one measure:</strong> Every bar must represent the same unit—count, dollars, time, weight, or another consistent value.</li>
+    <li><strong>Read the cumulative line:</strong> It shows how quickly the leading categories explain the total.</li>
+    <li><strong>Challenge the ranking:</strong> Compare frequency with cost, severity, exposure, and stratified views when the decision warrants it.</li>
+    <li><strong>Investigate next:</strong> A Pareto chart prioritizes the problem; it does not prove the underlying root cause.</li>
+  </ul>
+</section>
 
       <section id="references">
         <h2>References</h2>

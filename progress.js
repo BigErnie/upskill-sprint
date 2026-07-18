@@ -113,7 +113,11 @@
     style.id = 'pareto-ending-layout-styles';
     style.textContent = [
       '.lesson-wrapper #summary { max-width: 920px; margin: 3rem auto 1.8rem; }',
-      '.lesson-wrapper #references { max-width: 920px; margin: 1.8rem auto 0; }',
+'.lesson-wrapper .summary-list { max-width: 76ch; margin: 0; padding-left: 1.35rem; }',
+'.lesson-wrapper .summary-list li { margin: .72rem 0; padding-left: .3rem; color: var(--ink); }',
+'.lesson-wrapper .summary-list li::marker { color: var(--teal); font-size: 1.05em; }',
+'.lesson-wrapper .summary-list strong { color: var(--teal-dark); }',
+'.lesson-wrapper #references { max-width: 920px; margin: 1.8rem auto 0; }',
       '.lesson-wrapper .summary-grid { display: block; border-top: 1px solid var(--line);',
       '  border-bottom: 1px solid var(--line); }',
       '.lesson-wrapper .summary-item { display: grid; grid-template-columns: minmax(9.5rem,.42fr) minmax(0,1fr);',
@@ -141,7 +145,6 @@
       '.lesson-wrapper .lesson-footer-next { max-width: 36rem; justify-self: end; color: var(--muted); line-height: 1.55; }',
       '.lesson-wrapper .lesson-footer-next strong { color: var(--ink); }',
       '@media (max-width: 700px) {',
-      '  .lesson-wrapper .summary-item { grid-template-columns: 1fr; gap: .25rem; }',
       '  .lesson-wrapper .references-list { columns: 1; }',
       '  .lesson-wrapper #lesson-progress-widget .lp-card { grid-template-columns: 1fr; gap: .45rem; align-items: start; }',
       '  .lesson-wrapper #lesson-progress-widget .lp-label,',

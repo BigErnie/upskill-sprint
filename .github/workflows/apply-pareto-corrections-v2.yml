@@ -1,0 +1,192 @@
+name: Apply Pareto lesson corrections v2
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - lesson/pareto-fix
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: lesson/pareto-fix
+          fetch-depth: 0
+
+      - name: Apply and diagnose corrections
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import traceback
+
+          log = []
+          lesson_path = Path('lessons/understanding-pareto-chart.html')
+          library_path = Path('lessons.html')
+
+          try:
+              lesson = lesson_path.read_text(encoding='utf-8')
+              log.append('Loaded lesson')
+
+              if 'Engineering Tools</a>' not in lesson:
+                  lesson = lesson.replace(
+                      '      <a href="/lessons.html" aria-current="page">Lessons</a>\n',
+                      '      <a href="/lessons.html" aria-current="page">Lessons</a>\n      <a href="/engineering-tools.html">Engineering Tools</a>\n',
+                      1
+                  )
+                  lesson = lesson.replace(
+                      '    <a href="/lessons.html">Lessons</a>\n',
+                      '    <a href="/lessons.html">Lessons</a>\n    <a href="/engineering-tools.html">Engineering Tools</a>\n',
+                      1
+                  )
+              log.append('Updated navigation')
+
+              footer_css = '''    .lesson-footer {
+                margin-top: 3.5rem;
+                padding: 1.3rem;
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                background: var(--surface-soft);
+              }
+              .lesson-footer-nav {
+                display: grid;
+                grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+                gap: 1.25rem;
+                align-items: end;
+              }
+              .back-category-link {
+                justify-self: start;
+                font-weight: 800;
+                text-decoration: none;
+              }
+              .back-category-link:hover { text-decoration: underline; }
+              .lesson-footer-next { text-align: right; }
+              .lesson-footer-next p { margin: 0.4rem 0 0; }
+
+              .visually-hidden'''.replace('              ', '    ').replace('                ', '      ')
+              lesson, count = re.subn(
+                  r'    \.lesson-footer \{.*?\n    \}\n\n    \.visually-hidden',
+                  footer_css,
+                  lesson,
+                  count=1,
+                  flags=re.S
+              )
+              if count != 1:
+                  raise RuntimeError(f'Footer CSS replacements: {count}')
+              log.append('Updated lesson footer styles')
+
+              mobile_marker = '      .stat-grid { grid-template-columns: 1fr 1fr; }'
+              if '.lesson-footer-nav { grid-template-columns: 1fr;' not in lesson:
+                  lesson = lesson.replace(
+                      mobile_marker,
+                      mobile_marker + '\n      .lesson-footer-nav { grid-template-columns: 1fr; align-items: start; }\n      .lesson-footer-next { text-align: left; }',
+                      1
+                  )
+              log.append('Updated mobile footer layout')
+
+              if '@media print {' not in lesson:
+                  print_css = '''    @media print {
+                :root {
+                  --paper: #ffffff;
+                  --surface: #ffffff;
+                  --surface-soft: #f5f7fa;
+                  --ink: #101828;
+                  --ink-soft: #344054;
+                  --muted: #667085;
+                  --line: #cfd6df;
+                  --shadow: transparent;
+                }
+                html, body { background: var(--paper) !important; color: var(--ink) !important; }
+                body { font-size: 10.5pt; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+                .site, .mobile-nav, .skip-link, nav.lesson-toc, .interactive-controls,
+                .editor-panel, .quiz-actions, .lesson-footer { display: none !important; }
+                main#lesson-content { width: 100%; margin: 0; padding: 0; }
+                .lesson-hero { margin: 0 0 1.2rem; box-shadow: none; break-after: avoid-page; }
+                .lesson-wrapper > section { margin: 1.5rem 0; }
+                .panel, .concept-card, .concept-figure, .interactive-shell, .chart-card,
+                .insight-card, .quiz-shell, .quiz-q, .summary-item, .practice-step {
+                  box-shadow: none !important;
+                  break-inside: avoid-page;
+                }
+                .table-scroll { overflow: visible; }
+                table { min-width: 0; font-size: 9pt; }
+                a { color: var(--ink); text-decoration: underline; }
+                #pareto-chart { max-height: 6.8in; }
+              }
+
+              '''.replace('              ', '    ').replace('                ', '      ')
+                  marker = '    @media (prefers-reduced-motion: reduce) {'
+                  if marker not in lesson:
+                      raise RuntimeError('Reduced-motion marker not found')
+                  lesson = lesson.replace(marker, print_css + marker, 1)
+              log.append('Added print formatting')
+
+              footer_html = '''      <footer class="lesson-footer">
+                <div class="lesson-footer-nav">
+                  <a class="back-category-link" href="/lessons#quality-engineering">Back to Quality Engineering</a>
+                  <div class="lesson-footer-next">
+                    <strong>Next step:</strong> Use the largest validated category as the problem statement for a focused root-cause analysis.
+                    <p><a href="/lessons/root-cause-analysis-5-whys-fishbone">Continue to Root Cause Analysis: 5 Whys vs Fishbone Diagram</a></p>
+                  </div>
+                </div>
+              </footer>'''
+              lesson, count = re.subn(
+                  r'      <footer class="lesson-footer">.*?      </footer>',
+                  footer_html,
+                  lesson,
+                  count=1,
+                  flags=re.S
+              )
+              if count != 1:
+                  raise RuntimeError(f'Footer HTML replacements: {count}')
+              lesson_path.write_text(lesson, encoding='utf-8')
+              log.append('Added Back to Quality Engineering and removed lesson arrow')
+
+              library = library_path.read_text(encoding='utf-8')
+              row_pattern = r'(<a class="lesson-row" href=")lessons/understanding-pareto-chart\.html(".*?</a>)'
+              library, count = re.subn(row_pattern, r'\1/lessons/understanding-pareto-chart\2', library, count=1, flags=re.S)
+              if count != 1:
+                  raise RuntimeError(f'Library row URL replacements: {count}')
+              row_start = library.index('<a class="lesson-row" href="/lessons/understanding-pareto-chart"')
+              row_end = library.index('</a>', row_start) + len('</a>')
+              row = library[row_start:row_end]
+              row = row.replace(
+                  '<span class="lesson-action">Start lesson <span class="lesson-arrow" aria-hidden="true">&rarr;</span></span>',
+                  '<span class="lesson-action">Start lesson</span>'
+              )
+              library = library[:row_start] + row + library[row_end:]
+              library_path.write_text(library, encoding='utf-8')
+              log.append('Updated clean library URL and removed library arrow')
+
+              assert 'Back to Quality Engineering' in lesson
+              assert '@media print {' in lesson
+              assert lesson.count('Engineering Tools') >= 2
+              assert 'Fishbone Diagram →' not in lesson
+              assert 'href="/lessons/understanding-pareto-chart"' in library
+              log.append('All assertions passed')
+          except Exception:
+              log.append(traceback.format_exc())
+
+          Path('pareto-correction-log.txt').write_text('\n'.join(log) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit results
+        shell: bash
+        run: |
+          git config user.name "upskillsprint-agent"
+          git config user.email "upskillsprint-agent@users.noreply.github.com"
+          git add lessons/understanding-pareto-chart.html lessons.html pareto-correction-log.txt
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Apply requested Pareto lesson corrections"
+          git push origin HEAD:lesson/pareto-fix

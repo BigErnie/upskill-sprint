@@ -498,6 +498,109 @@
     }
     .diagram-text.small { font-size: 11px; fill: var(--muted); }
     .diagram-text.bold { font-weight: 800; }
+
+    .fishbone-builder {
+      grid-template-columns: 1fr;
+    }
+    .fishbone-controls-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 0.42fr);
+      gap: 1rem 1.25rem;
+      align-items: start;
+    }
+    .fishbone-controls-panel .field-group,
+    .fishbone-controls-panel .category-tabs,
+    .fishbone-controls-panel .cause-entry,
+    .fishbone-controls-panel .cause-count,
+    .fishbone-controls-panel .cause-list,
+    .fishbone-controls-panel .builder-actions {
+      grid-column: 1;
+    }
+    .fishbone-guidance {
+      grid-column: 2;
+      grid-row: 1 / span 6;
+      padding: 0.9rem 1rem;
+      border-left: 4px solid var(--teal);
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .fishbone-guidance strong { display: block; margin-bottom: 0.35rem; color: var(--ink); }
+    .fishbone-visual-panel { padding: clamp(0.9rem, 2vw, 1.25rem); }
+    .fishbone-visual-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.55rem;
+    }
+    .fishbone-visual-header > div:first-child { min-width: 0; }
+    .fishbone-visual-header p { margin: 0.18rem 0 0; color: var(--muted); font-size: 0.9rem; }
+    .fishbone-toolbar {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      padding: 0.25rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+    }
+    .fishbone-mode-button {
+      min-height: 38px;
+      padding: 0.45rem 0.72rem;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 750;
+    }
+    .fishbone-mode-button[aria-pressed="true"] {
+      border-color: var(--teal);
+      background: var(--shade-2);
+      color: var(--teal-dark);
+    }
+    .fishbone-view-status {
+      margin: 0 0 0.7rem;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 650;
+    }
+    .fishbone-diagram-frame { overscroll-behavior-inline: contain; }
+    .fishbone-svg {
+      display: block;
+      width: 100%;
+      min-width: 850px;
+      height: auto;
+    }
+    .fishbone-branch { cursor: pointer; }
+    .fishbone-branch-hit { fill: transparent; stroke: transparent; }
+    .fishbone-branch-line { stroke: var(--diagram-line); stroke-width: 3.2; fill: none; }
+    .fishbone-branch:hover .fishbone-branch-line,
+    .fishbone-branch:focus .fishbone-branch-line,
+    .fishbone-branch.is-selected .fishbone-branch-line {
+      stroke: var(--diagram-accent);
+      stroke-width: 5;
+    }
+    .fishbone-category-box {
+      fill: var(--surface);
+      stroke: var(--line);
+      stroke-width: 1.6;
+    }
+    .fishbone-branch:hover .fishbone-category-box,
+    .fishbone-branch:focus .fishbone-category-box,
+    .fishbone-branch.is-selected .fishbone-category-box {
+      fill: var(--shade-2);
+      stroke: var(--diagram-accent);
+      stroke-width: 2.2;
+    }
+    .fishbone-count-badge { fill: var(--shade-1); stroke: var(--diagram-accent); stroke-width: 1.3; }
+    .fishbone-cause-connector { stroke: var(--diagram-line); stroke-width: 1.5; fill: none; }
+    .fishbone-cause-box { fill: var(--surface); stroke: var(--line); stroke-width: 1.4; }
+    .fishbone-cause-box.is-active { fill: var(--shade-3); stroke: var(--diagram-accent); stroke-width: 1.8; }
+    .fishbone-cause-dot { fill: var(--diagram-accent); }
+    .fishbone-overflow-box { fill: var(--surface-soft); stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .fishbone-branch:focus { outline: none; }
+    .fishbone-branch:focus .fishbone-category-box { filter: drop-shadow(0 0 3px var(--focus-ring)); }
     .chain-status {
       display: flex;
       flex-wrap: wrap;
@@ -710,6 +813,17 @@
 
     @media (max-width: 900px) {
       .decision-shell, .builder-shell { grid-template-columns: 1fr; }
+      .fishbone-controls-panel { grid-template-columns: 1fr; }
+      .fishbone-controls-panel .field-group,
+      .fishbone-controls-panel .category-tabs,
+      .fishbone-controls-panel .cause-entry,
+      .fishbone-controls-panel .cause-count,
+      .fishbone-controls-panel .cause-list,
+      .fishbone-controls-panel .builder-actions,
+      .fishbone-guidance { grid-column: 1; grid-row: auto; }
+      .fishbone-visual-header { flex-direction: column; }
+      .fishbone-toolbar { width: 100%; }
+      .fishbone-mode-button { flex: 1 1 180px; }
       .recommendation { position: static; }
     }
     @media (max-width: 700px) {
@@ -723,48 +837,48 @@
       .builder-actions .button, .cause-entry .button, .quiz-actions .button { width: 100%; }
       .diagram-frame svg { min-width: 780px; }
       .decision-option { min-height: 56px; }
-      .lesson-sitebar .header-cta { display: none; }
     }
     @media (max-width: 430px) {
-      main#lesson-content { width: calc(100% - 0.75rem); }
-      .lesson-hero { padding: 1.3rem 1rem; }
-      .lesson-meta-row { gap: 0.4rem; }
-      .pill { font-size: 0.75rem; }
-      .category-tab { flex: 1 1 calc(50% - 0.4rem); }
+      .lesson-sitebar .brand span { max-width: 10rem; font-size: 0.84rem; }
+      .lesson-sitebar .header-cta { display: none; }
+      h1 { font-size: 2rem; }
+      .why-row { grid-template-columns: 1fr; }
+      .why-index { margin-bottom: 0.2rem; }
+      .why-row select { grid-column: 1; }
+      .recommendation-meter { grid-template-columns: 1fr; }
     }
+
+    @media print {
+      :root, html[data-theme="dark"] {
+        --paper: #ffffff;
+        --surface: #ffffff;
+        --surface-soft: #ffffff;
+        --ink: #000000;
+        --ink-soft: #222222;
+        --muted: #333333;
+        --line: #999999;
+        --diagram-line: #333333;
+        --diagram-fill: #ffffff;
+        --diagram-accent: #000000;
+      }
+      body { background: #ffffff; color: #000000; font-size: 10.5pt; }
+      .site, .mobile-nav, .lesson-toc, .builder-actions, .cause-entry, .category-tabs,
+      .recommendation-meter, .quiz-actions, .lesson-footer { display: none !important; }
+      main#lesson-content { width: 100%; padding: 0; }
+      .lesson-hero { box-shadow: none; border: 1px solid #777777; background: #ffffff; color: #000000; }
+      .lesson-hero h1, .lesson-hero strong, .lesson-hero .lesson-eyebrow,
+      .lesson-hero .lesson-lede, .lesson-hero .why-it-matters { color: #000000; }
+      .lesson-hero::after { display: none; }
+      .panel, .visual-panel, .quiz-shell { box-shadow: none; break-inside: avoid; }
+      .diagram-frame { overflow: visible; }
+      .diagram-frame svg { min-width: 0; }
+      section { break-inside: auto; }
+      table { min-width: 0; font-size: 9pt; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
-    }
-    @media print {
-      body { background: var(--paper); color: var(--ink); font-size: 10.5pt; }
-      .lesson-sitebar, .mobile-nav, nav.lesson-toc, .builder-actions, .category-tabs,
-      .cause-entry, .reveal-actions, .quiz-actions, .lesson-footer, #lesson-progress-widget {
-        display: none !important;
-      }
-      main#lesson-content { width: 100%; padding: 0; }
-      .lesson-hero {
-        padding: 1rem 0;
-        border: 0;
-        border-bottom: 2px solid var(--line);
-        border-radius: 0;
-        background: transparent;
-        color: var(--ink);
-        box-shadow: none;
-      }
-      .lesson-hero::after { display: none; }
-      .lesson-hero h1, .lesson-hero strong, .lesson-eyebrow, .lesson-lede, .why-it-matters { color: var(--ink); }
-      .why-it-matters { border-color: var(--line); background: transparent; }
-      .panel, .visual-panel, .quiz-shell, .quiz-q {
-        break-inside: avoid;
-        border-color: var(--line);
-        background: transparent;
-        box-shadow: none;
-      }
-      .lesson-wrapper > section { margin: 1.4rem 0; }
-      table { min-width: 0; font-size: 8.8pt; }
-      a { color: var(--ink); text-decoration: none; }
-      svg { max-height: 400px; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
     }
   </style>
   <script src="/theme.js"></script>
@@ -773,12 +887,13 @@
 <body data-lesson-page="true" data-category="quality-engineering" data-level="beginner" data-interactive="true">
   <a class="skip-link" href="#lesson-content">Skip to lesson content</a>
   <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+
   <header class="site lesson-sitebar">
     <a href="/" class="brand">
       <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
       <span>UpSkill Sprint Consulting</span>
     </a>
-    <nav class="desktop-nav" aria-label="Primary navigation">
+    <nav class="desktop-nav" aria-label="Main navigation">
       <a href="/start-here">Start Here</a>
       <a href="/lessons" aria-current="page">Lessons</a>
       <a href="/engineering-tools">Engineering Tools</a>
@@ -881,18 +996,15 @@
         <h2>Terminology</h2>
         <div class="table-scroll">
           <table>
-            <caption>Terms used throughout the lesson</caption>
-            <thead>
-              <tr><th>Term</th><th>Meaning</th><th>Example</th></tr>
-            </thead>
+            <caption>Terms used throughout this lesson</caption>
+            <thead><tr><th>Term</th><th>Meaning</th><th>Example</th></tr></thead>
             <tbody>
-              <tr><td>Effect / problem</td><td>The observable outcome that needs explanation.</td><td>Surface scratches increased after changeover.</td></tr>
-              <tr><td>Symptom</td><td>An indicator of the problem, often close to the effect.</td><td>Scratch marks appear near one edge.</td></tr>
-              <tr><td>Direct cause</td><td>The immediate condition that produced the effect.</td><td>A guide contacted the strip.</td></tr>
-              <tr><td>Contributing cause</td><td>A condition that increased likelihood or severity.</td><td>Inspection frequency was reduced.</td></tr>
-              <tr><td>Root cause</td><td>A verified, controllable system condition whose removal prevents or materially reduces recurrence.</td><td>The setup standard omitted the guide-clearance check.</td></tr>
-              <tr><td>Evidence</td><td>Observed data, records, tests, or replication that support or reject a causal link.</td><td>Scratch position matches the guide contact point.</td></tr>
-              <tr><td>Corrective action</td><td>An action aimed at eliminating the verified cause, not merely containing the effect.</td><td>Add the clearance check and mistake-proof the setup.</td></tr>
+              <tr><td>Symptom</td><td>The visible or measured effect.</td><td>Surface scratches increased after changeover.</td></tr>
+              <tr><td>Direct cause</td><td>The condition immediately producing the effect.</td><td>The side guide contacted the strip.</td></tr>
+              <tr><td>Contributing cause</td><td>A condition that increases probability or severity but may not be sufficient alone.</td><td>Poor lighting delayed detection.</td></tr>
+              <tr><td>Root cause</td><td>An underlying, controllable system condition whose removal prevents recurrence.</td><td>The product setup standard omitted the required guide clearance.</td></tr>
+              <tr><td>Candidate cause</td><td>A plausible explanation that still requires evidence.</td><td>Guide position drift.</td></tr>
+              <tr><td>6M categories</td><td>Common fishbone families: Manpower/People, Method, Machine, Material, Measurement, and Mother Nature/Environment.</td><td>Measurement includes gauges, sampling, and inspection methods.</td></tr>
             </tbody>
           </table>
         </div>
@@ -1004,9 +1116,9 @@
         </div>
 
         <h2 style="margin-top:2.7rem;">Build a live fishbone diagram</h2>
-        <p class="section-intro">Choose a 6M category, add or remove candidate causes, and watch the diagram rebuild itself.</p>
-        <div class="builder-shell">
-          <div class="panel">
+        <p class="section-intro">Choose a 6M category, add or remove candidate causes, and watch the diagram rebuild itself without crowding the labels.</p>
+        <div class="builder-shell fishbone-builder">
+          <div class="panel fishbone-controls-panel">
             <div class="field-group">
               <label for="effect-input">Effect at the head of the fishbone</label>
               <input id="effect-input" value="Surface scratches after changeover">
@@ -1022,14 +1134,27 @@
             <div class="builder-actions" style="margin-top:1rem;">
               <button class="button secondary" type="button" id="reset-fishbone">Reset fishbone</button>
             </div>
+            <aside class="fishbone-guidance">
+              <strong>How to explore the diagram</strong>
+              Select a category tab or click a branch on the fishbone. Focused mode shows one category in detail, while Overview shows one representative cause per category. This keeps long labels readable and prevents overlapping text.
+            </aside>
           </div>
-          <div class="visual-panel">
-            <h3>Live 6M fishbone</h3>
-            <p>The diagram organizes possibilities. It does not rank or validate them.</p>
-            <div class="diagram-frame">
-              <svg id="fishbone-svg" viewBox="0 0 920 600" role="img" aria-labelledby="fishbone-svg-title fishbone-svg-desc" style="width:100%;height:auto;">
+          <div class="visual-panel fishbone-visual-panel">
+            <div class="fishbone-visual-header">
+              <div>
+                <h3>Live 6M fishbone</h3>
+                <p>Click any branch to inspect its causes. The diagram organizes possibilities; it does not rank or validate them.</p>
+              </div>
+              <div class="fishbone-toolbar" role="group" aria-label="Fishbone display mode">
+                <button class="fishbone-mode-button" type="button" id="fishbone-focus-mode" aria-pressed="true">Focused category</button>
+                <button class="fishbone-mode-button" type="button" id="fishbone-overview-mode" aria-pressed="false">Overview</button>
+              </div>
+            </div>
+            <p class="fishbone-view-status" id="fishbone-view-status" role="status" aria-live="polite">Focused on People.</p>
+            <div class="diagram-frame fishbone-diagram-frame">
+              <svg id="fishbone-svg" class="fishbone-svg" viewBox="0 0 1200 760" role="img" aria-labelledby="fishbone-svg-title fishbone-svg-desc" style="width:100%;height:auto;" preserveAspectRatio="xMidYMid meet">
                 <title id="fishbone-svg-title">Interactive fishbone diagram</title>
-                <desc id="fishbone-svg-desc">A cause-and-effect diagram with six branches for People, Method, Machine, Material, Measurement, and Environment.</desc>
+                <desc id="fishbone-svg-desc">A selectable cause-and-effect diagram with six branches for People, Method, Machine, Material, Measurement, and Environment.</desc>
                 <g id="fishbone-layer"></g>
               </svg>
             </div>
@@ -1236,31 +1361,37 @@
     <div class="wrap">
       <div class="footer-grid">
         <div>
-          <div class="brand">
+          <div class="brand" style="margin-bottom:14px;">
             <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
             <span>UpSkill Sprint Consulting</span>
           </div>
-          <p>Practical learning for quality, data, process improvement, and business problem-solving.</p>
+          <p style="font-size:13.5px;line-height:1.6;color:var(--muted);max-width:260px;margin:0;">Practical learning for quality, data, process improvement, and business problem-solving.</p>
         </div>
         <div>
           <h4>Quick Links</h4>
           <a href="/">Home</a>
           <a href="/start-here">Start Here</a>
           <a href="/lessons">Lessons</a>
+          <a href="/engineering-tools">Engineering Tools</a>
           <a href="/services">Services</a>
           <a href="/request-topic">Request a Topic</a>
+          <a href="/about">About</a>
+          <a href="/faq">FAQ</a>
+          <a href="/contact">Contact</a>
         </div>
         <div>
           <h4>Topics</h4>
+          <a href="/lessons#data-analytics">Data Analytics</a>
           <a href="/lessons#quality-engineering">Quality Engineering</a>
           <a href="/lessons#lean-six-sigma">Lean Six Sigma</a>
           <a href="/lessons#statistics">Statistics</a>
-          <a href="/lessons#power-bi-excel-sql">Excel, Power BI &amp; SQL</a>
+          <a href="/lessons#power-bi-excel-sql">Power BI, Excel &amp; SQL</a>
+          <a href="/lessons#business-decision-making">Business Decision-Making</a>
         </div>
         <div>
           <h4>Contact</h4>
           <a href="mailto:skillsprintconsulting@gmail.com">skillsprintconsulting@gmail.com</a>
-          <p>Saskatchewan, Canada</p>
+          <p style="font-size:13.5px;color:var(--muted);margin:0;">Saskatchewan, Canada</p>
         </div>
       </div>
     </div>
@@ -1299,6 +1430,9 @@
       var causeCount = document.getElementById("cause-count");
       var fishboneLayer = document.getElementById("fishbone-layer");
       var resetFishboneButton = document.getElementById("reset-fishbone");
+      var fishboneFocusModeButton = document.getElementById("fishbone-focus-mode");
+      var fishboneOverviewModeButton = document.getElementById("fishbone-overview-mode");
+      var fishboneViewStatus = document.getElementById("fishbone-view-status");
 
       var validationBody = document.getElementById("validation-body");
       var candidateTotal = document.getElementById("candidate-total");
@@ -1338,6 +1472,7 @@
       var fishboneState = {};
       var validationState = {};
       var selectedCategory = "People";
+      var fishboneViewMode = "focused";
       var workedVisible = 1;
 
       function cloneDefaults() {
@@ -1556,7 +1691,7 @@
           var button = document.createElement("button");
           button.type = "button";
           button.className = "category-tab";
-          button.textContent = category;
+          button.textContent = category + " (" + fishboneState[category].length + ")";
           button.setAttribute("aria-pressed", category === selectedCategory ? "true" : "false");
           button.setAttribute("data-category", category);
           categoryTabs.appendChild(button);
@@ -1591,65 +1726,149 @@
         return rows;
       }
 
+      function setFishboneViewMode(mode) {
+        fishboneViewMode = mode === "overview" ? "overview" : "focused";
+        fishboneFocusModeButton.setAttribute("aria-pressed", fishboneViewMode === "focused" ? "true" : "false");
+        fishboneOverviewModeButton.setAttribute("aria-pressed", fishboneViewMode === "overview" ? "true" : "false");
+        renderFishbone();
+      }
+
+      function branchLayout() {
+        return [
+          { category: "People", spineX: 300, endX: 155, endY: 105, upper: true, zoneX: 35 },
+          { category: "Method", spineX: 585, endX: 440, endY: 105, upper: true, zoneX: 320 },
+          { category: "Machine", spineX: 870, endX: 725, endY: 105, upper: true, zoneX: 605 },
+          { category: "Material", spineX: 300, endX: 155, endY: 655, upper: false, zoneX: 35 },
+          { category: "Measurement", spineX: 585, endX: 440, endY: 655, upper: false, zoneX: 320 },
+          { category: "Environment", spineX: 870, endX: 725, endY: 655, upper: false, zoneX: 605 }
+        ];
+      }
+
+      function appendCauseCard(parent, layout, cause, causeIndex, totalShown, isFocused) {
+        var cardWidth = 238;
+        var cardHeight = 48;
+        var cardGap = 9;
+        var cardX = layout.zoneX;
+        var cardY = layout.upper
+          ? 145 + causeIndex * (cardHeight + cardGap)
+          : 567 - (totalShown - 1 - causeIndex) * (cardHeight + cardGap);
+        var branchFraction = (causeIndex + 1) / (totalShown + 1);
+        var branchX = layout.spineX + (layout.endX - layout.spineX) * branchFraction;
+        var branchY = 380 + (layout.endY - 380) * branchFraction;
+        var targetX = cardX + cardWidth;
+        var targetY = cardY + cardHeight / 2;
+
+        parent.appendChild(createSvgElement("path", {
+          d: "M " + branchX + " " + branchY + " L " + targetX + " " + targetY,
+          "class": "fishbone-cause-connector"
+        }));
+        parent.appendChild(createSvgElement("circle", {
+          cx: branchX, cy: branchY, r: 4.5, "class": "fishbone-cause-dot"
+        }));
+        var box = createSvgElement("rect", {
+          x: cardX, y: cardY, width: cardWidth, height: cardHeight, rx: 9,
+          "class": "fishbone-cause-box" + (isFocused ? " is-active" : "")
+        });
+        box.appendChild(createSvgElement("title", {}, cause));
+        parent.appendChild(box);
+        appendMultilineText(
+          parent,
+          cardX + 12,
+          cardY + 19,
+          cause,
+          "diagram-text small",
+          "start",
+          30
+        );
+      }
+
       function renderFishbone() {
         clearNode(fishboneLayer);
+        var spineY = 380;
+        var effect = effectInput.value.trim() || "Define the effect";
+
         fishboneLayer.appendChild(createSvgElement("line", {
-          x1: 95, y1: 300, x2: 790, y2: 300, "class": "diagram-line"
+          x1: 82, y1: spineY, x2: 1035, y2: spineY, "class": "diagram-line"
         }));
         fishboneLayer.appendChild(createSvgElement("polygon", {
-          points: "790,235 900,300 790,365",
+          points: "1035,305 1180,380 1035,455",
           "class": "diagram-accent", "stroke-width": 3
         }));
-        appendMultilineText(fishboneLayer, 840, 285, effectInput.value || "Define the effect", "diagram-text bold", "middle", 19);
+        appendMultilineText(fishboneLayer, 1102, 365, effect, "diagram-text bold", "middle", 20);
 
-        var branchX = [190, 400, 610, 190, 400, 610];
-        var upper = [true, true, true, false, false, false];
-
-        categoryOrder.forEach(function (category, index) {
-          var x = branchX[index];
-          var isUpper = upper[index];
-          var endX = x - 95;
-          var endY = isUpper ? 105 : 495;
-          var spineY = 300;
-          fishboneLayer.appendChild(createSvgElement("line", {
-            x1: x, y1: spineY, x2: endX, y2: endY, "class": "diagram-line"
-          }));
-          fishboneLayer.appendChild(createSvgElement("text", {
-            x: endX,
-            y: isUpper ? endY - 14 : endY + 28,
-            "class": "diagram-text bold",
-            "text-anchor": "middle"
-          }, category));
-
-          var causes = fishboneState[category].slice(0, 3);
-          causes.forEach(function (cause, causeIndex) {
-            var fraction = (causeIndex + 1) / (causes.length + 1);
-            var pointX = x + (endX - x) * fraction;
-            var pointY = spineY + (endY - spineY) * fraction;
-            var side = index % 2 === 0 ? -1 : 1;
-            var twigX = pointX + side * 75;
-            var twigY = pointY + (isUpper ? 24 : -24);
-            fishboneLayer.appendChild(createSvgElement("line", {
-              x1: pointX, y1: pointY, x2: twigX, y2: twigY, "class": "diagram-line thin"
-            }));
-            appendMultilineText(
-              fishboneLayer,
-              twigX + (side < 0 ? -4 : 4),
-              twigY + (isUpper ? -4 : 16),
-              cause,
-              "diagram-text small",
-              side < 0 ? "end" : "start",
-              20
-            );
+        branchLayout().forEach(function (layout) {
+          var category = layout.category;
+          var causes = fishboneState[category];
+          var selected = category === selectedCategory;
+          var group = createSvgElement("g", {
+            "class": "fishbone-branch" + (selected ? " is-selected" : ""),
+            "data-fish-category": category,
+            role: "button",
+            tabindex: "0",
+            "aria-label": "Select " + category + ", " + causes.length + " candidate causes"
           });
+          group.appendChild(createSvgElement("title", {}, "Select " + category + " to inspect " + causes.length + " candidate causes"));
+          group.appendChild(createSvgElement("line", {
+            x1: layout.spineX, y1: spineY, x2: layout.endX, y2: layout.endY,
+            "class": "fishbone-branch-line"
+          }));
+          group.appendChild(createSvgElement("line", {
+            x1: layout.spineX + 18, y1: spineY, x2: layout.endX - 18, y2: layout.endY,
+            "class": "fishbone-branch-hit", "stroke-width": 34
+          }));
+
+          var labelY = layout.upper ? layout.endY - 62 : layout.endY + 18;
+          group.appendChild(createSvgElement("rect", {
+            x: layout.endX - 77, y: labelY, width: 154, height: 44, rx: 10,
+            "class": "fishbone-category-box"
+          }));
+          group.appendChild(createSvgElement("text", {
+            x: layout.endX - 8, y: labelY + 27,
+            "class": "diagram-text bold", "text-anchor": "middle"
+          }, category));
+          group.appendChild(createSvgElement("circle", {
+            cx: layout.endX + 56, cy: labelY + 22, r: 14,
+            "class": "fishbone-count-badge"
+          }));
+          group.appendChild(createSvgElement("text", {
+            x: layout.endX + 56, y: labelY + 27,
+            "class": "diagram-text small bold", "text-anchor": "middle"
+          }, String(causes.length)));
+          fishboneLayer.appendChild(group);
+
+          var shouldShow = fishboneViewMode === "overview" || selected;
+          if (!shouldShow || causes.length === 0) return;
+          var visibleLimit = fishboneViewMode === "overview" ? 1 : 4;
+          var visibleCauses = causes.slice(0, visibleLimit);
+          visibleCauses.forEach(function (cause, causeIndex) {
+            appendCauseCard(fishboneLayer, layout, cause, causeIndex, visibleCauses.length, selected);
+          });
+
+          if (causes.length > visibleLimit && selected && fishboneViewMode === "focused") {
+            var overflowY = layout.upper ? 145 + visibleLimit * 57 : 567 + 57;
+            fishboneLayer.appendChild(createSvgElement("rect", {
+              x: layout.zoneX, y: overflowY, width: 238, height: 34, rx: 9,
+              "class": "fishbone-overflow-box"
+            }));
+            fishboneLayer.appendChild(createSvgElement("text", {
+              x: layout.zoneX + 119, y: overflowY + 22,
+              "class": "diagram-text small bold", "text-anchor": "middle"
+            }, "+" + (causes.length - visibleLimit) + " more in the editable list"));
+          }
         });
 
         fishboneLayer.appendChild(createSvgElement("text", {
-          x: 110, y: 335, "class": "diagram-text small"
-        }, "Potential causes"));
+          x: 92, y: 415, "class": "diagram-text small"
+        }, fishboneViewMode === "focused" ? "Select a branch to inspect causes" : "Overview of all six cause families"));
         fishboneLayer.appendChild(createSvgElement("text", {
-          x: 760, y: 335, "class": "diagram-text small", "text-anchor": "end"
+          x: 1010, y: 415, "class": "diagram-text small", "text-anchor": "end"
         }, "Effect"));
+
+        if (fishboneViewMode === "focused") {
+          fishboneViewStatus.textContent = "Focused on " + selectedCategory + " · " + fishboneState[selectedCategory].length + " candidate cause" + (fishboneState[selectedCategory].length === 1 ? "" : "s") + ". Click another branch to inspect it.";
+        } else {
+          fishboneViewStatus.textContent = "Overview mode · one representative cause is shown for each category. Select a branch for the full focused view.";
+        }
 
         renderValidation();
       }
@@ -1803,7 +2022,28 @@
         selectedCategory = button.getAttribute("data-category");
         renderCategoryTabs();
         renderCauseList();
+        renderFishbone();
       });
+      fishboneLayer.addEventListener("click", function (event) {
+        var branch = event.target.closest("[data-fish-category]");
+        if (!branch) return;
+        selectedCategory = branch.getAttribute("data-fish-category");
+        setFishboneViewMode("focused");
+        renderCategoryTabs();
+        renderCauseList();
+      });
+      fishboneLayer.addEventListener("keydown", function (event) {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        var branch = event.target.closest("[data-fish-category]");
+        if (!branch) return;
+        event.preventDefault();
+        selectedCategory = branch.getAttribute("data-fish-category");
+        setFishboneViewMode("focused");
+        renderCategoryTabs();
+        renderCauseList();
+      });
+      fishboneFocusModeButton.addEventListener("click", function () { setFishboneViewMode("focused"); });
+      fishboneOverviewModeButton.addEventListener("click", function () { setFishboneViewMode("overview"); });
       addCauseButton.addEventListener("click", addCause);
       causeInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
@@ -1822,12 +2062,14 @@
       resetFishboneButton.addEventListener("click", function () {
         cloneDefaults();
         selectedCategory = "People";
+        fishboneViewMode = "focused";
         effectInput.value = "Surface scratches after changeover";
         validationState = {};
         renderCategoryTabs();
         renderCauseList();
-        renderFishbone();
+        setFishboneViewMode("focused");
       });
+
       validationBody.addEventListener("change", function (event) {
         var select = event.target.closest(".matrix-select");
         if (!select) return;
@@ -1855,7 +2097,7 @@
       renderWhys();
       renderCategoryTabs();
       renderCauseList();
-      renderFishbone();
+      setFishboneViewMode("focused");
       renderWorked();
     }());
   </script>

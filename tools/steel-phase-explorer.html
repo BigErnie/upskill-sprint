@@ -16,16 +16,36 @@ stage: integrated equilibrium, transformation, kinetics, chemistry, learning, an
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
 <title>Steel Phase &amp; Transformation Explorer | UpSkill Sprint</title>
 <meta name="description" content="Interactive steel metallurgy suite with an iron-carbon phase diagram, lever-rule fractions, heating and cooling paths, TTT and CCT estimates, chemistry calculations, heat-treatment scenarios, microstructure visualization, learning challenges, and export tools.">
 <link rel="canonical" href="https://upskillsprint.com/tools/steel-phase-explorer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
 <script src="/theme.js"></script>
 <script src="/site-sections.js"></script>
 <link rel="stylesheet" href="/tools/steel-phase-explorer.css">
+<style>
+.spx-bottom-nav{display:flex;justify-content:flex-start;margin:24px 0 8px;padding-top:18px;border-top:1px solid var(--spx-border)}
+.spx-bottom-back{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 14px;border:1px solid var(--spx-accent);border-radius:9px;background:var(--spx-accent);color:#fff!important;font-size:.86rem;font-weight:800;text-decoration:none;box-shadow:0 4px 14px rgba(14,116,144,.18);transition:transform .15s ease,background-color .15s ease,box-shadow .15s ease}
+.spx-bottom-back:hover{transform:translateY(-1px);background:var(--teal-dark,#095d75);box-shadow:0 7px 18px rgba(14,116,144,.24)}
+.spx-bottom-back:focus-visible{outline:2px solid var(--spx-accent);outline-offset:3px}
+html[data-theme="dark"] .spx-bottom-back{color:#07131d!important}
+@media(max-width:520px){.spx-bottom-back{width:100%}}
+@media print{header.site,.mobile-nav,.spx-bottom-nav{display:none!important}}
+</style>
 </head>
 <body>
+<input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+<header class="site">
+  <a href="/" class="brand"><img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo"><span>UpSkill Sprint Consulting</span></a>
+  <nav class="desktop-nav" aria-label="Primary navigation"><a href="/start-here">Start Here</a><a href="/lessons">Lessons</a><a href="/engineering-tools" aria-current="page">Engineering Tools</a><a href="/services">Services</a><a href="/request-topic">Request a Topic</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></nav>
+  <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></label>
+  <a href="/lessons" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+</header>
+<nav class="mobile-nav" aria-label="Mobile navigation"><a href="/start-here">Start Here</a><a href="/lessons">Lessons</a><a href="/engineering-tools" aria-current="page">Engineering Tools</a><a href="/services">Services</a><a href="/request-topic">Request a Topic</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></nav>
 <main id="spx-tool">
-<a class="spx-back" href="/engineering-tools">&larr; Back to Engineering Tools</a>
 <h1>Steel Phase &amp; Transformation Explorer <span class="spx-badge">Interactive suite</span></h1>
 <p class="spx-subtitle">Explore equilibrium phases, calculate lever-rule fractions, animate heat-treatment paths, compare steels, inspect generalized TTT/CCT behaviour, estimate chemistry-driven transformation temperatures and properties, practise with challenges, and export scenarios.</p>
 <div class="spx-disclaimer"><strong>Engineering caution:</strong> equilibrium phase fractions are calculated from simplified Fe&ndash;Fe<sub>3</sub>C boundary models. TTT/CCT curves, transformation kinetics, and mechanical-property values are educational estimates and must not replace grade-specific diagrams, validated metallurgical models, laboratory testing, or governing specifications.</div>
@@ -114,6 +134,7 @@ stage: integrated equilibrium, transformation, kinetics, chemistry, learning, an
 </div>
 </div>
 </section>
+<div class="spx-bottom-nav" aria-label="Tool navigation"><a class="spx-bottom-back" href="/engineering-tools">&larr; Back to Engineering Tools</a></div>
 </main>
 <script src="/tools/steel-phase-explorer-core.js"></script>
 <script src="/tools/steel-phase-explorer-equilibrium.js"></script>

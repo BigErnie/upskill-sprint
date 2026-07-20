@@ -7,264 +7,118 @@ id: steel-phase-explorer
 title: Steel Phase & Transformation Explorer
 type: tool
 level: intermediate
-topics: iron-carbon phase diagram, phase transformations, CCT, microstructure, mechanical properties
-version: 0.2.0-stage1
+topics: iron-carbon phase diagram, lever rule, heat treatment, TTT, CCT, microstructure, mechanical properties
+version: 1.0.0-interactive-suite
 status: early-access
 requires: /theme.js, /site-sections.js
-stage: 1 of 5 (equilibrium diagram + multi-point placement + region detection)
+stage: integrated equilibrium, transformation, kinetics, chemistry, learning, and export suite
 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>Steel Phase &amp; Transformation Explorer | UpSkill Sprint</title>
-<meta name="description" content="Interactive iron-carbon phase diagram for plain-carbon steel: plot multiple temperature and carbon-content points, identify each phase field, and switch between Celsius and Fahrenheit.">
+<meta name="description" content="Interactive steel metallurgy suite with an iron-carbon phase diagram, lever-rule fractions, heating and cooling paths, TTT and CCT estimates, chemistry calculations, heat-treatment scenarios, microstructure visualization, learning challenges, and export tools.">
 <link rel="canonical" href="https://upskillsprint.com/tools/steel-phase-explorer">
 <script src="/theme.js"></script>
 <script src="/site-sections.js"></script>
-<style>
-  #spx-tool {
-    --spx-bg: var(--paper, #ffffff);
-    --spx-surface: var(--tint, #f5f7fa);
-    --spx-border: var(--line, #e3e7ee);
-    --spx-text: var(--ink, #101828);
-    --spx-text-muted: var(--muted, #667085);
-    --spx-accent: var(--teal, #0e7490);
-    --spx-accent-contrast: #ffffff;
-    --spx-danger: #b42318;
-    --spx-tint-gamma: #e8b93122;
-    --spx-tint-alpha-gamma: #d1793a22;
-    --spx-tint-gamma-cem: #7a4dbf1f;
-    --spx-tint-alpha-cem: #3a7dd11c;
-    --spx-tint-alpha: #3aa66b26;
-    color: var(--spx-text);
-    background: var(--spx-bg);
-    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 16px;
-    box-sizing: border-box;
-  }
-  #spx-tool *, #spx-tool *::before, #spx-tool *::after { box-sizing: inherit; }
-  #spx-tool h1 { font-size: 1.45rem; line-height: 1.25; margin: 0 0 4px; }
-  #spx-tool .spx-subtitle { color: var(--spx-text-muted); margin: 0 0 18px; font-size: .95rem; }
-  .spx-back { display: inline-block; margin: 0 0 12px; color: var(--spx-text-muted); text-decoration: none; font-size: .85rem; font-weight: 600; }
-  .spx-back:hover, .spx-back:focus-visible { color: var(--spx-accent); }
-  .spx-badge { display: inline-block; font-size: .68rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--spx-accent); border: 1px solid currentColor; border-radius: 999px; padding: 2px 9px; vertical-align: 3px; margin-left: 8px; }
-  #spx-controls { background: var(--spx-surface); border: 1px solid var(--spx-border); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
-  .spx-controls-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
-  .spx-controls-title h2 { font-size: 1rem; margin: 0 0 2px; }
-  .spx-controls-title p { color: var(--spx-text-muted); font-size: .84rem; margin: 0; }
-  .spx-control-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
-  .spx-unit-toggle { display: inline-flex; padding: 3px; border: 1px solid var(--spx-border); border-radius: 9px; background: var(--spx-bg); }
-  .spx-unit-toggle button, .spx-action-button, .spx-remove-button { min-height: 38px; border: 1px solid transparent; border-radius: 7px; font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer; }
-  .spx-unit-toggle button { padding: 6px 10px; color: var(--spx-text-muted); background: transparent; }
-  .spx-unit-toggle button[aria-pressed="true"] { background: var(--spx-accent); color: var(--spx-accent-contrast); }
-  .spx-action-button { padding: 7px 12px; border-color: var(--spx-border); background: var(--spx-bg); color: var(--spx-text); }
-  .spx-action-button.spx-primary { background: var(--spx-accent); border-color: var(--spx-accent); color: var(--spx-accent-contrast); }
-  .spx-action-button:hover, .spx-unit-toggle button:hover { filter: brightness(.97); }
-  .spx-action-button:focus-visible, .spx-unit-toggle button:focus-visible, .spx-remove-button:focus-visible, #spx-controls input[type="number"]:focus-visible { outline: 2px solid var(--spx-accent); outline-offset: 2px; }
-  #spx-points-list { display: grid; gap: 9px; }
-  .spx-point-row { --spx-point-color: var(--spx-accent); display: grid; grid-template-columns: 62px minmax(150px, 1fr) minmax(170px, 1fr) auto; gap: 10px; align-items: end; padding: 10px; border: 1px solid var(--spx-border); border-radius: 10px; background: var(--spx-bg); transition: border-color .12s ease, box-shadow .12s ease; }
-  .spx-point-row.is-active { border-color: var(--spx-point-color); box-shadow: 0 0 0 2px color-mix(in srgb, var(--spx-point-color) 18%, transparent); }
-  .spx-point-id { align-self: center; display: flex; align-items: center; gap: 7px; font-size: .85rem; font-weight: 800; }
-  .spx-point-swatch { width: 12px; height: 12px; border-radius: 50%; background: var(--spx-point-color); box-shadow: 0 0 0 2px var(--spx-bg), 0 0 0 3px var(--spx-border); }
-  .spx-field label { display: block; font-size: .8rem; font-weight: 650; margin-bottom: 4px; }
-  .spx-hint { color: var(--spx-text-muted); font-weight: 400; }
-  #spx-controls input[type="number"] { width: 100%; min-height: 42px; font-size: .98rem; padding: 8px 10px; border: 1px solid var(--spx-border); border-radius: 8px; background: var(--spx-bg); color: var(--spx-text); }
-  .spx-remove-button { min-width: 82px; padding: 7px 10px; border-color: var(--spx-border); color: var(--spx-danger); background: var(--spx-bg); }
-  .spx-remove-button:hover:not(:disabled) { border-color: currentColor; }
-  .spx-remove-button:disabled { opacity: .42; cursor: not-allowed; }
-  #spx-diagram-wrap { border: 1px solid var(--spx-border); border-radius: 10px; background: var(--spx-bg); padding: 6px; }
-  #spx-diagram { width: 100%; height: auto; display: block; touch-action: manipulation; cursor: crosshair; }
-  #spx-diagram text { font-family: inherit; }
-  .spx-axis-label { font-size: 13px; fill: var(--spx-text); }
-  .spx-tick-label { font-size: 11px; fill: var(--spx-text-muted); }
-  .spx-region-label { font-size: 14px; font-weight: 600; fill: var(--spx-text); opacity: .85; }
-  .spx-region-sub { font-size: 10.5px; fill: var(--spx-text-muted); }
-  .spx-boundary { fill: none; stroke: var(--spx-text); stroke-width: 1.6; }
-  .spx-grid { stroke: var(--spx-border); stroke-width: 1; opacity: .55; }
-  .spx-point-crosshair { stroke: var(--spx-point-color); stroke-width: 1; stroke-dasharray: 4 4; opacity: .78; pointer-events: none; }
-  .spx-point-marker { fill: var(--spx-point-color); stroke: var(--spx-accent-contrast); stroke-width: 1.6; cursor: pointer; }
-  .spx-point-marker.is-active { stroke-width: 2.4; }
-  .spx-point-label { fill: var(--spx-text); font-size: 11px; font-weight: 800; paint-order: stroke; stroke: var(--spx-bg); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
-  .spx-eutectoid-dot { fill: var(--spx-text); }
-  #spx-readout { margin-top: 14px; border: 1px solid var(--spx-border); border-left: 4px solid var(--spx-accent); border-radius: 10px; padding: 12px 14px; background: var(--spx-surface); }
-  .spx-readout-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-  .spx-readout-header h2 { font-size: 1.02rem; margin: 0; }
-  .spx-readout-header p { color: var(--spx-text-muted); font-size: .8rem; margin: 0; }
-  #spx-results-list { display: grid; gap: 9px; }
-  .spx-result-card { --spx-point-color: var(--spx-accent); padding: 10px 12px; border: 1px solid var(--spx-border); border-radius: 9px; background: var(--spx-bg); cursor: pointer; }
-  .spx-result-card.is-active { border-left: 4px solid var(--spx-point-color); }
-  .spx-result-heading { display: flex; align-items: center; gap: 9px; }
-  .spx-result-heading h3 { font-size: .98rem; margin: 0; }
-  .spx-result-point { display: inline-flex; align-items: center; gap: 6px; min-width: 42px; font-size: .78rem; font-weight: 800; }
-  .spx-result-coordinates { color: var(--spx-text-muted); font-size: .86rem; margin: 3px 0 6px; }
-  .spx-result-note { margin: 0; font-size: .91rem; }
-  .spx-result-incomplete { color: var(--spx-text-muted); }
-  @media (max-width: 720px) { .spx-controls-header { align-items: stretch; flex-direction: column; } .spx-control-actions { justify-content: flex-start; } .spx-point-row { grid-template-columns: 54px 1fr 1fr; } .spx-remove-button { grid-column: 2 / 4; justify-self: end; } }
-  @media (max-width: 520px) { #spx-tool { padding: 12px; font-size: 15px; } #spx-controls { padding: 10px; } .spx-control-actions { display: grid; grid-template-columns: 1fr 1fr; } .spx-unit-toggle { grid-column: 1 / -1; } .spx-unit-toggle button { flex: 1; } .spx-point-row { grid-template-columns: 1fr; gap: 7px; } .spx-point-id { margin-bottom: 1px; } .spx-remove-button { grid-column: auto; justify-self: stretch; } .spx-region-label { font-size: 12.5px; } .spx-region-sub { display: none; } .spx-readout-header { align-items: flex-start; flex-direction: column; } }
-  @media (prefers-reduced-motion: no-preference) { .spx-point-marker, .spx-point-crosshair, .spx-point-label { transition: all .12s ease-out; } }
-</style>
+<link rel="stylesheet" href="/tools/steel-phase-explorer.css">
 </head>
 <body>
 <main id="spx-tool">
-  <a class="spx-back" href="/engineering-tools">&larr; Back to Engineering Tools</a>
-  <h1>Steel Phase &amp; Transformation Explorer<span class="spx-badge">Early access</span></h1>
-  <p class="spx-subtitle">Plot one or more plain-carbon steels on the iron&ndash;carbon diagram, identify the phase field for every point, and switch the temperature scale without changing the underlying thermodynamic locations. Tap the diagram to move the selected point.</p>
-  <section id="spx-controls" aria-label="Steel composition and temperature inputs">
-    <div class="spx-controls-header">
-      <div class="spx-controls-title"><h2>Plot points</h2><p>Select a row, enter its values, or tap the diagram to reposition that point.</p></div>
-      <div class="spx-control-actions">
-        <div class="spx-unit-toggle" role="group" aria-label="Temperature units">
-          <button id="spx-unit-metric" type="button" data-unit="metric" aria-pressed="true">Metric (&deg;C)</button>
-          <button id="spx-unit-imperial" type="button" data-unit="imperial" aria-pressed="false">Imperial (&deg;F)</button>
-        </div>
-        <button id="spx-add-point" class="spx-action-button spx-primary" type="button">+ Add point</button>
-        <button id="spx-reset-points" class="spx-action-button" type="button">Reset</button>
-      </div>
-    </div>
-    <div id="spx-points-list" aria-live="polite"></div>
-  </section>
-  <section id="spx-diagram-wrap" aria-label="Iron-carbon equilibrium phase diagram">
-    <svg id="spx-diagram" viewBox="0 0 720 540" role="img" aria-label="Iron-carbon phase diagram from 0 to 1.2 weight percent carbon and 25 to 1250 degrees Celsius, with multiple user points">
-      <g id="spx-layer-regions"></g><g id="spx-layer-grid"></g><g id="spx-layer-boundaries"></g><g id="spx-layer-labels"></g><g id="spx-layer-points"></g>
-    </svg>
-  </section>
-  <section id="spx-readout" aria-live="polite">
-    <div class="spx-readout-header"><h2>Point results</h2><p>Each point is evaluated independently.</p></div>
-    <div id="spx-results-list"></div>
-  </section>
-  <script>
-  (function () {
-    'use strict';
-    var CFG = { cMin: 0, cMax: 1.2, tMin: 25, tMax: 1250, plot: { x0: 70, x1: 690, y0: 480, y1: 30 }, eutectoid: { c: 0.76, t: 727 }, alphaMaxC: 0.022, a3AtZero: 912, defaultPoint: { c: 0.20, t: 900 } };
-    var POINT_COLOURS = ['#0e7490', '#b45309', '#7c3aed', '#15803d', '#be123c', '#0369a1', '#a21caf', '#4d7c0f'];
-    var bounds = {
-      A1: CFG.eutectoid.t,
-      A3: function (c) { c = clamp(c, 0, CFG.eutectoid.c); return CFG.a3AtZero - (CFG.a3AtZero - CFG.eutectoid.t) * Math.sqrt(c / CFG.eutectoid.c); },
-      Acm: function (c) { c = clamp(c, CFG.eutectoid.c, CFG.cMax); return CFG.eutectoid.t + 420 * Math.pow((c - CFG.eutectoid.c) / (2.11 - CFG.eutectoid.c), 1.07); },
-      alphaMaxAboveA1: function (t) { t = clamp(t, CFG.eutectoid.t, CFG.a3AtZero); return CFG.alphaMaxC * (CFG.a3AtZero - t) / (CFG.a3AtZero - CFG.eutectoid.t); },
-      solvus: function (t) { t = clamp(t, CFG.tMin, CFG.eutectoid.t); return CFG.alphaMaxC * Math.exp(-(CFG.eutectoid.t - t) / 150); }
-    };
-    var REGIONS = {
-      gamma: { label: 'Austenite (\u03B3)', note: 'Single-phase austenite: FCC iron with all carbon in solid solution. This is the hot-working / reheating condition \u2014 everything about the final microstructure starts from the austenite grain size set here.' },
-      'alpha+gamma': { label: 'Ferrite + Austenite (\u03B1 + \u03B3)', note: 'Two-phase intercritical field: proeutectoid ferrite is forming from austenite. The remaining austenite is enriching in carbon toward the eutectoid composition as cooling continues.' },
-      'gamma+fe3c': { label: 'Austenite + Cementite (\u03B3 + Fe\u2083C)', note: 'Hypereutectoid two-phase field: proeutectoid cementite is precipitating, typically on austenite grain boundaries, while the remaining austenite decarburizes toward 0.76 wt% C.' },
-      'alpha+fe3c': { label: 'Ferrite + Cementite (\u03B1 + Fe\u2083C)', note: 'Below the A1 isotherm ({A1}) the equilibrium constituents are ferrite and cementite \u2014 seen as ferrite + pearlite in hypoeutectoid steels. A detailed microstructure and phase-fraction breakdown is coming in a future update.' },
-      alpha: { label: 'Ferrite (\u03B1)', note: 'Single-phase BCC ferrite: carbon content is below the very small solubility limit at this temperature, so no cementite is present.' }
-    };
-    function classify(c, t) {
-      c = clamp(c, CFG.cMin, CFG.cMax); t = clamp(t, CFG.tMin, CFG.tMax); var key;
-      if (t >= bounds.A1) { if (c <= CFG.eutectoid.c) { if (t >= bounds.A3(c)) key = 'gamma'; else if (c <= bounds.alphaMaxAboveA1(t)) key = 'alpha'; else key = 'alpha+gamma'; } else { key = (t >= bounds.Acm(c)) ? 'gamma' : 'gamma+fe3c'; } }
-      else { key = (c <= bounds.solvus(t)) ? 'alpha' : 'alpha+fe3c'; }
-      return { key: key, label: REGIONS[key].label, note: REGIONS[key].note.replace('{A1}', '727 \u00B0C') };
-    }
-    function xOf(c) { return CFG.plot.x0 + ((c - CFG.cMin) / (CFG.cMax - CFG.cMin)) * (CFG.plot.x1 - CFG.plot.x0); }
-    function yOf(t) { return CFG.plot.y0 - ((t - CFG.tMin) / (CFG.tMax - CFG.tMin)) * (CFG.plot.y0 - CFG.plot.y1); }
-    function dataFromClient(clientX, clientY, rect) { if (!rect || !rect.width || !rect.height) return null; var sx = (clientX - rect.left) * (720 / rect.width); var sy = (clientY - rect.top) * (540 / rect.height); var c = CFG.cMin + ((sx - CFG.plot.x0) / (CFG.plot.x1 - CFG.plot.x0)) * (CFG.cMax - CFG.cMin); var t = CFG.tMin + ((CFG.plot.y0 - sy) / (CFG.plot.y0 - CFG.plot.y1)) * (CFG.tMax - CFG.tMin); return { c: clamp(c, CFG.cMin, CFG.cMax), t: clamp(t, CFG.tMin, CFG.tMax) }; }
-    function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
-    function round(v, dp) { var m = Math.pow(10, dp); return Math.round(v * m) / m; }
-    function isNumber(v) { return typeof v === 'number' && isFinite(v); }
-    function cToF(t) { return (t * 9 / 5) + 32; }
-    function fToC(t) { return (t - 32) * 5 / 9; }
-    var SVG_NS = 'http://www.w3.org/2000/svg';
-    function el(name, attrs, text) { var node = document.createElementNS(SVG_NS, name); for (var k in attrs) node.setAttribute(k, attrs[k]); if (text != null) node.textContent = text; return node; }
-    function clearNode(node) { while (node.firstChild) node.removeChild(node.firstChild); }
-    function samplePath(from, to, n, coordOf) { var pts = []; for (var i = 0; i <= n; i++) { var v = from + (to - from) * (i / n); pts.push(coordOf(v)); } return pts; }
-    function ptsToPath(pts, close) { var d = pts.map(function (p, i) { return (i === 0 ? 'M' : 'L') + round(p[0], 2) + ' ' + round(p[1], 2); }).join(' '); return close ? d + ' Z' : d; }
-    var state = { unit: 'metric', activeId: 1, nextId: 2, points: [{ id: 1, c: CFG.defaultPoint.c, t: CFG.defaultPoint.t }] };
-    function pointColour(index) { return POINT_COLOURS[index % POINT_COLOURS.length]; }
-    function findPoint(id) { for (var i = 0; i < state.points.length; i++) if (state.points[i].id === id) return state.points[i]; return null; }
-    function activePoint() { return findPoint(state.activeId) || state.points[0]; }
-    function pointIsComplete(point) { return point && isNumber(point.c) && isNumber(point.t); }
-    function unitSymbol() { return state.unit === 'metric' ? '\u00B0C' : '\u00B0F'; }
-    function temperatureForDisplay(tC) { return state.unit === 'metric' ? tC : cToF(tC); }
-    function temperatureFromDisplay(value) { return state.unit === 'metric' ? value : fToC(value); }
-    function formatTemperature(tC) { return Math.round(temperatureForDisplay(tC)) + ' ' + unitSymbol(); }
-    function formatAxisTemperature(tC) { return String(Math.round(temperatureForDisplay(tC))); }
-    function formatCarbon(c) { return String(round(c, 3)); }
-    function formatCarbonInput(c) { var text = round(c, 3).toFixed(3).replace(/0+$/, '').replace(/\.$/, ''); if (text.indexOf('.') === -1) return text + '.00'; if (text.split('.')[1].length === 1) return text + '0'; return text; }
-    function inputTemperatureMin() { return Math.round(temperatureForDisplay(CFG.tMin)); }
-    function inputTemperatureMax() { return Math.round(temperatureForDisplay(CFG.tMax)); }
-    function inputTemperatureStep() { return state.unit === 'metric' ? 5 : 10; }
-    function regionNoteForDisplay(regionKey) { return REGIONS[regionKey].note.replace('{A1}', formatTemperature(bounds.A1)); }
-    function buildDiagram() {
-      var gRegions = document.getElementById('spx-layer-regions'), gGrid = document.getElementById('spx-layer-grid'), gBounds = document.getElementById('spx-layer-boundaries'), gLabels = document.getElementById('spx-layer-labels');
-      clearNode(gRegions); clearNode(gGrid); clearNode(gBounds); clearNode(gLabels);
-      var a3Pts = samplePath(0, CFG.eutectoid.c, 60, function (c) { return [xOf(c), yOf(bounds.A3(c))]; });
-      var acmPts = samplePath(CFG.eutectoid.c, CFG.cMax, 40, function (c) { return [xOf(c), yOf(bounds.Acm(c))]; });
-      var solvusPts = samplePath(CFG.eutectoid.t, CFG.tMin, 60, function (t) { return [xOf(bounds.solvus(t)), yOf(t)]; });
-      var alphaLeftPts = [[xOf(0), yOf(CFG.a3AtZero)], [xOf(CFG.alphaMaxC), yOf(CFG.eutectoid.t)]];
-      var topY = yOf(CFG.tMax), botY = yOf(CFG.tMin), xR = xOf(CFG.cMax);
-      var gammaPts = [[CFG.plot.x0, topY], [xR, topY], [xR, yOf(bounds.Acm(CFG.cMax))]].concat(acmPts.slice().reverse()).concat(a3Pts.slice().reverse());
-      var agPts = a3Pts.slice().concat([alphaLeftPts[1], alphaLeftPts[0]]);
-      var gcPts = acmPts.slice().concat([[xR, yOf(bounds.A1)], [xOf(CFG.eutectoid.c), yOf(bounds.A1)]]);
-      var acPts = [[xOf(CFG.alphaMaxC), yOf(bounds.A1)], [xR, yOf(bounds.A1)], [xR, botY], [xOf(bounds.solvus(CFG.tMin)), botY]].concat(solvusPts.slice().reverse());
-      var aPts = [alphaLeftPts[0], alphaLeftPts[1]].concat(solvusPts).concat([[CFG.plot.x0, botY], [CFG.plot.x0, yOf(CFG.a3AtZero)]]);
-      [['spx-region-gamma', gammaPts, 'var(--spx-tint-gamma)'], ['spx-region-alpha-gamma', agPts, 'var(--spx-tint-alpha-gamma)'], ['spx-region-gamma-cem', gcPts, 'var(--spx-tint-gamma-cem)'], ['spx-region-alpha-cem', acPts, 'var(--spx-tint-alpha-cem)'], ['spx-region-alpha', aPts, 'var(--spx-tint-alpha)']].forEach(function (f) { gRegions.appendChild(el('path', { id: f[0], d: ptsToPath(f[1], true), fill: f[2], stroke: 'none' })); });
-      [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2].forEach(function (c) { var x = xOf(c); gGrid.appendChild(el('line', { class: 'spx-grid', x1: x, y1: topY, x2: x, y2: botY })); gLabels.appendChild(el('text', { class: 'spx-tick-label', x: x, y: botY + 16, 'text-anchor': 'middle' }, c.toFixed(1))); });
-      [200, 400, 600, 727, 800, 912, 1000, 1147, 1200].forEach(function (t) { var y = yOf(t); gGrid.appendChild(el('line', { class: 'spx-grid', x1: CFG.plot.x0, y1: y, x2: xR, y2: y })); gLabels.appendChild(el('text', { class: 'spx-tick-label', x: CFG.plot.x0 - 8, y: y + 4, 'text-anchor': 'end' }, formatAxisTemperature(t))); });
-      gLabels.appendChild(el('text', { class: 'spx-axis-label', x: (CFG.plot.x0 + xR) / 2, y: botY + 38, 'text-anchor': 'middle' }, 'Carbon (wt%)'));
-      gLabels.appendChild(el('text', { class: 'spx-axis-label', x: 18, y: (topY + botY) / 2, 'text-anchor': 'middle', transform: 'rotate(-90 18 ' + (topY + botY) / 2 + ')' }, 'Temperature (' + unitSymbol() + ')'));
-      gBounds.appendChild(el('path', { id: 'spx-curve-a3', class: 'spx-boundary', d: ptsToPath(a3Pts) })); gBounds.appendChild(el('path', { id: 'spx-curve-acm', class: 'spx-boundary', d: ptsToPath(acmPts) })); gBounds.appendChild(el('path', { id: 'spx-curve-solvus', class: 'spx-boundary', d: ptsToPath(solvusPts) })); gBounds.appendChild(el('path', { id: 'spx-curve-alpha-left', class: 'spx-boundary', d: ptsToPath(alphaLeftPts) })); gBounds.appendChild(el('line', { id: 'spx-curve-a1', class: 'spx-boundary', x1: xOf(CFG.alphaMaxC), y1: yOf(bounds.A1), x2: xR, y2: yOf(bounds.A1) }));
-      function regionLabel(c, t, main, sub) { var x = xOf(c), y = yOf(t); gLabels.appendChild(el('text', { class: 'spx-region-label', x: x, y: y, 'text-anchor': 'middle' }, main)); if (sub) gLabels.appendChild(el('text', { class: 'spx-region-sub', x: x, y: y + 14, 'text-anchor': 'middle' }, sub)); }
-      regionLabel(0.55, 1080, '\u03B3', 'austenite'); regionLabel(0.24, 795, '\u03B1 + \u03B3', ''); regionLabel(1.05, 762, '\u03B3 + Fe\u2083C', ''); regionLabel(0.6, 420, '\u03B1 + Fe\u2083C', 'ferrite + pearlite \u2192 pearlite + cementite');
-      gLabels.appendChild(el('text', { class: 'spx-region-label', x: xOf(0.012), y: yOf(830), 'text-anchor': 'middle' }, '\u03B1'));
-      gLabels.appendChild(el('text', { class: 'spx-tick-label', x: xR - 4, y: yOf(bounds.A1) - 6, 'text-anchor': 'end' }, 'A\u2081 (' + formatTemperature(bounds.A1) + ')')); gLabels.appendChild(el('text', { class: 'spx-tick-label', x: xOf(0.3) - 6, y: yOf(bounds.A3(0.3)) - 8, 'text-anchor': 'end' }, 'A\u2083')); gLabels.appendChild(el('text', { class: 'spx-tick-label', x: xOf(1.08), y: yOf(bounds.Acm(1.08)) - 8, 'text-anchor': 'start' }, 'A\u1D04\u2098'));
-      gBounds.appendChild(el('circle', { class: 'spx-eutectoid-dot', cx: xOf(CFG.eutectoid.c), cy: yOf(CFG.eutectoid.t), r: 3.5 })); gLabels.appendChild(el('text', { class: 'spx-tick-label', x: xOf(CFG.eutectoid.c), y: yOf(CFG.eutectoid.t) + 16, 'text-anchor': 'middle' }, '0.76, ' + formatTemperature(CFG.eutectoid.t)));
-      document.getElementById('spx-diagram').setAttribute('aria-label', 'Iron-carbon phase diagram from 0 to 1.2 weight percent carbon and ' + inputTemperatureMin() + ' to ' + inputTemperatureMax() + ' ' + unitSymbol() + ', with multiple user points');
-    }
-    var pointsList = document.getElementById('spx-points-list'), resultsList = document.getElementById('spx-results-list'), svg = document.getElementById('spx-diagram');
-    function renderPointRows() {
-      clearNode(pointsList);
-      state.points.forEach(function (point, index) {
-        var row = document.createElement('div'); row.className = 'spx-point-row' + (point.id === state.activeId ? ' is-active' : ''); row.setAttribute('data-point-id', String(point.id)); row.style.setProperty('--spx-point-color', pointColour(index));
-        var pointId = document.createElement('div'); pointId.className = 'spx-point-id'; var swatch = document.createElement('span'); swatch.className = 'spx-point-swatch'; swatch.setAttribute('aria-hidden', 'true'); pointId.appendChild(swatch); pointId.appendChild(document.createTextNode('P' + point.id)); row.appendChild(pointId);
-        var carbonField = document.createElement('div'); carbonField.className = 'spx-field'; var carbonId = point.id === 1 ? 'spx-input-carbon' : 'spx-input-carbon-' + point.id; var carbonLabel = document.createElement('label'); carbonLabel.setAttribute('for', carbonId); carbonLabel.innerHTML = 'Carbon <span class="spx-hint">(wt%, 0&ndash;1.2)</span>'; var carbonInput = document.createElement('input'); carbonInput.id = carbonId; carbonInput.type = 'number'; carbonInput.inputMode = 'decimal'; carbonInput.min = String(CFG.cMin); carbonInput.max = String(CFG.cMax); carbonInput.step = '0.01'; carbonInput.placeholder = 'e.g., 0.20'; carbonInput.value = isNumber(point.c) ? formatCarbonInput(point.c) : ''; carbonInput.setAttribute('data-field', 'carbon'); carbonInput.setAttribute('data-point-id', String(point.id)); carbonField.appendChild(carbonLabel); carbonField.appendChild(carbonInput); row.appendChild(carbonField);
-        var tempField = document.createElement('div'); tempField.className = 'spx-field'; var tempId = point.id === 1 ? 'spx-input-temp' : 'spx-input-temp-' + point.id; var tempLabel = document.createElement('label'); tempLabel.setAttribute('for', tempId); tempLabel.innerHTML = 'Temperature <span class="spx-hint">(' + unitSymbol() + ', ' + inputTemperatureMin() + '&ndash;' + inputTemperatureMax() + ')</span>'; var tempInput = document.createElement('input'); tempInput.id = tempId; tempInput.type = 'number'; tempInput.inputMode = 'decimal'; tempInput.min = String(inputTemperatureMin()); tempInput.max = String(inputTemperatureMax()); tempInput.step = String(inputTemperatureStep()); tempInput.placeholder = state.unit === 'metric' ? 'e.g., 900' : 'e.g., 1652'; tempInput.value = isNumber(point.t) ? String(Math.round(temperatureForDisplay(point.t))) : ''; tempInput.setAttribute('data-field', 'temperature'); tempInput.setAttribute('data-point-id', String(point.id)); tempField.appendChild(tempLabel); tempField.appendChild(tempInput); row.appendChild(tempField);
-        var remove = document.createElement('button'); remove.type = 'button'; remove.className = 'spx-remove-button'; remove.setAttribute('data-action', 'remove'); remove.setAttribute('data-point-id', String(point.id)); remove.setAttribute('aria-label', 'Remove point P' + point.id); remove.textContent = 'Remove'; remove.disabled = state.points.length === 1; row.appendChild(remove); pointsList.appendChild(row);
-      });
-    }
-    function updateRowSelection() { var rows = pointsList.querySelectorAll('.spx-point-row'); for (var i = 0; i < rows.length; i++) rows[i].classList.toggle('is-active', Number(rows[i].getAttribute('data-point-id')) === state.activeId); }
-    function setActivePoint(id) { if (!findPoint(id)) return; state.activeId = id; updateRowSelection(); renderPoints(); renderResults(); }
-    function addPoint(c, t) { var point = { id: state.nextId++, c: isNumber(c) ? clamp(c, CFG.cMin, CFG.cMax) : null, t: isNumber(t) ? clamp(t, CFG.tMin, CFG.tMax) : null }; state.points.push(point); state.activeId = point.id; renderPointRows(); renderPoints(); renderResults(); var input = document.getElementById('spx-input-carbon-' + point.id); if (input) input.focus(); return point.id; }
-    function removePoint(id) { if (state.points.length === 1) return; var removedIndex = -1; for (var i = 0; i < state.points.length; i++) if (state.points[i].id === id) { removedIndex = i; break; } if (removedIndex < 0) return; state.points.splice(removedIndex, 1); if (state.activeId === id) state.activeId = state.points[Math.max(0, removedIndex - 1)].id; renderPointRows(); renderPoints(); renderResults(); }
-    function resetPoints() { state.points = [{ id: 1, c: CFG.defaultPoint.c, t: CFG.defaultPoint.t }]; state.activeId = 1; state.nextId = 2; renderPointRows(); renderPoints(); renderResults(); }
-    function setPoint(c, t, syncInputs, pointId) { if (!isNumber(c) || !isNumber(t)) return; var point = findPoint(pointId || state.activeId); if (!point) return; point.c = clamp(c, CFG.cMin, CFG.cMax); point.t = clamp(t, CFG.tMin, CFG.tMax); if (syncInputs) renderPointRows(); renderPoints(); renderResults(); }
-    function setUnit(unit) { if (unit !== 'metric' && unit !== 'imperial') return; if (state.unit === unit) return; state.unit = unit; document.getElementById('spx-unit-metric').setAttribute('aria-pressed', String(unit === 'metric')); document.getElementById('spx-unit-imperial').setAttribute('aria-pressed', String(unit === 'imperial')); renderPointRows(); buildDiagram(); renderPoints(); renderResults(); }
-    function renderPoints() {
-      var layer = document.getElementById('spx-layer-points'); clearNode(layer);
-      state.points.forEach(function (point, index) {
-        if (!pointIsComplete(point)) return; var x = xOf(point.c), y = yOf(point.t), isActive = point.id === state.activeId;
-        var group = el('g', { class: 'spx-point-group' + (isActive ? ' is-active' : ''), 'data-spx-point-id': String(point.id), role: 'button', tabindex: '0', 'aria-label': 'Select point P' + point.id + ', ' + formatCarbon(point.c) + ' weight percent carbon at ' + formatTemperature(point.t) }); group.style.setProperty('--spx-point-color', pointColour(index));
-        if (isActive) { group.appendChild(el('line', { id: 'spx-crosshair-v', class: 'spx-point-crosshair', x1: round(x, 2), x2: round(x, 2), y1: yOf(CFG.tMin), y2: round(y, 2) })); group.appendChild(el('line', { id: 'spx-crosshair-h', class: 'spx-point-crosshair', x1: xOf(CFG.cMin), x2: round(x, 2), y1: round(y, 2), y2: round(y, 2) })); }
-        var marker = el('circle', { class: 'spx-point-marker' + (isActive ? ' is-active' : ''), r: isActive ? 7 : 5.8, cx: round(x, 2), cy: round(y, 2), 'data-spx-point-id': String(point.id) }); if (isActive) marker.id = 'spx-point'; marker.appendChild(el('title', {}, 'P' + point.id + ': ' + formatCarbon(point.c) + ' wt% C, ' + formatTemperature(point.t))); group.appendChild(marker); group.appendChild(el('text', { class: 'spx-point-label', x: round(x + 10, 2), y: round(y - 9, 2), 'data-spx-point-id': String(point.id) }, 'P' + point.id)); layer.appendChild(group);
-      });
-    }
-    function renderResults() {
-      clearNode(resultsList);
-      state.points.forEach(function (point, index) {
-        var isActive = point.id === state.activeId; var card = document.createElement('article'); card.className = 'spx-result-card' + (isActive ? ' is-active' : '') + (pointIsComplete(point) ? '' : ' spx-result-incomplete'); card.setAttribute('data-point-id', String(point.id)); card.tabIndex = 0; card.style.setProperty('--spx-point-color', pointColour(index));
-        var heading = document.createElement('div'); heading.className = 'spx-result-heading'; var pointTag = document.createElement('span'); pointTag.className = 'spx-result-point'; var swatch = document.createElement('span'); swatch.className = 'spx-point-swatch'; swatch.setAttribute('aria-hidden', 'true'); pointTag.appendChild(swatch); pointTag.appendChild(document.createTextNode('P' + point.id)); heading.appendChild(pointTag); var regionHeading = document.createElement('h3'); if (isActive) regionHeading.id = 'spx-region-name'; heading.appendChild(regionHeading); card.appendChild(heading);
-        var coordinates = document.createElement('p'); coordinates.className = 'spx-result-coordinates'; if (isActive) coordinates.id = 'spx-point-readout'; card.appendChild(coordinates); var note = document.createElement('p'); note.className = 'spx-result-note'; if (isActive) note.id = 'spx-region-note'; card.appendChild(note);
-        if (pointIsComplete(point)) { var region = classify(point.c, point.t); regionHeading.textContent = region.label; coordinates.textContent = formatCarbon(point.c) + ' wt% C at ' + formatTemperature(point.t); note.textContent = regionNoteForDisplay(region.key); }
-        else { regionHeading.textContent = 'Point not plotted yet'; coordinates.textContent = 'Enter both carbon content and temperature.'; note.textContent = 'This point will appear on the diagram as soon as both values are provided.'; }
-        resultsList.appendChild(card);
-      });
-    }
-    pointsList.addEventListener('focusin', function (evt) { var id = Number(evt.target.getAttribute('data-point-id')); if (id) setActivePoint(id); });
-    pointsList.addEventListener('pointerdown', function (evt) { var row = evt.target.closest ? evt.target.closest('.spx-point-row') : null; if (row) setActivePoint(Number(row.getAttribute('data-point-id'))); });
-    pointsList.addEventListener('input', function (evt) { var field = evt.target.getAttribute('data-field'), id = Number(evt.target.getAttribute('data-point-id')); if (!field || !id) return; var point = findPoint(id); if (!point) return; state.activeId = id; var raw = evt.target.value.trim(); if (raw === '') { if (field === 'carbon') point.c = null; if (field === 'temperature') point.t = null; } else { var value = parseFloat(raw); if (isFinite(value)) { if (field === 'carbon') point.c = clamp(value, CFG.cMin, CFG.cMax); if (field === 'temperature') point.t = clamp(temperatureFromDisplay(value), CFG.tMin, CFG.tMax); } } updateRowSelection(); renderPoints(); renderResults(); });
-    pointsList.addEventListener('change', function (evt) { var field = evt.target.getAttribute('data-field'), id = Number(evt.target.getAttribute('data-point-id')), point = findPoint(id); if (!field || !point) return; if (field === 'carbon' && isNumber(point.c)) evt.target.value = formatCarbonInput(point.c); if (field === 'temperature' && isNumber(point.t)) evt.target.value = String(Math.round(temperatureForDisplay(point.t))); });
-    pointsList.addEventListener('click', function (evt) { if (evt.target.getAttribute('data-action') === 'remove') removePoint(Number(evt.target.getAttribute('data-point-id'))); });
-    document.getElementById('spx-add-point').addEventListener('click', function () { addPoint(); }); document.getElementById('spx-reset-points').addEventListener('click', resetPoints); document.getElementById('spx-unit-metric').addEventListener('click', function () { setUnit('metric'); }); document.getElementById('spx-unit-imperial').addEventListener('click', function () { setUnit('imperial'); });
-    function onPointer(evt) { var targetPoint = evt.target.getAttribute && evt.target.getAttribute('data-spx-point-id'); if (targetPoint) { setActivePoint(Number(targetPoint)); return; } var pos = dataFromClient(evt.clientX, evt.clientY, svg.getBoundingClientRect()); if (pos) setPoint(pos.c, pos.t, true); }
-    svg.addEventListener('pointerdown', onPointer); svg.addEventListener('keydown', function (evt) { var targetPoint = evt.target.getAttribute && evt.target.getAttribute('data-spx-point-id'); if (targetPoint && (evt.key === 'Enter' || evt.key === ' ')) { evt.preventDefault(); setActivePoint(Number(targetPoint)); } });
-    resultsList.addEventListener('click', function (evt) { var card = evt.target.closest ? evt.target.closest('.spx-result-card') : null; if (card) setActivePoint(Number(card.getAttribute('data-point-id'))); }); resultsList.addEventListener('keydown', function (evt) { var card = evt.target.closest ? evt.target.closest('.spx-result-card') : null; if (card && (evt.key === 'Enter' || evt.key === ' ')) { evt.preventDefault(); setActivePoint(Number(card.getAttribute('data-point-id'))); } });
-    renderPointRows(); buildDiagram(); renderPoints(); renderResults();
-    window.__SPX = { bounds: bounds, classify: classify, setPoint: setPoint, addPoint: addPoint, removePoint: removePoint, setUnit: setUnit, dataFromClient: dataFromClient, xOf: xOf, yOf: yOf, getState: function () { var point = activePoint(); return { c: point ? point.c : null, t: point ? point.t : null, unit: state.unit, activeId: state.activeId }; }, getPoints: function () { return state.points.map(function (point) { return { id: point.id, c: point.c, t: point.t }; }); } };
-  })();
-  </script>
+<a class="spx-back" href="/engineering-tools">&larr; Back to Engineering Tools</a>
+<h1>Steel Phase &amp; Transformation Explorer <span class="spx-badge">Interactive suite</span></h1>
+<p class="spx-subtitle">Explore equilibrium phases, calculate lever-rule fractions, animate heat-treatment paths, compare steels, inspect generalized TTT/CCT behaviour, estimate chemistry-driven transformation temperatures and properties, practise with challenges, and export scenarios.</p>
+<div class="spx-disclaimer"><strong>Engineering caution:</strong> equilibrium phase fractions are calculated from simplified Fe&ndash;Fe<sub>3</sub>C boundary models. TTT/CCT curves, transformation kinetics, and mechanical-property values are educational estimates and must not replace grade-specific diagrams, validated metallurgical models, laboratory testing, or governing specifications.</div>
+<nav class="spx-tabs" role="tablist" aria-label="Explorer modules">
+<button role="tab" aria-selected="true" aria-controls="spx-tab-equilibrium" data-tab="equilibrium">Equilibrium diagram</button>
+<button role="tab" aria-selected="false" aria-controls="spx-tab-path" data-tab="path">Heating &amp; cooling path</button>
+<button role="tab" aria-selected="false" aria-controls="spx-tab-kinetics" data-tab="kinetics">TTT / CCT</button>
+<button role="tab" aria-selected="false" aria-controls="spx-tab-chemistry" data-tab="chemistry">Chemistry &amp; properties</button>
+<button role="tab" aria-selected="false" aria-controls="spx-tab-learn" data-tab="learn">Learn &amp; export</button>
+</nav>
+
+<section id="spx-tab-equilibrium" class="spx-panel" role="tabpanel" data-panel="equilibrium">
+<div class="spx-grid-2">
+<div class="spx-card">
+<div class="spx-card-pad">
+<div class="spx-card-title"><div><h2>Plot and compare points</h2><p>Select a row or marker. Drag a marker or tap the diagram to reposition the active point.</p></div><div class="spx-toolbar"><div class="spx-segmented" role="group" aria-label="Temperature units"><button id="spx-unit-metric" aria-pressed="true" type="button">Metric (&deg;C)</button><button id="spx-unit-imperial" aria-pressed="false" type="button">Imperial (&deg;F)</button></div><button class="spx-btn primary" id="spx-add-point" type="button">+ Add point</button><button class="spx-btn" id="spx-reset-points" type="button">Reset</button></div></div>
+<div class="spx-checks"><label><input id="spx-toggle-tie" type="checkbox" checked> Show tie line</label><label><input id="spx-toggle-spotlight" type="checkbox" checked> Spotlight active region</label><label><input id="spx-toggle-snap" type="checkbox" checked> Snap to critical boundaries</label><label><input id="spx-toggle-connect" type="checkbox"> Connect points as path</label></div>
+<div class="spx-points" id="spx-points-list" aria-live="polite"></div>
+<div class="spx-preset-list" style="margin-top:10px"><button class="spx-preset" data-point-preset="0.10,900">Low-C austenite</button><button class="spx-preset" data-point-preset="0.20,750">Intercritical steel</button><button class="spx-preset" data-point-preset="0.40,700">Ferrite + pearlite</button><button class="spx-preset" data-point-preset="0.76,727">Eutectoid</button><button class="spx-preset" data-point-preset="1.00,760">Hypereutectoid</button></div>
+</div>
+<div class="spx-svg-wrap" id="spx-diagram-wrap"><svg id="spx-diagram" viewBox="0 0 760 560" role="img" aria-label="Interactive iron-carbon equilibrium phase diagram"><g id="spx-regions"></g><g id="spx-grid"></g><g id="spx-boundaries"></g><g id="spx-labels"></g><g id="spx-overlay"></g><g id="spx-points"></g></svg><div class="spx-tooltip" id="spx-tooltip" hidden></div></div>
+</div>
+<div class="spx-side-stack">
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Phase analysis</h2><p>Each point is evaluated independently.</p></div></div><div id="spx-results"></div></div>
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Microstructure viewer</h2><p>Schematic, not photomicrographic.</p></div></div><div class="spx-micro-wrap"><canvas id="spx-micro-canvas" width="480" height="280" aria-label="Schematic steel microstructure"></canvas><div class="spx-checks"><label><input id="spx-show-grains" type="checkbox" checked> Grain boundaries</label><label><input id="spx-show-carbon" type="checkbox"> Carbon distribution</label><label><input id="spx-show-labels" type="checkbox" checked> Labels</label></div><div class="spx-legend" id="spx-micro-legend"></div></div></div>
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Final equilibrium microstructure</h2><p>Room-temperature ferrite, pearlite, and proeutectoid cementite estimate.</p></div></div><div id="spx-final-micro"></div></div>
+</div>
+</div>
+</section>
+
+<section id="spx-tab-path" class="spx-panel" role="tabpanel" data-panel="path" hidden>
+<div class="spx-grid-2">
+<div class="spx-card">
+<div class="spx-card-pad"><div class="spx-card-title"><div><h2>Heat-treatment scenario builder</h2><p>Create heating, holding, cooling, quenching, and tempering segments.</p></div><div class="spx-toolbar"><button class="spx-btn primary" id="spx-play-path">Play</button><button class="spx-btn" id="spx-pause-path">Pause</button><button class="spx-btn" id="spx-add-step">+ Step</button></div></div>
+<div class="spx-fields"><div class="spx-field"><label for="spx-path-carbon">Carbon <span class="spx-hint">(wt%)</span></label><input id="spx-path-carbon" type="number" min="0" max="1.2" step="0.01" value="0.20"></div><div class="spx-field"><label for="spx-path-speed">Animation speed</label><select id="spx-path-speed"><option value="0.5">Slow</option><option value="1" selected>Normal</option><option value="2">Fast</option><option value="4">Very fast</option></select></div><div class="spx-field"><label for="spx-path-preset">Preset cycle</label><select id="spx-path-preset"><option value="normalizing">Normalizing</option><option value="full-anneal">Full annealing</option><option value="process-anneal">Process annealing</option><option value="spheroidize">Spheroidizing</option><option value="quench">Austenitize + quench</option><option value="quench-temper">Quench and temper</option><option value="intercritical">Intercritical annealing</option><option value="austemper">Austempering</option><option value="martemper">Martempering</option></select></div></div>
+<div class="spx-table-wrap" style="margin-top:10px"><table class="spx-table"><thead><tr><th>Step</th><th>Target temperature</th><th>Duration</th><th>Mode</th><th></th></tr></thead><tbody id="spx-cycle-rows"></tbody></table></div>
+</div>
+<div class="spx-svg-wrap"><svg id="spx-cycle-svg" viewBox="0 0 760 330" role="img" aria-label="Temperature versus time heat-treatment cycle"></svg></div>
+<div class="spx-card-pad"><div class="spx-slider-row"><span id="spx-path-time-label">0 min</span><input id="spx-path-slider" type="range" min="0" max="1000" value="0"><strong id="spx-path-temp-label">25 &deg;C</strong></div></div>
+</div>
+<div class="spx-side-stack">
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Transformation timeline</h2><p>Boundary crossings and expected metallurgical events.</p></div></div><div id="spx-path-events" class="spx-event-list"></div></div>
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Live phase state</h2><p>Scrub the slider or play the cycle.</p></div></div><div id="spx-path-live"></div></div>
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Animated microstructure</h2><p>Tracks the current cycle temperature.</p></div></div><canvas id="spx-path-canvas" width="480" height="280" style="width:100%;height:230px;border:1px solid var(--spx-border);border-radius:10px"></canvas></div>
+</div>
+</div>
+</section>
+
+<section id="spx-tab-kinetics" class="spx-panel" role="tabpanel" data-panel="kinetics" hidden>
+<div class="spx-grid-2">
+<div class="spx-card">
+<div class="spx-card-pad"><div class="spx-card-title"><div><h2>Generalized transformation kinetics</h2><p>Switch between idealized TTT and CCT views. Curves shift heuristically with chemistry.</p></div><div class="spx-segmented" role="group"><button id="spx-mode-ttt" aria-pressed="true">TTT</button><button id="spx-mode-cct" aria-pressed="false">CCT</button></div></div>
+<div class="spx-fields"><div class="spx-field"><label for="spx-kin-cooling">Cooling rate <span class="spx-hint">(&deg;C/s)</span></label><input id="spx-kin-cooling" type="number" min="0.01" max="1000" step="0.1" value="10"></div><div class="spx-field"><label for="spx-kin-hold">Isothermal hold <span class="spx-hint">(s)</span></label><input id="spx-kin-hold" type="number" min="0" max="100000" step="1" value="60"></div><div class="spx-field"><label for="spx-kin-final">Final temperature</label><input id="spx-kin-final" type="number" min="-100" max="700" step="5" value="25"></div></div>
+</div>
+<div class="spx-svg-wrap"><svg id="spx-kinetics-svg" viewBox="0 0 760 500" role="img" aria-label="Generalized TTT or CCT transformation diagram"></svg><div class="spx-tooltip" id="spx-kin-tooltip" hidden></div></div>
+</div>
+<div class="spx-side-stack">
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Predicted constituents</h2><p>Educational kinetic estimate.</p></div></div><div id="spx-kin-results"></div></div>
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Critical temperatures</h2><p>Calculated from the chemistry module.</p></div></div><div id="spx-critical-metrics" class="spx-metrics"></div></div>
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Interpretation</h2></div></div><div id="spx-kin-note" class="spx-note"></div></div>
+</div>
+</div>
+</section>
+
+<section id="spx-tab-chemistry" class="spx-panel" role="tabpanel" data-panel="chemistry" hidden>
+<div class="spx-grid-2">
+<div class="spx-card spx-card-pad">
+<div class="spx-card-title"><div><h2>Steel chemistry and grade presets</h2><p>Enter wt% chemistry to estimate CE, Pcm, critical temperatures, hardenability, and property trends.</p></div><div class="spx-toolbar"><select id="spx-grade-preset" class="spx-btn"><option value="custom">Custom chemistry</option><option value="1018">AISI 1018</option><option value="1045">AISI 1045</option><option value="1080">AISI 1080</option><option value="4130">AISI 4130</option><option value="4140">AISI 4140</option><option value="x70">Illustrative API X70</option></select><button id="spx-apply-grade" class="spx-btn primary">Apply preset</button></div></div>
+<div class="spx-chem-grid" id="spx-chem-grid"></div>
+<div class="spx-note" style="margin-top:10px">Preset chemistries are illustrative mid-range examples, not purchasing specifications. Always compare against the applicable material standard and heat analysis.</div>
+</div>
+<div class="spx-side-stack">
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Weldability and transformation metrics</h2></div></div><div id="spx-chem-metrics" class="spx-metrics"></div><div id="spx-chem-formulas" style="margin-top:9px"></div></div>
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Estimated properties</h2><p>Range estimates for the selected cooling rate.</p></div></div><div class="spx-field"><label for="spx-property-rate">Cooling rate <span class="spx-hint">(&deg;C/s)</span></label><input id="spx-property-rate" type="range" min="0" max="100" value="20"><div class="spx-slider-row"><span>Slow</span><span></span><strong id="spx-property-rate-label">10 &deg;C/s</strong></div></div><div id="spx-property-metrics" class="spx-metrics" style="margin-top:10px"></div><div id="spx-property-note" class="spx-note" style="margin-top:9px"></div></div>
+</div>
+</div>
+<div class="spx-card spx-card-pad" style="margin-top:14px"><div class="spx-card-title"><div><h2>Side-by-side steel comparison</h2><p>Compares every plotted point using the same chemistry-driven estimates.</p></div></div><div class="spx-table-wrap"><table class="spx-table"><thead><tr><th>Point</th><th>C</th><th>Temperature</th><th>Phase field</th><th>Equilibrium fractions</th><th>Final microstructure</th><th>Hardness trend</th><th>Weldability</th></tr></thead><tbody id="spx-compare-body"></tbody></table></div></div>
+</section>
+
+<section id="spx-tab-learn" class="spx-panel" role="tabpanel" data-panel="learn" hidden>
+<div class="spx-grid-2">
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Phase-diagram challenge</h2><p>Predict the phase field before revealing the answer.</p></div><button class="spx-btn primary" id="spx-new-quiz">New challenge</button></div><div id="spx-quiz-question" class="spx-note"></div><div class="spx-quiz-options" id="spx-quiz-options" style="margin-top:9px"></div><button class="spx-btn" id="spx-quiz-hint" style="margin-top:8px">Show hint</button><div id="spx-quiz-answer"></div></div>
+<div class="spx-side-stack">
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Boundary guide</h2><p>Click a boundary on the equilibrium diagram for the same information.</p></div></div><div id="spx-boundary-guide"></div></div>
+<div class="spx-card spx-card-pad"><div class="spx-card-title"><div><h2>Save, share, and export</h2></div></div><div class="spx-export-grid"><button class="spx-btn" id="spx-save-local">Save scenario</button><button class="spx-btn" id="spx-load-local">Load saved</button><button class="spx-btn" id="spx-copy-link">Copy share link</button><button class="spx-btn" id="spx-export-csv">Export CSV</button><button class="spx-btn" id="spx-export-png">Export diagram PNG</button><button class="spx-btn" id="spx-print">Print / PDF</button></div><div id="spx-export-status" class="spx-note" style="margin-top:9px">Nothing exported yet.</div></div>
+</div>
+</div>
+</section>
 </main>
+<script src="/tools/steel-phase-explorer-core.js"></script>
+<script src="/tools/steel-phase-explorer-equilibrium.js"></script>
+<script src="/tools/steel-phase-explorer-path.js"></script>
+<script src="/tools/steel-phase-explorer-analysis.js"></script>
+<script src="/tools/steel-phase-explorer-app.js"></script>
 </body>
 </html>

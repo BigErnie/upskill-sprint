@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+UPSKILLSPRINT_LESSON_META
+id: steel-phase-explorer
+title: Steel Phase & Transformation Explorer
+type: tool
+level: intermediate
+topics: iron-carbon phase diagram, phase transformations, CCT, microstructure, mechanical properties
+version: 0.1.0-stage1
+status: early-access
+requires: /theme.js, /site-sections.js
+stage: 1 of 5 (equilibrium diagram + point placement + region detection)
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Steel Phase &amp; Transformation Explorer | UpSkill Sprint</title>
+<meta name="description" content="Interactive iron-carbon phase diagram for plain-carbon steel: enter temperature and carbon content, plot your steel, and identify the phases present. Free engineering tool from UpSkill Sprint.">
+<link rel="canonical" href="https://upskillsprint.com/tools/steel-phase-explorer">
+<script src="/theme.js"></script>
+<script src="/site-sections.js"></script>
+<style>
+  /* ---- Theme tokens (site custom properties with local fallbacks) ---- */
+  #spx-tool {
+    --spx-bg: var(--paper, #ffffff);
+    --spx-surface: var(--tint, #f5f7fa);
+    --spx-border: var(--line, #e3e7ee);
+    --spx-text: var(--ink, #101828);
+    --spx-text-muted: var(--muted, #667085);
+    --spx-accent: var(--teal, #0e7490);
+    --spx-accent-contrast: #ffffff;
+    /* Region tints (fixed hues, kept faint so they sit on any theme) */
+    --spx-tint-gamma: #e8b93122;
+    --spx-tint-alpha-gamma: #d1793a22;
+    --spx-tint-gamma-cem: #7a4dbf1f;
+    --spx-tint-alpha-cem: #3a7dd11c;
+    --spx-tint-alpha: #3aa66b26;
+
+    color: var(--spx-text);
+    background: var(--spx-bg);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+  #spx-tool *, #spx-tool *::before, #spx-tool *::after { box-sizing: inherit; }
+
+  #spx-tool h1 { font-size: 1.45rem; line-height: 1.25; margin: 0 0 4px; }
+  #spx-tool .spx-subtitle { color: var(--spx-text-muted); margin: 0 0 18px; font-size: .95rem; }
+  .spx-back { display: inline-block; margin: 0 0 12px; color: var(--spx-text-muted); text-decoration: none; font-size: .85rem; font-weight: 600; }
+  .spx-back:hover, .spx-back:focus-visible { color: var(--spx-accent); }
+  .spx-badge { display: inline-block; font-size: .68rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--spx-accent); border: 1px solid currentColor; border-radius: 999px; padding: 2px 9px; vertical-align: 3px; margin-left: 8px; }
+
+  /* ---- Controls ---- */
+  #spx-controls {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    background: var(--spx-surface);
+    border: 1px solid var(--spx-border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+  #spx-controls .spx-field { flex: 1 1 180px; min-width: 150px; }
+  #spx-controls label { display: block; font-size: .82rem; font-weight: 600; margin-bottom: 4px; }
+  #spx-controls .spx-hint { font-weight: 400; color: var(--spx-text-muted); }
+  #spx-controls input[type="number"] {
+    width: 100%;
+    min-height: 44px;               /* touch-friendly */
+    font-size: 1rem;
+    padding: 8px 10px;
+    border: 1px solid var(--spx-border);
+    border-radius: 8px;
+    background: var(--spx-bg);
+    color: var(--spx-text);
+  }
+  #spx-controls input[type="number"]:focus-visible {
+    outline: 2px solid var(--spx-accent);
+    outline-offset: 1px;
+  }
+
+  /* ---- Diagram ---- */
+  #spx-diagram-wrap {
+    border: 1px solid var(--spx-border);
+    border-radius: 10px;
+    background: var(--spx-bg);
+    padding: 6px;
+  }
+  #spx-diagram { width: 100%; height: auto; display: block; touch-action: manipulation; cursor: crosshair; }
+  #spx-diagram text { font-family: inherit; }
+  .spx-axis-label { font-size: 13px; fill: var(--spx-text); }
+  .spx-tick-label { font-size: 11px; fill: var(--spx-text-muted); }
+  .spx-region-label { font-size: 14px; font-weight: 600; fill: var(--spx-text); opacity: .85; }
+  .spx-region-sub { font-size: 10.5px; fill: var(--spx-text-muted); }
+  .spx-boundary { fill: none; stroke: var(--spx-text); stroke-width: 1.6; }
+  .spx-boundary-a1 { stroke-dasharray: none; }
+  .spx-grid { stroke: var(--spx-border); stroke-width: 1; opacity: .55; }
+  .spx-crosshair { stroke: var(--spx-accent); stroke-width: 1; stroke-dasharray: 4 4; opacity: .75; }
+  #spx-point { fill: var(--spx-accent); stroke: var(--spx-accent-contrast); stroke-width: 1.5; }
+  .spx-eutectoid-dot { fill: var(--spx-text); }
+
+  /* ---- Readout ---- */
+  #spx-readout {
+    margin-top: 14px;
+    border: 1px solid var(--spx-border);
+    border-left: 4px solid var(--spx-accent);
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: var(--spx-surface);
+  }
+  #spx-readout h2 { font-size: 1.02rem; margin: 0 0 2px; }
+  #spx-point-readout { color: var(--spx-text-muted); font-size: .9rem; margin: 0 0 8px; }
+  #spx-region-note { margin: 0; font-size: .95rem; }
+
+  @media (max-width: 480px) {
+    #spx-tool { padding: 12px; font-size: 15px; }
+    #spx-controls { padding: 10px; }
+    .spx-region-label { font-size: 12.5px; }
+    .spx-region-sub { display: none; } /* declutter tiny screens */
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    #spx-point, .spx-crosshair { transition: all .12s ease-out; }
+  }
+</style>
+</head>
+<body>
+<main id="spx-tool">
+  <a class="spx-back" href="/engineering-tools">&larr; Back to Engineering Tools</a>
+  <h1>Steel Phase &amp; Transformation Explorer<span class="spx-badge">Early access</span></h1>
+  <p class="spx-subtitle">Plot a plain-carbon steel on the iron&ndash;carbon diagram, identify the phases present, and follow what happens as it cools. Tap the diagram or enter values below. This early version covers phase identification; transformation paths, cooling (CCT) behaviour, and property estimates are in development.</p>
+
+  <section id="spx-controls" aria-label="Steel composition and temperature inputs">
+    <div class="spx-field">
+      <label for="spx-input-carbon">Carbon <span class="spx-hint">(wt%, 0&ndash;1.2)</span></label>
+      <input id="spx-input-carbon" type="number" inputmode="decimal" min="0" max="1.2" step="0.01" value="0.20">
+    </div>
+    <div class="spx-field">
+      <label for="spx-input-temp">Temperature <span class="spx-hint">(&deg;C, 25&ndash;1250)</span></label>
+      <input id="spx-input-temp" type="number" inputmode="decimal" min="25" max="1250" step="5" value="900">
+    </div>
+  </section>
+
+  <section id="spx-diagram-wrap" aria-label="Iron-carbon equilibrium phase diagram">
+    <svg id="spx-diagram" viewBox="0 0 720 540" role="img"
+         aria-label="Iron-carbon phase diagram from 0 to 1.2 weight percent carbon and 25 to 1250 degrees Celsius, with the current steel plotted as a point">
+      <g id="spx-layer-regions"></g>
+      <g id="spx-layer-grid"></g>
+      <g id="spx-layer-boundaries"></g>
+      <g id="spx-layer-labels"></g>
+      <g id="spx-layer-point">
+        <line id="spx-crosshair-v" class="spx-crosshair" x1="0" y1="0" x2="0" y2="0"></line>
+        <line id="spx-crosshair-h" class="spx-crosshair" x1="0" y1="0" x2="0" y2="0"></line>
+        <circle id="spx-point" r="6" cx="0" cy="0"></circle>
+      </g>
+    </svg>
+  </section>
+
+  <section id="spx-readout" aria-live="polite">
+    <h2 id="spx-region-name">&mdash;</h2>
+    <p id="spx-point-readout">&mdash;</p>
+    <p id="spx-region-note">&mdash;</p>
+  </section>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* ================= Configuration ================= */
+    var CFG = {
+      cMin: 0, cMax: 1.2,          // wt% C
+      tMin: 25, tMax: 1250,        // deg C
+      plot: { x0: 70, x1: 690, y0: 480, y1: 30 },  // SVG plot box (y0 = bottom)
+      eutectoid: { c: 0.76, t: 727 },
+      alphaMaxC: 0.022,            // max C solubility in ferrite (at A1)
+      a3AtZero: 912                // A3 for pure iron
+    };
+
+    /* ================= Boundary models =================
+       Plain-carbon approximations, pinned to accepted anchor
+       points: (0 wt%C, 912 C), eutectoid (0.76, 727), and the
+       Acm trend toward (2.11, 1147). Labeled as estimates. */
+    var bounds = {
+      A1: CFG.eutectoid.t,
+
+      /* A3: gamma/(alpha+gamma) boundary, 0 <= c <= 0.76 */
+      A3: function (c) {
+        c = clamp(c, 0, CFG.eutectoid.c);
+        return CFG.a3AtZero -
+          (CFG.a3AtZero - CFG.eutectoid.t) * Math.sqrt(c / CFG.eutectoid.c);
+      },
+
+      /* Acm: gamma/(gamma+Fe3C) boundary, 0.76 <= c <= 1.2 (fit toward 2.11, 1147) */
+      Acm: function (c) {
+        c = clamp(c, CFG.eutectoid.c, CFG.cMax);
+        return CFG.eutectoid.t +
+          420 * Math.pow((c - CFG.eutectoid.c) / (2.11 - CFG.eutectoid.c), 1.07);
+      },
+
+      /* Max C in ferrite between A1 and 912 C (alpha/(alpha+gamma) line, ~linear) */
+      alphaMaxAboveA1: function (t) {
+        t = clamp(t, CFG.eutectoid.t, CFG.a3AtZero);
+        return CFG.alphaMaxC * (CFG.a3AtZero - t) /
+               (CFG.a3AtZero - CFG.eutectoid.t);
+      },
+
+      /* Ferrite solvus below A1: C solubility in alpha, decaying toward ~0 at RT */
+      solvus: function (t) {
+        t = clamp(t, CFG.tMin, CFG.eutectoid.t);
+        return CFG.alphaMaxC * Math.exp(-(CFG.eutectoid.t - t) / 150);
+      }
+    };
+
+    /* ================= Region classification ================= */
+    var REGIONS = {
+      gamma: {
+        label: 'Austenite (\u03B3)',
+        note: 'Single-phase austenite: FCC iron with all carbon in solid solution. This is the hot-working / reheating condition \u2014 everything about the final microstructure starts from the austenite grain size set here.'
+      },
+      'alpha+gamma': {
+        label: 'Ferrite + Austenite (\u03B1 + \u03B3)',
+        note: 'Two-phase intercritical field: proeutectoid ferrite is forming from austenite. The remaining austenite is enriching in carbon toward the eutectoid composition as cooling continues.'
+      },
+      'gamma+fe3c': {
+        label: 'Austenite + Cementite (\u03B3 + Fe\u2083C)',
+        note: 'Hypereutectoid two-phase field: proeutectoid cementite is precipitating (typically on austenite grain boundaries) while the remaining austenite decarburizes toward 0.76 wt% C.'
+      },
+      'alpha+fe3c': {
+        label: 'Ferrite + Cementite (\u03B1 + Fe\u2083C)',
+        note: 'Below the A1 isotherm (727 \u00B0C) the equilibrium constituents are ferrite and cementite \u2014 seen as ferrite + pearlite in hypoeutectoid steels. A detailed microstructure and phase-fraction breakdown is coming in a future update.'
+      },
+      alpha: {
+        label: 'Ferrite (\u03B1)',
+        note: 'Single-phase BCC ferrite: carbon content is below the (very small) solubility limit at this temperature, so no cementite is present.'
+      }
+    };
+
+    function classify(c, t) {
+      c = clamp(c, CFG.cMin, CFG.cMax);
+      t = clamp(t, CFG.tMin, CFG.tMax);
+      var key;
+      if (t >= bounds.A1) {
+        if (c <= CFG.eutectoid.c) {
+          if (t >= bounds.A3(c)) key = 'gamma';
+          else if (c <= bounds.alphaMaxAboveA1(t)) key = 'alpha';
+          else key = 'alpha+gamma';
+        } else {
+          key = (t >= bounds.Acm(c)) ? 'gamma' : 'gamma+fe3c';
+        }
+      } else {
+        key = (c <= bounds.solvus(t)) ? 'alpha' : 'alpha+fe3c';
+      }
+      return { key: key, label: REGIONS[key].label, note: REGIONS[key].note };
+    }
+
+    /* ================= Coordinate mapping ================= */
+    function xOf(c) {
+      return CFG.plot.x0 + ((c - CFG.cMin) / (CFG.cMax - CFG.cMin)) *
+             (CFG.plot.x1 - CFG.plot.x0);
+    }
+    function yOf(t) {
+      return CFG.plot.y0 - ((t - CFG.tMin) / (CFG.tMax - CFG.tMin)) *
+             (CFG.plot.y0 - CFG.plot.y1);
+    }
+    /* Inverse map from client coordinates, given the SVG's bounding rect.
+       Pure function (rect passed in) so it is unit-testable without layout. */
+    function dataFromClient(clientX, clientY, rect) {
+      if (!rect || !rect.width || !rect.height) return null;
+      var vb = { w: 720, h: 540 };
+      var sx = (clientX - rect.left) * (vb.w / rect.width);
+      var sy = (clientY - rect.top) * (vb.h / rect.height);
+      var c = CFG.cMin + ((sx - CFG.plot.x0) / (CFG.plot.x1 - CFG.plot.x0)) *
+              (CFG.cMax - CFG.cMin);
+      var t = CFG.tMin + ((CFG.plot.y0 - sy) / (CFG.plot.y0 - CFG.plot.y1)) *
+              (CFG.tMax - CFG.tMin);
+      return { c: clamp(c, CFG.cMin, CFG.cMax), t: clamp(t, CFG.tMin, CFG.tMax) };
+    }
+
+    function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+    function round(v, dp) { var m = Math.pow(10, dp); return Math.round(v * m) / m; }
+
+    /* ================= SVG construction ================= */
+    var SVG_NS = 'http://www.w3.org/2000/svg';
+    function el(name, attrs, text) {
+      var node = document.createElementNS(SVG_NS, name);
+      for (var k in attrs) node.setAttribute(k, attrs[k]);
+      if (text != null) node.textContent = text;
+      return node;
+    }
+    function samplePath(fn, from, to, n, coordOf) {
+      var pts = [];
+      for (var i = 0; i <= n; i++) {
+        var v = from + (to - from) * (i / n);
+        pts.push(coordOf(v));
+      }
+      return pts;
+    }
+    function ptsToPath(pts, close) {
+      var d = pts.map(function (p, i) {
+        return (i === 0 ? 'M' : 'L') + round(p[0], 2) + ' ' + round(p[1], 2);
+      }).join(' ');
+      return close ? d + ' Z' : d;
+    }
+
+    function buildDiagram() {
+      var gRegions = document.getElementById('spx-layer-regions');
+      var gGrid = document.getElementById('spx-layer-grid');
+      var gBounds = document.getElementById('spx-layer-boundaries');
+      var gLabels = document.getElementById('spx-layer-labels');
+
+      var a3Pts = samplePath(function (c) { return c; }, 0, CFG.eutectoid.c, 60,
+        function (c) { return [xOf(c), yOf(bounds.A3(c))]; });
+      var acmPts = samplePath(function (c) { return c; }, CFG.eutectoid.c, CFG.cMax, 40,
+        function (c) { return [xOf(c), yOf(bounds.Acm(c))]; });
+      var solvusPts = samplePath(function (t) { return t; }, CFG.eutectoid.t, CFG.tMin, 60,
+        function (t) { return [xOf(bounds.solvus(t)), yOf(t)]; });
+      var alphaLeftPts = [
+        [xOf(0), yOf(CFG.a3AtZero)],
+        [xOf(CFG.alphaMaxC), yOf(CFG.eutectoid.t)]
+      ];
+
+      /* --- Region fills --- */
+      var topY = yOf(CFG.tMax), botY = yOf(CFG.tMin);
+      var xR = xOf(CFG.cMax);
+      // Austenite: top edge -> right edge down to Acm(1.2) -> Acm back -> A3 back to (0,912)
+      var gammaPts = [[CFG.plot.x0, topY], [xR, topY], [xR, yOf(bounds.Acm(CFG.cMax))]]
+        .concat(acmPts.slice().reverse())
+        .concat(a3Pts.slice().reverse());
+      // alpha+gamma lens
+      var agPts = a3Pts.slice().concat([alphaLeftPts[1], alphaLeftPts[0]]);
+      // gamma+Fe3C
+      var gcPts = acmPts.slice().concat([[xR, yOf(bounds.A1)], [xOf(CFG.eutectoid.c), yOf(bounds.A1)]]);
+      // alpha+Fe3C
+      var acPts = [[xOf(CFG.alphaMaxC), yOf(bounds.A1)], [xR, yOf(bounds.A1)], [xR, botY],
+                   [xOf(bounds.solvus(CFG.tMin)), botY]].concat(solvusPts.slice().reverse());
+      // alpha sliver
+      var aPts = [alphaLeftPts[0], alphaLeftPts[1]].concat(solvusPts)
+        .concat([[CFG.plot.x0, botY], [CFG.plot.x0, yOf(CFG.a3AtZero)]]);
+
+      var fills = [
+        ['spx-region-gamma', gammaPts, 'var(--spx-tint-gamma)'],
+        ['spx-region-alpha-gamma', agPts, 'var(--spx-tint-alpha-gamma)'],
+        ['spx-region-gamma-cem', gcPts, 'var(--spx-tint-gamma-cem)'],
+        ['spx-region-alpha-cem', acPts, 'var(--spx-tint-alpha-cem)'],
+        ['spx-region-alpha', aPts, 'var(--spx-tint-alpha)']
+      ];
+      fills.forEach(function (f) {
+        gRegions.appendChild(el('path', { id: f[0], d: ptsToPath(f[1], true), fill: f[2], stroke: 'none' }));
+      });
+
+      /* --- Gridlines + ticks --- */
+      var cTicks = [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2];
+      var tTicks = [200, 400, 600, 727, 800, 912, 1000, 1147 > CFG.tMax ? null : 1147, 1200].filter(Boolean);
+      cTicks.forEach(function (c) {
+        var x = xOf(c);
+        gGrid.appendChild(el('line', { class: 'spx-grid', x1: x, y1: topY, x2: x, y2: botY }));
+        gLabels.appendChild(el('text', { class: 'spx-tick-label', x: x, y: botY + 16, 'text-anchor': 'middle' }, c.toFixed(1)));
+      });
+      tTicks.forEach(function (t) {
+        var y = yOf(t);
+        gGrid.appendChild(el('line', { class: 'spx-grid', x1: CFG.plot.x0, y1: y, x2: xR, y2: y }));
+        gLabels.appendChild(el('text', { class: 'spx-tick-label', x: CFG.plot.x0 - 8, y: y + 4, 'text-anchor': 'end' }, String(t)));
+      });
+
+      /* --- Axes labels --- */
+      gLabels.appendChild(el('text', { class: 'spx-axis-label', x: (CFG.plot.x0 + xR) / 2, y: botY + 38, 'text-anchor': 'middle' }, 'Carbon (wt%)'));
+      var yAxis = el('text', { class: 'spx-axis-label', x: 18, y: (topY + botY) / 2, 'text-anchor': 'middle', transform: 'rotate(-90 18 ' + (topY + botY) / 2 + ')' }, 'Temperature (\u00B0C)');
+      gLabels.appendChild(yAxis);
+
+      /* --- Boundary curves --- */
+      gBounds.appendChild(el('path', { id: 'spx-curve-a3', class: 'spx-boundary', d: ptsToPath(a3Pts) }));
+      gBounds.appendChild(el('path', { id: 'spx-curve-acm', class: 'spx-boundary', d: ptsToPath(acmPts) }));
+      gBounds.appendChild(el('path', { id: 'spx-curve-solvus', class: 'spx-boundary', d: ptsToPath(solvusPts) }));
+      gBounds.appendChild(el('path', { id: 'spx-curve-alpha-left', class: 'spx-boundary', d: ptsToPath(alphaLeftPts) }));
+      gBounds.appendChild(el('line', { id: 'spx-curve-a1', class: 'spx-boundary spx-boundary-a1', x1: xOf(CFG.alphaMaxC), y1: yOf(bounds.A1), x2: xR, y2: yOf(bounds.A1) }));
+
+      /* --- Region + boundary labels --- */
+      function regionLabel(c, t, main, sub) {
+        var x = xOf(c), y = yOf(t);
+        gLabels.appendChild(el('text', { class: 'spx-region-label', x: x, y: y, 'text-anchor': 'middle' }, main));
+        if (sub) gLabels.appendChild(el('text', { class: 'spx-region-sub', x: x, y: y + 14, 'text-anchor': 'middle' }, sub));
+      }
+      regionLabel(0.55, 1080, '\u03B3', 'austenite');
+      regionLabel(0.24, 795, '\u03B1 + \u03B3', '');
+      regionLabel(1.05, 762, '\u03B3 + Fe\u2083C', '');
+      regionLabel(0.6, 420, '\u03B1 + Fe\u2083C', 'ferrite + pearlite \u2192 pearlite + cementite');
+      gLabels.appendChild(el('text', { class: 'spx-region-label', x: xOf(0.012), y: yOf(830), 'text-anchor': 'middle' }, '\u03B1'));
+
+      gLabels.appendChild(el('text', { class: 'spx-tick-label', x: xR - 4, y: yOf(bounds.A1) - 6, 'text-anchor': 'end' }, 'A\u2081 (727 \u00B0C)'));
+      gLabels.appendChild(el('text', { class: 'spx-tick-label', x: xOf(0.3) - 6, y: yOf(bounds.A3(0.3)) - 8, 'text-anchor': 'end' }, 'A\u2083'));
+      gLabels.appendChild(el('text', { class: 'spx-tick-label', x: xOf(1.08), y: yOf(bounds.Acm(1.08)) - 8, 'text-anchor': 'start' }, 'A\u1D04\u2098'));
+      gBounds.appendChild(el('circle', { class: 'spx-eutectoid-dot', cx: xOf(CFG.eutectoid.c), cy: yOf(CFG.eutectoid.t), r: 3.5 }));
+      gLabels.appendChild(el('text', { class: 'spx-tick-label', x: xOf(CFG.eutectoid.c), y: yOf(CFG.eutectoid.t) + 16, 'text-anchor': 'middle' }, '0.76, 727'));
+    }
+
+    /* ================= State + rendering ================= */
+    var inputC = document.getElementById('spx-input-carbon');
+    var inputT = document.getElementById('spx-input-temp');
+    var state = { c: parseFloat(inputC.value), t: parseFloat(inputT.value) };
+
+    function setPoint(c, t, syncInputs) {
+      if (!isFinite(c) || !isFinite(t)) return;
+      state.c = clamp(c, CFG.cMin, CFG.cMax);
+      state.t = clamp(t, CFG.tMin, CFG.tMax);
+      if (syncInputs) {
+        inputC.value = String(round(state.c, 3));
+        inputT.value = String(Math.round(state.t));
+      }
+      renderPoint();
+    }
+
+    function renderPoint() {
+      var x = xOf(state.c), y = yOf(state.t);
+      var pt = document.getElementById('spx-point');
+      pt.setAttribute('cx', round(x, 2));
+      pt.setAttribute('cy', round(y, 2));
+      var v = document.getElementById('spx-crosshair-v');
+      v.setAttribute('x1', round(x, 2)); v.setAttribute('x2', round(x, 2));
+      v.setAttribute('y1', yOf(CFG.tMin)); v.setAttribute('y2', round(y, 2));
+      var h = document.getElementById('spx-crosshair-h');
+      h.setAttribute('x1', xOf(CFG.cMin)); h.setAttribute('x2', round(x, 2));
+      h.setAttribute('y1', round(y, 2)); h.setAttribute('y2', round(y, 2));
+
+      var r = classify(state.c, state.t);
+      document.getElementById('spx-region-name').textContent = r.label;
+      document.getElementById('spx-point-readout').textContent =
+        'At ' + round(state.c, 3) + ' wt% C, ' + Math.round(state.t) + ' \u00B0C';
+      document.getElementById('spx-region-note').textContent = r.note;
+    }
+
+    /* ================= Events ================= */
+    function onInput() {
+      setPoint(parseFloat(inputC.value), parseFloat(inputT.value), false);
+    }
+    inputC.addEventListener('input', onInput);
+    inputT.addEventListener('input', onInput);
+
+    var svg = document.getElementById('spx-diagram');
+    function onPointer(evt) {
+      var rect = svg.getBoundingClientRect();
+      var pos = dataFromClient(evt.clientX, evt.clientY, rect);
+      if (pos) setPoint(pos.c, pos.t, true);
+    }
+    svg.addEventListener('pointerdown', onPointer);
+
+    /* ================= Init ================= */
+    buildDiagram();
+    renderPoint();
+
+    /* Namespaced hook for staged jsdom validation (harmless in production;
+       remove before release if preferred). */
+    window.__SPX = {
+      bounds: bounds,
+      classify: classify,
+      setPoint: setPoint,
+      dataFromClient: dataFromClient,
+      xOf: xOf, yOf: yOf,
+      getState: function () { return { c: state.c, t: state.t }; }
+    };
+  })();
+  </script>
+</main>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<title>How to Use the Steel Phase &amp; Transformation Explorer | UpSkill Sprint Consulting</title>
+<meta name="description" content="Step-by-step user guide for equilibrium phase analysis, lever-rule fractions, heat-treatment paths, TTT and CCT estimates, chemistry, properties, learning mode, and exports.">
+<link rel="canonical" href="https://upskillsprint.com/tools/steel-phase-explorer/how-to-use">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Use the Steel Phase &amp; Transformation Explorer | UpSkill Sprint Consulting">
+<meta property="og:description" content="A practical guide to equilibrium phase analysis, heat-treatment paths, generalized TTT/CCT behaviour, steel chemistry calculations, comparison, and exports.">
+<meta property="og:url" content="https://upskillsprint.com/tools/steel-phase-explorer/how-to-use">
+<meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/tools/steel-phase-explorer/how-to-use/guide.css">
+<script src="/theme.js"></script>
+<script src="/site-sections.js"></script>
+</head>
+<body class="guide-page">
+<a class="skip" href="#guide-content">Skip to guide</a>
+<input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+<header class="site">
+  <a href="/" class="brand"><img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo"><span>UpSkill Sprint Consulting</span></a>
+  <nav class="desktop-nav" aria-label="Primary navigation"><a href="/start-here">Start Here</a><a href="/lessons">Lessons</a><a href="/engineering-tools" aria-current="page">Engineering Tools</a><a href="/services">Services</a><a href="/request-topic">Request a Topic</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></nav>
+  <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></label>
+  <a href="/lessons" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Start a 15-min lesson</a>
+</header>
+<nav class="mobile-nav" aria-label="Mobile navigation"><a href="/start-here">Start Here</a><a href="/lessons">Lessons</a><a href="/engineering-tools" aria-current="page">Engineering Tools</a><a href="/services">Services</a><a href="/request-topic">Request a Topic</a><a href="/about">About</a><a href="/faq">FAQ</a><a href="/contact">Contact</a></nav>
+
+<section class="guide-hero">
+  <div class="guide-wrap">
+    <p class="guide-eyebrow">Engineering Tools · User Guide</p>
+    <h1>How to Use the Steel Phase &amp; Transformation Explorer</h1>
+    <p class="guide-lead">Plot and compare steel conditions, calculate equilibrium phase fractions, build heat-treatment paths, explore generalized TTT/CCT behaviour, assess chemistry-driven transformation metrics, and save or export your work.</p>
+    <div class="guide-actions"><a class="guide-btn primary" href="/tools/steel-phase-explorer">Open the Explorer</a><a class="guide-btn" href="/engineering-tools">Browse Engineering Tools</a></div>
+  </div>
+</section>
+
+<div class="guide-wrap guide-layout" id="guide-content">
+  <aside class="guide-toc" aria-label="Guide contents">
+    <strong>On this page</strong>
+    <a href="#purpose">1. Purpose and limits</a>
+    <a href="#quick-start">2. Quick start</a>
+    <a href="#equilibrium">3. Equilibrium diagram</a>
+    <a href="#paths">4. Heating and cooling paths</a>
+    <a href="#kinetics">5. TTT and CCT</a>
+    <a href="#chemistry">6. Chemistry and properties</a>
+    <a href="#learn-export">7. Learn and export</a>
+    <a href="#workflows">8. Recommended workflows</a>
+    <a href="#cautions">9. Interpretation cautions</a>
+    <a href="#troubleshooting">10. Troubleshooting</a>
+    <a href="#checklist">11. Final checklist</a>
+  </aside>
+
+  <main class="guide-main">
+    <section class="guide-card" id="purpose">
+      <p class="guide-kicker">Before you begin</p>
+      <h2>Purpose and limits</h2>
+      <p>The explorer combines equilibrium phase analysis, transformation-path visualization, generalized kinetic diagrams, chemistry calculations, and training tools in one browser-based application.</p>
+      <div class="guide-grid">
+        <div class="guide-mini"><h3>Best uses</h3><p>Training, concept development, phase-field identification, lever-rule practice, multi-point comparison, heat-treatment visualization, and preliminary trend screening.</p></div>
+        <div class="guide-mini"><h3>Not a replacement for</h3><p>Controlled standards, grade-specific TTT/CCT diagrams, validated thermodynamic software, laboratory testing, procedure qualification, or responsible engineering approval.</p></div>
+      </div>
+      <div class="guide-callout danger"><p><strong>Engineering caution:</strong> Fe–Fe<sub>3</sub>C boundaries are simplified. TTT/CCT curves, kinetic fractions, property ranges, and weldability indicators are educational estimates and must not be used alone for material release, certification, or process qualification.</p></div>
+    </section>
+
+    <section class="guide-card" id="quick-start">
+      <p class="guide-kicker">Fastest workflow</p>
+      <h2>Quick start</h2>
+      <div class="guide-flow">
+        <article><h3>Select temperature units</h3><p>Choose <strong>Metric (°C)</strong> or <strong>Imperial (°F)</strong>. Carbon remains in weight percent in both modes.</p></article>
+        <article><h3>Enter a point</h3><p>Type carbon and temperature, select a preset, click the diagram, or drag the active marker.</p></article>
+        <article><h3>Read the result</h3><p>Review the phase field, phase fractions, tie line, calculation, and schematic microstructure.</p></article>
+        <article><h3>Add comparisons</h3><p>Select <strong>+ Add point</strong>. Every completed point stays plotted and is evaluated independently.</p></article>
+        <article><h3>Open another module</h3><p>Use the tabs for heat-treatment paths, TTT/CCT, chemistry and properties, or learning and export.</p></article>
+      </div>
+      <div class="guide-callout good"><p><strong>Suggested first exercise:</strong> plot 0.20 wt% C at 900 °C, 750 °C, and 700 °C to see the same steel move from austenite to the intercritical region and then below A<sub>1</sub>.</p></div>
+    </section>
+
+    <section class="guide-card" id="equilibrium">
+      <p class="guide-kicker">Module 1</p>
+      <h2>Equilibrium diagram</h2>
+      <h3>Plot and manage points</h3>
+      <ul>
+        <li>Enter carbon from 0 to 1.2 wt% and a temperature inside the displayed range.</li>
+        <li>Select a point from its input row, diagram marker, or result card.</li>
+        <li>Click or drag on the diagram to move only the active point.</li>
+        <li>Use <strong>+ Add point</strong>, <strong>Remove</strong>, and <strong>Reset</strong> to manage the point set.</li>
+      </ul>
+      <h3>Display controls</h3>
+      <div class="guide-table-wrap"><table class="guide-table"><thead><tr><th>Control</th><th>Function</th><th>Use</th></tr></thead><tbody>
+        <tr><td>Show tie line</td><td>Draws the isothermal line and identifies boundary compositions.</td><td>Lever-rule analysis.</td></tr>
+        <tr><td>Spotlight active region</td><td>Fades unrelated phase fields.</td><td>Teaching and crowded plots.</td></tr>
+        <tr><td>Snap to critical boundaries</td><td>Snaps nearby points to A<sub>1</sub>, A<sub>3</sub>, A<sub>cm</sub>, or the eutectoid composition.</td><td>Boundary demonstrations.</td></tr>
+        <tr><td>Connect points as path</td><td>Connects points in listed order.</td><td>Conceptual heating or cooling paths.</td></tr>
+      </tbody></table></div>
+      <h3>Lever-rule results</h3>
+      <p>Within a two-phase field, equilibrium mass fractions are calculated from the tie-line endpoints. For ferrite plus austenite:</p>
+      <span class="guide-code">fα = (Cγ − C₀) / (Cγ − Cα) &nbsp;&nbsp; and &nbsp;&nbsp; fγ = (C₀ − Cα) / (Cγ − Cα)</span>
+      <p>The fraction bar shows the result visually. A single-phase point displays 100% of the identified phase.</p>
+      <h3>Microstructure panels</h3>
+      <p>The live viewer is schematic, not photomicrographic. Toggle grain boundaries, carbon distribution, and labels. The final equilibrium panel estimates ferrite, pearlite, and proeutectoid cementite at room temperature.</p>
+      <div class="guide-callout"><p><strong>Remember:</strong> equilibrium phases at a selected temperature are not automatically the same as final room-temperature microconstituents. Actual cooling path and kinetics matter.</p></div>
+    </section>
+
+    <section class="guide-card" id="paths">
+      <p class="guide-kicker">Module 2</p>
+      <h2>Heating and cooling paths</h2>
+      <p>This module creates a temperature-versus-time cycle and animates the expected state as the cycle progresses.</p>
+      <h3>Preset cycles</h3>
+      <p>Choose normalizing, full annealing, process annealing, spheroidizing, austenitize and quench, quench and temper, intercritical annealing, austempering, or martempering. The step table and chart update automatically.</p>
+      <h3>Custom cycle</h3>
+      <ol>
+        <li>Enter carbon content.</li>
+        <li>Select <strong>+ Step</strong>.</li>
+        <li>Set target temperature, duration, and mode for each segment.</li>
+        <li>Use <strong>Play</strong>, <strong>Pause</strong>, or the time slider.</li>
+      </ol>
+      <h3>Read the output</h3>
+      <ul><li>The graph shows temperature history.</li><li>The timeline lists boundary crossings and expected events.</li><li>The live phase state reports the current equilibrium field.</li><li>The animated schematic follows the selected cycle position.</li></ul>
+      <div class="guide-callout"><p>Crossing an equilibrium boundary does not prove instantaneous transformation. Time, alloying, austenite grain size, section thickness, and real cooling rate control the transformation response.</p></div>
+    </section>
+
+    <section class="guide-card" id="kinetics">
+      <p class="guide-kicker">Module 3</p>
+      <h2>TTT and CCT</h2>
+      <div class="guide-grid"><div class="guide-mini"><h3>TTT mode</h3><p>Use the isothermal hold to see how a constant-temperature path intersects idealized start and finish curves.</p></div><div class="guide-mini"><h3>CCT mode</h3><p>Use cooling rate to see how a continuous path passes through ferrite, pearlite, bainite, and martensite regions.</p></div></div>
+      <h3>Inputs</h3>
+      <ul><li><strong>Cooling rate</strong> changes the continuous-cooling path.</li><li><strong>Isothermal hold</strong> sets transformation time in TTT mode.</li><li><strong>Final temperature</strong> affects the estimated amount transformed below M<sub>s</sub>.</li><li><strong>Chemistry</strong> from the chemistry module shifts the generalized curves and critical temperatures.</li></ul>
+      <h3>Outputs</h3>
+      <p>Review estimated constituent fractions, critical temperatures, and the interpretation note. Use these results to compare trends—not to qualify a real grade.</p>
+      <div class="guide-callout danger"><p>The displayed curves are not certified grade-specific diagrams. Real data depend on exact chemistry, austenitizing practice, prior microstructure, grain size, test method, and section size.</p></div>
+    </section>
+
+    <section class="guide-card" id="chemistry">
+      <p class="guide-kicker">Module 4</p>
+      <h2>Chemistry and properties</h2>
+      <h3>Presets and custom chemistry</h3>
+      <p>Select an illustrative preset for AISI 1018, 1045, 1080, 4130, 4140, or API X70 and choose <strong>Apply preset</strong>. For actual work, replace every value with verified heat chemistry.</p>
+      <h3>Calculated metrics</h3>
+      <div class="guide-table-wrap"><table class="guide-table"><thead><tr><th>Metric</th><th>Purpose</th><th>Caution</th></tr></thead><tbody>
+        <tr><td>CE IIW</td><td>General carbon-equivalent indicator.</td><td>Thresholds depend on product, thickness, heat input, hydrogen control, and requirements.</td></tr>
+        <tr><td>Pcm</td><td>Low-carbon weldability indicator.</td><td>Use only where the equation is applicable.</td></tr>
+        <tr><td>A<sub>c1</sub> / A<sub>c3</sub></td><td>Estimated heating transformation temperatures.</td><td>Actual values depend on chemistry, heating rate, segregation, and prior condition.</td></tr>
+        <tr><td>M<sub>s</sub></td><td>Estimated martensite-start temperature.</td><td>Equation validity is chemistry-range dependent.</td></tr>
+        <tr><td>Hardenability / weldability</td><td>Directional tendency indicators.</td><td>Not a substitute for Jominy data, WPS controls, preheat calculations, or hardness testing.</td></tr>
+      </tbody></table></div>
+      <h3>Property estimates and comparison</h3>
+      <p>Move the cooling-rate slider to see directional changes in hardness, strength, ductility, and toughness. The comparison table evaluates all plotted points using the active chemistry.</p>
+      <div class="guide-callout"><p><strong>Data caution:</strong> verify that the carbon value plotted on the phase diagram and the carbon entered in the chemistry module refer to the same intended steel.</p></div>
+    </section>
+
+    <section class="guide-card" id="learn-export">
+      <p class="guide-kicker">Module 5</p>
+      <h2>Learn and export</h2>
+      <h3>Learning mode</h3>
+      <p>Select <strong>New challenge</strong>, choose a phase field, and review the feedback. Use <strong>Show hint</strong> for guidance. The boundary guide explains A<sub>1</sub>, A<sub>3</sub>, A<sub>cm</sub>, and the ferrite solvus.</p>
+      <h3>Save and share</h3>
+      <ul><li><strong>Save scenario</strong> stores the current state in the same browser.</li><li><strong>Load saved</strong> restores the last local scenario.</li><li><strong>Copy share link</strong> embeds scenario state in the URL.</li></ul>
+      <h3>Export</h3>
+      <ul><li><strong>CSV</strong> exports points, phase fields, fractions, and final microstructure estimates.</li><li><strong>PNG</strong> exports the equilibrium diagram.</li><li><strong>Print / PDF</strong> opens the browser print workflow.</li></ul>
+      <div class="guide-callout good"><p>For technical reporting, include chemistry, units, thermal assumptions, model limitations, data source, and analysis date with exported results.</p></div>
+    </section>
+
+    <section class="guide-card" id="workflows">
+      <p class="guide-kicker">Practical applications</p>
+      <h2>Recommended workflows</h2>
+      <div class="guide-grid">
+        <div class="guide-mini"><h3>Teach the diagram</h3><p>Use one carbon level, add multiple temperatures, connect points, and discuss each boundary crossing.</p></div>
+        <div class="guide-mini"><h3>Compare carbon levels</h3><p>Hold temperature constant and compare phase fractions and final equilibrium microstructures.</p></div>
+        <div class="guide-mini"><h3>Review heat treatment</h3><p>Play a preset cycle, pause at critical events, and compare with the kinetics module.</p></div>
+        <div class="guide-mini"><h3>Screen chemistry trends</h3><p>Enter verified heat chemistry, review CE/Pcm and critical temperatures, then vary cooling rate.</p></div>
+        <div class="guide-mini"><h3>Prepare training</h3><p>Build a scenario, copy the share link, and ask learners to predict the result before opening it.</p></div>
+        <div class="guide-mini"><h3>Create an appendix</h3><p>Export CSV and PNG, document assumptions, and attach the controlled chemistry and process source.</p></div>
+      </div>
+    </section>
+
+    <section class="guide-card" id="cautions">
+      <p class="guide-kicker">Accuracy controls</p>
+      <h2>Interpretation cautions</h2>
+      <ul>
+        <li><strong>Equilibrium versus kinetics:</strong> Fe–Fe<sub>3</sub>C identifies equilibrium phases; TTT/CCT addresses time-dependent products.</li>
+        <li><strong>Bainite and martensite:</strong> these are not equilibrium phase fields on the Fe–Fe<sub>3</sub>C diagram.</li>
+        <li><strong>Phase versus microconstituent:</strong> ferrite and cementite are phases; pearlite and bainite are microconstituents.</li>
+        <li><strong>Range:</strong> the equilibrium plot is limited to 0–1.2 wt% C and does not show the full cast-iron region.</li>
+        <li><strong>Alloy effects:</strong> alloying shifts boundaries and kinetics; the plain-carbon equilibrium approximation is incomplete for alloy steels.</li>
+        <li><strong>Properties:</strong> grain size, precipitation, inclusions, texture, prior deformation, section size, cooling uniformity, and test orientation matter.</li>
+        <li><strong>Weldability:</strong> CE and Pcm are screening indicators. Heat input, hydrogen, restraint, thickness, preheat/interpass control, and procedure qualification remain essential.</li>
+      </ul>
+    </section>
+
+    <section class="guide-card" id="troubleshooting">
+      <p class="guide-kicker">Common issues</p>
+      <h2>Troubleshooting</h2>
+      <div class="guide-table-wrap"><table class="guide-table"><thead><tr><th>Issue</th><th>Cause</th><th>Action</th></tr></thead><tbody>
+        <tr><td>Point will not move freely</td><td>Boundary snapping is on.</td><td>Turn off <strong>Snap to critical boundaries</strong>.</td></tr>
+        <tr><td>Temperature changed after unit switch</td><td>The displayed value was converted.</td><td>The internal temperature is unchanged; switch back to confirm.</td></tr>
+        <tr><td>Microstructure does not resemble a micrograph</td><td>The viewer is schematic.</td><td>Use it for concepts, not morphology validation.</td></tr>
+        <tr><td>TTT/CCT differs from published data</td><td>The tool uses generalized curves.</td><td>Use grade-specific validated diagrams for engineering decisions.</td></tr>
+        <tr><td>Saved work is missing</td><td>Browser storage was cleared or another device was used.</td><td>Use share links or exports for portable records.</td></tr>
+        <tr><td>Export does not download</td><td>Browser permissions may block downloads.</td><td>Allow downloads and retry, or use Print/PDF.</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="guide-card" id="checklist">
+      <p class="guide-kicker">Before relying on an output</p>
+      <h2>Final checklist</h2>
+      <ul class="guide-checklist">
+        <li>Confirm carbon and alloy chemistry.</li><li>Confirm temperature units.</li>
+        <li>Separate equilibrium phases from kinetic products.</li><li>Document the thermal path.</li>
+        <li>Verify grade-specific TTT/CCT data.</li><li>Record section size and process history.</li>
+        <li>Treat properties as directional estimates.</li><li>Include model limitations in reports.</li>
+        <li>Verify with testing or validated software.</li><li>Obtain technical approval where required.</li>
+      </ul>
+      <div class="guide-bottom"><a class="guide-back" href="/engineering-tools">&larr; Back to Engineering Tools</a><a class="guide-btn primary" href="/tools/steel-phase-explorer">Open the Steel Phase Explorer</a></div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+name: Add Quality Tools lessons to library
+
+on:
+  push:
+    branches:
+      - feature/world-class-14-quality-tools-course
+
+permissions:
+  contents: write
+
+jobs:
+  update-library:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/world-class-14-quality-tools-course
+      - name: Add lessons to Quality Engineering section
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('lessons.html')
+          text = p.read_text(encoding='utf-8')
+          old = '''          <div class="category-header">
+            <h2>Quality Engineering</h2>
+            <span class="category-count">2 lessons</span>
+          </div>
+          <div class="lesson-list">'''
+          new = '''          <div class="category-header">
+            <h2>Quality Engineering</h2>
+            <span class="category-count">5 lessons</span>
+          </div>
+          <div class="lesson-list">
+            <a class="lesson-row" href="/lessons/7-essential-quality-tools" data-lesson-item data-topic="quality-engineering" data-level="beginner" data-interactive="true" data-search="7 essential quality tools seven basic qc tools flowchart check sheet stratification pareto fishbone histogram scatter plot control chart quality engineering ASQ CSSBB CQE interactive">
+              <div>
+                <div class="lesson-meta"><span>Beginner</span><span>Interactive</span><span>30 min</span></div>
+                <h3>The 7 Essential Quality Tools</h3>
+                <p>Learn when and why to use each QC tool through live simulators, a tool-selection wizard, and a steel tensile-failure investigation.</p>
+              </div>
+              <span class="lesson-action">Start lesson <span class="lesson-arrow" aria-hidden="true">&rarr;</span></span>
+            </a>
+            <a class="lesson-row" href="/lessons/7-management-planning-tools" data-lesson-item data-topic="quality-engineering" data-level="intermediate" data-interactive="true" data-search="7 management planning tools affinity diagram interrelationship digraph tree diagram prioritization matrix matrix diagram PDPC activity network quality engineering ASQ CQE CSSBB interactive">
+              <div>
+                <div class="lesson-meta"><span>Intermediate</span><span>Interactive</span><span>35 min</span></div>
+                <h3>The 7 Management &amp; Planning Tools</h3>
+                <p>Turn a confirmed cause into an executable plan with affinity grouping, weighted prioritization, RACI ownership, PDPC, and critical-path logic.</p>
+              </div>
+              <span class="lesson-action">Start lesson <span class="lesson-arrow" aria-hidden="true">&rarr;</span></span>
+            </a>
+            <a class="lesson-row" href="/lessons/complete-14-quality-tools-project" data-lesson-item data-topic="quality-engineering" data-level="advanced" data-interactive="true" data-search="complete 14 quality tools project integrated quality engineering root cause corrective action capstone QC tools management planning tools ASQ CSSBB CQE interactive">
+              <div>
+                <div class="lesson-meta"><span>Advanced</span><span>Interactive</span><span>45 min</span></div>
+                <h3>The Complete Quality Toolbox: All 14 Tools</h3>
+                <p>Run an end-to-end quality investigation from process mapping and root-cause evidence through corrective-action planning and sustainment.</p>
+              </div>
+              <span class="lesson-action">Start lesson <span class="lesson-arrow" aria-hidden="true">&rarr;</span></span>
+            </a>'''
+          if '/lessons/7-essential-quality-tools' not in text:
+              if old not in text:
+                  raise SystemExit('Quality Engineering section target not found')
+              text = text.replace(old, new, 1)
+              text = text.replace('<span id="results-count" aria-live="polite">14 lessons</span>', '<span id="results-count" aria-live="polite">17 lessons</span>', 1)
+              text = text.replace('<option value="intermediate">Intermediate</option>', '<option value="intermediate">Intermediate</option>\n              <option value="advanced">Advanced</option>', 1)
+              p.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit library update and remove temporary workflow
+        run: |
+          rm -f .github/workflows/temp-add-quality-tools-to-library.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lessons.html .github/workflows/temp-add-quality-tools-to-library.yml
+          git commit -m "Add Quality Tools course to Quality Engineering library"
+          git push origin HEAD:feature/world-class-14-quality-tools-course

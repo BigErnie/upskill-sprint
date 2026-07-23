@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- UPSKILLSPRINT_LESSON_META
+{
+  "title": "Overall Equipment Effectiveness (OEE) and the Eight Losses",
+  "slug": "overall-equipment-effectiveness-oee",
+  "category": "Lean Six Sigma",
+  "category_slug": "lean-six-sigma",
+  "level": "Intermediate",
+  "estimated_minutes": 28,
+  "interactive": true,
+  "card_title": "Overall Equipment Effectiveness (OEE)",
+  "card_description": "Six live interactives take you through OEE: calculate it three ways, map all eight TPM losses, and settle the two classification arguments that misdirect most improvement programmes.",
+  "search_keywords": [
+    "oee",
+    "overall equipment effectiveness",
+    "availability performance quality",
+    "eight losses",
+    "six big losses",
+    "tpm",
+    "total productive maintenance",
+    "small stops",
+    "minor stoppages",
+    "setup and adjustment",
+    "reduced speed",
+    "ideal cycle time",
+    "teep",
+    "downtime threshold",
+    "lean six sigma",
+    "excel oee",
+    "minitab pareto",
+    "asq cssbb",
+    "asq cqe"
+  ],
+  "suggested_github_path": "lessons/overall-equipment-effectiveness-oee.html"
+}
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overall Equipment Effectiveness (OEE) and the Eight Losses | UpSkill Sprint Consulting</title>
+  <meta name="description" content="An interactive lesson on Overall Equipment Effectiveness: the three factors, all eight TPM losses, why small stops are a performance loss, why setup is an availability loss, and calculation shortcuts for the ASQ CSSBB and CQE exams.">
+  <link rel="canonical" href="https://upskillsprint.com/lessons/overall-equipment-effectiveness-oee">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Overall Equipment Effectiveness (OEE) and the Eight Losses | UpSkill Sprint Consulting">
+  <meta property="og:description" content="Six live interactives take you through OEE: calculate it three ways, map all eight TPM losses, and settle the two classification arguments that misdirect most improvement programmes.">
+  <meta property="og:image" content="https://upskillsprint.com/assets/logo-icon.png">
+  <meta property="og:url" content="https://upskillsprint.com/lessons/overall-equipment-effectiveness-oee">
+  <meta name="twitter:card" content="summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/lessons-theme.css">
+  <style>
+    :root {
+      --paper: #ffffff;
+      --surface: #ffffff;
+      --surface-soft: #f5f7fa;
+      --card: #ffffff;
+      --tint: #f5f7fa;
+      --ink: #101828;
+      --ink-soft: #344054;
+      --muted: #667085;
+      --line: #e3e7ee;
+      --navy: #0f2a43;
+      --teal: #0e7490;
+      --teal-dark: #0a5a70;
+      --amber: #c46f00;
+      --success: #237a4b;
+      --warning: #a96300;
+      --danger: #b42318;
+      --info: #2f6fb0;
+      --shadow: rgba(15, 42, 67, 0.09);
+      --oee-a: #2f6fb0;
+      --oee-p: #c46f00;
+      --oee-q: #7a4bb8;
+      --oee-good: #237a4b;
+    }
+
+    .section-intro { max-width: 78ch; color: var(--ink-soft); }
+
+    .table-scroll { overflow-x: auto; margin: 16px 0; -webkit-overflow-scrolling: touch; }
+    .table-scroll table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 14.5px; }
+    .table-scroll caption { padding-bottom: 8px; color: var(--muted); font-size: 13px; text-align: left; }
+    .table-scroll th, .table-scroll td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .table-scroll thead th { background: var(--navy); color: #fff; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
+    .table-scroll tbody tr:nth-child(even) { background: var(--tint); }
+
+    .tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
+    .tag.a { background: #e7f0f9; color: var(--oee-a); }
+    .tag.p { background: #fdf3e5; color: var(--oee-p); }
+    .tag.q { background: #f2ecfa; color: var(--oee-q); }
+
+    .lab {
+      margin: 22px 0; padding: 20px;
+      border: 1px solid var(--line); border-radius: 14px;
+      background: var(--card); box-shadow: 0 1px 3px var(--shadow);
+    }
+    .lab > h3 { margin: 0 0 4px; font-size: 18px; }
+    .lab .lab-sub { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
+
+    .lab-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 12px; margin-bottom: 18px; }
+    .lab-inputs label { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); }
+    .lab-inputs small { color: var(--muted); font-weight: 400; }
+    .lab-inputs input[type="number"] { min-height: 44px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--ink); font: inherit; }
+    .lab-inputs input:focus-visible, .lab button:focus-visible, .lab input[type="range"]:focus-visible { outline: 3px solid rgba(14,116,144,.25); outline-offset: 2px; }
+
+    .factor-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(122px, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .factor { padding: 13px 11px; border: 1px solid var(--line); border-radius: 11px; background: var(--tint); text-align: center; }
+    .factor span { display: block; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .factor strong { display: block; margin-top: 6px; font-size: 26px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .factor.fa { border-top: 4px solid var(--oee-a); } .factor.fa strong { color: var(--oee-a); }
+    .factor.fp { border-top: 4px solid var(--oee-p); } .factor.fp strong { color: var(--oee-p); }
+    .factor.fq { border-top: 4px solid var(--oee-q); } .factor.fq strong { color: var(--oee-q); }
+    .factor.ft { border-top: 4px solid var(--oee-good); background: #eefaf3; } .factor.ft strong { color: var(--oee-good); }
+
+    .lab figure { margin: 16px 0 0; }
+    .lab .fig-scroll { overflow-x: auto; }
+    .lab svg { display: block; width: 100%; min-width: 440px; height: auto; }
+    .lab figcaption { margin-top: 10px; color: var(--muted); font-size: 13px; }
+
+    .verdict { margin-top: 16px; padding: 12px 14px; border-radius: 10px; background: var(--tint); border-left: 4px solid var(--teal); font-size: 14px; color: var(--ink-soft); }
+    .verdict.bad { border-left-color: var(--danger); background: #fdf2f1; }
+
+    .slider-row { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 16px; }
+    .slider-row label { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+    .slider-row input[type="range"] { width: 100%; height: 34px; accent-color: var(--teal); }
+    .slider-scale { display: flex; justify-content: space-between; color: var(--muted); font-size: 11.5px; }
+
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .chip { min-height: 42px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--ink); font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; }
+    .chip[aria-pressed="true"] { border-color: var(--teal); background: var(--teal); color: #fff; }
+
+    .loss-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 9px; margin-bottom: 16px; }
+    .loss-btn { display: flex; flex-direction: column; gap: 4px; min-height: 64px; padding: 11px 13px; text-align: left; border: 1px solid var(--line); border-radius: 11px; background: var(--paper); color: var(--ink); font: inherit; cursor: pointer; }
+    .loss-btn b { font-size: 13.5px; }
+    .loss-btn i { font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+    .loss-btn[data-bucket="availability"] i { color: var(--oee-a); }
+    .loss-btn[data-bucket="performance"] i { color: var(--oee-p); }
+    .loss-btn[data-bucket="quality"] i { color: var(--oee-q); }
+    .loss-btn[aria-pressed="true"] { border-color: var(--teal); box-shadow: inset 0 0 0 2px rgba(14,116,144,.2); }
+    .loss-detail { padding: 16px; border: 1px solid var(--line); border-radius: 11px; background: var(--tint); }
+    .loss-detail h4 { margin: 0 0 8px; font-size: 16px; }
+    .loss-detail dl { display: grid; grid-template-columns: minmax(128px, auto) 1fr; gap: 7px 16px; margin: 0; font-size: 14px; }
+    .loss-detail dt { font-weight: 700; color: var(--ink-soft); }
+    .loss-detail dd { margin: 0; color: var(--ink-soft); }
+
+    .drill-scenario { margin: 0 0 14px; padding: 15px; border: 1px solid var(--line); border-radius: 11px; background: var(--tint); font-size: 15px; }
+    .drill-answers { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .drill-answers button { flex: 1 1 132px; min-height: 48px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink); font: inherit; font-weight: 700; cursor: pointer; }
+    .drill-answers button:hover:not(:disabled) { border-color: var(--teal); }
+    .drill-answers button:disabled { opacity: .5; cursor: default; }
+    .drill-feedback { padding: 13px 15px; border-radius: 10px; font-size: 14px; }
+    .drill-feedback.right { background: #eefaf3; border-left: 4px solid var(--success); }
+    .drill-feedback.wrong { background: #fdf2f1; border-left: 4px solid var(--danger); }
+    .drill-bar { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+    .drill-track { flex: 1; height: 9px; border-radius: 999px; background: var(--line); overflow: hidden; }
+    .drill-track i { display: block; height: 100%; background: var(--teal); transition: width .25s; }
+    .drill-count { color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+
+    .trick-card { margin: 22px 0; padding: 20px 22px; border: 2px solid var(--teal); border-radius: 14px; background: linear-gradient(180deg, #f1f9fa, var(--paper)); }
+    .trick-card h3 { margin: 0 0 10px; color: var(--teal-dark); }
+    .trick-rule { margin: 12px 0; padding: 14px 16px; border: 1px dashed var(--teal); border-radius: 10px; background: var(--paper); font-size: 16px; font-weight: 600; line-height: 2; }
+
+    .practice-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 16px; }
+    .practice-step { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--tint); }
+    .practice-step span { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--teal); color: #fff; font-weight: 800; }
+    .practice-step h3 { margin: 10px 0 6px; font-size: 15px; }
+    .practice-step p { margin: 0; color: var(--ink-soft); font-size: 13.5px; }
+
+    /* lessons-theme.css hides .quiz-feedback unless .correct/.incorrect is set,
+       so an unanswered prompt would render invisible without this. */
+    .quiz-feedback.notice { display: block; background: var(--tint); color: var(--ink-soft); border: 1px solid var(--line); }
+    .quiz-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+    html[data-theme="dark"] .lab,
+    html[data-theme="dark"] .trick-card { background: var(--surface, #131c26); }
+    html[data-theme="dark"] .factor.ft { background: rgba(35,122,75,.16); }
+    html[data-theme="dark"] .drill-feedback.right { background: rgba(35,122,75,.16); }
+    html[data-theme="dark"] .drill-feedback.wrong { background: rgba(180,35,24,.16); }
+    html[data-theme="dark"] .verdict.bad { background: rgba(180,35,24,.16); }
+    html[data-theme="dark"] .callout { background: var(--surface, #131c26); }
+
+    @media (max-width: 640px) {
+      .lab { padding: 15px; }
+      .factor strong { font-size: 21px; }
+      .loss-detail dl { grid-template-columns: 1fr; gap: 2px 0; }
+      .loss-detail dd { margin-bottom: 10px; }
+      .drill-answers button { flex: 1 1 100%; }
+      .trick-rule { font-size: 15px; }
+    }
+  </style>
+  <script src="/theme.js"></script>
+  <script src="/site-sections.js"></script>
+</head>
+
+<body data-lesson-page="true" data-category="lean-six-sigma" data-level="intermediate" data-interactive="true">
+  <a class="skip-link" href="#lesson-content">Skip to lesson content</a>
+  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+  <header class="site lesson-sitebar">
+    <a href="/index.html" class="brand">
+      <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+      <span>UpSkill Sprint Consulting</span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="/start-here.html">Start Here</a>
+      <a href="/lessons.html" aria-current="page">Lessons</a>
+      <a href="/engineering-tools.html">Engineering Tools</a>
+      <a href="/services.html">Services</a>
+      <a href="/request-topic.html">Request a Topic</a>
+      <a href="/about.html">About</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <a href="/lessons.html" class="btn btn-teal header-cta">Browse lessons</a>
+      <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </label>
+    </div>
+  </header>
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="/start-here.html">Start Here</a>
+    <a href="/lessons.html">Lessons</a>
+    <a href="/engineering-tools.html">Engineering Tools</a>
+    <a href="/services.html">Services</a>
+    <a href="/request-topic.html">Request a Topic</a>
+    <a href="/about.html">About</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="/contact.html">Contact</a>
+  </nav>
+
+  <main id="lesson-content">
+    <article class="lesson-wrapper">
+      <header class="lesson-hero">
+        <p class="lesson-eyebrow">Lean Six Sigma · Intermediate · 28 min read</p>
+        <h1>Overall Equipment Effectiveness (OEE) and the Eight Losses</h1>
+        <div class="lesson-meta-row" aria-label="Lesson features">
+          <span class="pill accent">6 interactives</span>
+          <span class="pill">Excel</span>
+          <span class="pill">Minitab</span>
+          <span class="pill">ASQ CSSBB / CQE</span>
+        </div>
+        <p class="lesson-lede">OEE is three numbers multiplied together, which makes it look easy. The hard part is deciding which bucket a loss belongs in&mdash;and two of the eight losses get put in the wrong bucket so often that entire improvement programmes end up aimed at the wrong problem.</p>
+        <div class="why-it-matters"><strong>Why this matters at work:</strong> OEE does not just measure a machine. It routes your improvement effort. Call a loss "availability" when it is really "performance" and you will buy a faster changeover cart when what you needed was a jam-free infeed. The total OEE reads identically either way, which is exactly why the mistake survives for years.</div>
+      </header>
+
+      <nav class="lesson-toc" aria-label="Lesson contents">
+        <h2>Lesson contents</h2>
+        <ol>
+          <li><a href="#learning-objectives">Learning objectives</a></li>
+          <li><a href="#prerequisites">Before you start</a></li>
+          <li><a href="#key-concepts">The three factors</a></li>
+          <li><a href="#terminology">Terminology and calculations</a></li>
+          <li><a href="#calculator">Interactive: OEE calculator</a></li>
+          <li><a href="#eight-losses">Interactive: the eight losses</a></li>
+          <li><a href="#loss-pareto">Interactive: count versus minutes</a></li>
+          <li><a href="#the-confusion">The two arguments that never end</a></li>
+          <li><a href="#the-trick">The trick: logged or lost?</a></li>
+          <li><a href="#threshold">Interactive: the logging threshold</a></li>
+          <li><a href="#drill">Interactive: classification drill</a></li>
+          <li><a href="#procedure">How to calculate OEE for a shift</a></li>
+          <li><a href="#tricks">Calculation shortcuts</a></li>
+          <li><a href="#priority">Interactive: where to improve first</a></li>
+          <li><a href="#worked-example">Worked example</a></li>
+          <li><a href="#mistakes">Common mistakes</a></li>
+          <li><a href="#software">Statistics implementation: Excel &amp; Minitab</a></li>
+          <li><a href="#practice">Try it yourself</a></li>
+          <li><a href="#quiz">Check your understanding</a></li>
+          <li><a href="#summary">Final summary</a></li>
+          <li><a href="#references">References</a></li>
+        </ol>
+      </nav>
+
+      <section id="learning-objectives">
+        <h2>Learning objectives</h2>
+        <ul>
+          <li>Calculate availability, performance, quality and OEE from shift data.</li>
+          <li>Name all eight TPM losses and assign each to the correct OEE factor.</li>
+          <li>Explain why minor stoppages are a performance loss even though the machine has stopped.</li>
+          <li>Explain why setup and adjustment is an availability loss even though the machine appears to be running.</li>
+          <li>Apply a one-question test that resolves either case in seconds.</li>
+          <li>Use time accounting and the one-line formula to check any OEE calculation.</li>
+          <li>Recognise what OEE does <em>not</em> tell you, and when it will mislead you.</li>
+        </ul>
+      </section>
+
+      <section id="prerequisites">
+        <h2>Before you start</h2>
+        <p class="section-intro">Nothing heavy&mdash;this lesson is arithmetic plus careful definitions. It helps if you are comfortable with:</p>
+        <ul>
+          <li>Percentages and multiplying them together.</li>
+          <li>The idea of a bottleneck or constraint operation.</li>
+          <li>Basic shift documentation: downtime logs, production counts, scrap records.</li>
+        </ul>
+        <div class="callout callout-info">
+          <strong>Bring your own data if you can.</strong> Every interactive here starts with a realistic default, but each one accepts your numbers. A single real shift from your own line will teach you more than the worked example.
+        </div>
+      </section>
+
+      <section id="key-concepts">
+        <h2>The three factors</h2>
+        <p class="section-intro">OEE asks one question in three parts: <strong>of the time we planned to make good parts, how much actually produced good parts at full rate?</strong></p>
+
+        <div class="callout callout-formula">
+          OEE = Availability &times; Performance &times; Quality
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <caption>The three OEE factors and what each one is actually asking.</caption>
+            <thead>
+              <tr><th>Factor</th><th>Question it answers</th><th>Formula</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="tag a">Availability</span></td><td>Did the machine run when we wanted it to?</td><td>Run Time &divide; Planned Production Time</td></tr>
+              <tr><td><span class="tag p">Performance</span></td><td>While running, did it run at full speed?</td><td>(Ideal Cycle Time &times; Total Count) &divide; Run Time</td></tr>
+              <tr><td><span class="tag q">Quality</span></td><td>Of what it made, how much was good first time?</td><td>Good Count &divide; Total Count</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Two definitions do most of the work, and nearly every argument about OEE is really an argument about one of them:</p>
+        <ul>
+          <li><strong>Planned Production Time</strong> is all time minus time you genuinely did not intend to produce&mdash;no orders, unstaffed shift, planned shutdown. It is <em>not</em> "all time minus everything that went wrong".</li>
+          <li><strong>Ideal Cycle Time</strong> is the fastest sustainable rate the equipment has actually demonstrated for that product. Use the nameplate figure and performance will read artificially low forever.</li>
+        </ul>
+
+        <div class="callout callout-info">
+          <strong>A useful mental model.</strong> Picture three filters stacked in a funnel. Planned time goes in the top. Availability strains out the time the machine was stopped, performance strains out the time it ran slow, quality strains out the parts that were not sellable. What drips out the bottom is <em>fully productive time</em>&mdash;time that produced a good part at full rate.
+        </div>
+      </section>
+
+      <section id="terminology">
+        <h2>Terminology and calculations</h2>
+        <div class="table-scroll">
+          <table>
+            <caption>Core terms used when measuring and reporting OEE.</caption>
+            <thead>
+              <tr><th>Term</th><th>Meaning</th><th>Interpretation</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>All Time</td><td>Every hour on the calendar.</td><td>The denominator for TEEP, not for OEE.</td></tr>
+              <tr><td>Planned Production Time</td><td>All time minus periods you did not intend to produce.</td><td>The OEE denominator. Contested more than any other term.</td></tr>
+              <tr><td>Run Time</td><td>Planned production time minus logged downtime.</td><td>Only <em>recorded</em> stops reduce it. This is the crux of the whole lesson.</td></tr>
+              <tr><td>Ideal Cycle Time</td><td>Fastest sustainable time per part actually demonstrated.</td><td>Use observed best, not nameplate, or performance is permanently understated.</td></tr>
+              <tr><td>Total Count</td><td>All parts produced, good and bad.</td><td>Excludes test pieces made during changeover.</td></tr>
+              <tr><td>Good Count</td><td>Parts meeting specification first pass.</td><td>Reworked parts are <em>not</em> good count, even if they eventually ship.</td></tr>
+              <tr><td>Fully Productive Time</td><td>Good Count &times; Ideal Cycle Time.</td><td>The only time that fully counted. OEE is this over planned production time.</td></tr>
+              <tr><td>Logging Threshold</td><td>Shortest stop the system records, often 2&ndash;5 minutes.</td><td>Decides whether a short stop lands in availability or performance.</td></tr>
+              <tr><td>TEEP</td><td>OEE &times; Utilisation.</td><td>Measures the asset against the calendar rather than the schedule.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="calculator">
+        <h2>Interactive: OEE calculator</h2>
+        <p class="section-intro">Change any input and all three factors move. The bar underneath converts every loss into the same currency&mdash;minutes&mdash;which is the single most useful habit in OEE work. The verdict line runs three consistency checks on your numbers.</p>
+
+        <div class="lab">
+          <h3>Shift data</h3>
+          <p class="lab-sub">Defaults describe one realistic packaging shift. Replace any value with your own.</p>
+
+          <div class="lab-inputs">
+            <label for="c-shift">Shift length <small>(min)</small><input type="number" id="c-shift" value="480" min="1" step="1"></label>
+            <label for="c-planned">Planned stops <small>(breaks, handover)</small><input type="number" id="c-planned" value="30" min="0" step="1"></label>
+            <label for="c-down">Logged downtime <small>(min)</small><input type="number" id="c-down" value="80" min="0" step="1"></label>
+            <label for="c-ict">Ideal cycle time <small>(min/part)</small><input type="number" id="c-ict" value="1" min="0.01" step="0.01"></label>
+            <label for="c-total">Total parts made<input type="number" id="c-total" value="320" min="0" step="1"></label>
+            <label for="c-reject">Rejects and rework<input type="number" id="c-reject" value="12" min="0" step="1"></label>
+          </div>
+
+          <div class="factor-row">
+            <div class="factor fa"><span>Availability</span><strong id="c-a">&mdash;</strong></div>
+            <div class="factor fp"><span>Performance</span><strong id="c-p">&mdash;</strong></div>
+            <div class="factor fq"><span>Quality</span><strong id="c-q">&mdash;</strong></div>
+            <div class="factor ft"><span>OEE</span><strong id="c-oee">&mdash;</strong></div>
+          </div>
+
+          <figure>
+            <div class="fig-scroll">
+              <svg id="c-waterfall" viewBox="0 0 760 200" role="img" aria-labelledby="c-wf-t c-wf-d">
+                <title id="c-wf-t">Where the planned production time went</title>
+                <desc id="c-wf-d">A stacked bar dividing planned production time into availability loss, performance loss, quality loss and fully productive time.</desc>
+              </svg>
+            </div>
+            <figcaption id="c-caption"></figcaption>
+          </figure>
+
+          <p class="verdict" id="c-verdict"></p>
+        </div>
+      </section>
+
+      <section id="eight-losses">
+        <h2>Interactive: the eight losses</h2>
+        <p class="section-intro">Nakajima's TPM framework names eight equipment losses. Six are the familiar "six big losses"; the full eight split out tool changes and planned shutdown, which matters because those are where disputes start. Select any loss to see where it lands and why.</p>
+
+        <div class="lab">
+          <div class="loss-grid" id="loss-grid" role="group" aria-label="The eight equipment losses"></div>
+          <div class="loss-detail" id="loss-detail" aria-live="polite"></div>
+        </div>
+
+        <div class="table-scroll">
+          <table>
+            <caption>The eight TPM losses mapped to the three OEE factors.</caption>
+            <thead>
+              <tr><th>#</th><th>Loss</th><th>Factor</th><th>Typical evidence in the data</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Breakdown / equipment failure</td><td><span class="tag a">Availability</span></td><td>A logged stop with a work order behind it</td></tr>
+              <tr><td>2</td><td>Setup and adjustment</td><td><span class="tag a">Availability</span></td><td>Changeover start to first good part</td></tr>
+              <tr><td>3</td><td>Tool, die or blade change</td><td><span class="tag a">Availability</span></td><td>A logged stop on a predictable interval</td></tr>
+              <tr><td>4</td><td>Start-up and yield loss</td><td><span class="tag q">Quality</span></td><td>Scrap concentrated in the first parts after a start</td></tr>
+              <tr><td>5</td><td>Minor stoppages and idling</td><td><span class="tag p">Performance</span></td><td>Nothing in the downtime log, but the count is short</td></tr>
+              <tr><td>6</td><td>Reduced speed</td><td><span class="tag p">Performance</span></td><td>Cycle time consistently above ideal</td></tr>
+              <tr><td>7</td><td>Defects and rework</td><td><span class="tag q">Quality</span></td><td>Scrap spread across the run</td></tr>
+              <tr><td>8</td><td>Planned shutdown</td><td><span class="tag a">Availability</span> or excluded</td><td>Scheduled maintenance, no-demand time</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-warning">
+          <strong>Loss 8 is a policy choice, not a fact.</strong> If planned shutdown sits inside planned production time it depresses availability. If it is excluded, availability rises and you are measuring OEE rather than TEEP. Neither is wrong. What is wrong is switching between the two and then comparing the numbers.
+        </div>
+      </section>
+
+      <section id="loss-pareto">
+        <h2>Interactive: count versus minutes</h2>
+        <p class="section-intro">The same shift, ranked two ways. Toggle between how <em>often</em> each loss happened and how many <em>minutes</em> it cost. Watch minor stops swap ends of the chart&mdash;this is precisely why you run the Minitab Pareto twice, and why a minutes-only report hides the most actionable problem on the line.</p>
+
+        <div class="lab">
+          <div class="chip-row" role="group" aria-label="Ranking measure">
+            <button type="button" class="chip" data-pareto="count" aria-pressed="true">Rank by number of events</button>
+            <button type="button" class="chip" data-pareto="minutes" aria-pressed="false">Rank by minutes lost</button>
+          </div>
+          <figure>
+            <div class="fig-scroll">
+              <svg id="p-chart" viewBox="0 0 760 320" role="img" aria-labelledby="p-t p-d">
+                <title id="p-t">Losses ranked by the selected measure</title>
+                <desc id="p-d">A bar chart of the shift losses, re-sorted when the ranking measure changes.</desc>
+              </svg>
+            </div>
+            <figcaption id="p-caption"></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="the-confusion">
+        <h2>The two arguments that never end</h2>
+        <p class="section-intro">Two losses account for most misclassification. Both feel obvious&mdash;and both feel obvious in the wrong direction.</p>
+
+        <h3>Small stops feel like availability, but they are performance</h3>
+        <p>A jam is a stop. The machine is not moving. Every instinct says availability. So why is loss 5 a performance loss?</p>
+        <p>Because of how the data are collected. Most downtime systems only capture stops above a threshold&mdash;commonly five minutes, sometimes two. A thirty-second jam that an operator clears by hand never becomes a downtime record. Nobody writes it down.</p>
+        <p>That has a direct arithmetic consequence. If the stop is not logged, it is not subtracted from run time. The clock keeps counting the machine as <em>running</em>. But no parts came out during those thirty seconds. So at the end of the shift the machine is credited with 370 minutes of run time and produced only 320 parts against an ideal of 370. The shortfall has nowhere else to go: it lands in performance.</p>
+        <div class="callout callout-info">
+          <strong>The short version:</strong> small stops are invisible to the downtime log, so they can only ever show up as a rate deficit. A loss the clock never saw cannot reduce availability.
+        </div>
+
+        <h3>Setup feels like performance, but it is availability</h3>
+        <p>During a changeover the machine is far from idle. Operators jog the drive, run test pieces, tweak guides, make a part, measure it, adjust again. It <em>looks</em> like a machine running badly. Every instinct says performance.</p>
+        <p>But setup has something small stops do not: a clean start and a clean end. The changeover begins when the last good part of the old order comes off and ends when the first good part of the new order is confirmed. That is a bounded, recordable event&mdash;and it goes into the downtime log as a single entry. Logged time comes out of run time, so it reduces availability.</p>
+        <p>The test pieces made during setup are not counted as production. They were never sellable parts; they were part of the changeover.</p>
+      </section>
+
+      <section id="the-trick">
+        <h2>The trick: logged or lost?</h2>
+        <p class="section-intro">You do not need to memorise eight rows of a table. One question resolves every case, including both of the hard ones above.</p>
+
+        <div class="trick-card">
+          <h3>Ask: did the clock stop?</h3>
+          <div class="trick-rule">
+            Time <strong>LOGGED</strong> as a stop &rarr; <span class="tag a">Availability</span><br>
+            Time <strong>LOST</strong> inside run time &rarr; <span class="tag p">Performance</span><br>
+            Time spent, but the part is not sellable &rarr; <span class="tag q">Quality</span>
+          </div>
+          <p style="margin:12px 0 0"><strong>Logged</strong> means somebody or some sensor recorded a start and an end&mdash;the event has a duration you could point at on a timeline. <strong>Lost</strong> means the time disappeared inside a period the system still counts as running, detectable only because fewer parts came out than should have.</p>
+        </div>
+
+        <p>Run the two hard cases through it:</p>
+        <ul>
+          <li><strong>Setup and adjustment.</strong> Does it have a recorded start and end? Yes&mdash;every changeover does. <em>Logged &rarr; availability.</em> That the machine moves during setup is irrelevant; movement was never the test.</li>
+          <li><strong>Minor stoppages.</strong> Does a thirty-second jam have a recorded start and end? No. <em>Lost &rarr; performance.</em> That the machine stopped is irrelevant; stopping was never the test either.</li>
+        </ul>
+
+        <div class="callout callout-warning">
+          <strong>The sharpest part of this trick is also its catch.</strong> Classification depends on <em>your data collection</em>, not on physics. Install sensors that log every jam down to five seconds and small stops genuinely become availability losses&mdash;correctly so. What you must never do is log them <em>and</em> also count them as performance loss. That double-counts, and the two OEE formulas will stop agreeing.
+        </div>
+      </section>
+
+      <section id="threshold">
+        <h2>Interactive: the logging threshold</h2>
+        <p class="section-intro">This shift contained sixty minor stops lasting between 12 and 48 seconds, totalling 30 minutes. Drag the threshold to change the shortest stop your system records. Watch availability and performance trade places&mdash;and watch OEE refuse to move.</p>
+
+        <div class="lab">
+          <div class="slider-row">
+            <label for="t-threshold">Downtime logging threshold: <span id="t-value">2.0 minutes</span></label>
+            <input type="range" id="t-threshold" min="0" max="5" step="0.1" value="2">
+            <div class="slider-scale"><span>0 (log everything)</span><span>2&ndash;5 min typical</span><span>5 min</span></div>
+          </div>
+
+          <div class="factor-row">
+            <div class="factor fa"><span>Availability</span><strong id="t-a">&mdash;</strong></div>
+            <div class="factor fp"><span>Performance</span><strong id="t-p">&mdash;</strong></div>
+            <div class="factor fq"><span>Quality</span><strong id="t-q">&mdash;</strong></div>
+            <div class="factor ft"><span>OEE</span><strong id="t-oee">&mdash;</strong></div>
+          </div>
+
+          <figure>
+            <div class="fig-scroll">
+              <svg id="t-chart" viewBox="0 0 760 190" role="img" aria-labelledby="t-t t-d">
+                <title id="t-t">Stops logged versus stops invisible</title>
+                <desc id="t-d">A bar showing how many of the sixty minor stops are recorded at the chosen threshold and how many disappear into run time.</desc>
+              </svg>
+            </div>
+            <figcaption id="t-caption"></figcaption>
+          </figure>
+
+          <p class="verdict" id="t-verdict"></p>
+        </div>
+
+        <div class="callout callout-danger">
+          <strong>Why OEE cannot move.</strong> Availability is Run&nbsp;Time &divide; PPT and performance is (ICT &times; Count) &divide; Run&nbsp;Time. Multiply them and run time cancels: A &times; P = (ICT &times; Count) &divide; PPT. Run time is not in the answer at all. Anything you shift between availability and performance leaves OEE untouched&mdash;algebraically, not approximately.
+        </div>
+      </section>
+
+      <section id="drill">
+        <h2>Interactive: classification drill</h2>
+        <p class="section-intro">Ten shift-floor scenarios in random order. Decide the factor, then read the reasoning. Try to answer using the logged-or-lost test rather than recognition&mdash;the exam will not reuse these words.</p>
+
+        <div class="lab">
+          <p class="drill-scenario" id="d-scenario"></p>
+          <div class="drill-answers">
+            <button type="button" data-drill="availability">Availability</button>
+            <button type="button" data-drill="performance">Performance</button>
+            <button type="button" data-drill="quality">Quality</button>
+          </div>
+          <div class="drill-feedback" id="d-feedback" hidden></div>
+          <div class="drill-bar">
+            <div class="drill-track"><i id="d-track" style="width:0%"></i></div>
+            <span class="drill-count" id="d-count"></span>
+          </div>
+          <div class="quiz-actions">
+            <button type="button" class="btn" id="d-next">Next scenario</button>
+            <button type="button" class="btn" id="d-restart">Restart drill</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="procedure">
+        <h2>How to calculate OEE for a shift</h2>
+        <ol class="step-list">
+          <li><strong>Fix the boundary.</strong> Write down planned production time first. Subtract only periods you never intended to produce. Do this before looking at any loss data, so the denominator is not quietly negotiated later.</li>
+          <li><strong>Establish ideal cycle time.</strong> Take the fastest rate the line has actually sustained for that product, evidenced from run data. Record where the number came from.</li>
+          <li><strong>Pull the downtime log.</strong> Total the logged stops. This is your availability loss, in minutes.</li>
+          <li><strong>Classify every entry.</strong> Apply logged-or-lost to each reason code. Confirm nothing is counted twice.</li>
+          <li><strong>Count production.</strong> Total count, then good count. Reworked parts are not good count.</li>
+          <li><strong>Convert to minutes.</strong> Compute performance loss and quality loss as minutes, not percentages.</li>
+          <li><strong>Reconcile.</strong> The four buckets must sum to planned production time. If they do not, stop and find the error before reporting anything.</li>
+          <li><strong>Calculate twice.</strong> A &times; P &times; Q, then the one-line formula. They must agree.</li>
+        </ol>
+      </section>
+
+      <section id="tricks">
+        <h2>Calculation shortcuts</h2>
+
+        <h3>1. Put everything in minutes</h3>
+        <p>Percentages are hard to reason about and easy to mis-multiply. Minutes are not. Convert every loss into lost minutes and the whole shift reconciles on one line:</p>
+        <div class="callout callout-formula">
+          Planned Production Time = Availability loss + Performance loss + Quality loss + Fully productive time
+        </div>
+        <ul>
+          <li>Availability loss = logged downtime</li>
+          <li>Performance loss = Run Time &minus; (Total Count &times; Ideal Cycle Time)</li>
+          <li>Quality loss = (Total Count &minus; Good Count) &times; Ideal Cycle Time</li>
+          <li>Fully productive time = Good Count &times; Ideal Cycle Time</li>
+        </ul>
+        <p>If those four do not add to planned production time you have a data error&mdash;usually a stop counted twice, or an ideal cycle time that does not match the product mix.</p>
+
+        <h3>2. The one-line OEE</h3>
+        <p>You never actually need the three factors to get OEE:</p>
+        <div class="callout callout-formula">
+          OEE = (Good Count &times; Ideal Cycle Time) &divide; Planned Production Time
+        </div>
+        <p>This is the best check you have. Compute OEE both ways; if <em>A &times; P &times; Q</em> disagrees with the one-line version, something is double-counted. In an exam it takes fifteen seconds and catches arithmetic slips.</p>
+
+        <h3>3. Attack your weakest factor first</h3>
+        <p>Because the three multiply, the gain from improving one factor by a point is the product of the other two:</p>
+        <div class="callout callout-formula">
+          &part;OEE / &part;A = P &times; Q
+        </div>
+        <p>The lowest factor always has the highest product of the other two, so it always returns the most OEE per point. That is a mathematical result, not a rule of thumb&mdash;and the next interactive lets you confirm it.</p>
+
+        <h3>4. Respect the multiplication</h3>
+        <p>90&thinsp;%, 90&thinsp;% and 90&thinsp;% do not average to 90&thinsp;%. They multiply to <strong>72.9&thinsp;%</strong>. Three respectable numbers make one poor one. The widely quoted "world class" 85&thinsp;% is 90.0 &times; 95.0 &times; 99.9&mdash;note how little quality loss it tolerates.</p>
+
+        <h3>5. Points, not percent</h3>
+        <p>Moving availability from 80&thinsp;% to 82&thinsp;% is <strong>two percentage points</strong>, and a 2.5&thinsp;% relative improvement. "We improved availability by 2&thinsp;%" is ambiguous and will be challenged in any serious review.</p>
+
+        <h3>6. Performance above 100&thinsp;% means your ideal is wrong</h3>
+        <p>Performance is capped at 1.0 by definition. If you compute 104&thinsp;%, the ideal cycle time is too slow, the part count includes rework passes, or run time is understated. Fix the input; never cap the output.</p>
+
+        <div class="callout callout-practice">
+          <strong>Exam habit.</strong> Write the four time buckets before touching a calculator. Most OEE questions on the CSSBB and CQE test whether you put each stated loss in the right bucket, not whether you can divide.
+        </div>
+      </section>
+
+      <section id="priority">
+        <h2>Interactive: where to improve first</h2>
+        <p class="section-intro">Set any three factors and the panel calculates what one percentage point of improvement is worth on each. The winner is always the weakest factor, and now you can see why rather than take it on trust.</p>
+
+        <div class="lab">
+          <div class="lab-inputs">
+            <label for="i-a">Availability <small>(%)</small><input type="number" id="i-a" value="70" min="1" max="100" step="0.1"></label>
+            <label for="i-p">Performance <small>(%)</small><input type="number" id="i-p" value="95" min="1" max="100" step="0.1"></label>
+            <label for="i-q">Quality <small>(%)</small><input type="number" id="i-q" value="99" min="1" max="100" step="0.1"></label>
+          </div>
+          <figure>
+            <div class="fig-scroll">
+              <svg id="i-chart" viewBox="0 0 760 260" role="img" aria-labelledby="i-t i-d">
+                <title id="i-t">OEE gained from one percentage point of improvement</title>
+                <desc id="i-d">Three bars comparing the OEE gained by adding one percentage point to availability, performance or quality.</desc>
+              </svg>
+            </div>
+            <figcaption id="i-caption"></figcaption>
+          </figure>
+          <p class="verdict" id="i-verdict"></p>
+        </div>
+      </section>
+
+      <section id="worked-example">
+        <h2>Worked example</h2>
+        <p class="section-intro">A single shift on a packaging line. These are the calculator defaults, so you can follow along above.</p>
+
+        <div class="table-scroll">
+          <table>
+            <caption>Shift inputs for the worked example.</caption>
+            <thead><tr><th>Input</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Shift length</td><td>480 min</td></tr>
+              <tr><td>Planned stops (breaks, handover)</td><td>30 min</td></tr>
+              <tr><td>Planned Production Time</td><td>450 min</td></tr>
+              <tr><td>Logged downtime (breakdown 25, setup 40, tool change 15)</td><td>80 min</td></tr>
+              <tr><td>Run Time</td><td>370 min</td></tr>
+              <tr><td>Ideal cycle time</td><td>1.0 min/part</td></tr>
+              <tr><td>Total parts made</td><td>320</td></tr>
+              <tr><td>Rejects (8 start-up, 4 process)</td><td>12</td></tr>
+              <tr><td>Good parts</td><td>308</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-formula">
+          Availability = 370 / 450 = 0.8222 = 82.22 %<br>
+          Performance&nbsp; = (1.0 &times; 320) / 370 = 0.8649 = 86.49 %<br>
+          Quality&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 308 / 320 = 0.9625 = 96.25 %<br>
+          OEE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 0.8222 &times; 0.8649 &times; 0.9625 = 0.6844 = <strong>68.44 %</strong>
+        </div>
+
+        <p><strong>Check with the one-line formula:</strong></p>
+        <div class="callout callout-formula">
+          OEE = (308 &times; 1.0) / 450 = 0.6844 = 68.44 % &nbsp;&check;
+        </div>
+
+        <p><strong>Check with the time buckets:</strong></p>
+        <div class="callout callout-formula">
+          Availability loss&nbsp; = 80 min<br>
+          Performance loss&nbsp;&nbsp; = 370 &minus; 320 = 50 min<br>
+          Quality loss&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 12 &times; 1.0 = 12 min<br>
+          Fully productive&nbsp;&nbsp; = 308 &times; 1.0 = 308 min<br>
+          Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 450 min &nbsp;&check;
+        </div>
+
+        <p>Note what the buckets reveal that the percentages hide. The largest single loss is not the breakdown everyone talks about&mdash;it is the 50 minutes of performance loss, which nobody logged and nobody raised at the morning meeting. It is invisible precisely because it never reached the downtime report.</p>
+
+        <div class="callout callout-warning">
+          <strong>The same shift, classified differently.</strong> Suppose 30 of those 50 performance minutes are the sixty small stops. Log them and availability falls to 75.56&thinsp;% while performance rises to 94.12&thinsp;%&mdash;and OEE stays at 68.44&thinsp;%. Read the first version and you chase breakdowns and changeovers. Read the second and you see the real problem is sixty jams a shift, which is an infeed project, not a maintenance one. The number was never wrong. The diagnosis was.
+        </div>
+      </section>
+
+      <section id="mistakes">
+        <h2>Common mistakes</h2>
+        <ul>
+          <li><strong>Using nameplate speed as ideal cycle time.</strong> Performance is then permanently depressed and no improvement ever shows.</li>
+          <li><strong>Counting rework as good.</strong> Quality means good <em>first pass</em>. A part needing a second operation is a quality loss even if it eventually ships.</li>
+          <li><strong>Moving unplanned events into planned stops.</strong> Reclassifying a breakdown as "planned downtime" inflates OEE and hides the problem. Planned means you intended it before the shift started.</li>
+          <li><strong>Comparing OEE across different machines.</strong> OEE compares a machine to itself over time. Cross-machine league tables reward whoever set the softest ideal cycle time.</li>
+          <li><strong>Double-counting a logged small stop.</strong> Once it is in the downtime log it is an availability loss. Counting it again as performance loss breaks the reconciliation.</li>
+          <li><strong>Optimising OEE on a non-bottleneck.</strong> Running a non-constraint at high OEE builds inventory, not throughput.</li>
+          <li><strong>Reporting OEE without the loss breakdown.</strong> A single percentage tells nobody what to do next. Always publish the four buckets alongside it.</li>
+        </ul>
+      </section>
+
+      <section id="software">
+        <h2>Statistics implementation: Excel &amp; Minitab</h2>
+
+        <h3>Excel functions</h3>
+        <div class="table-scroll">
+          <table>
+            <caption>Excel functions used to build and audit an OEE report.</caption>
+            <thead><tr><th>Function</th><th>Syntax</th><th>Purpose</th><th>When to use it</th></tr></thead>
+            <tbody>
+              <tr><td>PRODUCT</td><td><code>=PRODUCT(range)</code></td><td>Multiplies A, P and Q in one step</td><td>OEE from three factor cells</td></tr>
+              <tr><td>SUMIFS</td><td><code>=SUMIFS(sum_range, crit_range, criteria)</code></td><td>Totals downtime minutes by reason code</td><td>Splitting logged downtime into the eight losses</td></tr>
+              <tr><td>COUNTIFS</td><td><code>=COUNTIFS(crit_range, criteria)</code></td><td>Counts stop events by category</td><td>Separating stop <em>frequency</em> from stop <em>duration</em></td></tr>
+              <tr><td>SUMPRODUCT</td><td><code>=SUMPRODUCT(counts, cycle_times)</code></td><td>Weighted ideal time across a mixed-model run</td><td>One line running several part numbers per shift</td></tr>
+              <tr><td>COUNTIFS with operator</td><td><code>=COUNTIFS(dur,"&lt;"&amp;threshold)</code></td><td>Counts stops below the logging threshold</td><td>Quantifying how many small stops are invisible</td></tr>
+              <tr><td>IFERROR</td><td><code>=IFERROR(value, "")</code></td><td>Suppresses divide-by-zero on unworked shifts</td><td>Any OEE column on a calendar-based sheet</td></tr>
+              <tr><td>MIN</td><td><code>=MIN(value, 1)</code></td><td>Flags impossible results</td><td>Diagnostic only&mdash;never cap performance silently</td></tr>
+              <tr><td>AVERAGE / MEDIAN</td><td><code>=MEDIAN(range)</code></td><td>Central tendency of daily OEE</td><td>Median when one catastrophic shift skews the mean</td></tr>
+              <tr><td>STDEV.S</td><td><code>=STDEV.S(range)</code></td><td>Shift-to-shift variation in OEE</td><td>Stability matters as much as level</td></tr>
+              <tr><td>PERCENTILE.INC</td><td><code>=PERCENTILE.INC(range, 0.05)</code></td><td>Demonstrated fastest sustained cycle</td><td>Evidence-based ideal cycle time from real runs</td></tr>
+              <tr><td>SORT / RANK</td><td><code>=SORT(range, col, -1)</code></td><td>Orders losses by magnitude</td><td>Building the Pareto of losses</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Excel use cases</h4>
+        <ul>
+          <li><strong>Reason-code roll-up.</strong> With stop reasons in column B and minutes in column C, <code>=SUMIFS($C:$C,$B:$B,"Setup")</code> gives setup minutes. Repeat for all eight losses and confirm the total equals your logged downtime&mdash;if it does not, reason codes are missing or overlapping.</li>
+          <li><strong>Frequency versus duration.</strong> Put <code>=COUNTIFS($B:$B,"Minor stop")</code> beside <code>=SUMIFS($C:$C,$B:$B,"Minor stop")</code>. This separates "one long jam" from "sixty short ones", which demand completely different countermeasures and look identical in a minutes total.</li>
+          <li><strong>How much is invisible?</strong> <code>=COUNTIFS(durations,"&lt;"&amp;$B$1)</code> against your threshold in B1 counts the stops your system never records&mdash;the Excel equivalent of the threshold interactive above.</li>
+          <li><strong>Demonstrated ideal cycle time.</strong> Instead of arguing about nameplate speed, take <code>=PERCENTILE.INC(cycle_times, 0.05)</code> across clean runs. The fifth percentile of observed cycles is a defensible "fastest sustained" figure.</li>
+          <li><strong>Reconciliation column.</strong> Add <code>=PPT-(down+perf_loss+qual_loss+productive)</code>. It should read zero on every row. Any non-zero cell is a data problem, and finding it here is far cheaper than in a review meeting.</li>
+          <li><strong>Mixed-model shifts.</strong> <code>=SUMPRODUCT(part_counts, ideal_times)</code> gives total ideal minutes when several products with different cycle times ran in one shift.</li>
+        </ul>
+
+        <h3>Minitab navigation</h3>
+        <div class="table-scroll">
+          <table>
+            <caption>Minitab menu paths for OEE analysis, with guidance on which option to choose.</caption>
+            <thead><tr><th>Task</th><th>Menu path</th><th>Which option and why</th></tr></thead>
+            <tbody>
+              <tr><td>Rank the eight losses</td><td>Stat &rarr; Quality Tools &rarr; Pareto Chart</td><td>Run it twice&mdash;once on stop <em>count</em>, once on stop <em>minutes</em>. Minor stops usually top the count chart and barely register on the minutes chart, which is the entire argument for treating them separately.</td></tr>
+              <tr><td>Trend OEE over time</td><td>Graph &rarr; Time Series Plot &rarr; Simple</td><td>Use before any control chart. Shift patterns and changeover effects are usually visible by eye and tell you whether a control chart is even appropriate.</td></tr>
+              <tr><td>Is OEE stable?</td><td>Stat &rarr; Control Charts &rarr; Variables Charts for Individuals &rarr; I-MR</td><td>Daily OEE is one value per period, so individuals is the right family. Alternative: Variables Charts for Subgroups &rarr; Xbar-R when you have several lines per shift and want between-line variation separated.</td></tr>
+              <tr><td>Did an improvement work?</td><td>Stat &rarr; Basic Statistics &rarr; 2-Sample t</td><td>Compares mean OEE before and after. Check normality first via Stat &rarr; Basic Statistics &rarr; Normality Test; OEE is a bounded ratio and skews badly near the top of its range.</td></tr>
+              <tr><td>Non-normal OEE data</td><td>Stat &rarr; Nonparametrics &rarr; Mann-Whitney</td><td>Use when the normality test fails or the sample is small. Compares medians and assumes no distribution.</td></tr>
+              <tr><td>Which loss drives OEE?</td><td>Stat &rarr; Regression &rarr; Regression &rarr; Fit Regression Model</td><td>OEE as response, loss minutes by category as predictors. Exploratory only&mdash;the predictors are compositional and not independent, so read coefficients as direction, not effect size.</td></tr>
+              <tr><td>Stop duration distribution</td><td>Graph &rarr; Histogram &rarr; With Fit</td><td>Reveals the threshold effect directly. A gap just below your logging threshold is evidence that small stops are being missed rather than genuinely absent.</td></tr>
+              <tr><td>Compare lines or shifts</td><td>Stat &rarr; ANOVA &rarr; One-Way</td><td>Use when comparing three or more lines. Follow with Tukey comparisons to see which pairs actually differ rather than eyeballing the means.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Exam tips</h3>
+        <ul>
+          <li><strong>Classification is the question.</strong> CSSBB and CQE items normally list shift events and ask for OEE. The arithmetic is trivial; the marks are in bucketing each event. Apply logged-or-lost to every line before calculating.</li>
+          <li><strong>Watch for planned time traps.</strong> A stem mentioning "two 15-minute breaks and a 30-minute unplanned stoppage" is testing whether you subtract the breaks from planned production time and leave the stoppage as an availability loss.</li>
+          <li><strong>Rework is a quality loss.</strong> If a stem says parts "required rework before shipping", they are not good count. One of the most common single-mark errors.</li>
+          <li><strong>Know the one-line formula.</strong> Faster than three divisions and it self-checks. Learn it as the primary method and use A &times; P &times; Q to confirm.</li>
+          <li><strong>OEE versus TEEP.</strong> If a question introduces total calendar time or unstaffed shifts, it is testing utilisation: TEEP = OEE &times; Utilisation.</li>
+          <li><strong>Reclassification questions.</strong> If a stem changes the logging threshold and asks what happens to OEE, the answer is "nothing"&mdash;availability and performance move in opposite directions by design.</li>
+          <li><strong>In the real world.</strong> Expect to defend your ideal cycle time more than your arithmetic. Bring the demonstrated-rate evidence; "the nameplate says so" will not survive review.</li>
+        </ul>
+      </section>
+
+      <section id="practice">
+        <h2>Try it yourself</h2>
+        <p class="section-intro">Use one real shift from your own line, not a prepared dataset. The friction you hit is the lesson.</p>
+        <div class="practice-card">
+          <div class="practice-step"><span>1</span><h3>Define</h3><p>Write down planned production time and where the boundary sits, before looking at any loss data.</p></div>
+          <div class="practice-step"><span>2</span><h3>Classify</h3><p>Take every downtime reason code and assign it with logged-or-lost. Flag any you argue about.</p></div>
+          <div class="practice-step"><span>3</span><h3>Reconcile</h3><p>Convert all four buckets to minutes and confirm they sum to planned production time.</p></div>
+          <div class="practice-step"><span>4</span><h3>Find the threshold</h3><p>Ask what your shortest recorded stop is. Anything below it is invisible and sitting in performance.</p></div>
+          <div class="practice-step"><span>5</span><h3>Decide</h3><p>Name the one project your loss breakdown supports, and one reason the data might be misleading you.</p></div>
+        </div>
+      </section>
+
+      <section id="quiz">
+        <h2>Check your understanding</h2>
+        <div class="quiz-shell">
+          <fieldset class="quiz-q" data-q="1" data-answer="b">
+            <legend>1. An operator clears roughly sixty short jams during a shift. None appears in the downtime log. Which factor absorbs this loss?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q1" value="a"> Availability, because the machine was stopped each time.</label>
+              <label class="quiz-option"><input type="radio" name="q1" value="b"> Performance, because the time stayed inside run time and only the count fell short.</label>
+              <label class="quiz-option"><input type="radio" name="q1" value="c"> Quality, because jams damage parts.</label>
+            </div>
+            <div class="quiz-feedback" data-correct="Correct. Unlogged time cannot reduce run time, so it can only appear as a rate deficit." data-incorrect="Apply the logged-or-lost test. Nothing was recorded, so run time still counts those minutes and the shortfall lands in performance."></div>
+          </fieldset>
+
+          <fieldset class="quiz-q" data-q="2" data-answer="a">
+            <legend>2. A changeover takes 40 minutes, during which the machine runs test pieces and is adjusted repeatedly. Which factor?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q2" value="a"> Availability, because the changeover is logged with a start and an end.</label>
+              <label class="quiz-option"><input type="radio" name="q2" value="b"> Performance, because the machine was running slowly the whole time.</label>
+              <label class="quiz-option"><input type="radio" name="q2" value="c"> Quality, because the test pieces were scrapped.</label>
+            </div>
+            <div class="quiz-feedback" data-correct="Correct. Movement is not the test. A bounded, recorded event comes out of run time." data-incorrect="The machine moving is not what decides this. Setup has a recorded start and end, so it is logged time and reduces availability."></div>
+          </fieldset>
+
+          <fieldset class="quiz-q" data-q="3" data-answer="c">
+            <legend>3. Planned production time 450 min, run time 370 min, ideal cycle time 1.0 min/part, total count 320, good count 308. What is OEE?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q3" value="a"> 82.2 %</label>
+              <label class="quiz-option"><input type="radio" name="q3" value="b"> 74.1 %</label>
+              <label class="quiz-option"><input type="radio" name="q3" value="c"> 68.4 %</label>
+            </div>
+            <div class="quiz-feedback" data-correct="Correct. The one-line formula gets there fastest: 308 x 1.0 / 450 = 68.4 %." data-incorrect="Use the one-line formula: Good Count x Ideal Cycle Time / Planned Production Time = 308 / 450 = 68.4 %."></div>
+          </fieldset>
+
+          <fieldset class="quiz-q" data-q="4" data-answer="b">
+            <legend>4. A plant fits sensors that log every jam. OEE is recalculated for the same shift. What happens?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q4" value="a"> OEE falls, because more downtime is now visible.</label>
+              <label class="quiz-option"><input type="radio" name="q4" value="b"> OEE is unchanged; availability falls and performance rises by an offsetting amount.</label>
+              <label class="quiz-option"><input type="radio" name="q4" value="c"> OEE rises, because performance improves.</label>
+            </div>
+            <div class="quiz-feedback" data-correct="Correct. Run time cancels in A x P, so reclassifying moves loss between the two and leaves OEE untouched. The diagnosis changes, not the total." data-incorrect="The lost minutes are identical either way. Because A x P = (ICT x Count) / PPT, run time is not in the answer at all."></div>
+          </fieldset>
+
+          <fieldset class="quiz-q" data-q="5" data-answer="a">
+            <legend>5. Availability is 70 %, performance 95 %, quality 99 %. Where does one percentage point of improvement buy the most OEE?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q5" value="a"> Availability, because the product of the other two factors is highest.</label>
+              <label class="quiz-option"><input type="radio" name="q5" value="b"> Quality, because it is closest to its ceiling.</label>
+              <label class="quiz-option"><input type="radio" name="q5" value="c"> All three are worth exactly the same.</label>
+            </div>
+            <div class="quiz-feedback" data-correct="Correct. The marginal gain equals the product of the other two factors, so the weakest factor always returns the most." data-incorrect="Because the factors multiply, a point added to one is worth the product of the other two. Here that favours availability, the lowest factor."></div>
+          </fieldset>
+
+          <fieldset class="quiz-q" data-q="6" data-answer="c">
+            <legend>6. Calculated performance comes out at 106 %. What is the correct response?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q6" value="a"> Report it; the line beat its target.</label>
+              <label class="quiz-option"><input type="radio" name="q6" value="b"> Cap it at 100 % and move on.</label>
+              <label class="quiz-option"><input type="radio" name="q6" value="c"> Treat it as a data error and check ideal cycle time, part count and run time.</label>
+            </div>
+            <div class="quiz-feedback" data-correct="Correct. Performance cannot exceed 1.0 by definition, so an input is wrong. Fix the input, not the output." data-incorrect="Performance above 100 % is impossible by definition. Capping it hides the fault; find the bad input instead."></div>
+          </fieldset>
+
+          <fieldset class="quiz-q" data-q="7" data-answer="b">
+            <legend>7. Which loss is a quality loss rather than an availability loss?</legend>
+            <div class="quiz-options">
+              <label class="quiz-option"><input type="radio" name="q7" value="a"> Tool change at the end of blade life.</label>
+              <label class="quiz-option"><input type="radio" name="q7" value="b"> Scrap produced while the process stabilises after a start-up.</label>
+              <label class="quiz-option"><input type="radio" name="q7" value="c"> Scheduled preventive maintenance on a Sunday.</label>
+            </div>
+            <div class="quiz-feedback" data-correct="Correct. Start-up loss produced parts that were not sellable, which is the definition of a quality loss." data-incorrect="Start-up and yield loss is loss 4 and belongs to quality: parts came out, but they were not sellable."></div>
+          </fieldset>
+
+          <div class="quiz-actions">
+            <button type="button" id="quiz-submit" class="btn btn-teal">Check answers</button>
+            <button type="button" id="quiz-retry" class="btn">Reset</button>
+          </div>
+          <p id="quiz-score" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section id="summary">
+        <h2>Final summary</h2>
+        <ul>
+          <li>OEE = Availability &times; Performance &times; Quality, and the one-line form (Good Count &times; Ideal Cycle Time &divide; Planned Production Time) gives the same answer as a check.</li>
+          <li>The eight TPM losses map to three factors: breakdown, setup, tool change and planned shutdown are availability; minor stops and reduced speed are performance; defects and start-up losses are quality.</li>
+          <li><strong>Logged or lost</strong> resolves any classification: recorded time reduces availability, time that vanishes inside run time surfaces as performance, unsellable output is quality.</li>
+          <li>Minor stops are a performance loss because nothing records them, not because of anything physical. Setup is an availability loss because it is recorded, not because the machine is still.</li>
+          <li>Run time cancels in A &times; P, so classification never changes total OEE. It changes which improvement project you start&mdash;which is why it matters.</li>
+          <li>Reconcile every shift in minutes. The four buckets must sum to planned production time.</li>
+          <li>Improve your weakest factor first. The marginal gain is the product of the other two.</li>
+        </ul>
+      </section>
+
+      <section id="references">
+        <h2>References and further reading</h2>
+        <ul>
+          <li>Nakajima, S. <em>Introduction to TPM: Total Productive Maintenance.</em> Productivity Press.</li>
+          <li>ASQ Certified Six Sigma Black Belt Body of Knowledge&mdash;Lean tools and process metrics.</li>
+          <li>ASQ Certified Quality Engineer Body of Knowledge&mdash;quality systems and continuous improvement.</li>
+          <li>Hansen, R. C. <em>Overall Equipment Effectiveness.</em> Industrial Press.</li>
+          <li><a href="/lessons/understanding-pareto-chart">Understanding Pareto Chart</a>&mdash;for ranking the eight losses once you have measured them.</li>
+          <li><a href="/lessons/control-charts-explained">Control Charts Explained</a>&mdash;for judging whether an OEE change is signal or noise.</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+
+    var NS = "http://www.w3.org/2000/svg";
+    var BUCKET = { availability: "Availability", performance: "Performance", quality: "Quality" };
+    var COLOR = { availability: "#2f6fb0", performance: "#c46f00", quality: "#7a4bb8", good: "#237a4b" };
+
+    function $(id) { return document.getElementById(id); }
+    function num(el, fallback) { var v = parseFloat(el.value); return isFinite(v) ? v : fallback; }
+    function pct(x) { return isFinite(x) ? (x * 100).toFixed(1) + " %" : "\u2014"; }
+    function clear(node) { while (node && node.lastChild) node.removeChild(node.lastChild); }
+
+    function svg(parent, name, attrs, text) {
+      var n = document.createElementNS(NS, name);
+      Object.keys(attrs || {}).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+      if (text != null) n.textContent = text;
+      parent.appendChild(n);
+      return n;
+    }
+
+    function clearChart(node) {
+      /* keep <title> and <desc> for assistive technology */
+      while (node.childNodes.length > 2) node.removeChild(node.lastChild);
+    }
+
+    /* ============ 1. OEE calculator ============ */
+
+    var cal = {
+      shift: $("c-shift"), planned: $("c-planned"), down: $("c-down"),
+      ict: $("c-ict"), total: $("c-total"), reject: $("c-reject"),
+      a: $("c-a"), p: $("c-p"), q: $("c-q"), oee: $("c-oee"),
+      chart: $("c-waterfall"), caption: $("c-caption"), verdict: $("c-verdict")
+    };
+
+    function drawWaterfall(m) {
+      var node = cal.chart;
+      clearChart(node);
+      if (m.ppt <= 0) return;
+
+      var x0 = 20, x1 = 740, y = 54, h = 58, width = x1 - x0;
+      var segs = [
+        { k: "Availability loss", v: m.aLoss, c: COLOR.availability },
+        { k: "Performance loss", v: m.pLoss, c: COLOR.performance },
+        { k: "Quality loss", v: m.qLoss, c: COLOR.quality },
+        { k: "Fully productive", v: m.prod, c: COLOR.good }
+      ];
+
+      svg(node, "text", { x: x0, y: 28, "font-size": "15", "font-weight": "700", fill: "#101828" },
+        "Planned production time: " + Math.round(m.ppt) + " min");
+
+      var cursor = x0;
+      segs.forEach(function (s) {
+        var w = Math.max(0, s.v / m.ppt * width);
+        if (w <= 0) return;
+        svg(node, "rect", { x: cursor.toFixed(1), y: y, width: w.toFixed(1), height: h, fill: s.c, rx: 3 });
+        if (w > 46) {
+          svg(node, "text", {
+            x: (cursor + w / 2).toFixed(1), y: y + h / 2 + 6, "text-anchor": "middle",
+            "font-size": "15", "font-weight": "700", fill: "#ffffff"
+          }, Math.round(s.v));
+        }
+        cursor += w;
+      });
+
+      var ly = y + h + 32, lx = x0;
+      segs.forEach(function (s) {
+        svg(node, "rect", { x: lx, y: ly - 11, width: 13, height: 13, fill: s.c, rx: 2 });
+        svg(node, "text", { x: lx + 19, y: ly, "font-size": "13", fill: "#344054" },
+          s.k + " (" + Math.round(s.v) + " min)");
+        lx += 184;
+      });
+      svg(node, "text", { x: x0, y: ly + 30, "font-size": "13", fill: "#667085" },
+        "Every loss expressed in the same currency: minutes.");
+    }
+
+    function runCalculator() {
+      var shift = num(cal.shift, 480), planned = num(cal.planned, 0), down = num(cal.down, 0);
+      var ict = num(cal.ict, 1), total = num(cal.total, 0), reject = num(cal.reject, 0);
+
+      var ppt = Math.max(0, shift - planned);
+      var run = Math.max(0, ppt - down);
+      var good = Math.max(0, total - reject);
+
+      var A = ppt > 0 ? run / ppt : NaN;
+      var P = run > 0 ? (ict * total) / run : NaN;
+      var Q = total > 0 ? good / total : NaN;
+      var oee = A * P * Q;
+
+      cal.a.textContent = pct(A); cal.p.textContent = pct(P);
+      cal.q.textContent = pct(Q); cal.oee.textContent = pct(oee);
+
+      var m = {
+        ppt: ppt, aLoss: down,
+        pLoss: Math.max(0, run - ict * total),
+        qLoss: Math.max(0, reject * ict),
+        prod: Math.max(0, good * ict)
+      };
+      drawWaterfall(m);
+
+      var oneLine = ppt > 0 ? (good * ict) / ppt : NaN;
+      var sum = m.aLoss + m.pLoss + m.qLoss + m.prod;
+      var msgs = [], bad = false;
+
+      if (isFinite(P) && P > 1.0001) {
+        bad = true;
+        msgs.push("Performance is above 100 %, which is impossible. Ideal cycle time is probably too slow, or the part count includes rework passes.");
+      }
+      if (isFinite(oneLine) && isFinite(oee) && Math.abs(oneLine - oee) > 0.0005) {
+        bad = true;
+        msgs.push("The two OEE formulas disagree, so something is double-counted.");
+      }
+      if (ppt > 0 && Math.abs(sum - ppt) > 0.5) {
+        bad = true;
+        msgs.push("The four buckets sum to " + Math.round(sum) + " min but planned production time is " + Math.round(ppt) + " min.");
+      }
+      if (!bad) {
+        msgs.push("All three checks passed. One-line OEE = (" + Math.round(good) + " \u00D7 " + ict +
+          ") \u00F7 " + Math.round(ppt) + " = " + pct(oneLine) +
+          ", matching A \u00D7 P \u00D7 Q, and the four buckets reconcile.");
+      }
+
+      cal.verdict.className = "verdict" + (bad ? " bad" : "");
+      cal.verdict.textContent = msgs.join(" ");
+      cal.caption.textContent = "Of " + Math.round(ppt) + " planned minutes, " + Math.round(m.prod) +
+        " produced a good part at full rate. " + Math.round(ppt - m.prod) + " minutes were lost.";
+    }
+
+    ["shift", "planned", "down", "ict", "total", "reject"].forEach(function (k) {
+      if (cal[k]) cal[k].addEventListener("input", runCalculator);
+    });
+
+    /* ============ 2. eight losses ============ */
+
+    var LOSSES = [
+      { id: 1, name: "Breakdown / failure", bucket: "availability",
+        what: "An unplanned stop where the equipment cannot run until it is repaired.",
+        why: "Recorded with a start, an end and usually a work order. Logged time comes straight out of run time.",
+        evidence: "A downtime record with a maintenance reason code.",
+        wrong: "Rarely misclassified. This is the loss everyone recognises." },
+      { id: 2, name: "Setup and adjustment", bucket: "availability",
+        what: "Changeover from the last good part of one order to the first good part of the next.",
+        why: "It has a clean start and end, so it is logged. The machine moving during setup does not make it a performance loss.",
+        evidence: "A changeover entry in the downtime log; test pieces excluded from the part count.",
+        wrong: "Often mistaken for performance because the machine is jogging, running test pieces and being adjusted. Movement is not the test \u2014 logging is." },
+      { id: 3, name: "Tool / die / blade change", bucket: "availability",
+        what: "Stopping to replace a consumable tool at the end of its life.",
+        why: "Bounded and recorded like any other stop, even when it is entirely predictable.",
+        evidence: "A regular, short stop appearing on a consistent interval.",
+        wrong: "Sometimes buried inside setup. Split it out \u2014 the countermeasures are completely different." },
+      { id: 4, name: "Start-up and yield loss", bucket: "quality",
+        what: "Scrap produced while the process stabilises after a start or changeover.",
+        why: "Time was spent and parts were produced, but they were not sellable. That is a quality loss by definition.",
+        evidence: "Rejects clustered in the first parts after every start.",
+        wrong: "Often lumped into setup. If a part came out and was scrapped it is quality; if no part came out it is setup." },
+      { id: 5, name: "Minor stoppages / idling", bucket: "performance",
+        what: "Short interruptions cleared by an operator without maintenance \u2014 jams, misfeeds, sensor trips.",
+        why: "Too short to reach the logging threshold, so run time still counts those minutes and the shortfall appears as a rate deficit.",
+        evidence: "Nothing in the downtime log, yet the part count is well below ideal for the run time.",
+        wrong: "The single most misclassified loss. The machine has stopped, so it feels like availability \u2014 but if it was never logged, availability cannot see it." },
+      { id: 6, name: "Reduced speed", bucket: "performance",
+        what: "Running below the demonstrated ideal rate \u2014 deliberately slowed, worn, or fighting a material problem.",
+        why: "The machine runs the whole time and produces, just more slowly than it can.",
+        evidence: "Observed cycle time consistently above ideal with no stop events.",
+        wrong: "Hard to separate from minor stops without event-level data. Both look identical in a shift total." },
+      { id: 7, name: "Defects and rework", bucket: "quality",
+        what: "Parts produced during stable running that fail inspection or need a second operation.",
+        why: "The time was productive but the output was not good first pass.",
+        evidence: "Scrap spread evenly across the run rather than clustered at starts.",
+        wrong: "Rework is frequently counted as good because the part eventually ships. Quality means good first time." },
+      { id: 8, name: "Planned shutdown", bucket: "availability",
+        what: "Scheduled maintenance, no demand, or an unstaffed period.",
+        why: "If it sits inside planned production time it is an availability loss. Many plants exclude it and measure TEEP separately.",
+        evidence: "Scheduled in advance on the maintenance or production plan.",
+        wrong: "Less a misclassification than a policy choice. The error is switching convention between reporting periods and then comparing." }
+    ];
+
+    var lossGrid = $("loss-grid"), lossDetail = $("loss-detail");
+
+    function showLoss(loss) {
+      Array.prototype.forEach.call(lossGrid.querySelectorAll("button"), function (b) {
+        b.setAttribute("aria-pressed", String(Number(b.dataset.loss) === loss.id));
+      });
+      lossDetail.innerHTML =
+        '<h4>' + loss.id + '. ' + loss.name + ' &mdash; <span class="tag ' + loss.bucket.charAt(0) +
+        '">' + BUCKET[loss.bucket] + '</span></h4><dl>' +
+        '<dt>What it is</dt><dd>' + loss.what + '</dd>' +
+        '<dt>Why this factor</dt><dd>' + loss.why + '</dd>' +
+        '<dt>Evidence in the data</dt><dd>' + loss.evidence + '</dd>' +
+        '<dt>Where people go wrong</dt><dd>' + loss.wrong + '</dd></dl>';
+    }
+
+    if (lossGrid) {
+      LOSSES.forEach(function (loss) {
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "loss-btn";
+        b.dataset.loss = loss.id; b.dataset.bucket = loss.bucket;
+        b.setAttribute("aria-pressed", "false");
+        b.innerHTML = "<b>" + loss.id + ". " + loss.name + "</b><i>" + BUCKET[loss.bucket] + "</i>";
+        b.addEventListener("click", function () { showLoss(loss); });
+        lossGrid.appendChild(b);
+      });
+      showLoss(LOSSES[4]);
+    }
+
+    /* ============ 3. count vs minutes Pareto ============ */
+
+    var SHIFT_LOSSES = [
+      { name: "Minor stops", events: 60, minutes: 30, bucket: "performance" },
+      { name: "Reduced speed", events: 1, minutes: 20, bucket: "performance" },
+      { name: "Setup", events: 1, minutes: 40, bucket: "availability" },
+      { name: "Breakdown", events: 1, minutes: 25, bucket: "availability" },
+      { name: "Tool change", events: 3, minutes: 15, bucket: "availability" },
+      { name: "Start-up scrap", events: 8, minutes: 8, bucket: "quality" },
+      { name: "Process defects", events: 4, minutes: 4, bucket: "quality" }
+    ];
+
+    var pMode = "count";
+    var pChart = $("p-chart"), pCaption = $("p-caption");
+
+    function drawPareto() {
+      if (!pChart) return;
+      clearChart(pChart);
+      var key = pMode === "count" ? "events" : "minutes";
+      var data = SHIFT_LOSSES.slice().sort(function (a, b) { return b[key] - a[key]; });
+      var max = data[0][key];
+      var x0 = 130, x1 = 720, top = 34, rowH = 34;
+
+      svg(pChart, "text", { x: 20, y: 20, "font-size": "14", "font-weight": "700", fill: "#101828" },
+        pMode === "count" ? "Ranked by number of events" : "Ranked by minutes lost");
+
+      data.forEach(function (d, i) {
+        var y = top + i * rowH;
+        var w = Math.max(2, d[key] / max * (x1 - x0));
+        svg(pChart, "text", { x: x0 - 10, y: y + 16, "text-anchor": "end", "font-size": "13", fill: "#344054" }, d.name);
+        svg(pChart, "rect", { x: x0, y: y, width: w.toFixed(1), height: 22, rx: 3, fill: COLOR[d.bucket] });
+        svg(pChart, "text", {
+          x: (x0 + w + 8).toFixed(1), y: y + 16, "font-size": "13", "font-weight": "700", fill: "#344054"
+        }, pMode === "count" ? d[key] + (d[key] === 1 ? " event" : " events") : d[key] + " min");
+      });
+
+      var ly = top + data.length * rowH + 24, lx = 130;
+      ["availability", "performance", "quality"].forEach(function (b) {
+        svg(pChart, "rect", { x: lx, y: ly - 11, width: 13, height: 13, rx: 2, fill: COLOR[b] });
+        svg(pChart, "text", { x: lx + 19, y: ly, "font-size": "13", fill: "#344054" }, BUCKET[b]);
+        lx += 150;
+      });
+
+      pCaption.textContent = pMode === "count"
+        ? "Minor stops dominate by a wide margin \u2014 sixty events against single figures for everything else. A team looking at this chart investigates jams."
+        : "Ranked by minutes, minor stops fall to third and setup leads. A team looking only at this chart buys a changeover trolley and never notices the jams.";
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll("[data-pareto]"), function (btn) {
+      btn.addEventListener("click", function () {
+        pMode = btn.dataset.pareto;
+        Array.prototype.forEach.call(document.querySelectorAll("[data-pareto]"), function (b) {
+          b.setAttribute("aria-pressed", String(b === btn));
+        });
+        drawPareto();
+      });
+    });
+
+    /* ============ 4. logging threshold ============ */
+
+    /* Sixty minor stops, 0.2 to 0.8 min, summing to exactly 30 minutes. */
+    var MINOR = (function () {
+      var out = [], i;
+      for (i = 0; i < 60; i++) out.push(0.2 + 0.6 * i / 59);
+      return out;
+    })();
+    var MAJOR = 80;        /* breakdown 25 + setup 40 + tool change 15 */
+    var PPT = 450, ICT = 1, COUNT = 320, GOOD = 308;
+
+    var thr = {
+      slider: $("t-threshold"), value: $("t-value"),
+      a: $("t-a"), p: $("t-p"), q: $("t-q"), oee: $("t-oee"),
+      chart: $("t-chart"), caption: $("t-caption"), verdict: $("t-verdict")
+    };
+
+    function runThreshold() {
+      if (!thr.slider) return;
+      var t = parseFloat(thr.slider.value);
+      var loggedMin = 0, loggedCount = 0;
+      MINOR.forEach(function (d) { if (d >= t) { loggedMin += d; loggedCount += 1; } });
+
+      var down = MAJOR + loggedMin;
+      var run = PPT - down;
+      var A = run / PPT, P = (ICT * COUNT) / run, Q = GOOD / COUNT;
+      var oee = A * P * Q;
+
+      thr.value.textContent = t.toFixed(1) + (t === 1 ? " minute" : " minutes");
+      thr.a.textContent = pct(A); thr.p.textContent = pct(P);
+      thr.q.textContent = pct(Q); thr.oee.textContent = pct(oee);
+
+      clearChart(thr.chart);
+      var x0 = 20, x1 = 740, y = 40, h = 40, width = x1 - x0;
+      var loggedW = loggedCount / 60 * width;
+
+      svg(thr.chart, "text", { x: x0, y: 24, "font-size": "14", "font-weight": "700", fill: "#101828" },
+        "The sixty minor stops");
+      if (loggedW > 0) {
+        svg(thr.chart, "rect", { x: x0, y: y, width: loggedW.toFixed(1), height: h, rx: 3, fill: COLOR.availability });
+      }
+      if (width - loggedW > 0) {
+        svg(thr.chart, "rect", { x: (x0 + loggedW).toFixed(1), y: y, width: (width - loggedW).toFixed(1), height: h, rx: 3, fill: COLOR.performance });
+      }
+      svg(thr.chart, "text", { x: x0, y: y + h + 24, "font-size": "13", fill: COLOR.availability },
+        loggedCount + " logged \u2192 availability (" + loggedMin.toFixed(1) + " min)");
+      svg(thr.chart, "text", { x: x1, y: y + h + 24, "text-anchor": "end", "font-size": "13", fill: COLOR.performance },
+        (60 - loggedCount) + " invisible \u2192 performance (" + (30 - loggedMin).toFixed(1) + " min)");
+
+      svg(thr.chart, "text", { x: x0, y: y + h + 58, "font-size": "22", "font-weight": "700", fill: COLOR.good },
+        "OEE " + pct(oee));
+      svg(thr.chart, "text", { x: x0 + 120, y: y + h + 58, "font-size": "14", fill: "#667085" },
+        "\u2014 unchanged at every threshold");
+
+      thr.caption.textContent = "At a " + t.toFixed(1) + " minute threshold, " + loggedCount +
+        " of 60 stops are recorded and " + (60 - loggedCount) + " vanish into run time.";
+
+      var note;
+      if (t <= 0.2) {
+        note = "Everything is logged. All 30 minutes sit in availability and performance looks strong \u2014 the jams are fully visible.";
+      } else if (loggedCount === 0) {
+        note = "At any realistic plant threshold, all sixty stops are invisible. Thirty minutes of loss is hiding inside performance, and the downtime report shows nothing at all.";
+      } else {
+        note = loggedCount + " stops are recorded and " + (60 - loggedCount) +
+          " are not, so the same underlying problem is split across two factors. This is the worst case for diagnosis: neither number tells the whole story.";
+      }
+      thr.verdict.textContent = note;
+    }
+
+    if (thr.slider) thr.slider.addEventListener("input", runThreshold);
+
+    /* ============ 5. classification drill ============ */
+
+    var SCENARIOS = [
+      { t: "A guard interlock trips roughly forty times per shift. Each time the operator resets it in under a minute. The downtime system only records stops longer than five minutes.",
+        a: "performance",
+        w: "Nothing reaches the logging threshold, so run time still includes those minutes. The loss can only surface as a shortfall in part count." },
+      { t: "Changeover from product A to product B took 52 minutes from last good A to first good B.",
+        a: "availability",
+        w: "A bounded, recorded event. Logged time comes out of run time regardless of how much the machine moved during it." },
+      { t: "The first eleven bottles after every start-up are scrapped because fill weight has not stabilised.",
+        a: "quality",
+        w: "Parts were produced but were not sellable. Start-up loss is a quality loss, not part of the setup stop." },
+      { t: "A gearbox failed. The line was down for 95 minutes waiting on maintenance and a work order was raised.",
+        a: "availability",
+        w: "A logged unplanned stop with a clear start and end." },
+      { t: "The line is deliberately run at 85 % of its rated speed because the downstream labeller cannot keep up.",
+        a: "performance",
+        w: "The machine runs continuously and produces, just below its demonstrated ideal rate." },
+      { t: "Twenty-two parts from the middle of a stable run failed final inspection and were sent for rework before shipping.",
+        a: "quality",
+        w: "Quality means good first pass. A part needing a second operation is a quality loss even though it eventually ships." },
+      { t: "The blade is replaced every 400 cuts. The change takes 6 minutes and is entered in the stop log.",
+        a: "availability",
+        w: "Tool change is a recorded stop. Predictability does not change the classification." },
+      { t: "The plant installs vision sensors that now log every jam down to five seconds, and jam time is recorded as downtime.",
+        a: "availability",
+        w: "Once logged, the time genuinely leaves run time and becomes an availability loss. Classification follows your data collection \u2014 but do not then also count it as performance loss." },
+      { t: "Cycle time has crept from 1.00 to 1.12 minutes per part over six months. No stop events accompany it.",
+        a: "performance",
+        w: "Continuous running below the demonstrated ideal rate, with nothing logged." },
+      { t: "The line is shut down every Sunday for scheduled preventive maintenance, planned a month in advance.",
+        a: "availability",
+        w: "Planned shutdown is an availability loss if it sits inside planned production time. Many plants exclude it and report TEEP instead \u2014 either is defensible, provided you stay consistent." }
+    ];
+
+    var drill = {
+      order: [], i: 0, correct: 0, answered: false,
+      scenario: $("d-scenario"), feedback: $("d-feedback"),
+      track: $("d-track"), count: $("d-count"),
+      next: $("d-next"), restart: $("d-restart")
+    };
+
+    function shuffle(list) {
+      var out = list.slice(), i, j, tmp;
+      for (i = out.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        tmp = out[i]; out[i] = out[j]; out[j] = tmp;
+      }
+      return out;
+    }
+
+    function drillButtons(disabled) {
+      Array.prototype.forEach.call(document.querySelectorAll("[data-drill]"), function (b) {
+        b.disabled = disabled;
+      });
+    }
+
+    function renderDrill() {
+      if (!drill.scenario) return;
+      if (drill.i >= SCENARIOS.length) {
+        drill.scenario.textContent = "Drill complete: " + drill.correct + " of " +
+          SCENARIOS.length + " correct. Restart to run the scenarios again in a new order.";
+        drill.feedback.hidden = true;
+        drillButtons(true);
+        drill.next.disabled = true;
+        drill.count.textContent = drill.correct + " / " + SCENARIOS.length;
+        drill.track.style.width = "100%";
+        return;
+      }
+      drill.scenario.textContent = SCENARIOS[drill.order[drill.i]].t;
+      drill.feedback.hidden = true;
+      drill.feedback.className = "drill-feedback";
+      drill.answered = false;
+      drillButtons(false);
+      drill.next.disabled = true;
+      drill.count.textContent = "Scenario " + (drill.i + 1) + " of " + SCENARIOS.length +
+        " \u00B7 " + drill.correct + " correct";
+      drill.track.style.width = (drill.i / SCENARIOS.length * 100).toFixed(0) + "%";
+    }
+
+    function answerDrill(choice) {
+      if (!drill.scenario || drill.answered || drill.i >= SCENARIOS.length) return;
+      var s = SCENARIOS[drill.order[drill.i]];
+      var right = choice === s.a;
+      if (right) drill.correct += 1;
+      drill.answered = true;
+      drillButtons(true);
+      drill.next.disabled = false;
+      drill.feedback.hidden = false;
+      drill.feedback.className = "drill-feedback " + (right ? "right" : "wrong");
+      drill.feedback.textContent = (right ? "Correct. " : "Not this one \u2014 it is " +
+        BUCKET[s.a].toLowerCase() + ". ") + s.w;
+      drill.count.textContent = "Scenario " + (drill.i + 1) + " of " + SCENARIOS.length +
+        " \u00B7 " + drill.correct + " correct";
+      drill.track.style.width = ((drill.i + 1) / SCENARIOS.length * 100).toFixed(0) + "%";
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll("[data-drill]"), function (btn) {
+      btn.addEventListener("click", function () { answerDrill(btn.dataset.drill); });
+    });
+    if (drill.next) {
+      drill.next.addEventListener("click", function () { drill.i += 1; renderDrill(); });
+    }
+    if (drill.restart) {
+      drill.restart.addEventListener("click", function () {
+        drill.order = shuffle(drill.order); drill.i = 0; drill.correct = 0;
+        drill.next.disabled = true;
+        renderDrill();
+      });
+    }
+
+    /* ============ 6. improvement priority ============ */
+
+    var imp = { a: $("i-a"), p: $("i-p"), q: $("i-q"), chart: $("i-chart"), caption: $("i-caption"), verdict: $("i-verdict") };
+
+    function runPriority() {
+      if (!imp.chart) return;
+      var A = num(imp.a, 70) / 100, P = num(imp.p, 95) / 100, Q = num(imp.q, 99) / 100;
+      var base = A * P * Q;
+
+      var options = [
+        { key: "Availability", bucket: "availability", gain: Math.min(A + 0.01, 1) * P * Q - base, current: A },
+        { key: "Performance", bucket: "performance", gain: A * Math.min(P + 0.01, 1) * Q - base, current: P },
+        { key: "Quality", bucket: "quality", gain: A * P * Math.min(Q + 0.01, 1) - base, current: Q }
+      ];
+      var max = Math.max.apply(null, options.map(function (o) { return o.gain; }));
+      var best = options.filter(function (o) { return o.gain === max; })[0];
+
+      clearChart(imp.chart);
+      var x0 = 150, x1 = 690, top = 46, rowH = 56;
+
+      svg(imp.chart, "text", { x: 20, y: 26, "font-size": "14", "font-weight": "700", fill: "#101828" },
+        "Current OEE: " + pct(base) + " \u2014 OEE gained from +1 percentage point");
+
+      options.forEach(function (o, i) {
+        var y = top + i * rowH;
+        var w = max > 0 ? Math.max(2, o.gain / max * (x1 - x0)) : 2;
+        svg(imp.chart, "text", { x: x0 - 12, y: y + 20, "text-anchor": "end", "font-size": "13.5", fill: "#344054" }, o.key);
+        svg(imp.chart, "text", { x: x0 - 12, y: y + 37, "text-anchor": "end", "font-size": "12", fill: "#667085" },
+          "now " + (o.current * 100).toFixed(1) + " %");
+        svg(imp.chart, "rect", {
+          x: x0, y: y, width: w.toFixed(1), height: 30, rx: 3,
+          fill: COLOR[o.bucket], opacity: o === best ? "1" : "0.45"
+        });
+        svg(imp.chart, "text", {
+          x: (x0 + w + 10).toFixed(1), y: y + 21, "font-size": "13.5", "font-weight": "700", fill: "#344054"
+        }, "+" + (o.gain * 100).toFixed(2) + " pts");
+      });
+
+      imp.caption.textContent = "Each bar is the OEE gained by adding one percentage point to that factor alone.";
+      imp.verdict.className = "verdict";
+      imp.verdict.textContent = "Best return: " + best.key + ", worth +" + (best.gain * 100).toFixed(2) +
+        " points of OEE. That is the product of the other two factors (" +
+        options.filter(function (o) { return o !== best; })
+          .map(function (o) { return (o.current * 100).toFixed(1) + " %"; }).join(" \u00D7 ") +
+        "), which is why the weakest factor always wins.";
+    }
+
+    ["a", "p", "q"].forEach(function (k) {
+      if (imp[k]) imp[k].addEventListener("input", runPriority);
+    });
+
+    /* ============ quiz ============ */
+
+    var submit = $("quiz-submit"), retry = $("quiz-retry"), scoreOut = $("quiz-score");
+
+    if (submit) {
+      submit.addEventListener("click", function () {
+        var questions = document.querySelectorAll(".quiz-q");
+        var score = 0, answered = 0;
+
+        Array.prototype.forEach.call(questions, function (q) {
+          var chosen = q.querySelector("input[type='radio']:checked");
+          var fb = q.querySelector(".quiz-feedback");
+          fb.hidden = false;
+          fb.classList.remove("correct", "incorrect", "notice");
+
+          if (!chosen) {
+            /* .notice keeps this visible; the shared theme only shows
+               .quiz-feedback when correct or incorrect is present. */
+            fb.classList.add("notice");
+            fb.textContent = "Choose an answer for this question.";
+            return;
+          }
+          answered += 1;
+          if (chosen.value === q.dataset.answer) {
+            score += 1;
+            fb.textContent = fb.dataset.correct;
+            fb.classList.add("correct");
+          } else {
+            fb.textContent = fb.dataset.incorrect;
+            fb.classList.add("incorrect");
+          }
+        });
+
+        scoreOut.textContent = "Your score: " + score + " out of " + questions.length + ".";
+        if (answered === questions.length) {
+          document.dispatchEvent(new CustomEvent("upskill-quiz-result", {
+            detail: { score: score, total: questions.length }
+          }));
+        }
+      });
+    }
+
+    if (retry) {
+      retry.addEventListener("click", function () {
+        Array.prototype.forEach.call(document.querySelectorAll(".quiz-q input[type='radio']"), function (i) { i.checked = false; });
+        Array.prototype.forEach.call(document.querySelectorAll(".quiz-feedback"), function (fb) {
+          fb.hidden = true;
+          fb.classList.remove("correct", "incorrect", "notice");
+          fb.textContent = "";
+        });
+        scoreOut.textContent = "";
+      });
+    }
+
+    /* ============ init ============ */
+
+    drill.order = shuffle(SCENARIOS.map(function (_, i) { return i; }));
+    renderDrill();
+    runCalculator();
+    drawPareto();
+    runThreshold();
+    runPriority();
+  })();
+  </script>
+</body>
+</html>

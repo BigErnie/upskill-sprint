@@ -51,6 +51,18 @@
       description: 'Learn Cp and Cpk with a live capability explorer: specs, spread, centering, the 1.33 benchmark, and Excel & Minitab how-tos.'
     },
     {
+      marker: 'data-overall-equipment-effectiveness',
+      sectionId: 'lean-six-sigma',
+      path: '/lessons/overall-equipment-effectiveness-oee',
+      topic: 'lean-six-sigma',
+      level: 'intermediate',
+      interactive: 'true',
+      search: 'oee overall equipment effectiveness availability performance quality eight losses six big losses tpm total productive maintenance small stops minor stoppages setup adjustment reduced speed ideal cycle time run time planned production time teep downtime threshold logged lost excel minitab pareto lean six sigma asq cssbb cqe interactive',
+      meta: '<span>Intermediate</span><span>Interactive</span><span>28 min</span>',
+      title: 'Overall Equipment Effectiveness (OEE) and the Eight Losses',
+      description: 'Six live interactives: calculate OEE three ways, map all eight TPM losses, and settle why small stops are a performance loss while setup is an availability loss.'
+    },
+    {
       marker: 'data-introduction-doe',
       sectionId: 'lean-six-sigma',
       path: '/lessons/introduction-to-design-of-experiment-doe',

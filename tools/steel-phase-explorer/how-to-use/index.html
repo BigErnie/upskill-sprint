@@ -60,11 +60,12 @@
     <a href="#metallography">15. Virtual metallography</a>
     <a href="#solidification">16. Solidification and rolling</a>
     <a href="#families">17. Alloy-family modes</a>
-    <a href="#learn-export">18. Learn, save, and export</a>
-    <a href="#workflows">19. Recommended workflows</a>
-    <a href="#cautions">20. Engineering cautions</a>
-    <a href="#troubleshooting">21. Troubleshooting</a>
-    <a href="#checklist">22. Final checklist</a>
+    <a href="#reference-diagrams">18. Reference diagrams</a>
+    <a href="#learn-export">19. Learn, save, and export</a>
+    <a href="#workflows">20. Recommended workflows</a>
+    <a href="#cautions">21. Engineering cautions</a>
+    <a href="#troubleshooting">22. Troubleshooting</a>
+    <a href="#checklist">23. Final checklist</a>
   </aside>
 
   <main class="guide-main">
@@ -248,6 +249,68 @@
       <div class="guide-callout danger"><p>Do not apply plain-carbon Fe–Fe<sub>3</sub>C logic uncritically to stainless steels, highly alloyed tool steels, or cast irons. Their phase stability and transformations require family-specific data and models.</p></div>
     </section>
 
+    <section class="guide-card" id="reference-diagrams">
+      <p class="guide-kicker">Release 5</p>
+      <h2>Reference diagrams</h2>
+      <p>This tab holds two separate reference charts. Choose between them with the selector at the top of the panel. They share a carbon axis but not a coordinate system, so points do not carry across when you switch.</p>
+
+      <h3>Which chart is which</h3>
+      <div class="guide-table-wrap"><table class="guide-table"><thead><tr><th>Chart</th><th>What it shows</th><th>What it is not</th></tr></thead><tbody>
+        <tr><td>Rapid-quench microconstituent map</td><td>The constituent formed when austenite is quenched into an isothermal bath held at the temperature shown, from 0 to 1.2&nbsp;wt%&nbsp;C.</td><td>Not a TTT or CCT diagram. There is no time axis and nothing on it can be read as a cooling rate.</td></tr>
+        <tr><td>Iron-carbon / cementite phase diagram</td><td>The equilibrium Fe&ndash;Fe<sub>3</sub>C system to 6.68&nbsp;wt%&nbsp;C, including liquid, delta ferrite, austenite, ferrite, cementite and graphite fields.</td><td>Not a kinetic diagram. Bainite and martensite are not equilibrium phases and do not appear on it.</td></tr>
+      </tbody></table></div>
+      <div class="guide-callout"><p>Keep the distinction in mind when reading results. The equilibrium diagram tells you what would form given unlimited time. The rapid-quench map tells you what actually forms when time is denied. Neither predicts a real quench on its own.</p></div>
+
+      <h3>Plotting and moving points</h3>
+      <ol>
+        <li>Use <strong>+ Add point</strong> to create P2, P3, and as many further points as you need. Existing points stay visible.</li>
+        <li>Select a point by clicking its <strong>P</strong> button in the list, or by clicking its marker.</li>
+        <li>Drag any marker directly, or click anywhere inside the plot to move the active point there.</li>
+        <li>Type exact values into the carbon and temperature fields for precise placement.</li>
+        <li><strong>Remove</strong> deletes the active point. At least one point is always kept.</li>
+        <li><strong>Reset examples</strong> restores the seeded points for the current chart.</li>
+      </ol>
+
+      <h3>Reading a region</h3>
+      <p>Move the pointer over the diagram. The crosshair reports carbon content, temperature in both Celsius and Fahrenheit at once, and the interpreted region. The <em>What does this region mean?</em> panel updates as you move, covering what is present, how it forms, typical morphology, and the property tendencies that follow.</p>
+      <p>The painted colour and the reported region are generated from the same boundary functions, so the readout always matches the field you are pointing at.</p>
+
+      <h3>Experience levels</h3>
+      <div class="guide-table-wrap"><table class="guide-table"><thead><tr><th>Level</th><th>What you get</th></tr></thead><tbody>
+        <tr><td>Beginner</td><td>Plain language and an immediate conclusion, with jargon kept out.</td></tr>
+        <tr><td>Engineer</td><td>Process implications, assumptions, property tendencies, and what still needs verifying.</td></tr>
+        <tr><td>Advanced</td><td>Calculation basis, model limitations, boundary assumptions, and data-validation cautions.</td></tr>
+      </tbody></table></div>
+
+      <h3>Critical lines and legend</h3>
+      <p><strong>Critical lines</strong> draws A<sub>1</sub>, A<sub>3</sub>, A<sub>cm</sub>, M<sub>s</sub> and M<sub>f</sub> on the rapid-quench map, and the eutectoid, eutectic, peritectic, liquidus and solidus on the poster. <strong>Labels</strong> toggles field and line annotation. Selecting a legend entry loads that region into the explanation panel. Regions are also reachable by keyboard: tab to one and press Enter.</p>
+
+      <h3>Units</h3>
+      <p>The &deg;C and &deg;F buttons change the display only. Internal values stay in Celsius, so a point does not move when you switch units. The poster's own printed scales remain in their original dual-unit form, since the artwork is reproduced unaltered.</p>
+
+      <h3>Zoom, pan and full screen</h3>
+      <p>Use the zoom buttons, or hold <kbd>Ctrl</kbd> and scroll. Pan by scrolling or dragging the diagram frame while zoomed. <strong>Fit</strong> returns to the whole chart and <strong>Full screen</strong> gives the diagram the entire viewport. Page scrolling is suppressed while you are manipulating the chart.</p>
+
+      <h3>PNG export</h3>
+      <p><strong>Export PNG</strong> writes the diagram as currently displayed, including plotted points, visible overlays, critical-line emphasis and labels. Raster elements are embedded at export time, so the file is complete and self-contained. Attribution and the copyright line are included in the exported image and must not be removed.</p>
+
+      <h3>On a phone</h3>
+      <p>Controls stack into a single column and touch targets are enlarged. The poster is dense by design; use zoom and pan to inspect it rather than expecting the whole sheet to be legible at once. Poster artwork is only fetched when you open that chart, so the rapid-quench map stays fast on a mobile connection.</p>
+
+      <h3>Engineering limitations</h3>
+      <ul>
+        <li>On the rapid-quench map, A<sub>1</sub>, A<sub>3</sub>, A<sub>cm</sub>, M<sub>s</sub> and M<sub>f</sub> are quantitative. M<sub>s</sub> follows Andrews for plain carbon steel; alloying additions depress it and are not modelled.</li>
+        <li>M<sub>f</sub> is drawn as a fixed offset below M<sub>s</sub>. The real finish is asymptotic and retained austenite persists below the line, increasingly so at higher carbon.</li>
+        <li>The pearlite, bainite and austenitising divisions are educational approximations conveying field topology only. They carry no implied precision.</li>
+        <li>Below roughly 0.42&nbsp;wt%&nbsp;C there is no lower bainite field, because M<sub>s</sub> sits above the bainite divide and a quench past it forms martensite directly.</li>
+        <li>Real boundaries depend on chemistry, grain size, section size, homogeneity and holding time. Validate against grade-specific data before any process decision.</li>
+      </ul>
+
+      <h3>Source and copyright</h3>
+      <p>The iron-carbon chart is the Iron-Carbon/Cementite Phase Diagram published by Buehler, an ITW company. Copyright &copy; 2006 ASM International. All rights reserved. It is reproduced here under permission held by UpSkill Sprint Consulting and is served from this site rather than a third-party server. The artwork is reproduced unaltered; a link to the official PDF is provided beneath the diagram. Attribution and the copyright line must be preserved in any export or reuse.</p>
+      <p>The rapid-quench map is an original vector reconstruction. Its boundaries are generated from published relationships rather than traced from a source image.</p>
+    </section>
+
     <section class="guide-card" id="learn-export">
       <p class="guide-kicker">Learning and records</p>
       <h2>Learn, save, share, and export</h2>
@@ -294,7 +357,11 @@
       <div class="guide-table-wrap"><table class="guide-table"><thead><tr><th>Issue</th><th>Likely cause</th><th>Action</th></tr></thead><tbody>
         <tr><td>Point will not move freely</td><td>Boundary snapping is enabled.</td><td>Turn off Snap to critical boundaries.</td></tr>
         <tr><td>Temperature appears to change after unit switching</td><td>The displayed value was converted.</td><td>The internal Celsius state is preserved.</td></tr>
-        <tr><td>Release 2–4 tab is missing</td><td>Cached JavaScript or incomplete load.</td><td>Hard refresh the page and confirm all scripts are allowed.</td></tr>
+        <tr><td>Release 2–5 tab is missing</td><td>Cached JavaScript or incomplete load.</td><td>Hard refresh the page and confirm all scripts are allowed.</td></tr>
+        <tr><td>Poster does not appear</td><td>The artwork is fetched only when that chart is opened.</td><td>Wait for the loading notice to clear, then hard refresh if the status line reports an error.</td></tr>
+        <tr><td>Points vanish after switching charts</td><td>The two charts use different carbon and temperature ranges.</td><td>Expected. Each chart seeds its own example points.</td></tr>
+        <tr><td>Exported PNG is missing the micrographs</td><td>A raster failed to embed during export.</td><td>Re-run the export once the poster has fully loaded.</td></tr>
+        <tr><td>Crosshair region looks wrong near a boundary</td><td>Pointer precision at high zoom.</td><td>Zoom in further; the readout and the painted field are generated from the same functions and cannot disagree.</td></tr>
         <tr><td>Uploaded file has no chart</td><td>Wrong delimiter, column mapping, or nonnumeric fields.</td><td>Check delimiter, headers, time column, temperature column, and units.</td></tr>
         <tr><td>Too many candidate arrests</td><td>Noise, low sensitivity threshold, or insufficient smoothing.</td><td>Increase smoothing or reduce arrest sensitivity, then confirm against raw data.</td></tr>
         <tr><td>Thermal record differs from simulated path</td><td>Sensor location, lag, section heat transfer, transfer delay, or simplified path.</td><td>Review measurement setup and update the cycle assumptions.</td></tr>

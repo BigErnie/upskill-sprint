@@ -4,10 +4,13 @@
   "version": "1.0.0",
   "description": "Static UpSkill Sprint site and Netlify functions",
   "scripts": {
-    "test": "node --test tests/material-checker-engine.test.js"
+    "test": "node --test tests/material-checker-engine.test.js tests/steel-phase-poster-geometry.test.js tests/steel-phase-rapid-geometry.test.js tests/steel-phase-release5-ui.test.js tests/steel-phase-guide-compliance.test.js"
   },
   "dependencies": {
     "@netlify/blobs": "10.7.9",
     "@netlify/identity": "1.2.0"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
   }
 }

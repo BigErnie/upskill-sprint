@@ -1,0 +1,152 @@
+.focused-clause-section {
+  max-width: 920px;
+  margin-inline: auto;
+}
+
+.clause-focus-picker {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(260px, 1.35fr) auto;
+  gap: 0.8rem 1rem;
+  align-items: center;
+  margin: 1.2rem 0 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-soft);
+}
+
+.clause-focus-picker label {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.clause-focus-picker select {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--card);
+  color: var(--ink);
+}
+
+#clause-focus-progress {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.clause-focus-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: 0 12px 30px var(--shadow);
+}
+
+.clause-focus-header {
+  padding: 1.25rem 1.4rem;
+  color: #fff;
+}
+
+.clause-focus-header h3 {
+  margin: 0.15rem 0 0.2rem;
+  color: #fff;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: clamp(1.55rem, 4vw, 2.15rem);
+}
+
+.clause-focus-header p {
+  margin: 0;
+  color: #fff;
+}
+
+.clause-focus-kicker {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+.clause-focus-body {
+  padding: clamp(1.1rem, 3vw, 1.55rem);
+}
+
+.clause-focus-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.clause-focus-block {
+  margin-bottom: 1rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-soft);
+}
+
+.clause-focus-block h4 {
+  margin: 0 0 0.45rem;
+  color: var(--ink);
+  font-family: "Work Sans", Arial, sans-serif;
+  font-size: 0.9rem;
+}
+
+.clause-focus-block p {
+  margin: 0;
+}
+
+.clause-focus-block ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.clause-focus-block li + li {
+  margin-top: 0.4rem;
+}
+
+.beginner-tip {
+  border-left: 4px solid var(--amber);
+}
+
+.practice-prompt {
+  border-left: 4px solid var(--teal);
+}
+
+#clause-focus-example {
+  min-height: 118px;
+  margin: 0.55rem 0 0;
+  white-space: pre-wrap;
+}
+
+.clause-focus-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.clause-focus-note {
+  margin: 0.9rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+@media (max-width: 760px) {
+  .clause-focus-picker,
+  .clause-focus-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #clause-focus-progress {
+    justify-self: start;
+  }
+
+  .clause-focus-actions .button {
+    width: 100%;
+    justify-content: center;
+  }
+}

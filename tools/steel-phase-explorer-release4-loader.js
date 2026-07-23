@@ -1,5 +1,6 @@
 (function(){
 'use strict';
+function loadRelease5(){if(document.querySelector('script[src="/tools/steel-phase-explorer-release5-loader.js"]'))return;var s=document.createElement('script');s.src='/tools/steel-phase-explorer-release5-loader.js';s.async=false;document.body.appendChild(s)}
 var attempts=0;
 function start(){
   var tool=document.getElementById('spx-tool'),tabs=tool&&tool.querySelector('.spx-tabs'),nav=document.getElementById('spx-tab-navigator');
@@ -89,6 +90,7 @@ function start(){
 </section>`;
   var learn=document.getElementById('spx-tab-learn');learn.parentNode.insertBefore(shell.firstElementChild,learn);
   var js=document.createElement('script');js.src='/tools/steel-phase-explorer-release4.js';js.async=false;document.body.appendChild(js);
+  loadRelease5();
 }
 start();
 })();

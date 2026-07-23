@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Static UpSkill Sprint site and Netlify functions",
   "scripts": {
-    "test": "node --test tests/material-checker-engine.test.js tests/oee-lesson.test.js"
+    "test": "node --test tests/*.test.js"
   },
   "dependencies": {
     "@netlify/blobs": "10.7.9",

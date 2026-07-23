@@ -150,6 +150,7 @@ function drawFull(){
   var ref=$('spx-r5-reference'),hot=$('spx-r5-hotspots');clear(ref);clear(hot);
   add(ref,'rect',{x:0,y:0,width:1000,height:1515,fill:'#eceae4'});
   var image=add(ref,'image',{href:BUEHLER_IMAGE,x:0,y:0,width:1000,height:1515,preserveAspectRatio:'xMidYMid meet',class:'spx-r5-reference-photo',crossorigin:'anonymous'});image.setAttribute('crossorigin','anonymous');
+  image.addEventListener('error',function(){clear(ref);add(ref,'rect',{x:0,y:0,width:1000,height:1515,fill:'#eceae4'});add(ref,'text',{x:500,y:690,'text-anchor':'middle',class:'spx-r5-emphasis-label'},'Official poster image could not be loaded');add(ref,'text',{x:500,y:735,'text-anchor':'middle',class:'spx-r5-rapid-small'},'Use the official PDF link below or allow the Buehler image domain.');$('spx-r5-status').innerHTML='The official poster image was blocked by the browser, network, or source server. Use <a href="'+BUEHLER_PDF+'" target="_blank" rel="noopener">the official high-resolution PDF</a>.'});
   var spots=[
     ['posterAustenite',130,292,245,210],['posterFerrite',126,630,310,475],['posterCementite',666,688,218,326],
     ['posterEquilibrium',126,675,314,170],['posterCastIron',460,830,230,278],['posterHeatColor',455,215,215,610]

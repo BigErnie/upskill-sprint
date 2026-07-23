@@ -184,14 +184,62 @@ test('the quiz has answerable questions with both feedback strings', () => {
 });
 
 test('an unanswered question shows a visible prompt', () => {
-  /* lessons-theme.css hides .quiz-feedback unless correct/incorrect is set,
-     so the prompt needs its own visibility class or it renders invisible. */
+  /* The lesson chrome scopes .lesson-wrapper .quiz-feedback to display:block
+     and hides via [hidden], overriding the theme default of display:none. */
   const win = lessonWindow();
   const d = win.document;
   d.getElementById('quiz-submit').dispatchEvent(new win.MouseEvent('click', { bubbles: true }));
   const fb = d.querySelector('.quiz-q .quiz-feedback');
   assert.match(fb.textContent, /Choose an answer/);
-  assert.ok(fb.classList.contains('notice'), 'carries a class that makes it visible');
+  assert.equal(fb.hidden, false, 'not hidden, so the chrome rule renders it');
+});
+
+/* ---------- page template ----------
+ * lessons-theme.css carries no layout at all. The page template lives in each
+ * lesson's inline style block, so a lesson that omits it renders full-width
+ * and unstyled. These guard against shipping that again.
+ */
+
+test('the content container is width-constrained', () => {
+  assert.match(html, /main#lesson-content\s*\{[^}]*width:\s*min\(1080px/,
+    'without this the page runs the full viewport width');
+});
+
+test('the lesson chrome selectors are all defined', () => {
+  ['article.lesson-wrapper', '.lesson-wrapper > section', '.lesson-hero', '.lesson-lede',
+   '.lesson-eyebrow', '.lesson-meta-row', '.pill', 'nav.lesson-toc', '.section-intro',
+   '.table-scroll', '.practice-card', '.practice-step', '.why-it-matters', '.skip-link',
+   '.objectives-list', '.summary-list', '.references-list', '.numbered-process',
+   '.panel', '.stat-grid', '.stat-tile', '.button', '.lesson-footer']
+    .forEach(sel => {
+      const escaped = sel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      assert.match(html, new RegExp(escaped + '\\s*[,{]'), `chrome selector missing: ${sel}`);
+    });
+});
+
+test('the responsive breakpoints are present', () => {
+  ['860px', '700px', '430px'].forEach(bp => {
+    assert.ok(html.includes(`@media (max-width: ${bp})`), `missing breakpoint: ${bp}`);
+  });
+  assert.ok(html.includes('@media print'), 'print styles');
+  assert.ok(html.includes('prefers-reduced-motion'), 'reduced motion');
+});
+
+test('the lesson uses house components rather than bespoke markup', () => {
+  assert.match(html, /<ul class="objectives-list">/);
+  assert.match(html, /<ul class="summary-list">/);
+  assert.match(html, /<ol class="references-list">/);
+  assert.match(html, /<ol class="numbered-process">/);
+  assert.match(html, /class="stat-tile/);
+  assert.match(html, /class="button primary"/);
+  assert.match(html, /<footer class="lesson-footer">/);
+});
+
+test('the footer links back to the right category', () => {
+  const win = lessonWindow();
+  const back = win.document.querySelector('.back-category-link');
+  assert.ok(back, 'back link present');
+  assert.equal(back.getAttribute('href'), '/lessons#lean-six-sigma');
 });
 
 test('completing the quiz dispatches upskill-quiz-result', () => {

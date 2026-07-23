@@ -52,6 +52,7 @@
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/lessons-theme.css">
   <style>
+
     :root {
       --paper: #ffffff;
       --surface: #ffffff;
@@ -70,125 +71,789 @@
       --warning: #a96300;
       --danger: #b42318;
       --info: #2f6fb0;
+      --shade-1: #ccebf0;
+      --shade-2: #e4f4f6;
+      --shade-3: #f1f9fa;
+      --on-dark: #ffffff;
+      --on-dark-soft: #e8f3f6;
+      --glass: rgba(255, 255, 255, 0.12);
+      --glass-line: rgba(255, 255, 255, 0.28);
       --shadow: rgba(15, 42, 67, 0.09);
+      --chart-grid: #d9e0e8;
+      --chart-bar: #0e7490;
+      --chart-bar-focus: #c46f00;
+      --chart-line: #237a4b;
+      --chart-point: #ffffff;
+      --chart-threshold: #b42318;
+      --focus-ring: #c46f00;
+    }
+
+    html[data-theme="dark"] {
+      --paper: #0b1220;
+      --surface: #111c2d;
+      --surface-soft: #0f1a2b;
+      --card: #111c2d;
+      --tint: #0f1a2b;
+      --ink: #f4f7fb;
+      --ink-soft: #d2dbea;
+      --muted: #a9b6c8;
+      --line: #2b3b50;
+      --navy: #102a43;
+      --teal: #2bb7c9;
+      --teal-dark: #67d4df;
+      --amber: #f0b95a;
+      --success: #58c48a;
+      --warning: #e9a94a;
+      --danger: #e57368;
+      --info: #6ea3d8;
+      --shade-1: #173946;
+      --shade-2: #142f3a;
+      --shade-3: #102731;
+      --on-dark: #ffffff;
+      --on-dark-soft: #e8f3f6;
+      --glass: rgba(255, 255, 255, 0.11);
+      --glass-line: rgba(255, 255, 255, 0.24);
+      --shadow: rgba(0, 0, 0, 0.24);
+      --chart-grid: #32445a;
+      --chart-bar: #2bb7c9;
+      --chart-bar-focus: #f0b95a;
+      --chart-line: #58c48a;
+      --chart-point: #0b1220;
+      --chart-threshold: #e57368;
+      --focus-ring: #f0b95a;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.68;
+    }
+    h1, h2, h3, h4 {
+      color: var(--ink);
+      font-family: "Source Serif 4", Georgia, serif;
+      font-weight: 600;
+      line-height: 1.22;
+    }
+    h1 { margin: 0.35rem 0 0.7rem; font-size: clamp(2rem, 5vw, 3.25rem); }
+    h2 { margin: 0 0 1rem; font-size: clamp(1.5rem, 3vw, 2rem); }
+    h3 { margin: 0 0 0.65rem; font-size: 1.2rem; }
+    p { margin: 0.72rem 0; }
+    a { color: var(--teal-dark); }
+    strong { color: var(--ink); }
+    button, input, select { font: inherit; }
+    button, select, input[type="range"], input[type="checkbox"], input[type="radio"] { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 3px;
+    }
+    code {
+      padding: 0.08rem 0.34rem;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      z-index: 100;
+      padding: 0.7rem 1rem;
+      border-radius: 0 0 8px 0;
+      background: var(--navy);
+      color: var(--on-dark);
+    }
+    .skip-link:focus { left: 0; }
+
+    .lesson-sitebar .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+    .lesson-sitebar .header-cta { padding: 0.6rem 0.9rem; font-size: 0.78rem; }
+    .lesson-sitebar .mobile-menu-btn { color: var(--ink); }
+
+    main#lesson-content {
+      width: min(1080px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1rem 0 4rem;
+    }
+    article.lesson-wrapper { display: block; }
+    .lesson-wrapper > section { margin: 3.2rem 0; scroll-margin-top: 92px; }
+
+    .lesson-hero {
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+      padding: clamp(1.6rem, 4vw, 3.3rem);
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--navy), var(--teal));
+      color: var(--on-dark);
+      box-shadow: 0 18px 44px var(--shadow);
+    }
+    .lesson-hero::after {
+      content: "";
+      position: absolute;
+      right: -5rem;
+      bottom: -7rem;
+      width: 19rem;
+      height: 19rem;
+      border: 2rem solid var(--glass);
+      border-radius: 50%;
+    }
+    .lesson-hero > * { position: relative; z-index: 1; }
+    .lesson-hero h1, .lesson-hero strong { color: var(--on-dark); }
+    .lesson-eyebrow {
+      margin: 0;
+      color: var(--on-dark-soft);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .lesson-meta-row { display: flex; flex-wrap: wrap; gap: 0.55rem; margin: 0.8rem 0 1rem; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.28rem 0.75rem;
+      border: 1px solid var(--glass-line);
+      border-radius: 999px;
+      background: var(--glass);
+      color: var(--on-dark);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .pill.accent { background: var(--on-dark); color: var(--navy); }
+    .lesson-lede { max-width: 68ch; margin: 0; color: var(--on-dark-soft); font-size: clamp(1.04rem, 2vw, 1.2rem); }
+    .why-it-matters {
+      max-width: 78ch;
+      margin-top: 1.2rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--glass-line);
+      border-left: 4px solid var(--amber);
+      border-radius: 0 10px 10px 0;
+      background: var(--glass);
+      color: var(--on-dark);
+    }
+
+    nav.lesson-toc {
+      margin: 1.6rem 0;
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+    nav.lesson-toc h2 {
+      margin: 0 0 0.55rem;
+      color: var(--muted);
+      font-family: "Work Sans", Arial, sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    nav.lesson-toc ol {
+      margin: 0;
+      padding-left: 1.25rem;
+      columns: 2;
+      column-gap: 2rem;
+    }
+    nav.lesson-toc li { break-inside: avoid; margin: 0.28rem 0; }
+    nav.lesson-toc a { text-decoration: none; }
+    nav.lesson-toc a:hover { text-decoration: underline; }
+
+    .section-intro { max-width: 76ch; color: var(--muted); }
+    .panel {
+      padding: 1.2rem 1.3rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+    .grid-2, .grid-3, .stat-grid, .software-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    }
+    .concept-card {
+      min-height: 100%;
+      padding: 1.15rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+    .concept-number {
+      display: inline-grid;
+      width: 2.25rem;
+      height: 2.25rem;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--shade-1);
+      color: var(--teal-dark);
+      font-weight: 800;
+    }
+    .concept-card p { margin-bottom: 0; color: var(--muted); }
+
+    .lesson-wrapper .callout {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--info);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+    }
+    .lesson-wrapper .callout.tip { border-left-color: var(--success); }
+    .lesson-wrapper .callout.warn { border-left-color: var(--warning); }
+    .lesson-wrapper .callout.danger { border-left-color: var(--danger); }
+
+    .objectives-list { margin: 0; padding-left: 1.25rem; }
+    .objectives-list li { margin: 0.45rem 0; }
+    .objectives-list li::marker { color: var(--teal); font-weight: 800; }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      width: 100%;
+      min-width: 660px;
+      border-collapse: collapse;
+      background: var(--surface);
+    }
+    caption { padding: 0 0 0.55rem; color: var(--muted); text-align: left; font-size: 0.88rem; }
+    th, td {
+      padding: 0.68rem 0.75rem;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--navy); color: var(--on-dark); }
+    tbody tr:nth-child(even) { background: var(--surface-soft); }
+
+    .formula-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.65rem;
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--teal);
+      border-radius: 12px;
+      background: var(--surface);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.05rem;
+    }
+    .formula-strip .equals { color: var(--muted); font-family: "Work Sans", Arial, sans-serif; }
+    .fraction {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.1;
+    }
+    .fraction span:first-child { padding: 0 0.3rem 0.12rem; border-bottom: 1px solid var(--ink); }
+    .fraction span:last-child { padding: 0.12rem 0.3rem 0; }
+
+    .concept-figure {
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+    .concept-figure svg { display: block; }
+    .svg-axis { stroke: var(--line); stroke-width: 2; }
+    .svg-bar-main { fill: var(--chart-bar-focus); }
+    .svg-bar-secondary { fill: var(--chart-bar); }
+    .svg-cumulative { fill: none; stroke: var(--chart-line); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+    .svg-dot { fill: var(--chart-point); stroke: var(--chart-line); stroke-width: 4; }
+    .svg-guide { stroke: var(--chart-threshold); stroke-width: 3; stroke-dasharray: 10 8; }
+    .svg-text { fill: var(--ink); font-family: "Work Sans", Arial, sans-serif; font-size: 24px; }
+    .svg-small { fill: var(--muted); font-family: "Work Sans", Arial, sans-serif; font-size: 18px; }
+
+    .interactive-shell {
+      padding: clamp(1rem, 3vw, 1.5rem);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface-soft);
+    }
+    .interactive-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      gap: 0.9rem;
+      align-items: end;
+      margin-bottom: 1rem;
+    }
+    .control-group { display: grid; gap: 0.4rem; }
+    .control-group > span, .control-group > label:first-child {
+      color: var(--ink-soft);
+      font-size: 0.79rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .control-group select,
+    .editor-table input {
+      width: 100%;
+      min-height: 44px;
+      padding: 0.58rem 0.68rem;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+    .range-row { display: grid; grid-template-columns: 1fr auto; gap: 0.6rem; align-items: center; }
+    .range-row input { width: 100%; accent-color: var(--teal); }
+    .range-row output { min-width: 3.4rem; color: var(--teal-dark); font-weight: 800; text-align: right; }
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+    }
+    .segmented button {
+      min-height: 44px;
+      padding: 0.55rem 0.7rem;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .segmented button + button { border-left: 1px solid var(--line); }
+    .segmented button[aria-pressed="true"] { background: var(--teal); color: var(--on-dark); }
+    .toggle-row {
+      display: flex;
+      min-height: 44px;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.55rem 0.7rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .toggle-row input { width: 1.1rem; height: 1.1rem; accent-color: var(--teal); }
+
+    .chart-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(250px, 0.9fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .chart-card, .insight-card {
+      min-width: 0;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+    .chart-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.35rem;
+    }
+    .chart-header p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .button {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.58rem 0.85rem;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 750;
+    }
+    .button.primary { border-color: var(--teal); background: var(--teal); color: var(--on-dark); }
+    .button.danger { color: var(--danger); }
+    .button:hover { transform: translateY(-1px); }
+    #pareto-chart { display: block; overflow: visible; }
+    .chart-grid-line { stroke: var(--chart-grid); stroke-width: 1; }
+    .chart-axis-line { stroke: var(--ink-soft); stroke-width: 1.5; }
+    .chart-bar { fill: var(--chart-bar); opacity: 0.92; }
+    .chart-bar.vital { fill: var(--chart-bar-focus); }
+    .chart-cumulative { fill: none; stroke: var(--chart-line); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    .chart-point { fill: var(--chart-point); stroke: var(--chart-line); stroke-width: 3; }
+    .chart-threshold { stroke: var(--chart-threshold); stroke-width: 2; stroke-dasharray: 8 7; }
+    .chart-text { fill: var(--ink); font-family: "Work Sans", Arial, sans-serif; font-size: 14px; }
+    .chart-text.small { fill: var(--muted); font-size: 12px; }
+    .chart-text.threshold { fill: var(--chart-threshold); font-weight: 800; }
+    .chart-value { fill: var(--ink); font-family: "Work Sans", Arial, sans-serif; font-size: 12px; font-weight: 800; }
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.1rem;
+      margin-top: 0.35rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    .legend-item { display: inline-flex; align-items: center; gap: 0.38rem; }
+    .legend-swatch { width: 0.85rem; height: 0.85rem; border-radius: 3px; background: var(--chart-bar); }
+    .legend-swatch.vital { background: var(--chart-bar-focus); }
+    .legend-line { width: 1.5rem; border-top: 3px solid var(--chart-line); }
+    .legend-threshold { width: 1.5rem; border-top: 2px dashed var(--chart-threshold); }
+
+    .insight-card { border-top: 5px solid var(--amber); }
+    .insight-kicker {
+      margin: 0 0 0.3rem;
+      color: var(--amber);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 1rem 0; }
+    .stat-tile {
+      padding: 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-soft);
+    }
+    .stat-tile span { display: block; color: var(--muted); font-size: 0.75rem; }
+    .stat-tile strong { display: block; font-size: 1.25rem; }
+    .vital-list { margin: 0; padding-left: 1.2rem; }
+    .vital-list li { margin: 0.35rem 0; }
+    .insight-text { color: var(--muted); font-size: 0.92rem; }
+
+    .editor-panel { margin-top: 1rem; }
+    .editor-panel h3 { margin-bottom: 0.2rem; }
+    .editor-panel > p { margin-top: 0; color: var(--muted); font-size: 0.9rem; }
+    .editor-table { min-width: 720px; }
+    .editor-table td { vertical-align: middle; }
+    .editor-table .row-number { width: 2.5rem; color: var(--muted); text-align: center; }
+    .editor-table .remove-cell { width: 5.5rem; text-align: center; }
+    .editor-table .button { width: 100%; min-height: 40px; padding: 0.4rem 0.55rem; }
+    .editor-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 0.85rem; }
+    .source-order-note { min-height: 1.5rem; margin-top: 0.7rem; color: var(--muted); font-size: 0.84rem; }
+
+    .numbered-process {
+      counter-reset: process;
+      display: grid;
+      gap: 0.8rem;
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .numbered-process li {
+      counter-increment: process;
+      position: relative;
+      min-height: 3rem;
+      padding: 0.85rem 1rem 0.85rem 3.8rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .numbered-process li::before {
+      content: counter(process);
+      position: absolute;
+      left: 0.85rem;
+      top: 0.75rem;
+      display: grid;
+      width: 2.15rem;
+      height: 2.15rem;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--teal);
+      color: var(--on-dark);
+      font-weight: 800;
+    }
+
+    .mistake-card { border-top: 4px solid var(--warning); }
+    .mistake-card h3 { display: flex; align-items: center; gap: 0.45rem; }
+    .mistake-card p { color: var(--muted); }
+
+    .software-path {
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      font-weight: 750;
+    }
+    .software-note { color: var(--muted); font-size: 0.9rem; }
+
+    .practice-card {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+      gap: 0.9rem;
+    }
+    .practice-step {
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .practice-step span {
+      display: inline-grid;
+      width: 2rem;
+      height: 2rem;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--shade-1);
+      color: var(--teal-dark);
+      font-weight: 800;
+    }
+
+    .quiz-shell {
+      padding: clamp(1rem, 3vw, 1.5rem);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-soft);
+    }
+    .quiz-q {
+      margin: 0 0 1rem;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .quiz-q legend { padding: 0 0.25rem; color: var(--ink); font-weight: 800; }
+    .quiz-options { display: grid; gap: 0.55rem; margin-top: 0.8rem; }
+    .lesson-wrapper .quiz-option {
+      display: flex;
+      min-height: 44px;
+      align-items: flex-start;
+      gap: 0.65rem;
+      padding: 0.72rem 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+    .lesson-wrapper .quiz-option:hover { border-color: var(--teal); }
+    .lesson-wrapper .quiz-option input { margin-top: 0.27rem; accent-color: var(--teal); }
+    .lesson-wrapper .quiz-feedback {
+      display: block;
+      margin-top: 0.7rem;
+      padding: 0.7rem 0.8rem;
+      border-radius: 8px;
+      background: var(--surface-soft);
+      color: var(--ink);
+    }
+    .lesson-wrapper .quiz-feedback[hidden] { display: none; }
+    .quiz-feedback.correct { border-left: 4px solid var(--success); }
+    .quiz-feedback.incorrect { border-left: 4px solid var(--danger); }
+    .quiz-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+    #quiz-score { margin: 0; color: var(--ink); font-weight: 800; }
+
+    .summary-list {
+  max-width: 76ch;
+  margin: 0;
+  padding-left: 1.35rem;
+}
+.summary-list li {
+  margin: 0.72rem 0;
+  padding-left: 0.3rem;
+  color: var(--ink);
+}
+.summary-list li::marker {
+  color: var(--teal);
+  font-size: 1.05em;
+}
+.summary-list strong { color: var(--teal-dark); }
+
+.references-list { padding-left: 1.2rem; }
+    .references-list li { margin: 0.6rem 0; }
+    .lesson-footer {
+  margin-top: 3.5rem;
+  padding: 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-soft);
+}
+.lesson-footer-nav {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+  gap: 1.25rem;
+  align-items: end;
+}
+.back-category-link {
+  justify-self: start;
+  font-weight: 800;
+  text-decoration: none;
+}
+.back-category-link:hover { text-decoration: underline; }
+.lesson-footer-next { text-align: right; }
+.lesson-footer-next p { margin: 0.4rem 0 0; }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 860px) {
+      .chart-layout { grid-template-columns: 1fr; }
+      .chart-header { flex-direction: column; }
+      .chart-header .button { width: 100%; }
+    }
+    @media (max-width: 700px) {
+      main#lesson-content { width: min(100% - 1rem, 1080px); }
+      nav.lesson-toc ol { columns: 1; }
+      .lesson-wrapper > section { margin: 2.6rem 0; }
+      .lesson-hero { border-radius: 14px; }
+      .interactive-shell { padding: 0.75rem; }
+      .chart-card, .insight-card { padding: 0.75rem; }
+      .editor-actions, .quiz-actions { display: grid; grid-template-columns: 1fr; }
+      .editor-actions .button, .quiz-actions .button { width: 100%; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .lesson-footer-nav { grid-template-columns: 1fr; align-items: start; }
+      .lesson-footer-next { text-align: left; }
+    }
+    @media (max-width: 430px) {
+      .lesson-sitebar .header-cta { display: none; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .segmented { grid-template-columns: 1fr; }
+      .segmented button + button { border-top: 1px solid var(--line); border-left: 0; }
+    }
+    @media print {
+  :root {
+    --paper: #ffffff;
+    --surface: #ffffff;
+    --surface-soft: #f5f7fa;
+    --ink: #101828;
+    --ink-soft: #344054;
+    --muted: #667085;
+    --line: #cfd6df;
+    --shadow: transparent;
+  }
+  html, body { background: var(--paper) !important; color: var(--ink) !important; }
+  body { font-size: 10.5pt; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .site, .mobile-nav, .skip-link, nav.lesson-toc, .interactive-controls,
+  .editor-panel, .quiz-actions, .lesson-footer { display: none !important; }
+  main#lesson-content { width: 100%; margin: 0; padding: 0; }
+  .lesson-hero { margin: 0 0 1.2rem; box-shadow: none; break-after: avoid-page; }
+  .lesson-wrapper > section { margin: 1.5rem 0; }
+  .panel, .concept-card, .concept-figure, .interactive-shell, .chart-card,
+  .insight-card, .quiz-shell, .quiz-q, .summary-list li, .practice-step {
+    box-shadow: none !important;
+    break-inside: avoid-page;
+  }
+  .table-scroll { overflow: visible; }
+  table { min-width: 0; font-size: 9pt; }
+  a { color: var(--ink); text-decoration: underline; }
+  #pareto-chart { max-height: 6.8in; }
+}
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  
+
+    /* ---------- OEE lesson components ---------- */
+
+    :root {
       --oee-a: #2f6fb0;
       --oee-p: #c46f00;
       --oee-q: #7a4bb8;
       --oee-good: #237a4b;
     }
 
-    .section-intro { max-width: 78ch; color: var(--ink-soft); }
-
-    .table-scroll { overflow-x: auto; margin: 16px 0; -webkit-overflow-scrolling: touch; }
-    .table-scroll table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 14.5px; }
-    .table-scroll caption { padding-bottom: 8px; color: var(--muted); font-size: 13px; text-align: left; }
-    .table-scroll th, .table-scroll td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-    .table-scroll thead th { background: var(--navy); color: #fff; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
-    .table-scroll tbody tr:nth-child(even) { background: var(--tint); }
-
-    .tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
+    .tag { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
     .tag.a { background: #e7f0f9; color: var(--oee-a); }
     .tag.p { background: #fdf3e5; color: var(--oee-p); }
     .tag.q { background: #f2ecfa; color: var(--oee-q); }
 
-    .lab {
-      margin: 22px 0; padding: 20px;
-      border: 1px solid var(--line); border-radius: 14px;
-      background: var(--card); box-shadow: 0 1px 3px var(--shadow);
-    }
-    .lab > h3 { margin: 0 0 4px; font-size: 18px; }
-    .lab .lab-sub { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
+    .stat-tile.fa { border-top: 3px solid var(--oee-a); }
+    .stat-tile.fa strong { color: var(--oee-a); }
+    .stat-tile.fp { border-top: 3px solid var(--oee-p); }
+    .stat-tile.fp strong { color: var(--oee-p); }
+    .stat-tile.fq { border-top: 3px solid var(--oee-q); }
+    .stat-tile.fq strong { color: var(--oee-q); }
+    .stat-tile.ft { border-top: 3px solid var(--oee-good); }
+    .stat-tile.ft strong { color: var(--oee-good); }
+    .stat-tile strong { font-variant-numeric: tabular-nums; }
 
-    .lab-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 12px; margin-bottom: 18px; }
-    .lab-inputs label { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); }
-    .lab-inputs small { color: var(--muted); font-weight: 400; }
-    .lab-inputs input[type="number"] { min-height: 44px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--ink); font: inherit; }
-    .lab-inputs input:focus-visible, .lab button:focus-visible, .lab input[type="range"]:focus-visible { outline: 3px solid rgba(14,116,144,.25); outline-offset: 2px; }
+    .field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+    .field-grid label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); }
+    .field-grid small { color: var(--muted); font-weight: 400; }
+    .field-grid input[type="number"] { min-height: 44px; padding: 0.55rem 0.7rem; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); color: var(--ink); font: inherit; }
 
-    .factor-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(122px, 1fr)); gap: 10px; margin-bottom: 16px; }
-    .factor { padding: 13px 11px; border: 1px solid var(--line); border-radius: 11px; background: var(--tint); text-align: center; }
-    .factor span { display: block; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-    .factor strong { display: block; margin-top: 6px; font-size: 26px; line-height: 1.1; font-variant-numeric: tabular-nums; }
-    .factor.fa { border-top: 4px solid var(--oee-a); } .factor.fa strong { color: var(--oee-a); }
-    .factor.fp { border-top: 4px solid var(--oee-p); } .factor.fp strong { color: var(--oee-p); }
-    .factor.fq { border-top: 4px solid var(--oee-q); } .factor.fq strong { color: var(--oee-q); }
-    .factor.ft { border-top: 4px solid var(--oee-good); background: #eefaf3; } .factor.ft strong { color: var(--oee-good); }
+    .fig-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .fig-scroll svg { display: block; width: 100%; min-width: 430px; height: auto; }
+    .oee-figure { margin: 1rem 0 0; }
+    .oee-figure figcaption { margin-top: 0.6rem; color: var(--muted); font-size: 0.82rem; }
 
-    .lab figure { margin: 16px 0 0; }
-    .lab .fig-scroll { overflow-x: auto; }
-    .lab svg { display: block; width: 100%; min-width: 440px; height: auto; }
-    .lab figcaption { margin-top: 10px; color: var(--muted); font-size: 13px; }
+    .verdict { margin: 1rem 0 0; padding: 0.75rem 0.9rem; border-radius: 10px; background: var(--tint); border-left: 4px solid var(--teal); font-size: 0.88rem; color: var(--ink-soft); }
+    .verdict.bad { border-left-color: var(--danger); background: var(--danger-bg, #fdf2f1); }
 
-    .verdict { margin-top: 16px; padding: 12px 14px; border-radius: 10px; background: var(--tint); border-left: 4px solid var(--teal); font-size: 14px; color: var(--ink-soft); }
-    .verdict.bad { border-left-color: var(--danger); background: #fdf2f1; }
-
-    .slider-row { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 16px; }
-    .slider-row label { font-size: 13px; font-weight: 700; color: var(--ink-soft); }
+    .slider-row { display: grid; gap: 0.5rem; margin-bottom: 1rem; }
+    .slider-row label { font-size: 0.85rem; font-weight: 700; color: var(--ink-soft); }
     .slider-row input[type="range"] { width: 100%; height: 34px; accent-color: var(--teal); }
-    .slider-scale { display: flex; justify-content: space-between; color: var(--muted); font-size: 11.5px; }
+    .slider-scale { display: flex; justify-content: space-between; gap: 0.5rem; color: var(--muted); font-size: 0.72rem; }
 
-    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-    .chip { min-height: 42px; padding: 9px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--ink); font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer; }
-    .chip[aria-pressed="true"] { border-color: var(--teal); background: var(--teal); color: #fff; }
-
-    .loss-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 9px; margin-bottom: 16px; }
-    .loss-btn { display: flex; flex-direction: column; gap: 4px; min-height: 64px; padding: 11px 13px; text-align: left; border: 1px solid var(--line); border-radius: 11px; background: var(--paper); color: var(--ink); font: inherit; cursor: pointer; }
-    .loss-btn b { font-size: 13.5px; }
-    .loss-btn i { font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+    .loss-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 0.55rem; margin-bottom: 1rem; }
+    .loss-btn { display: flex; flex-direction: column; gap: 0.25rem; min-height: 64px; padding: 0.7rem 0.8rem; text-align: left; border: 1px solid var(--line); border-radius: 11px; background: var(--paper); color: var(--ink); font: inherit; cursor: pointer; }
+    .loss-btn b { font-size: 0.85rem; }
+    .loss-btn i { font-style: normal; font-size: 0.68rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
     .loss-btn[data-bucket="availability"] i { color: var(--oee-a); }
     .loss-btn[data-bucket="performance"] i { color: var(--oee-p); }
     .loss-btn[data-bucket="quality"] i { color: var(--oee-q); }
-    .loss-btn[aria-pressed="true"] { border-color: var(--teal); box-shadow: inset 0 0 0 2px rgba(14,116,144,.2); }
-    .loss-detail { padding: 16px; border: 1px solid var(--line); border-radius: 11px; background: var(--tint); }
-    .loss-detail h4 { margin: 0 0 8px; font-size: 16px; }
-    .loss-detail dl { display: grid; grid-template-columns: minmax(128px, auto) 1fr; gap: 7px 16px; margin: 0; font-size: 14px; }
+    .loss-btn[aria-pressed="true"] { border-color: var(--teal); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--teal) 22%, transparent); }
+    .loss-detail { padding: 1rem; border: 1px solid var(--line); border-radius: 11px; background: var(--tint); }
+    .loss-detail h4 { margin: 0 0 0.55rem; font-size: 1rem; }
+    .loss-detail dl { display: grid; grid-template-columns: minmax(126px, auto) 1fr; gap: 0.4rem 1rem; margin: 0; font-size: 0.87rem; }
     .loss-detail dt { font-weight: 700; color: var(--ink-soft); }
     .loss-detail dd { margin: 0; color: var(--ink-soft); }
 
-    .drill-scenario { margin: 0 0 14px; padding: 15px; border: 1px solid var(--line); border-radius: 11px; background: var(--tint); font-size: 15px; }
-    .drill-answers { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-    .drill-answers button { flex: 1 1 132px; min-height: 48px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink); font: inherit; font-weight: 700; cursor: pointer; }
-    .drill-answers button:hover:not(:disabled) { border-color: var(--teal); }
-    .drill-answers button:disabled { opacity: .5; cursor: default; }
-    .drill-feedback { padding: 13px 15px; border-radius: 10px; font-size: 14px; }
-    .drill-feedback.right { background: #eefaf3; border-left: 4px solid var(--success); }
-    .drill-feedback.wrong { background: #fdf2f1; border-left: 4px solid var(--danger); }
-    .drill-bar { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+    .drill-scenario { margin: 0 0 0.9rem; padding: 0.9rem; border: 1px solid var(--line); border-radius: 11px; background: var(--tint); font-size: 0.95rem; }
+    .drill-answers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; margin-bottom: 0.9rem; }
+    .drill-answers .button { width: 100%; }
+    .drill-feedback { padding: 0.8rem 0.95rem; border-radius: 10px; font-size: 0.88rem; }
+    .drill-feedback.right { background: var(--practice-bg, #eefaf3); border-left: 4px solid var(--success); }
+    .drill-feedback.wrong { background: var(--danger-bg, #fdf2f1); border-left: 4px solid var(--danger); }
+    .drill-bar { display: flex; align-items: center; gap: 0.75rem; margin-top: 0.8rem; }
     .drill-track { flex: 1; height: 9px; border-radius: 999px; background: var(--line); overflow: hidden; }
     .drill-track i { display: block; height: 100%; background: var(--teal); transition: width .25s; }
-    .drill-count { color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+    .drill-count { color: var(--muted); font-size: 0.78rem; white-space: nowrap; }
 
-    .trick-card { margin: 22px 0; padding: 20px 22px; border: 2px solid var(--teal); border-radius: 14px; background: linear-gradient(180deg, #f1f9fa, var(--paper)); }
-    .trick-card h3 { margin: 0 0 10px; color: var(--teal-dark); }
-    .trick-rule { margin: 12px 0; padding: 14px 16px; border: 1px dashed var(--teal); border-radius: 10px; background: var(--paper); font-size: 16px; font-weight: 600; line-height: 2; }
+    .trick-card { margin: 1.4rem 0; padding: 1.2rem 1.3rem; border: 2px solid var(--teal); border-radius: 14px; background: var(--surface); }
+    .trick-card h3 { margin: 0 0 0.6rem; color: var(--teal-dark, var(--teal)); }
+    .trick-rule { margin: 0.8rem 0; padding: 0.85rem 1rem; border: 1px dashed var(--teal); border-radius: 10px; background: var(--paper); font-size: 1rem; font-weight: 600; line-height: 2; }
 
-    .practice-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-top: 16px; }
-    .practice-step { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--tint); }
-    .practice-step span { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--teal); color: #fff; font-weight: 800; }
-    .practice-step h3 { margin: 10px 0 6px; font-size: 15px; }
-    .practice-step p { margin: 0; color: var(--ink-soft); font-size: 13.5px; }
+    html[data-theme="dark"] .loss-btn,
+    html[data-theme="dark"] .field-grid input[type="number"],
+    html[data-theme="dark"] .trick-rule { background: var(--surface); }
+    html[data-theme="dark"] .tag.a { background: rgba(47,111,176,.18); }
+    html[data-theme="dark"] .tag.p { background: rgba(196,111,0,.18); }
+    html[data-theme="dark"] .tag.q { background: rgba(122,75,184,.18); }
 
-    /* lessons-theme.css hides .quiz-feedback unless .correct/.incorrect is set,
-       so an unanswered prompt would render invisible without this. */
-    .quiz-feedback.notice { display: block; background: var(--tint); color: var(--ink-soft); border: 1px solid var(--line); }
-    .quiz-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
-
-    html[data-theme="dark"] .lab,
-    html[data-theme="dark"] .trick-card { background: var(--surface, #131c26); }
-    html[data-theme="dark"] .factor.ft { background: rgba(35,122,75,.16); }
-    html[data-theme="dark"] .drill-feedback.right { background: rgba(35,122,75,.16); }
-    html[data-theme="dark"] .drill-feedback.wrong { background: rgba(180,35,24,.16); }
-    html[data-theme="dark"] .verdict.bad { background: rgba(180,35,24,.16); }
-    html[data-theme="dark"] .callout { background: var(--surface, #131c26); }
-
-    @media (max-width: 640px) {
-      .lab { padding: 15px; }
-      .factor strong { font-size: 21px; }
-      .loss-detail dl { grid-template-columns: 1fr; gap: 2px 0; }
-      .loss-detail dd { margin-bottom: 10px; }
-      .drill-answers button { flex: 1 1 100%; }
-      .trick-rule { font-size: 15px; }
+    @media (max-width: 700px) {
+      .loss-detail dl { grid-template-columns: 1fr; gap: 0.15rem 0; }
+      .loss-detail dd { margin-bottom: 0.6rem; }
+      .drill-answers { grid-template-columns: 1fr; }
+      .trick-rule { font-size: 0.92rem; line-height: 1.9; }
+      .fig-scroll svg { min-width: 400px; }
     }
+    @media (max-width: 430px) {
+      .field-grid { grid-template-columns: 1fr; }
+      .loss-grid { grid-template-columns: 1fr; }
+    }
+
   </style>
   <script src="/theme.js"></script>
   <script src="/site-sections.js"></script>
@@ -274,25 +939,22 @@
 
       <section id="learning-objectives">
         <h2>Learning objectives</h2>
-        <ul>
-          <li>Calculate availability, performance, quality and OEE from shift data.</li>
-          <li>Name all eight TPM losses and assign each to the correct OEE factor.</li>
-          <li>Explain why minor stoppages are a performance loss even though the machine has stopped.</li>
-          <li>Explain why setup and adjustment is an availability loss even though the machine appears to be running.</li>
-          <li>Apply a one-question test that resolves either case in seconds.</li>
-          <li>Use time accounting and the one-line formula to check any OEE calculation.</li>
-          <li>Recognise what OEE does <em>not</em> tell you, and when it will mislead you.</li>
-        </ul>
+        <div class="panel">
+          <ul class="objectives-list">
+            <li>Calculate availability, performance, quality and OEE from shift data.</li>
+            <li>Name all eight TPM losses and assign each to the correct OEE factor.</li>
+            <li>Explain why minor stoppages are a performance loss even though the machine has stopped.</li>
+            <li>Explain why setup and adjustment is an availability loss even though the machine appears to be running.</li>
+            <li>Apply a one-question test that resolves either case in seconds.</li>
+            <li>Use time accounting and the one-line formula to check any OEE calculation.</li>
+            <li>Recognise what OEE does <em>not</em> tell you, and when it will mislead you.</li>
+          </ul>
+        </div>
       </section>
 
       <section id="prerequisites">
         <h2>Before you start</h2>
-        <p class="section-intro">Nothing heavy&mdash;this lesson is arithmetic plus careful definitions. It helps if you are comfortable with:</p>
-        <ul>
-          <li>Percentages and multiplying them together.</li>
-          <li>The idea of a bottleneck or constraint operation.</li>
-          <li>Basic shift documentation: downtime logs, production counts, scrap records.</li>
-        </ul>
+        <p class="section-intro">Nothing heavy&mdash;this lesson is arithmetic plus careful definitions. It helps if you are comfortable with percentages, the idea of a bottleneck operation, and basic shift documentation: downtime logs, production counts and scrap records.</p>
         <div class="callout callout-info">
           <strong>Bring your own data if you can.</strong> Every interactive here starts with a realistic default, but each one accepts your numbers. A single real shift from your own line will teach you more than the worked example.
         </div>
@@ -302,16 +964,12 @@
         <h2>The three factors</h2>
         <p class="section-intro">OEE asks one question in three parts: <strong>of the time we planned to make good parts, how much actually produced good parts at full rate?</strong></p>
 
-        <div class="callout callout-formula">
-          OEE = Availability &times; Performance &times; Quality
-        </div>
+        <div class="callout callout-formula">OEE = Availability &times; Performance &times; Quality</div>
 
         <div class="table-scroll">
           <table>
             <caption>The three OEE factors and what each one is actually asking.</caption>
-            <thead>
-              <tr><th>Factor</th><th>Question it answers</th><th>Formula</th></tr>
-            </thead>
+            <thead><tr><th>Factor</th><th>Question it answers</th><th>Formula</th></tr></thead>
             <tbody>
               <tr><td><span class="tag a">Availability</span></td><td>Did the machine run when we wanted it to?</td><td>Run Time &divide; Planned Production Time</td></tr>
               <tr><td><span class="tag p">Performance</span></td><td>While running, did it run at full speed?</td><td>(Ideal Cycle Time &times; Total Count) &divide; Run Time</td></tr>
@@ -336,9 +994,7 @@
         <div class="table-scroll">
           <table>
             <caption>Core terms used when measuring and reporting OEE.</caption>
-            <thead>
-              <tr><th>Term</th><th>Meaning</th><th>Interpretation</th></tr>
-            </thead>
+            <thead><tr><th>Term</th><th>Meaning</th><th>Interpretation</th></tr></thead>
             <tbody>
               <tr><td>All Time</td><td>Every hour on the calendar.</td><td>The denominator for TEEP, not for OEE.</td></tr>
               <tr><td>Planned Production Time</td><td>All time minus periods you did not intend to produce.</td><td>The OEE denominator. Contested more than any other term.</td></tr>
@@ -358,27 +1014,25 @@
         <h2>Interactive: OEE calculator</h2>
         <p class="section-intro">Change any input and all three factors move. The bar underneath converts every loss into the same currency&mdash;minutes&mdash;which is the single most useful habit in OEE work. The verdict line runs three consistency checks on your numbers.</p>
 
-        <div class="lab">
+        <div class="panel">
           <h3>Shift data</h3>
-          <p class="lab-sub">Defaults describe one realistic packaging shift. Replace any value with your own.</p>
-
-          <div class="lab-inputs">
+          <div class="field-grid">
             <label for="c-shift">Shift length <small>(min)</small><input type="number" id="c-shift" value="480" min="1" step="1"></label>
-            <label for="c-planned">Planned stops <small>(breaks, handover)</small><input type="number" id="c-planned" value="30" min="0" step="1"></label>
+            <label for="c-planned">Planned stops <small>(breaks)</small><input type="number" id="c-planned" value="30" min="0" step="1"></label>
             <label for="c-down">Logged downtime <small>(min)</small><input type="number" id="c-down" value="80" min="0" step="1"></label>
             <label for="c-ict">Ideal cycle time <small>(min/part)</small><input type="number" id="c-ict" value="1" min="0.01" step="0.01"></label>
             <label for="c-total">Total parts made<input type="number" id="c-total" value="320" min="0" step="1"></label>
             <label for="c-reject">Rejects and rework<input type="number" id="c-reject" value="12" min="0" step="1"></label>
           </div>
 
-          <div class="factor-row">
-            <div class="factor fa"><span>Availability</span><strong id="c-a">&mdash;</strong></div>
-            <div class="factor fp"><span>Performance</span><strong id="c-p">&mdash;</strong></div>
-            <div class="factor fq"><span>Quality</span><strong id="c-q">&mdash;</strong></div>
-            <div class="factor ft"><span>OEE</span><strong id="c-oee">&mdash;</strong></div>
+          <div class="stat-grid">
+            <div class="stat-tile fa"><span>Availability</span><strong id="c-a">&mdash;</strong></div>
+            <div class="stat-tile fp"><span>Performance</span><strong id="c-p">&mdash;</strong></div>
+            <div class="stat-tile fq"><span>Quality</span><strong id="c-q">&mdash;</strong></div>
+            <div class="stat-tile ft"><span>OEE</span><strong id="c-oee">&mdash;</strong></div>
           </div>
 
-          <figure>
+          <figure class="oee-figure">
             <div class="fig-scroll">
               <svg id="c-waterfall" viewBox="0 0 760 200" role="img" aria-labelledby="c-wf-t c-wf-d">
                 <title id="c-wf-t">Where the planned production time went</title>
@@ -396,7 +1050,7 @@
         <h2>Interactive: the eight losses</h2>
         <p class="section-intro">Nakajima's TPM framework names eight equipment losses. Six are the familiar "six big losses"; the full eight split out tool changes and planned shutdown, which matters because those are where disputes start. Select any loss to see where it lands and why.</p>
 
-        <div class="lab">
+        <div class="panel">
           <div class="loss-grid" id="loss-grid" role="group" aria-label="The eight equipment losses"></div>
           <div class="loss-detail" id="loss-detail" aria-live="polite"></div>
         </div>
@@ -404,9 +1058,7 @@
         <div class="table-scroll">
           <table>
             <caption>The eight TPM losses mapped to the three OEE factors.</caption>
-            <thead>
-              <tr><th>#</th><th>Loss</th><th>Factor</th><th>Typical evidence in the data</th></tr>
-            </thead>
+            <thead><tr><th>#</th><th>Loss</th><th>Factor</th><th>Typical evidence in the data</th></tr></thead>
             <tbody>
               <tr><td>1</td><td>Breakdown / equipment failure</td><td><span class="tag a">Availability</span></td><td>A logged stop with a work order behind it</td></tr>
               <tr><td>2</td><td>Setup and adjustment</td><td><span class="tag a">Availability</span></td><td>Changeover start to first good part</td></tr>
@@ -429,12 +1081,12 @@
         <h2>Interactive: count versus minutes</h2>
         <p class="section-intro">The same shift, ranked two ways. Toggle between how <em>often</em> each loss happened and how many <em>minutes</em> it cost. Watch minor stops swap ends of the chart&mdash;this is precisely why you run the Minitab Pareto twice, and why a minutes-only report hides the most actionable problem on the line.</p>
 
-        <div class="lab">
-          <div class="chip-row" role="group" aria-label="Ranking measure">
-            <button type="button" class="chip" data-pareto="count" aria-pressed="true">Rank by number of events</button>
-            <button type="button" class="chip" data-pareto="minutes" aria-pressed="false">Rank by minutes lost</button>
+        <div class="panel">
+          <div class="segmented" role="group" aria-label="Ranking measure">
+            <button type="button" data-pareto="count" aria-pressed="true">By number of events</button>
+            <button type="button" data-pareto="minutes" aria-pressed="false">By minutes lost</button>
           </div>
-          <figure>
+          <figure class="oee-figure">
             <div class="fig-scroll">
               <svg id="p-chart" viewBox="0 0 760 320" role="img" aria-labelledby="p-t p-d">
                 <title id="p-t">Losses ranked by the selected measure</title>
@@ -475,7 +1127,7 @@
             Time <strong>LOST</strong> inside run time &rarr; <span class="tag p">Performance</span><br>
             Time spent, but the part is not sellable &rarr; <span class="tag q">Quality</span>
           </div>
-          <p style="margin:12px 0 0"><strong>Logged</strong> means somebody or some sensor recorded a start and an end&mdash;the event has a duration you could point at on a timeline. <strong>Lost</strong> means the time disappeared inside a period the system still counts as running, detectable only because fewer parts came out than should have.</p>
+          <p><strong>Logged</strong> means somebody or some sensor recorded a start and an end&mdash;the event has a duration you could point at on a timeline. <strong>Lost</strong> means the time disappeared inside a period the system still counts as running, detectable only because fewer parts came out than should have.</p>
         </div>
 
         <p>Run the two hard cases through it:</p>
@@ -493,21 +1145,21 @@
         <h2>Interactive: the logging threshold</h2>
         <p class="section-intro">This shift contained sixty minor stops lasting between 12 and 48 seconds, totalling 30 minutes. Drag the threshold to change the shortest stop your system records. Watch availability and performance trade places&mdash;and watch OEE refuse to move.</p>
 
-        <div class="lab">
+        <div class="panel">
           <div class="slider-row">
             <label for="t-threshold">Downtime logging threshold: <span id="t-value">2.0 minutes</span></label>
             <input type="range" id="t-threshold" min="0" max="5" step="0.1" value="2">
-            <div class="slider-scale"><span>0 (log everything)</span><span>2&ndash;5 min typical</span><span>5 min</span></div>
+            <div class="slider-scale"><span>0 &mdash; log everything</span><span>2&ndash;5 min typical</span><span>5 min</span></div>
           </div>
 
-          <div class="factor-row">
-            <div class="factor fa"><span>Availability</span><strong id="t-a">&mdash;</strong></div>
-            <div class="factor fp"><span>Performance</span><strong id="t-p">&mdash;</strong></div>
-            <div class="factor fq"><span>Quality</span><strong id="t-q">&mdash;</strong></div>
-            <div class="factor ft"><span>OEE</span><strong id="t-oee">&mdash;</strong></div>
+          <div class="stat-grid">
+            <div class="stat-tile fa"><span>Availability</span><strong id="t-a">&mdash;</strong></div>
+            <div class="stat-tile fp"><span>Performance</span><strong id="t-p">&mdash;</strong></div>
+            <div class="stat-tile fq"><span>Quality</span><strong id="t-q">&mdash;</strong></div>
+            <div class="stat-tile ft"><span>OEE</span><strong id="t-oee">&mdash;</strong></div>
           </div>
 
-          <figure>
+          <figure class="oee-figure">
             <div class="fig-scroll">
               <svg id="t-chart" viewBox="0 0 760 190" role="img" aria-labelledby="t-t t-d">
                 <title id="t-t">Stops logged versus stops invisible</title>
@@ -529,12 +1181,12 @@
         <h2>Interactive: classification drill</h2>
         <p class="section-intro">Ten shift-floor scenarios in random order. Decide the factor, then read the reasoning. Try to answer using the logged-or-lost test rather than recognition&mdash;the exam will not reuse these words.</p>
 
-        <div class="lab">
+        <div class="panel">
           <p class="drill-scenario" id="d-scenario"></p>
           <div class="drill-answers">
-            <button type="button" data-drill="availability">Availability</button>
-            <button type="button" data-drill="performance">Performance</button>
-            <button type="button" data-drill="quality">Quality</button>
+            <button type="button" class="button" data-drill="availability">Availability</button>
+            <button type="button" class="button" data-drill="performance">Performance</button>
+            <button type="button" class="button" data-drill="quality">Quality</button>
           </div>
           <div class="drill-feedback" id="d-feedback" hidden></div>
           <div class="drill-bar">
@@ -542,15 +1194,15 @@
             <span class="drill-count" id="d-count"></span>
           </div>
           <div class="quiz-actions">
-            <button type="button" class="btn" id="d-next">Next scenario</button>
-            <button type="button" class="btn" id="d-restart">Restart drill</button>
+            <button type="button" class="button primary" id="d-next">Next scenario</button>
+            <button type="button" class="button" id="d-restart">Restart drill</button>
           </div>
         </div>
       </section>
 
       <section id="procedure">
         <h2>How to calculate OEE for a shift</h2>
-        <ol class="step-list">
+        <ol class="numbered-process">
           <li><strong>Fix the boundary.</strong> Write down planned production time first. Subtract only periods you never intended to produce. Do this before looking at any loss data, so the denominator is not quietly negotiated later.</li>
           <li><strong>Establish ideal cycle time.</strong> Take the fastest rate the line has actually sustained for that product, evidenced from run data. Record where the number came from.</li>
           <li><strong>Pull the downtime log.</strong> Total the logged stops. This is your availability loss, in minutes.</li>
@@ -567,9 +1219,7 @@
 
         <h3>1. Put everything in minutes</h3>
         <p>Percentages are hard to reason about and easy to mis-multiply. Minutes are not. Convert every loss into lost minutes and the whole shift reconciles on one line:</p>
-        <div class="callout callout-formula">
-          Planned Production Time = Availability loss + Performance loss + Quality loss + Fully productive time
-        </div>
+        <div class="callout callout-formula">Planned Production Time = Availability loss + Performance loss + Quality loss + Fully productive time</div>
         <ul>
           <li>Availability loss = logged downtime</li>
           <li>Performance loss = Run Time &minus; (Total Count &times; Ideal Cycle Time)</li>
@@ -580,16 +1230,12 @@
 
         <h3>2. The one-line OEE</h3>
         <p>You never actually need the three factors to get OEE:</p>
-        <div class="callout callout-formula">
-          OEE = (Good Count &times; Ideal Cycle Time) &divide; Planned Production Time
-        </div>
+        <div class="callout callout-formula">OEE = (Good Count &times; Ideal Cycle Time) &divide; Planned Production Time</div>
         <p>This is the best check you have. Compute OEE both ways; if <em>A &times; P &times; Q</em> disagrees with the one-line version, something is double-counted. In an exam it takes fifteen seconds and catches arithmetic slips.</p>
 
         <h3>3. Attack your weakest factor first</h3>
         <p>Because the three multiply, the gain from improving one factor by a point is the product of the other two:</p>
-        <div class="callout callout-formula">
-          &part;OEE / &part;A = P &times; Q
-        </div>
+        <div class="callout callout-formula">&part;OEE / &part;A = P &times; Q</div>
         <p>The lowest factor always has the highest product of the other two, so it always returns the most OEE per point. That is a mathematical result, not a rule of thumb&mdash;and the next interactive lets you confirm it.</p>
 
         <h3>4. Respect the multiplication</h3>
@@ -610,15 +1256,15 @@
         <h2>Interactive: where to improve first</h2>
         <p class="section-intro">Set any three factors and the panel calculates what one percentage point of improvement is worth on each. The winner is always the weakest factor, and now you can see why rather than take it on trust.</p>
 
-        <div class="lab">
-          <div class="lab-inputs">
+        <div class="panel">
+          <div class="field-grid">
             <label for="i-a">Availability <small>(%)</small><input type="number" id="i-a" value="70" min="1" max="100" step="0.1"></label>
             <label for="i-p">Performance <small>(%)</small><input type="number" id="i-p" value="95" min="1" max="100" step="0.1"></label>
             <label for="i-q">Quality <small>(%)</small><input type="number" id="i-q" value="99" min="1" max="100" step="0.1"></label>
           </div>
-          <figure>
+          <figure class="oee-figure">
             <div class="fig-scroll">
-              <svg id="i-chart" viewBox="0 0 760 260" role="img" aria-labelledby="i-t i-d">
+              <svg id="i-chart" viewBox="0 0 760 240" role="img" aria-labelledby="i-t i-d">
                 <title id="i-t">OEE gained from one percentage point of improvement</title>
                 <desc id="i-d">Three bars comparing the OEE gained by adding one percentage point to availability, performance or quality.</desc>
               </svg>
@@ -653,23 +1299,21 @@
 
         <div class="callout callout-formula">
           Availability = 370 / 450 = 0.8222 = 82.22 %<br>
-          Performance&nbsp; = (1.0 &times; 320) / 370 = 0.8649 = 86.49 %<br>
-          Quality&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 308 / 320 = 0.9625 = 96.25 %<br>
-          OEE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 0.8222 &times; 0.8649 &times; 0.9625 = 0.6844 = <strong>68.44 %</strong>
+          Performance = (1.0 &times; 320) / 370 = 0.8649 = 86.49 %<br>
+          Quality = 308 / 320 = 0.9625 = 96.25 %<br>
+          OEE = 0.8222 &times; 0.8649 &times; 0.9625 = 0.6844 = <strong>68.44 %</strong>
         </div>
 
         <p><strong>Check with the one-line formula:</strong></p>
-        <div class="callout callout-formula">
-          OEE = (308 &times; 1.0) / 450 = 0.6844 = 68.44 % &nbsp;&check;
-        </div>
+        <div class="callout callout-formula">OEE = (308 &times; 1.0) / 450 = 0.6844 = 68.44 % &nbsp;&check;</div>
 
         <p><strong>Check with the time buckets:</strong></p>
         <div class="callout callout-formula">
-          Availability loss&nbsp; = 80 min<br>
-          Performance loss&nbsp;&nbsp; = 370 &minus; 320 = 50 min<br>
-          Quality loss&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 12 &times; 1.0 = 12 min<br>
-          Fully productive&nbsp;&nbsp; = 308 &times; 1.0 = 308 min<br>
-          Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 450 min &nbsp;&check;
+          Availability loss = 80 min<br>
+          Performance loss = 370 &minus; 320 = 50 min<br>
+          Quality loss = 12 &times; 1.0 = 12 min<br>
+          Fully productive = 308 &times; 1.0 = 308 min<br>
+          Total = 450 min &nbsp;&check;
         </div>
 
         <p>Note what the buckets reveal that the percentages hide. The largest single loss is not the breakdown everyone talks about&mdash;it is the 50 minutes of performance loss, which nobody logged and nobody raised at the morning meeting. It is invisible precisely because it never reached the downtime report.</p>
@@ -681,7 +1325,7 @@
 
       <section id="mistakes">
         <h2>Common mistakes</h2>
-        <ul>
+        <ul class="summary-list">
           <li><strong>Using nameplate speed as ideal cycle time.</strong> Performance is then permanently depressed and no improvement ever shows.</li>
           <li><strong>Counting rework as good.</strong> Quality means good <em>first pass</em>. A part needing a second operation is a quality loss even if it eventually ships.</li>
           <li><strong>Moving unplanned events into planned stops.</strong> Reclassifying a breakdown as "planned downtime" inflates OEE and hides the problem. Planned means you intended it before the shift started.</li>
@@ -708,10 +1352,10 @@
               <tr><td>COUNTIFS with operator</td><td><code>=COUNTIFS(dur,"&lt;"&amp;threshold)</code></td><td>Counts stops below the logging threshold</td><td>Quantifying how many small stops are invisible</td></tr>
               <tr><td>IFERROR</td><td><code>=IFERROR(value, "")</code></td><td>Suppresses divide-by-zero on unworked shifts</td><td>Any OEE column on a calendar-based sheet</td></tr>
               <tr><td>MIN</td><td><code>=MIN(value, 1)</code></td><td>Flags impossible results</td><td>Diagnostic only&mdash;never cap performance silently</td></tr>
-              <tr><td>AVERAGE / MEDIAN</td><td><code>=MEDIAN(range)</code></td><td>Central tendency of daily OEE</td><td>Median when one catastrophic shift skews the mean</td></tr>
+              <tr><td>MEDIAN</td><td><code>=MEDIAN(range)</code></td><td>Central tendency of daily OEE</td><td>Preferred when one catastrophic shift skews the mean</td></tr>
               <tr><td>STDEV.S</td><td><code>=STDEV.S(range)</code></td><td>Shift-to-shift variation in OEE</td><td>Stability matters as much as level</td></tr>
               <tr><td>PERCENTILE.INC</td><td><code>=PERCENTILE.INC(range, 0.05)</code></td><td>Demonstrated fastest sustained cycle</td><td>Evidence-based ideal cycle time from real runs</td></tr>
-              <tr><td>SORT / RANK</td><td><code>=SORT(range, col, -1)</code></td><td>Orders losses by magnitude</td><td>Building the Pareto of losses</td></tr>
+              <tr><td>SORT</td><td><code>=SORT(range, col, -1)</code></td><td>Orders losses by magnitude</td><td>Building the Pareto of losses</td></tr>
             </tbody>
           </table>
         </div>
@@ -745,7 +1389,7 @@
         </div>
 
         <h3>Exam tips</h3>
-        <ul>
+        <ul class="summary-list">
           <li><strong>Classification is the question.</strong> CSSBB and CQE items normally list shift events and ask for OEE. The arithmetic is trivial; the marks are in bucketing each event. Apply logged-or-lost to every line before calculating.</li>
           <li><strong>Watch for planned time traps.</strong> A stem mentioning "two 15-minute breaks and a 30-minute unplanned stoppage" is testing whether you subtract the breaks from planned production time and leave the stoppage as an availability loss.</li>
           <li><strong>Rework is a quality loss.</strong> If a stem says parts "required rework before shipping", they are not good count. One of the most common single-mark errors.</li>
@@ -764,7 +1408,6 @@
           <div class="practice-step"><span>2</span><h3>Classify</h3><p>Take every downtime reason code and assign it with logged-or-lost. Flag any you argue about.</p></div>
           <div class="practice-step"><span>3</span><h3>Reconcile</h3><p>Convert all four buckets to minutes and confirm they sum to planned production time.</p></div>
           <div class="practice-step"><span>4</span><h3>Find the threshold</h3><p>Ask what your shortest recorded stop is. Anything below it is invisible and sitting in performance.</p></div>
-          <div class="practice-step"><span>5</span><h3>Decide</h3><p>Name the one project your loss breakdown supports, and one reason the data might be misleading you.</p></div>
         </div>
       </section>
 
@@ -778,7 +1421,7 @@
               <label class="quiz-option"><input type="radio" name="q1" value="b"> Performance, because the time stayed inside run time and only the count fell short.</label>
               <label class="quiz-option"><input type="radio" name="q1" value="c"> Quality, because jams damage parts.</label>
             </div>
-            <div class="quiz-feedback" data-correct="Correct. Unlogged time cannot reduce run time, so it can only appear as a rate deficit." data-incorrect="Apply the logged-or-lost test. Nothing was recorded, so run time still counts those minutes and the shortfall lands in performance."></div>
+            <div class="quiz-feedback" hidden data-correct="Correct. Unlogged time cannot reduce run time, so it can only appear as a rate deficit." data-incorrect="Apply the logged-or-lost test. Nothing was recorded, so run time still counts those minutes and the shortfall lands in performance."></div>
           </fieldset>
 
           <fieldset class="quiz-q" data-q="2" data-answer="a">
@@ -788,7 +1431,7 @@
               <label class="quiz-option"><input type="radio" name="q2" value="b"> Performance, because the machine was running slowly the whole time.</label>
               <label class="quiz-option"><input type="radio" name="q2" value="c"> Quality, because the test pieces were scrapped.</label>
             </div>
-            <div class="quiz-feedback" data-correct="Correct. Movement is not the test. A bounded, recorded event comes out of run time." data-incorrect="The machine moving is not what decides this. Setup has a recorded start and end, so it is logged time and reduces availability."></div>
+            <div class="quiz-feedback" hidden data-correct="Correct. Movement is not the test. A bounded, recorded event comes out of run time." data-incorrect="The machine moving is not what decides this. Setup has a recorded start and end, so it is logged time and reduces availability."></div>
           </fieldset>
 
           <fieldset class="quiz-q" data-q="3" data-answer="c">
@@ -798,7 +1441,7 @@
               <label class="quiz-option"><input type="radio" name="q3" value="b"> 74.1 %</label>
               <label class="quiz-option"><input type="radio" name="q3" value="c"> 68.4 %</label>
             </div>
-            <div class="quiz-feedback" data-correct="Correct. The one-line formula gets there fastest: 308 x 1.0 / 450 = 68.4 %." data-incorrect="Use the one-line formula: Good Count x Ideal Cycle Time / Planned Production Time = 308 / 450 = 68.4 %."></div>
+            <div class="quiz-feedback" hidden data-correct="Correct. The one-line formula gets there fastest: 308 x 1.0 / 450 = 68.4 %." data-incorrect="Use the one-line formula: Good Count x Ideal Cycle Time / Planned Production Time = 308 / 450 = 68.4 %."></div>
           </fieldset>
 
           <fieldset class="quiz-q" data-q="4" data-answer="b">
@@ -808,7 +1451,7 @@
               <label class="quiz-option"><input type="radio" name="q4" value="b"> OEE is unchanged; availability falls and performance rises by an offsetting amount.</label>
               <label class="quiz-option"><input type="radio" name="q4" value="c"> OEE rises, because performance improves.</label>
             </div>
-            <div class="quiz-feedback" data-correct="Correct. Run time cancels in A x P, so reclassifying moves loss between the two and leaves OEE untouched. The diagnosis changes, not the total." data-incorrect="The lost minutes are identical either way. Because A x P = (ICT x Count) / PPT, run time is not in the answer at all."></div>
+            <div class="quiz-feedback" hidden data-correct="Correct. Run time cancels in A x P, so reclassifying moves loss between the two and leaves OEE untouched. The diagnosis changes, not the total." data-incorrect="The lost minutes are identical either way. Because A x P = (ICT x Count) / PPT, run time is not in the answer at all."></div>
           </fieldset>
 
           <fieldset class="quiz-q" data-q="5" data-answer="a">
@@ -818,7 +1461,7 @@
               <label class="quiz-option"><input type="radio" name="q5" value="b"> Quality, because it is closest to its ceiling.</label>
               <label class="quiz-option"><input type="radio" name="q5" value="c"> All three are worth exactly the same.</label>
             </div>
-            <div class="quiz-feedback" data-correct="Correct. The marginal gain equals the product of the other two factors, so the weakest factor always returns the most." data-incorrect="Because the factors multiply, a point added to one is worth the product of the other two. Here that favours availability, the lowest factor."></div>
+            <div class="quiz-feedback" hidden data-correct="Correct. The marginal gain equals the product of the other two factors, so the weakest factor always returns the most." data-incorrect="Because the factors multiply, a point added to one is worth the product of the other two. Here that favours availability, the lowest factor."></div>
           </fieldset>
 
           <fieldset class="quiz-q" data-q="6" data-answer="c">
@@ -828,7 +1471,7 @@
               <label class="quiz-option"><input type="radio" name="q6" value="b"> Cap it at 100 % and move on.</label>
               <label class="quiz-option"><input type="radio" name="q6" value="c"> Treat it as a data error and check ideal cycle time, part count and run time.</label>
             </div>
-            <div class="quiz-feedback" data-correct="Correct. Performance cannot exceed 1.0 by definition, so an input is wrong. Fix the input, not the output." data-incorrect="Performance above 100 % is impossible by definition. Capping it hides the fault; find the bad input instead."></div>
+            <div class="quiz-feedback" hidden data-correct="Correct. Performance cannot exceed 1.0 by definition, so an input is wrong. Fix the input, not the output." data-incorrect="Performance above 100 % is impossible by definition. Capping it hides the fault; find the bad input instead."></div>
           </fieldset>
 
           <fieldset class="quiz-q" data-q="7" data-answer="b">
@@ -838,12 +1481,12 @@
               <label class="quiz-option"><input type="radio" name="q7" value="b"> Scrap produced while the process stabilises after a start-up.</label>
               <label class="quiz-option"><input type="radio" name="q7" value="c"> Scheduled preventive maintenance on a Sunday.</label>
             </div>
-            <div class="quiz-feedback" data-correct="Correct. Start-up loss produced parts that were not sellable, which is the definition of a quality loss." data-incorrect="Start-up and yield loss is loss 4 and belongs to quality: parts came out, but they were not sellable."></div>
+            <div class="quiz-feedback" hidden data-correct="Correct. Start-up loss produced parts that were not sellable, which is the definition of a quality loss." data-incorrect="Start-up and yield loss is loss 4 and belongs to quality: parts came out, but they were not sellable."></div>
           </fieldset>
 
           <div class="quiz-actions">
-            <button type="button" id="quiz-submit" class="btn btn-teal">Check answers</button>
-            <button type="button" id="quiz-retry" class="btn">Reset</button>
+            <button type="button" id="quiz-submit" class="button primary">Check answers</button>
+            <button type="button" id="quiz-retry" class="button">Reset</button>
           </div>
           <p id="quiz-score" role="status" aria-live="polite"></p>
         </div>
@@ -851,28 +1494,36 @@
 
       <section id="summary">
         <h2>Final summary</h2>
-        <ul>
-          <li>OEE = Availability &times; Performance &times; Quality, and the one-line form (Good Count &times; Ideal Cycle Time &divide; Planned Production Time) gives the same answer as a check.</li>
-          <li>The eight TPM losses map to three factors: breakdown, setup, tool change and planned shutdown are availability; minor stops and reduced speed are performance; defects and start-up losses are quality.</li>
-          <li><strong>Logged or lost</strong> resolves any classification: recorded time reduces availability, time that vanishes inside run time surfaces as performance, unsellable output is quality.</li>
-          <li>Minor stops are a performance loss because nothing records them, not because of anything physical. Setup is an availability loss because it is recorded, not because the machine is still.</li>
-          <li>Run time cancels in A &times; P, so classification never changes total OEE. It changes which improvement project you start&mdash;which is why it matters.</li>
-          <li>Reconcile every shift in minutes. The four buckets must sum to planned production time.</li>
-          <li>Improve your weakest factor first. The marginal gain is the product of the other two.</li>
+        <ul class="summary-list">
+          <li><strong>OEE = Availability &times; Performance &times; Quality</strong>, and the one-line form (Good Count &times; Ideal Cycle Time &divide; Planned Production Time) gives the same answer as a check.</li>
+          <li><strong>The eight TPM losses map to three factors.</strong> Breakdown, setup, tool change and planned shutdown are availability; minor stops and reduced speed are performance; defects and start-up losses are quality.</li>
+          <li><strong>Logged or lost resolves any classification.</strong> Recorded time reduces availability, time that vanishes inside run time surfaces as performance, unsellable output is quality.</li>
+          <li><strong>Minor stops are a performance loss because nothing records them</strong>, not because of anything physical. Setup is an availability loss because it is recorded, not because the machine is still.</li>
+          <li><strong>Run time cancels in A &times; P</strong>, so classification never changes total OEE. It changes which improvement project you start&mdash;which is why it matters.</li>
+          <li><strong>Reconcile every shift in minutes.</strong> The four buckets must sum to planned production time.</li>
+          <li><strong>Improve your weakest factor first.</strong> The marginal gain is the product of the other two.</li>
         </ul>
       </section>
 
       <section id="references">
         <h2>References and further reading</h2>
-        <ul>
+        <ol class="references-list">
           <li>Nakajima, S. <em>Introduction to TPM: Total Productive Maintenance.</em> Productivity Press.</li>
           <li>ASQ Certified Six Sigma Black Belt Body of Knowledge&mdash;Lean tools and process metrics.</li>
           <li>ASQ Certified Quality Engineer Body of Knowledge&mdash;quality systems and continuous improvement.</li>
           <li>Hansen, R. C. <em>Overall Equipment Effectiveness.</em> Industrial Press.</li>
-          <li><a href="/lessons/understanding-pareto-chart">Understanding Pareto Chart</a>&mdash;for ranking the eight losses once you have measured them.</li>
-          <li><a href="/lessons/control-charts-explained">Control Charts Explained</a>&mdash;for judging whether an OEE change is signal or noise.</li>
-        </ul>
+        </ol>
       </section>
+
+      <footer class="lesson-footer">
+        <div class="lesson-footer-nav">
+          <a class="back-category-link" href="/lessons#lean-six-sigma">Back to Lean Six Sigma</a>
+          <div class="lesson-footer-next">
+            <strong>Next step:</strong> Rank your eight losses properly before choosing a project&mdash;by event count as well as by minutes.
+            <p><a href="/lessons/understanding-pareto-chart">Continue to Understanding Pareto Chart</a></p>
+          </div>
+        </div>
+      </footer>
     </article>
   </main>
 
@@ -1385,12 +2036,9 @@
           var chosen = q.querySelector("input[type='radio']:checked");
           var fb = q.querySelector(".quiz-feedback");
           fb.hidden = false;
-          fb.classList.remove("correct", "incorrect", "notice");
+          fb.classList.remove("correct", "incorrect");
 
           if (!chosen) {
-            /* .notice keeps this visible; the shared theme only shows
-               .quiz-feedback when correct or incorrect is present. */
-            fb.classList.add("notice");
             fb.textContent = "Choose an answer for this question.";
             return;
           }
@@ -1419,7 +2067,7 @@
         Array.prototype.forEach.call(document.querySelectorAll(".quiz-q input[type='radio']"), function (i) { i.checked = false; });
         Array.prototype.forEach.call(document.querySelectorAll(".quiz-feedback"), function (fb) {
           fb.hidden = true;
-          fb.classList.remove("correct", "incorrect", "notice");
+          fb.classList.remove("correct", "incorrect");
           fb.textContent = "";
         });
         scoreOut.textContent = "";

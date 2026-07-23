@@ -1,0 +1,63 @@
+(function(){
+'use strict';
+var tool=document.getElementById('spx-tool');
+if(!tool||typeof state==='undefined')return;
+var NS='http://www.w3.org/2000/svg';
+var $5=function(id){return document.getElementById(id)};
+var BUEHLER_IMAGE='https://www.buehler.com/assets/images/literature/tp/Iron-Carbon-Phase-Diagram-Poster.jpg';
+var BUEHLER_PDF='https://www.buehler.com/assets/posters/FN00454-R4_Iron-CarbonPoster_FINAL_Web.pdf';
+var RAPID_PARTS=Array.from({length:14},function(_,i){return '/assets/steel-phase/rapid-reference-q72/part-'+String(i+1).padStart(2,'0')+'.txt'});
+var MAPS={
+  rapid:{w:850,h:890,plot:{x0:80,x1:701,y0:792,y1:90,xmin:0,xmax:1.2,ymin:-100,ymax:1000}},
+  full:{w:1000,h:1515,plot:{x0:128,x1:890,y0:1117,y1:151,xmin:0,xmax:6.68,ymin:0,ymax:1538}}
+};
+var COLORS={
+  austenite:'#eee9e5',austRange:'#ed7440',ferriteAustenite:'#eee9e5',austeniteCementite:'#eee9e5',
+  ferritePearlite:'#e5582e',pearlite:'#aaa8ad',cementitePearlite:'#e5582e',upperBainite:'#c9c9cd',
+  lowerBainite:'#b7b7bc',lowerBainiteRA:'#6152a4',martensiteRA:'#e5582e',martensite:'#eee9e5',
+  liquid:'#78b6df',delta:'#a2a4db',deltaLiquid:'#8497cf',deltaGamma:'#b49ed4',gammaLiquid:'#f0a452',
+  ferrite:'#b7d6b1',ferriteCementite:'#d57049',liquidCementite:'#9cbfdf',posterHotspot:'#0e7490'
+};
+var LABELS={
+  austenite:'Austenite',austRange:'Austenitizing temperature range',ferriteAustenite:'Ferrite + Austenite',austeniteCementite:'Austenite + Cementite',
+  ferritePearlite:'Ferrite + Pearlite',pearlite:'Pearlite',cementitePearlite:'Cementite + Pearlite',upperBainite:'Upper Bainite',
+  lowerBainite:'Lower Bainite',lowerBainiteRA:'Lower Bainite + Retained Austenite',martensiteRA:'Martensite + Retained Austenite',martensite:'Martensite',
+  liquid:'Liquid iron alloy',delta:'δ-Iron / delta ferrite',deltaLiquid:'Delta ferrite + Liquid',deltaGamma:'Delta ferrite + Austenite',
+  gammaLiquid:'Austenite + Liquid',ferrite:'Ferrite',ferriteCementite:'Ferrite + Cementite',liquidCementite:'Liquid + Cementite',
+  posterAustenite:'Austenite crystal and micrograph',posterFerrite:'Ferrite crystal and micrographs',posterCementite:'Cementite crystal structure',
+  posterEquilibrium:'Equilibrium microstructures',posterCastIron:'Cast-iron microstructures',posterHeatColor:'Observed heat-color column'
+};
+var BEGIN={
+  austenite:'Austenite is the high-temperature parent structure from which pearlite, bainite, or martensite may form during cooling.',
+  austRange:'The orange band is the illustrated austenitizing range before rapid quenching. It is a teaching reference, not a universal furnace setpoint.',
+  ferriteAustenite:'Ferrite and austenite coexist. Carbon concentrates preferentially in the austenite.',
+  austeniteCementite:'Austenite coexists with cementite on the high-carbon side.',
+  ferritePearlite:'The expected room-temperature microconstituents are ferrite and pearlite.',
+  pearlite:'Pearlite is a lamellar ferrite–cementite microconstituent formed by diffusion.',
+  cementitePearlite:'Pearlite is accompanied by proeutectoid cementite.',
+  upperBainite:'Upper bainite forms below the pearlite range and above lower bainite.',
+  lowerBainite:'Lower bainite forms at lower temperature and is generally finer and harder than upper bainite.',
+  lowerBainiteRA:'Lower bainite forms while some carbon-enriched austenite remains retained.',
+  martensiteRA:'Martensite has formed, but some austenite remains because transformation is incomplete.',
+  martensite:'Most austenite is expected to transform to martensite after sufficiently rapid cooling.',
+  liquid:'The alloy is above its liquidus and is molten.',delta:'Delta ferrite is the high-temperature body-centred-cubic form of iron.',
+  deltaLiquid:'Liquid and delta ferrite coexist during early solidification.',deltaGamma:'Delta ferrite and austenite coexist near the peritectic region.',
+  gammaLiquid:'Austenite and liquid coexist during solidification.',ferrite:'Ferrite is the low-carbon body-centred-cubic form of iron.',
+  ferriteCementite:'The equilibrium phases below the eutectoid temperature are ferrite and cementite.',liquidCementite:'Liquid coexists with cementite in the high-carbon metastable system.',
+  posterAustenite:'The poster shows the face-centred-cubic austenite unit cell and a representative etched austenite microstructure.',
+  posterFerrite:'The poster shows body-centred-cubic ferrite and representative ferritic, pearlitic, bainitic, and martensitic microstructures.',
+  posterCementite:'Cementite, Fe₃C, is shown with its orthorhombic crystal structure.',
+  posterEquilibrium:'The poster groups representative ferrite, pearlite, and cementite-containing structures after equilibrium cooling.',
+  posterCastIron:'The lower-right micrographs illustrate white- and gray-cast-iron structures.',
+  posterHeatColor:'The central color column is a furnace-appearance reference under specified observation conditions.'
+};
+var ENGINEER={
+  austenite:'Uniform quench response requires heat-through, complete transformation, appropriate carbide dissolution, and controlled prior-austenite grain size.',
+  austRange:'The useful austenitizing window balances transformation and homogenization against grain growth, oxidation, decarburization, and retained-austenite risk.',
+  ferriteAustenite:'Phase fraction and austenite carbon enrichment control intercritical and dual-phase behavior.',
+  austeniteCementite:'Undissolved cementite changes austenite carbon, hardness, retained austenite, and dimensional stability.',
+  ferritePearlite:'Ferrite supports ductility; pearlite fraction and spacing raise strength.',
+  pearlite:'Lower transformation temperature generally refines pearlite spacing and increases strength.',
+  cementitePearlite:'Cementite morphology is critical; continuous grain-boundary networks can strongly reduce toughness.',
+  upperBainite:'Carbide distribution and ferritic-unit size depend on temperature, time, chemistry, and prior-austenite condition.',
+  lowerBainite:'Lower transformation temperature produces a fi

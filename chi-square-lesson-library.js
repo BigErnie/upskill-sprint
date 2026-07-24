@@ -115,9 +115,9 @@
       sectionId: 'quality-engineering',
       path: '/lessons/complete-14-quality-tools-project',
       topic: 'quality-engineering',
-      level: 'intermediate',
+      level: 'advanced',
       interactive: 'true',
-      search: 'complete 14 quality tools project integrated quality engineering root cause corrective action capstone QC tools management planning tools ASQ CSSBB CQE interactive',
+      search: 'complete 14 quality tools project integrated quality engineering root cause corrective action capstone QC tools management planning tools ASQ CSSBB CQE advanced interactive',
       meta: '<span>Advanced</span><span>Interactive</span><span>45 min</span>',
       title: 'The Complete Quality Toolbox: All 14 Tools',
       description: 'Run an end-to-end quality investigation from process mapping and root-cause evidence through corrective-action planning and sustainment.'

@@ -24,7 +24,7 @@ const sources = {
 };
 
 const siteHeader = `
-<a class="uss-skip-link" href="#app">Skip to Grade Specification Lookup</a>
+<a class="uss-skip-link" href="#app">Skip to Material Specification Lookup</a>
 <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
 <header class="site grade-sitebar">
   <a class="brand" href="/" aria-label="UpSkill Sprint Consulting home"><img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo"><span>UpSkill Sprint Consulting</span></a>
@@ -73,19 +73,25 @@ async function decodeSource(source) {
   return original.toString('utf8');
 }
 
-function prepareApplication(originalHtml) {
+function renameTool(originalHtml) {
   return originalHtml
-    .replace('<title>Steel Grade Specification Lookup — Compliance & Calculators</title>', '<title>Grade Specification Lookup | UpSkill Sprint Consulting</title>')
+    .replaceAll('Steel Grade Specification Lookup', 'Material Specification Lookup')
+    .replaceAll('Grade Specification Lookup', 'Material Specification Lookup');
+}
+
+function prepareApplication(originalHtml) {
+  return renameTool(originalHtml)
+    .replace('<title>Material Specification Lookup — Compliance & Calculators</title>', '<title>Material Specification Lookup | UpSkill Sprint Consulting</title>')
     .replaceAll('href="grade_spec_lookup_user_guide.html"', 'href="./how-to-use/"')
     .replace('<div class="top-actions">', '<div class="top-actions"><a class="btn site-companion" href="/tools/material-specification-compliance-checker">Compliance Checker</a>')
-    .replace('</head>', '<meta name="description" content="Interactive steel grade lookup, comparison, compliance screening, reverse lookup, and engineering calculators for CSA, ASTM, and API material designations.">\n<link rel="canonical" href="https://upskillsprint.com/engineering-tools/grade-specification-lookup">\n<meta name="color-scheme" content="light dark">\n' + integrationHead + '\n</head>')
+    .replace('</head>', '<meta name="description" content="Interactive material specification lookup, comparison, compliance screening, reverse lookup, and engineering calculators for CSA, ASTM, and API material designations.">\n<link rel="canonical" href="https://upskillsprint.com/engineering-tools/grade-specification-lookup">\n<meta name="color-scheme" content="light dark">\n' + integrationHead + '\n</head>')
     .replace('<body>', '<body class="grade-spec-tool-page">\n' + siteHeader)
     .replace('</body>', backLink + '\n</body>');
 }
 
 function prepareGuide(originalHtml) {
-  return originalHtml
-    .replace('<title>How to Use — Steel Grade Specification Lookup</title>', '<title>How to Use the Grade Specification Lookup | UpSkill Sprint Consulting</title>')
+  return renameTool(originalHtml)
+    .replace('<title>How to Use — Material Specification Lookup</title>', '<title>How to Use the Material Specification Lookup | UpSkill Sprint Consulting</title>')
     .replaceAll('href="grade_spec_lookup.html#compliance"', 'href="../#compliance"')
     .replaceAll('href="grade_spec_lookup.html"', 'href="../"')
     .replace('>← Back to Tool<', '>Back to Tool<')
@@ -112,7 +118,7 @@ async function build() {
     writeFile(join(guideDirectory, 'index.html'), guide, 'utf8')
   ]);
 
-  console.log('Grade Specification Lookup rebuilt from verified uploaded source files.');
+  console.log('Material Specification Lookup rebuilt from verified uploaded source files.');
   console.log(`Application SHA-256: ${digest(application)}`);
   console.log(`Guide SHA-256: ${digest(guide)}`);
 }

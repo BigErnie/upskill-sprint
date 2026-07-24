@@ -446,3 +446,142 @@ test('a successful poster load injects the artwork once', async () => {
   assert.equal(win.document.querySelectorAll('#spx-r5-reference .spx-r5-poster').length, 1,
     'still one after a re-render');
 });
+
+/* ---------- region highlighting ----------
+ * Selecting a legend entry set state but drew nothing: drawOverlay never
+ * referenced s5.highlight, and the poster tab has no region paths of its own
+ * because the artwork is imported. Highlight shapes are now derived by
+ * sampling the classifier, which works on both tabs and cannot disagree with
+ * the readout.
+ */
+
+function highlightRects(win) {
+  return win.document.querySelectorAll('#spx-r5-overlay .spx-r5-highlight rect');
+}
+
+test('selecting a region draws it on the rapid diagram', () => {
+  const win = boot();
+  assert.equal(highlightRects(win).length, 0, 'nothing highlighted initially');
+  win.__SPX.release5.setHighlight('pearlite');
+  assert.ok(highlightRects(win).length > 5, 'highlight shapes drawn');
+});
+
+test('EVERY legend entry on the rapid tab produces a visible highlight', () => {
+  const win = boot();
+  const keys = [...win.document.querySelectorAll('#spx-r5-legend [data-r5-legend]')]
+    .map(b => b.dataset.r5Legend);
+  assert.ok(keys.length >= 6, 'legend populated');
+  keys.forEach(k => {
+    win.__SPX.release5.setHighlight(k);
+    assert.ok(highlightRects(win).length > 0, `no highlight drawn for ${k}`);
+  });
+});
+
+test('EVERY legend entry on the poster tab produces a visible highlight', () => {
+  const win = boot();
+  win.__SPX.release5.setMap('poster');
+  const keys = [...win.document.querySelectorAll('#spx-r5-legend [data-r5-legend]')]
+    .map(b => b.dataset.r5Legend);
+  assert.ok(keys.length >= 8, 'poster legend populated');
+  keys.forEach(k => {
+    win.__SPX.release5.setHighlight(k);
+    assert.ok(highlightRects(win).length > 0, `no highlight drawn for ${k}`);
+  });
+});
+
+test('the highlight works even when the poster artwork failed to load', async () => {
+  const win = boot();
+  win.__SPX.release5.setMap('poster');
+  await new Promise(r => setTimeout(r, 20));
+  assert.equal(win.__SPX.release5.posterState(), 'error', 'artwork unavailable in tests');
+  win.__SPX.release5.setHighlight('austenite');
+  assert.ok(highlightRects(win).length > 0, 'overlay is independent of the artwork');
+});
+
+test('highlight shapes only cover cells the classifier assigns to that region', () => {
+  const win = boot();
+  const G = win.SPXRapidGeometry;
+  win.__SPX.release5.setHighlight('upperBainite');
+  const rects = [...highlightRects(win)];
+  assert.ok(rects.length > 0, 'shapes exist');
+  rects.slice(0, 40).forEach(r => {
+    const cx = Number(r.getAttribute('x')) + Number(r.getAttribute('width')) / 2;
+    const cy = Number(r.getAttribute('y')) + Number(r.getAttribute('height')) / 2;
+    assert.equal(G.regionAt(G.cOf(cx), G.tOf(cy)), 'upperBainite',
+      'a highlighted cell that is not actually in the region');
+  });
+});
+
+test('clicking a legend entry highlights and clicking it again clears', () => {
+  const win = boot();
+  const btn = win.document.querySelector('#spx-r5-legend [data-r5-legend="pearlite"]');
+  btn.dispatchEvent(new win.MouseEvent('click', { bubbles: true }));
+  assert.equal(win.__SPX.release5.highlight(), 'pearlite');
+  assert.ok(highlightRects(win).length > 0, 'drawn after first click');
+
+  win.document.querySelector('#spx-r5-legend [data-r5-legend="pearlite"]')
+    .dispatchEvent(new win.MouseEvent('click', { bubbles: true }));
+  assert.equal(win.__SPX.release5.highlight(), null);
+  assert.equal(highlightRects(win).length, 0, 'cleared after second click');
+});
+
+test('the legend reports the highlight in the status line', () => {
+  const win = boot();
+  win.document.querySelector('#spx-r5-legend [data-r5-legend="pearlite"]')
+    .dispatchEvent(new win.MouseEvent('click', { bubbles: true }));
+  assert.match(win.document.getElementById('spx-r5-status').textContent, /Pearlite highlighted/i);
+});
+
+test('the highlight carries a readable label', () => {
+  const win = boot();
+  win.__SPX.release5.setHighlight('lowerBainite');
+  const label = win.document.querySelector('#spx-r5-overlay .spx-r5-highlight text');
+  assert.ok(label, 'label drawn');
+  assert.equal(label.textContent, win.SPXRapidGeometry.LABELS.lowerBainite);
+});
+
+test('escape clears the highlight while the tab is visible', () => {
+  const win = boot();
+  win.document.getElementById('spx-tab-reference-diagrams').hidden = false;
+  win.__SPX.release5.setHighlight('pearlite');
+  win.document.dispatchEvent(new win.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  assert.equal(win.__SPX.release5.highlight(), null);
+  assert.equal(highlightRects(win).length, 0);
+});
+
+test('the highlight is cleared when switching diagrams', () => {
+  const win = boot();
+  win.__SPX.release5.setHighlight('pearlite');
+  win.document.querySelector('#spx-r5-subnav [data-r5-map="poster"]')
+    .dispatchEvent(new win.MouseEvent('click', { bubbles: true }));
+  assert.equal(win.__SPX.release5.highlight(), null, 'stale highlight not carried across');
+  assert.equal(highlightRects(win).length, 0);
+});
+
+test('highlight shapes are cached rather than recomputed on every overlay draw', () => {
+  const win = boot();
+  const G = win.SPXRapidGeometry;
+  win.__SPX.release5.setHighlight('pearlite');
+  const baseline = win.__SPX.release5.highlightShapeCount();
+
+  let calls = 0;
+  const real = G.regionAt;
+  G.regionAt = function (c, t) { calls++; return real(c, t); };
+  win.__SPX.release5.render();
+  win.__SPX.release5.render();
+  G.regionAt = real;
+
+  assert.ok(baseline > 0, 'shapes exist');
+  assert.ok(calls < 5000,
+    `two renders should reuse the cache, saw ${calls} classifier calls`);
+});
+
+test('changing the highlight recomputes the shapes', () => {
+  const win = boot();
+  win.__SPX.release5.setHighlight('pearlite');
+  const a = win.__SPX.release5.highlightShapeCount();
+  win.__SPX.release5.setHighlight('martensiteAustenite');
+  const b = win.__SPX.release5.highlightShapeCount();
+  assert.ok(a > 0 && b > 0, 'both produced shapes');
+  assert.notEqual(a, b, 'different regions give different shape counts');
+});

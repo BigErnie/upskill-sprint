@@ -119,6 +119,7 @@
     highlight: null
   };
 
+  var highlightCache = null;   /* { key, map, shapes, centroid } */
   var posterMarkup = null;
   var posterState = 'idle';        /* idle | loading | ready | error */
   var posterPromise = null;
@@ -438,9 +439,99 @@
 
   /* ---------- overlay ---------- */
 
+  /*
+   * Highlight shapes are derived by sampling regionAt() across the field and
+   * merging each scan row into horizontal runs. Deriving them from the
+   * classifier rather than from a second set of coordinates means the
+   * highlight always covers exactly what the readout reports, and it works
+   * on the poster tab where the artwork is imported and there are no region
+   * paths of our own to colour in.
+   *
+   * The sampling costs tens of thousands of classifier calls, so the result
+   * is cached; drawOverlay runs on every pointer move.
+   */
+  function highlightShapes() {
+    if (!s5.highlight) return null;
+    if (highlightCache && highlightCache.key === s5.highlight && highlightCache.map === s5.map) {
+      return highlightCache;
+    }
+
+    var G = geo(), b = bounds();
+    var rows = 170, cols = 210;
+    var dt = (b.tMax - b.tMin) / rows;
+    var dc = (b.cMax - b.cMin) / cols;
+    var shapes = [];
+    var sumX = 0, sumY = 0, n = 0;
+    var i, j, t, c, inRun, runStart, x0, x1, y0, y1;
+
+    for (i = 0; i < rows; i++) {
+      t = b.tMin + (i + 0.5) * dt;
+      runStart = -1;
+      for (j = 0; j <= cols; j++) {
+        c = b.cMin + (j + 0.5) * dc;
+        inRun = j < cols && G.regionAt(c, t) === s5.highlight;
+        if (inRun && runStart < 0) runStart = j;
+        if (!inRun && runStart >= 0) {
+          x0 = G.xOf(b.cMin + runStart * dc);
+          x1 = G.xOf(b.cMin + j * dc);
+          y0 = G.yOf(t + dt / 2);
+          y1 = G.yOf(t - dt / 2);
+          shapes.push([
+            Math.min(x0, x1), Math.min(y0, y1),
+            Math.abs(x1 - x0), Math.abs(y1 - y0)
+          ]);
+          sumX += (x0 + x1) / 2; sumY += (y0 + y1) / 2; n += 1;
+          runStart = -1;
+        }
+      }
+    }
+
+    highlightCache = {
+      key: s5.highlight, map: s5.map, shapes: shapes,
+      centroid: n ? [sumX / n, sumY / n] : null
+    };
+    return highlightCache;
+  }
+
+  function invalidateHighlight() { highlightCache = null; }
+
+  function drawHighlight(layer) {
+    var data = highlightShapes();
+    if (!data || !data.shapes.length) return;
+    var colour = COLORS[data.key] || '#0e7490';
+    var g = el(layer, 'g', { class: 'spx-r5-highlight', 'pointer-events': 'none' });
+
+    data.shapes.forEach(function (r) {
+      el(g, 'rect', {
+        x: r[0].toFixed(2), y: r[1].toFixed(2),
+        width: Math.max(0.5, r[2]).toFixed(2), height: Math.max(0.5, r[3]).toFixed(2),
+        fill: colour, opacity: '0.45'
+      });
+    });
+
+    if (data.centroid) {
+      var label = geo().LABELS[data.key] || data.key;
+      var scale = s5.map === 'rapid' ? 1 : 1.7;
+      var w = label.length * 8.6 * scale + 22 * scale;
+      var h = 30 * scale;
+      var cx = Math.max(w / 2 + 4, data.centroid[0]);
+      var cy = data.centroid[1];
+      el(g, 'rect', {
+        x: (cx - w / 2).toFixed(1), y: (cy - h / 2).toFixed(1),
+        width: w.toFixed(1), height: h.toFixed(1), rx: 5 * scale,
+        fill: '#14110d', opacity: '0.9'
+      });
+      el(g, 'text', {
+        x: cx.toFixed(1), y: (cy + 5.5 * scale).toFixed(1), 'text-anchor': 'middle',
+        'font-size': (15 * scale).toFixed(0), 'font-weight': '700', fill: '#ffffff'
+      }, label);
+    }
+  }
+
   function drawOverlay() {
     var o = $('spx-r5-overlay'), pl = $('spx-r5-point-layer');
     clear(o); clear(pl);
+    drawHighlight(o);
     var G = geo(), b = bounds();
     var box = s5.map === 'rapid'
       ? { x0: RG.PLOT.x0, x1: RG.PLOT.x1, yTop: RG.PLOT.yTop, yBottom: RG.PLOT.yBottom }
@@ -652,6 +743,7 @@
       if (!b) return;
       s5.map = b.dataset.r5Map;
       s5.zoom = 1; hover = null; s5.highlight = null;
+      invalidateHighlight();
       invalidateReference();
       resetPoints();
       render();
@@ -706,6 +798,7 @@
       if (!b) return;
       s5.activeId = Number(b.dataset.r5Select);
       s5.highlight = null;
+      invalidateHighlight();
       render();
     });
 
@@ -724,8 +817,13 @@
       var b = e.target.closest('[data-r5-legend]');
       if (!b) return;
       s5.highlight = s5.highlight === b.dataset.r5Legend ? null : b.dataset.r5Legend;
+      invalidateHighlight();
       renderLegend();
       renderHelp(s5.highlight);
+      drawOverlay();
+      $('spx-r5-status').textContent = s5.highlight
+        ? geo().LABELS[s5.highlight] + ' highlighted on the diagram.'
+        : 'Highlight cleared.';
     });
 
     $('spx-r5-zoom-in').addEventListener('click', function () { s5.zoom = clamp(s5.zoom + 0.25, 1, 6); applyCanvas(); });
@@ -759,6 +857,11 @@
       } else if (d.inside) {
         setPoint(s5.activeId, d.c, d.t);
         dragId = s5.activeId;
+        var picked = geo().regionAt(d.c, d.t);
+        if (picked && picked !== 'outside' && picked !== s5.highlight) {
+          s5.highlight = picked;
+          invalidateHighlight();
+        }
       } else return;
       svg.setPointerCapture(e.pointerId);
       e.preventDefault();
@@ -790,9 +893,22 @@
       if (region && (e.key === 'Enter' || e.key === ' ')) {
         e.preventDefault();
         s5.highlight = region.dataset.r5Region;
+        invalidateHighlight();
         renderHelp(s5.highlight);
         renderLegend();
+        drawOverlay();
       }
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || !s5.highlight) return;
+      var panel = $('spx-tab-reference-diagrams');
+      if (!panel || panel.hidden) return;
+      s5.highlight = null;
+      invalidateHighlight();
+      renderLegend();
+      drawOverlay();
+      $('spx-r5-status').textContent = 'Highlight cleared.';
     });
 
     $('spx-r5-export').addEventListener('click', exportPng);
@@ -877,6 +993,63 @@
 
   /* ---------- persistence + init ---------- */
 
+  /*
+   * Restored state arrives from a saved file or a share link, so it is
+   * untrusted input. Assigning it wholesale let a stale or hand-edited
+   * payload drop the points array entirely, which throws on the next render.
+   */
+  function sanitise(raw) {
+    var safe = {
+      map: raw && raw.map === 'poster' ? 'poster' : 'rapid',
+      level: ['beginner', 'engineer', 'advanced'].indexOf(raw && raw.level) >= 0
+        ? raw.level : 'engineer',
+      zoom: Math.min(6, Math.max(1, Number(raw && raw.zoom) || 1)),
+      showCritical: raw ? raw.showCritical !== false : true,
+      showLabels: raw ? raw.showLabels !== false : true,
+      showCrosshair: raw ? raw.showCrosshair !== false : true,
+      showLegend: raw ? raw.showLegend !== false : true,
+      highlight: null,
+      points: [],
+      activeId: 1,
+      nextId: 1
+    };
+
+    var prev = s5.map;
+    s5.map = safe.map;
+    var b = bounds();
+    s5.map = prev;
+
+    var seen = {};
+    if (raw && Object.prototype.toString.call(raw.points) === '[object Array]') {
+      raw.points.forEach(function (p) {
+        if (!p) return;
+        var c = Number(p.c), t = Number(p.t), id = Math.floor(Number(p.id));
+        if (!isFinite(c) || !isFinite(t)) return;
+        if (!isFinite(id) || id < 1 || seen[id]) id = safe.points.length + 1;
+        seen[id] = true;
+        safe.points.push({ id: id, c: clamp(c, b.cMin, b.cMax), t: clamp(t, b.tMin, b.tMax) });
+      });
+    }
+    if (!safe.points.length) {
+      var prevMap = s5.map;
+      s5.map = safe.map;
+      safe.points = defaults();
+      s5.map = prevMap;
+    }
+
+    safe.nextId = safe.points.reduce(function (m, p) { return Math.max(m, p.id); }, 0);
+    var wanted = Math.floor(Number(raw && raw.activeId));
+    safe.activeId = safe.points.some(function (p) { return p.id === wanted; })
+      ? wanted : safe.points[0].id;
+
+    if (raw && raw.highlight && LABELS_FOR(safe.map)[raw.highlight]) {
+      safe.highlight = raw.highlight;
+    }
+    return safe;
+  }
+
+  function LABELS_FOR(map) { return map === 'rapid' ? RG.LABELS : PG.LABELS; }
+
   function persist() {
     if (typeof window.serializable === 'function' && !window.serializable.__r5) {
       var base = window.serializable;
@@ -892,8 +1065,9 @@
       window.restore = function (obj) {
         var ok = baseRestore(obj);
         if (ok && obj && obj.release5) {
-          s5 = JSON.parse(JSON.stringify(obj.release5));
+          s5 = sanitise(obj.release5);
           invalidateReference();
+          invalidateHighlight();
           render();
         }
         return ok;
@@ -940,8 +1114,9 @@
       setLevel: function (l) { s5.level = l; render(); },
       regionAt: function (c, t) { return geo().regionAt(c, t); },
       addPoint: function (c, t) {
-        var id = ++s5.nextId;
-        s5.points.push({ id: id, c: c, t: t });
+        var b = bounds(), id = ++s5.nextId;
+        s5.points.push({ id: id, c: clamp(Number(c) || 0, b.cMin, b.cMax),
+                         t: clamp(Number(t) || 0, b.tMin, b.tMax) });
         s5.activeId = id;
         render();
         return id;
@@ -954,7 +1129,19 @@
         return true;
       },
       posterLoaded: function () { return posterState === 'ready'; },
-      posterState: function () { return posterState; }
+      posterState: function () { return posterState; },
+      setHighlight: function (key) {
+        s5.highlight = key;
+        invalidateHighlight();
+        renderLegend();
+        renderHelp(key);
+        drawOverlay();
+      },
+      highlight: function () { return s5.highlight; },
+      highlightShapeCount: function () {
+        var data = highlightShapes();
+        return data ? data.shapes.length : 0;
+      }
     };
   }
 

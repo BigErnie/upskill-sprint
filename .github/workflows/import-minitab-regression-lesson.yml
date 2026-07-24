@@ -1,0 +1,94 @@
+name: Import Minitab regression lesson
+
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - .github/workflows/import-minitab-regression-lesson.yml
+
+permissions:
+  contents: write
+
+jobs:
+  import-lesson:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out test branch
+        uses: actions/checkout@v4
+        with:
+          ref: test
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Assemble approved files
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .import-parts/minitab-regression/bundle-*.part > /tmp/minitab-regression-bundle.b64
+          base64 --decode /tmp/minitab-regression-bundle.b64 > /tmp/minitab-regression-bundle.tar.gz
+          echo "2f43c7e754281675a1856c2229c9d9c754806455ff6568ecc640152a00b570fa  /tmp/minitab-regression-bundle.tar.gz" | sha256sum --check
+          tar -xzf /tmp/minitab-regression-bundle.tar.gz -C .
+          echo "869779fdce9d24c84100688d0600906d0d45b333695da27dcbe46ba984e30260  lessons/minitab-best-predictive-regression-model.html" | sha256sum --check
+
+      - name: Validate lesson and library integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check chi-square-lesson-library.js
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re
+
+          lesson = Path('lessons/minitab-best-predictive-regression-model.html')
+          text = lesson.read_text(encoding='utf-8')
+          assert text.lstrip().lower().startswith('<!doctype html>')
+          assert '<title>Finding the Best Predictive Regression Model in Minitab' in text
+          assert 'data-lesson-id="minitab-best-predictive-regression-model"' in text
+          assert 'id="quiz-form"' in text
+          assert 'upskill-quiz-result' in text
+
+          class AuditParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.ids = []
+                  self.fragment_links = []
+              def handle_starttag(self, tag, attrs):
+                  values = dict(attrs)
+                  if 'id' in values:
+                      self.ids.append(values['id'])
+                  href = values.get('href', '')
+                  if href.startswith('#') and len(href) > 1:
+                      self.fragment_links.append(href[1:])
+
+          parser = AuditParser()
+          parser.feed(text)
+          assert len(parser.ids) == len(set(parser.ids)), 'Duplicate HTML IDs found'
+          missing = sorted(set(parser.fragment_links) - set(parser.ids))
+          assert not missing, f'Broken internal anchors: {missing}'
+
+          scripts = re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', text, flags=re.I | re.S)
+          assert scripts, 'No inline JavaScript found'
+          for index, script in enumerate(scripts, 1):
+              Path(f'/tmp/minitab-inline-{index}.js').write_text(script, encoding='utf-8')
+
+          library = Path('chi-square-lesson-library.js').read_text(encoding='utf-8')
+          assert "data-minitab-best-predictive-regression-model" in library
+          assert "sectionId: 'statistics'" in library
+          assert "path: '/lessons/minitab-best-predictive-regression-model'" in library
+          print(f'Validated {len(parser.ids)} unique IDs, {len(parser.fragment_links)} internal links, and {len(scripts)} inline script block(s).')
+          PY
+          for script in /tmp/minitab-inline-*.js; do node --check "$script"; done
+
+      - name: Commit final lesson files
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .import-parts/minitab-regression
+          rm -f .github/workflows/import-minitab-regression-lesson.yml
+          git config user.name "upskillsprint-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add Minitab predictive regression model lesson"
+          git push origin HEAD:test

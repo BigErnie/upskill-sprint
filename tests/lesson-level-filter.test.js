@@ -287,3 +287,34 @@ test('switching from advanced back to All levels restores the full library', asy
   assert.equal(visibleRows(window).length, total);
   assert.equal(window.document.getElementById('featured-section').hidden, false);
 });
+
+test('the Minitab predictive regression lesson is filterable as advanced', async () => {
+  const window = await lessonsPage();
+  selectLevel(window, 'advanced');
+
+  const row = window.document
+    .querySelector('[data-minitab-best-predictive-regression-model]');
+  assert.ok(row, 'the regression lesson row is rendered');
+  assert.equal(row.dataset.level, 'advanced');
+  assert.equal(row.hidden, false, 'it is visible under the Advanced filter');
+});
+
+test('the Minitab predictive regression lesson appears under Statistics + Advanced', async () => {
+  const window = await lessonsPage();
+  selectLevel(window, 'advanced');
+
+  const topic = window.document.getElementById('topic-filter');
+  topic.value = 'statistics';
+  topic.dispatchEvent(new window.Event('change'));
+
+  const shown = visibleRows(window).map(row => row.getAttribute('href'));
+  assert.ok(
+    shown.includes('/lessons/minitab-best-predictive-regression-model'),
+    `regression lesson visible, got: ${shown.join(', ')}`
+  );
+  assert.equal(
+    window.document.getElementById('statistics').hidden,
+    false,
+    'the Statistics section stays open'
+  );
+});

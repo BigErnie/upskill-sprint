@@ -43,7 +43,7 @@
       sectionId: 'statistics',
       path: '/lessons/minitab-best-predictive-regression-model',
       topic: 'statistics',
-      level: 'intermediate',
+      level: 'advanced',
       interactive: 'true',
       search: 'minitab best predictive regression model model selection polynomial regression interactions squares cubic hierarchy forward selection cross validation grouped folds validation r squared rmse mad vif residuals MARS discover best model automated machine learning statistics advanced interactive',
       meta: '<span>Advanced</span><span>Interactive</span><span>30–40 min</span><span>Minitab</span>',

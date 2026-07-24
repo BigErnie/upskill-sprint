@@ -39,6 +39,18 @@
       description: 'See how the normal connects to the Weibull, lognormal, t, binomial and more — with a live Central Limit Theorem simulator.'
     },
     {
+      marker: 'data-minitab-best-predictive-regression-model',
+      sectionId: 'statistics',
+      path: '/lessons/minitab-best-predictive-regression-model',
+      topic: 'statistics',
+      level: 'intermediate',
+      interactive: 'true',
+      search: 'minitab best predictive regression model model selection polynomial regression interactions squares cubic hierarchy forward selection cross validation grouped folds validation r squared rmse mad vif residuals MARS discover best model automated machine learning statistics advanced interactive',
+      meta: '<span>Advanced</span><span>Interactive</span><span>30–40 min</span><span>Minitab</span>',
+      title: 'Finding the Best Predictive Regression Model in Minitab',
+      description: 'Build, validate, challenge, and select an interpretable predictive model using polynomial regression, grouped cross-validation, MARS, and automated model comparison.'
+    },
+    {
       marker: 'data-process-capability',
       sectionId: 'lean-six-sigma',
       path: '/lessons/lean-six-sigma/process-capability-cp-and-cpk',

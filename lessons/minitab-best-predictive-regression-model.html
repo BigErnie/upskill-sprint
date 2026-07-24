@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff">
+  <title>Finding the Best Predictive Regression Model in Minitab | UpSkill Sprint</title>
+  <meta name="description" content="A step-by-step, cross-validated workflow for selecting an interpretable linear, polynomial, interaction, or MARS regression model in Minitab.">
+  <link rel="canonical" href="https://upskillsprint.com/lessons/minitab-best-predictive-regression-model.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/theme.js"></script>
+  <script src="/site-sections.js"></script>
+  <style>
+    :root {
+      --lesson-max: 1160px;
+      --lesson-reading: 820px;
+      --success: #15803d;
+      --success-soft: #ecfdf3;
+      --danger: #b42318;
+      --danger-soft: #fff1f0;
+      --purple: #6941c6;
+      --purple-soft: #f4f3ff;
+      --blue: #175cd3;
+      --blue-soft: #eff8ff;
+      --shadow-soft: 0 14px 40px rgba(16, 24, 40, .08);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { margin: 0; }
+    button, input, select { font: inherit; }
+    .lesson-wrapper { background: var(--paper, #fff); color: var(--ink, #101828); }
+    .lesson-wrapper * { box-sizing: border-box; }
+    .lesson-wrapper .page { max-width: var(--lesson-max); margin: 0 auto; padding: 0 24px; }
+    .lesson-wrapper p, .lesson-wrapper li { line-height: 1.72; }
+    .lesson-wrapper h1, .lesson-wrapper h2, .lesson-wrapper h3, .lesson-wrapper h4 {
+      font-family: "Source Serif 4", Georgia, serif;
+      color: var(--ink, #101828);
+    }
+    .lesson-wrapper h2 { font-size: clamp(28px, 3vw, 38px); line-height: 1.15; margin: 0 0 18px; }
+    .lesson-wrapper h3 { font-size: 23px; margin: 0 0 12px; }
+    .lesson-wrapper a { color: var(--teal-dark, #0e7490); }
+    .lesson-wrapper code, .equation, .menu-path {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .reading-progress {
+      position: fixed; inset: 0 auto auto 0; z-index: 1200; height: 4px; width: 0;
+      background: var(--teal, #0e7490); transition: width .08s linear;
+    }
+
+    .lesson-hero {
+      position: relative; overflow: hidden; padding: 86px 0 58px;
+      border-bottom: 1px solid var(--line, #e4e7ec);
+      background:
+        radial-gradient(circle at 84% 18%, rgba(14,116,144,.12), transparent 28%),
+        radial-gradient(circle at 8% 80%, rgba(240,195,106,.15), transparent 30%);
+    }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(340px, .88fr); gap: 54px; align-items: center; }
+    .lesson-kicker { margin: 0 0 14px; color: var(--teal-dark, #0e7490); font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .lesson-hero h1 { max-width: 760px; margin: 0 0 20px; font-size: clamp(39px, 5vw, 62px); line-height: 1.02; }
+    .hero-copy { max-width: 720px; margin: 0 0 24px; color: var(--ink-soft, #344054); font-size: 18px; line-height: 1.68; }
+    .meta-row { display: flex; flex-wrap: wrap; gap: 9px; }
+    .meta-pill { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid var(--line, #e4e7ec); border-radius: 999px; background: var(--card, #fff); color: var(--ink-soft, #344054); font-size: 12px; font-weight: 700; }
+    .hero-panel { position: relative; min-height: 430px; border: 1px solid var(--line, #e4e7ec); border-radius: 18px; background: var(--card, #fff); box-shadow: var(--shadow-soft); padding: 26px; }
+    .hero-panel-title { margin: 0 0 18px; font: 700 13px/1.3 "Work Sans", Arial, sans-serif; color: var(--ink-soft, #344054); text-transform: uppercase; letter-spacing: .07em; }
+    .pathway { display: grid; gap: 12px; }
+    .path-step { position: relative; display: grid; grid-template-columns: 42px 1fr; gap: 13px; align-items: center; padding: 14px; border: 1px solid var(--line, #e4e7ec); border-radius: 11px; background: var(--paper, #fff); }
+    .path-step:not(:last-child)::after { content: ""; position: absolute; left: 34px; bottom: -13px; width: 2px; height: 13px; background: var(--teal, #0e7490); }
+    .path-number { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: var(--tint, #f8fafc); color: var(--teal-dark, #0e7490); font-weight: 800; }
+    .path-step strong { display: block; margin-bottom: 3px; font-size: 14px; }
+    .path-step span { color: var(--muted, #667085); font-size: 12.5px; line-height: 1.45; }
+    .path-pulse { position: absolute; left: 30px; top: 49px; width: 10px; height: 10px; border-radius: 50%; background: var(--amber, #f0c36a); box-shadow: 0 0 0 0 rgba(240,195,106,.45); animation: pulse 2.4s infinite; }
+    @keyframes pulse { 70% { box-shadow: 0 0 0 12px rgba(240,195,106,0); } 100% { box-shadow: 0 0 0 0 rgba(240,195,106,0); } }
+
+    .lesson-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 48px; align-items: start; padding: 44px 0 96px; }
+    .lesson-nav { position: sticky; top: 92px; max-height: calc(100vh - 115px); overflow: auto; padding: 18px; border: 1px solid var(--line, #e4e7ec); border-radius: 12px; background: var(--card, #fff); }
+    .lesson-nav-title { margin: 0 0 12px; font-size: 12px; color: var(--muted, #667085); font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+    .lesson-nav a { display: block; padding: 8px 9px; border-left: 2px solid transparent; color: var(--ink-soft, #344054); font-size: 13px; line-height: 1.35; text-decoration: none; }
+    .lesson-nav a:hover, .lesson-nav a.active { border-left-color: var(--teal, #0e7490); background: var(--tint, #f8fafc); color: var(--ink, #101828); }
+
+    .lesson-content { min-width: 0; }
+    .lesson-section { scroll-margin-top: 96px; padding: 0 0 68px; }
+    .section-intro { max-width: 780px; color: var(--ink-soft, #344054); font-size: 16px; }
+    .learning-grid, .track-grid, .diagnostic-grid, .metric-grid { display: grid; gap: 16px; }
+    .learning-grid { grid-template-columns: repeat(3, 1fr); margin-top: 26px; }
+    .track-grid { grid-template-columns: repeat(2, 1fr); }
+    .diagnostic-grid { grid-template-columns: repeat(2, 1fr); }
+    .metric-grid { grid-template-columns: repeat(3, 1fr); }
+    .lesson-card { border: 1px solid var(--line, #e4e7ec); border-radius: 12px; background: var(--card, #fff); padding: 22px; }
+    .lesson-card h3, .lesson-card h4 { margin-top: 0; }
+    .lesson-card p:last-child { margin-bottom: 0; }
+    .card-number { display: grid; place-items: center; width: 34px; height: 34px; margin-bottom: 14px; border-radius: 9px; background: var(--tint, #f8fafc); color: var(--teal-dark, #0e7490); font-size: 13px; font-weight: 800; }
+
+    .callout { margin: 24px 0; padding: 20px 22px; border-left: 4px solid var(--teal, #0e7490); border-radius: 0 10px 10px 0; background: var(--info-bg, #eff8ff); color: var(--ink-soft, #344054); }
+    .callout strong { color: var(--ink, #101828); }
+    .callout-warning { border-left-color: var(--amber, #f0c36a); background: var(--warning-bg, #fffaeb); }
+    .callout-danger { border-left-color: var(--danger); background: var(--danger-bg, #fff1f0); }
+    .callout-success { border-left-color: var(--success); background: var(--practice-bg, #ecfdf3); }
+    .callout-purple { border-left-color: var(--purple); background: var(--purple-soft); }
+
+    .equation-box { margin: 18px 0; padding: 19px; overflow-x: auto; border: 1px solid var(--line, #e4e7ec); border-radius: 10px; background: var(--tint, #f8fafc); text-align: center; }
+    .equation { font-size: 16px; white-space: nowrap; }
+    .term-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .term-chip { padding: 7px 10px; border: 1px solid var(--line, #e4e7ec); border-radius: 999px; background: var(--card, #fff); font-family: ui-monospace, monospace; font-size: 12px; }
+
+    .interactive { margin: 28px 0; border: 1px solid var(--line, #e4e7ec); border-radius: 14px; background: linear-gradient(135deg, var(--card, #fff), var(--tint, #f8fafc)); overflow: hidden; }
+    .interactive-head { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; padding: 21px 22px 17px; border-bottom: 1px solid var(--line, #e4e7ec); }
+    .interactive-head h3 { margin: 0 0 5px; font-size: 21px; }
+    .interactive-head p { margin: 0; color: var(--muted, #667085); font-size: 13.5px; }
+    .interactive-badge { flex: 0 0 auto; padding: 7px 9px; border-radius: 999px; background: var(--teal, #0e7490); color: #fff; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+    .interactive-body { padding: 22px; }
+    .control-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .control-field { display: flex; flex-direction: column; gap: 7px; }
+    .control-field label, .control-label { color: var(--ink-soft, #344054); font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    .control-field input[type="range"] { width: 100%; accent-color: var(--teal, #0e7490); }
+    .control-field select, .control-field input[type="number"] { width: 100%; min-height: 42px; padding: 8px 11px; border: 1px solid var(--line, #d0d5dd); border-radius: 8px; background: var(--card, #fff); color: var(--ink, #101828); }
+    .check-stack { display: grid; gap: 8px; }
+    .check-row { display: flex; align-items: flex-start; gap: 9px; padding: 9px 10px; border: 1px solid var(--line, #e4e7ec); border-radius: 8px; background: var(--card, #fff); font-size: 13px; }
+    .check-row input { margin-top: 2px; accent-color: var(--teal, #0e7490); }
+    .result-panel { margin-top: 18px; padding: 18px; border: 1px solid var(--line, #e4e7ec); border-radius: 10px; background: var(--card, #fff); }
+    .result-big { margin: 0; font-family: "Source Serif 4", Georgia, serif; font-size: 34px; font-weight: 700; color: var(--teal-dark, #0e7490); }
+    .result-label { margin: 2px 0 0; color: var(--muted, #667085); font-size: 12.5px; }
+    .result-message { margin: 12px 0 0; color: var(--ink-soft, #344054); font-size: 13.5px; line-height: 1.55; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .lesson-btn { min-height: 42px; padding: 10px 15px; border: 1px solid var(--teal, #0e7490); border-radius: 8px; background: var(--teal, #0e7490); color: #fff; font-weight: 700; cursor: pointer; }
+    .lesson-btn.secondary { background: transparent; color: var(--teal-dark, #0e7490); }
+    .lesson-btn:hover { filter: brightness(.96); }
+
+    .workflow { display: grid; gap: 12px; margin-top: 25px; }
+    details.workflow-step { border: 1px solid var(--line, #e4e7ec); border-radius: 11px; background: var(--card, #fff); overflow: hidden; }
+    details.workflow-step[open] { box-shadow: 0 10px 24px rgba(16,24,40,.05); }
+    details.workflow-step summary { list-style: none; display: grid; grid-template-columns: 42px 1fr auto; gap: 13px; align-items: center; padding: 17px 18px; cursor: pointer; }
+    details.workflow-step summary::-webkit-details-marker { display: none; }
+    .step-index { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: var(--tint, #f8fafc); color: var(--teal-dark, #0e7490); font-weight: 800; }
+    .step-summary strong { display: block; margin-bottom: 3px; font-size: 14.5px; }
+    .step-summary span { color: var(--muted, #667085); font-size: 12.5px; }
+    .step-chevron { color: var(--muted, #667085); transition: transform .2s ease; }
+    details[open] .step-chevron { transform: rotate(180deg); }
+    .step-content { padding: 0 22px 22px 73px; border-top: 1px solid var(--line, #e4e7ec); }
+    .menu-path { display: inline-block; margin: 14px 0 4px; padding: 9px 11px; border-radius: 7px; background: var(--tint, #f8fafc); color: var(--ink, #101828); font-size: 13px; font-weight: 700; }
+    .step-content ul { margin-bottom: 0; }
+
+    .comparison-table-wrap { overflow-x: auto; border: 1px solid var(--line, #e4e7ec); border-radius: 11px; }
+    table.comparison-table { width: 100%; min-width: 760px; border-collapse: collapse; background: var(--card, #fff); }
+    .comparison-table th, .comparison-table td { padding: 13px 14px; border-bottom: 1px solid var(--line, #e4e7ec); text-align: left; font-size: 13px; }
+    .comparison-table th { background: var(--tint, #f8fafc); color: var(--ink, #101828); font-weight: 800; }
+    .comparison-table tr:last-child td { border-bottom: 0; }
+    .model-select { cursor: pointer; }
+    .model-select:hover td { background: var(--tint, #f8fafc); }
+    .model-select.selected td { background: var(--blue-soft); }
+    .tag { display: inline-flex; align-items: center; padding: 5px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; }
+    .tag-high { color: var(--success); background: var(--success-soft); }
+    .tag-medium { color: #9a6700; background: #fffaeb; }
+    .tag-low { color: var(--danger); background: var(--danger-soft); }
+
+    .fold-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 9px; margin-top: 18px; }
+    .fold { min-height: 160px; padding: 10px; border: 1px solid var(--line, #e4e7ec); border-radius: 9px; background: var(--card, #fff); }
+    .fold h4 { margin: 0 0 8px; font: 800 11px/1.2 "Work Sans", Arial, sans-serif; color: var(--muted, #667085); text-transform: uppercase; letter-spacing: .05em; }
+    .group-observation { margin: 5px 0; padding: 6px 7px; border-radius: 6px; color: #fff; font-size: 11px; font-weight: 700; text-align: center; }
+    .g-a { background: #175cd3; } .g-b { background: #6941c6; } .g-c { background: #c4320a; } .g-d { background: #087443; } .g-e { background: #9a6700; }
+    .leak-indicator { margin-top: 14px; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 700; }
+    .leak-bad { color: var(--danger); background: var(--danger-soft); }
+    .leak-good { color: var(--success); background: var(--success-soft); }
+
+    .mars-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: center; }
+    .chart-wrap { min-height: 280px; padding: 12px; border: 1px solid var(--line, #e4e7ec); border-radius: 10px; background: var(--card, #fff); }
+    #mars-chart { width: 100%; height: 260px; }
+    .chart-axis { stroke: #98a2b3; stroke-width: 1; }
+    .chart-grid { stroke: #e4e7ec; stroke-width: 1; }
+    .chart-line { fill: none; stroke: #0e7490; stroke-width: 3; }
+    .chart-threshold { stroke: #f0c36a; stroke-width: 2; stroke-dasharray: 5 5; }
+    .chart-point { fill: #0e7490; stroke: #fff; stroke-width: 2; }
+    .chart-text { fill: currentColor; font: 11px "Work Sans", Arial, sans-serif; }
+
+    .mini-plot { width: 100%; height: 150px; margin-bottom: 12px; border-radius: 8px; background: var(--tint, #f8fafc); }
+    .diagnostic-card h4 { margin: 0 0 6px; font-size: 17px; }
+    .diagnostic-card p { margin: 0; color: var(--muted, #667085); font-size: 13px; }
+
+    .decision-gate { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 22px; }
+    .gate { padding: 16px; border: 1px solid var(--line, #e4e7ec); border-radius: 10px; background: var(--card, #fff); }
+    .gate strong { display: block; margin-bottom: 5px; font-size: 13px; }
+    .gate span { color: var(--muted, #667085); font-size: 12px; line-height: 1.45; }
+
+    .quiz { border: 1px solid var(--line, #e4e7ec); border-radius: 14px; background: var(--card, #fff); overflow: hidden; }
+    .quiz-head { padding: 22px; border-bottom: 1px solid var(--line, #e4e7ec); background: var(--tint, #f8fafc); }
+    .quiz-head h3 { margin: 0 0 6px; }
+    .quiz-head p { margin: 0; color: var(--muted, #667085); font-size: 13.5px; }
+    .quiz-body { padding: 22px; }
+    .quiz-question { margin: 0 0 18px; padding: 18px; border: 1px solid var(--line, #e4e7ec); border-radius: 10px; }
+    .quiz-question legend { padding: 0 5px; font-weight: 800; font-size: 14px; }
+    .quiz-option { display: flex; gap: 9px; align-items: flex-start; margin: 9px 0; color: var(--ink-soft, #344054); font-size: 13.5px; }
+    .quiz-option input { margin-top: 3px; accent-color: var(--teal, #0e7490); }
+    .quiz-feedback { display: none; margin: 10px 0 0; padding: 10px 12px; border-radius: 7px; font-size: 13px; line-height: 1.5; }
+    .quiz-feedback.correct { display: block; color: var(--success); background: var(--success-soft); }
+    .quiz-feedback.incorrect { display: block; color: var(--danger); background: var(--danger-soft); }
+    #quiz-result { display: none; margin-top: 18px; padding: 18px; border-radius: 10px; background: var(--tint, #f8fafc); }
+    #quiz-result strong { display: block; font-size: 22px; margin-bottom: 5px; }
+
+    .checklist { display: grid; gap: 10px; margin-top: 22px; }
+    .checklist-item { display: grid; grid-template-columns: 28px 1fr; gap: 11px; align-items: start; padding: 13px 14px; border: 1px solid var(--line, #e4e7ec); border-radius: 9px; background: var(--card, #fff); }
+    .check-icon { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--success-soft); color: var(--success); font-weight: 900; }
+    .checklist-item strong { display: block; margin-bottom: 3px; font-size: 13.5px; }
+    .checklist-item span { color: var(--muted, #667085); font-size: 12.5px; line-height: 1.5; }
+
+    .reference-list { columns: 2; column-gap: 30px; padding-left: 20px; }
+    .reference-list li { break-inside: avoid; margin-bottom: 9px; font-size: 12.5px; }
+    .lesson-footer { padding: 30px 0 52px; border-top: 1px solid var(--line, #e4e7ec); }
+
+    html[data-theme="dark"] .lesson-hero { background: radial-gradient(circle at 84% 18%, rgba(43,183,201,.15), transparent 28%), radial-gradient(circle at 8% 80%, rgba(240,195,106,.1), transparent 30%); }
+    html[data-theme="dark"] .callout-purple { background: #211a3a; }
+    html[data-theme="dark"] .model-select.selected td { background: #10233a; }
+    html[data-theme="dark"] .chart-grid { stroke: #2b3b50; }
+    html[data-theme="dark"] .chart-axis { stroke: #667085; }
+    html[data-theme="dark"] .chart-text { fill: #d2dbea; }
+
+    @media (max-width: 980px) {
+      .hero-grid, .lesson-layout, .mars-grid { grid-template-columns: 1fr; }
+      .hero-panel { min-height: auto; }
+      .lesson-nav { position: static; display: flex; gap: 4px; overflow-x: auto; max-height: none; white-space: nowrap; }
+      .lesson-nav-title { display: none; }
+      .lesson-nav a { flex: 0 0 auto; border-left: 0; border-bottom: 2px solid transparent; }
+      .lesson-nav a:hover, .lesson-nav a.active { border-left: 0; border-bottom-color: var(--teal, #0e7490); }
+      .learning-grid, .metric-grid { grid-template-columns: repeat(2, 1fr); }
+      .decision-gate { grid-template-columns: repeat(2, 1fr); }
+      .fold-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .lesson-hero { padding-top: 62px; }
+      .lesson-wrapper .page { padding: 0 17px; }
+      .learning-grid, .track-grid, .diagnostic-grid, .metric-grid, .control-grid { grid-template-columns: 1fr; }
+      .interactive-head { flex-direction: column; }
+      .fold-grid { grid-template-columns: repeat(2, 1fr); }
+      .decision-gate { grid-template-columns: 1fr; }
+      .step-content { padding-left: 20px; }
+      .reference-list { columns: 1; }
+    }
+    @media print {
+      .reading-progress, header.site, .mobile-nav, .lesson-nav, .interactive-badge, .lesson-btn, footer { display: none !important; }
+      .lesson-layout, .hero-grid { display: block; }
+      .lesson-section { page-break-inside: avoid; }
+      details.workflow-step > * { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+  <input type="checkbox" id="mnav-check" class="mnav-check" aria-hidden="true">
+  <header class="site">
+    <a href="/index.html" class="brand">
+      <img src="/assets/logo-icon.png" alt="UpSkill Sprint Consulting logo">
+      <span>UpSkill Sprint Consulting</span>
+    </a>
+    <nav class="desktop-nav">
+      <a href="/start-here.html">Start Here</a>
+      <a href="/lessons.html" aria-current="page">Lessons</a>
+      <a href="/services.html">Services</a>
+      <a href="/request-topic.html">Request a Topic</a>
+      <a href="/about.html">About</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/contact.html">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <label for="mnav-check" class="mobile-menu-btn" aria-label="Open menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </label>
+      <a href="/lessons.html" class="btn btn-teal header-cta" style="padding:9px 15px;font-size:12.5px;">Browse lessons</a>
+    </div>
+  </header>
+  <nav class="mobile-nav">
+    <a href="/start-here.html">Start Here</a>
+    <a href="/lessons.html" aria-current="page">Lessons</a>
+    <a href="/services.html">Services</a>
+    <a href="/request-topic.html">Request a Topic</a>
+    <a href="/about.html">About</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="/contact.html">Contact</a>
+  </nav>
+
+  <main class="lesson-wrapper" data-lesson-id="minitab-best-predictive-regression-model">
+    <section class="lesson-hero">
+      <div class="page hero-grid">
+        <div>
+          <p class="lesson-kicker">Advanced statistics · Minitab workflow</p>
+          <h1>Finding the Best Predictive Regression Model in Minitab</h1>
+          <p class="hero-copy">Build a strong candidate term pool, let Minitab search it without violating hierarchy, validate the search on unseen data, compare interpretable nonlinear alternatives, and select a model an engineer can defend.</p>
+          <div class="meta-row" aria-label="Lesson information">
+            <span class="meta-pill">Advanced</span>
+            <span class="meta-pill">30–40 minutes</span>
+            <span class="meta-pill">Interactive</span>
+            <span class="meta-pill">Continuous response</span>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-label="Model selection pathway">
+          <span class="path-pulse" aria-hidden="true"></span>
+          <p class="hero-panel-title">The defensible search pathway</p>
+          <div class="pathway">
+            <div class="path-step"><span class="path-number">1</span><div><strong>Define the prediction problem</strong><span>Response, predictors, operating range, and grouping unit.</span></div></div>
+            <div class="path-step"><span class="path-number">2</span><div><strong>Create a reasonable term pool</strong><span>Main effects, squares, and selected two-way interactions.</span></div></div>
+            <div class="path-step"><span class="path-number">3</span><div><strong>Search with validation</strong><span>Use forward selection with cross-validation or a test set.</span></div></div>
+            <div class="path-step"><span class="path-number">4</span><div><strong>Challenge with nonlinear models</strong><span>Compare polynomial regression, MARS, and automated ML.</span></div></div>
+            <div class="path-step"><span class="path-number">5</span><div><strong>Validate engineering adequacy</strong><span>Residuals, influence, extrapolation, stability, and process logic.</span></div></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <div class="page lesson-layout">
+      <nav class="lesson-nav" aria-label="Lesson sections">
+        <p class="lesson-nav-title">In this lesson</p>
+        <a href="#objectives">1. Learning objectives</a>
+        <a href="#problem">2. The model-search problem</a>
+        <a href="#candidate-pool">3. Build the candidate pool</a>
+        <a href="#validation">4. Design validation correctly</a>
+        <a href="#minitab-workflow">5. Minitab workflow</a>
+        <a href="#mars">6. MARS alternative</a>
+        <a href="#automl">7. Discover Best Model</a>
+        <a href="#diagnostics">8. Validate the winner</a>
+        <a href="#decision">9. Selection rule</a>
+        <a href="#quiz">10. Knowledge check</a>
+        <a href="#summary">11. Field checklist</a>
+      </nav>
+
+      <article class="lesson-content">
+        <section class="lesson-section" id="objectives">
+          <p class="lesson-kicker">Learning objectives</p>
+          <h2>What you will be able to do</h2>
+          <p class="section-intro">By the end of this lesson, you will be able to configure Minitab to search a controlled set of linear, interaction, and polynomial terms—and distinguish a model that merely fits the current data from one that is likely to predict new production data.</p>
+          <div class="learning-grid">
+            <div class="lesson-card"><span class="card-number">01</span><h3>Construct</h3><p>Build a candidate model with main effects, squares, and defensible interactions without creating an uncontrolled term explosion.</p></div>
+            <div class="lesson-card"><span class="card-number">02</span><h3>Configure</h3><p>Use centering, hierarchical forward selection, and cross-validation correctly in Minitab.</p></div>
+            <div class="lesson-card"><span class="card-number">03</span><h3>Compare</h3><p>Challenge polynomial regression with MARS and automated machine-learning models while preserving interpretability.</p></div>
+            <div class="lesson-card"><span class="card-number">04</span><h3>Diagnose</h3><p>Review residual patterns, VIF, leverage, Cook’s distance, time order, and extrapolation risk.</p></div>
+            <div class="lesson-card"><span class="card-number">05</span><h3>Select</h3><p>Choose the simplest model whose validation performance is practically equivalent to the strongest competitor.</p></div>
+            <div class="lesson-card"><span class="card-number">06</span><h3>Defend</h3><p>Document the model search, validation design, limitations, and engineering rationale for technical review.</p></div>
+          </div>
+        </section>
+
+        <section class="lesson-section" id="problem">
+          <p class="lesson-kicker">The real problem</p>
+          <h2>You are not searching for the equation with the largest R²</h2>
+          <p class="section-intro">A model can fit historical data extremely well and still fail on the next heat, coil, batch, customer, or production campaign. The objective is to find a model that balances predictive accuracy, stability, interpretability, and process credibility.</p>
+          <div class="equation-box"><span class="equation">Y = β₀ + β₁X₁ + β₂X₂ + β₃X₁² + β₄X₁X₂ + ε</span></div>
+          <div class="track-grid">
+            <div class="lesson-card">
+              <h3>Track 1 — Interpretable polynomial regression</h3>
+              <p>Search a controlled pool of main effects, square terms, and two-way interactions. This produces a conventional equation, coefficient table, VIF values, residual plots, and familiar engineering interpretations.</p>
+            </div>
+            <div class="lesson-card">
+              <h3>Track 2 — Interpretable nonlinear regression</h3>
+              <p>Use MARS when the process contains thresholds, slope changes, or operating regions that a single quadratic curve cannot represent well.</p>
+            </div>
+          </div>
+          <div class="callout callout-warning"><strong>Critical correction:</strong> in Minitab’s forward selection with validation, the next term is selected primarily by the stepwise significance rule; validation is then used to identify the best model size or step. It is not a brute-force search that directly tests every possible equation and adds whichever term gives the largest validation improvement.</div>
+          <div class="callout callout-danger"><strong>Do not use the ordinary training R² as the selection criterion.</strong> It nearly always increases as terms are added—even when the added terms reduce generalization.</div>
+        </section>
+
+        <section class="lesson-section" id="candidate-pool">
+          <p class="lesson-kicker">Step 1</p>
+          <h2>Build a large enough—but still defensible—candidate pool</h2>
+          <p class="section-intro">Start with process physics and measurement logic. Give Minitab plausible terms to consider; do not ask it to manufacture meaning from every mathematical combination.</p>
+
+          <div class="interactive" id="term-builder">
+            <div class="interactive-head">
+              <div><h3>Candidate-term builder</h3><p>See how quickly model complexity grows as you add squares, interactions, and individual cubic terms.</p></div>
+              <span class="interactive-badge">Try it</span>
+            </div>
+            <div class="interactive-body">
+              <div class="control-grid">
+                <div class="control-field">
+                  <label for="predictor-count">Number of continuous predictors: <span id="predictor-count-label">4</span></label>
+                  <input id="predictor-count" type="range" min="2" max="10" value="4">
+                </div>
+                <div class="check-stack" aria-label="Candidate term options">
+                  <label class="check-row"><input id="include-squares" type="checkbox" checked> Include individual square terms, Xᵢ²</label>
+                  <label class="check-row"><input id="include-interactions" type="checkbox" checked> Include all two-way interactions, XᵢXⱼ</label>
+                  <label class="check-row"><input id="include-cubes" type="checkbox"> Include individual cubic terms, Xᵢ³</label>
+                </div>
+              </div>
+              <div class="result-panel">
+                <p class="result-big" id="term-total">14 terms</p>
+                <p class="result-label">candidate terms, excluding the intercept</p>
+                <div class="term-chips" id="term-chip-list" aria-live="polite"></div>
+                <p class="result-message" id="term-advice"></p>
+              </div>
+            </div>
+          </div>
+
+          <h3>Recommended first-pass candidate model</h3>
+          <div class="equation-box"><span class="equation">Main effects + individual squares + two-way interactions</span></div>
+          <p>This is exactly what Minitab’s <strong>Terms through order: 2</strong> option creates for selected continuous predictors: powers through order 2 and interactions through order 2. If categorical predictors are selected, Minitab also creates the applicable interactions with those predictors.</p>
+
+          <div class="callout callout-purple"><strong>Why not start with “Terms through order 3”?</strong> It adds more than individual cubes. It can also generate mixed terms such as X₁²X₂, X₁X₂², and X₁X₂X₃. The search space, multicollinearity, and interpretation burden can grow sharply.</div>
+
+          <h3>Use individual cubic terms only when justified</h3>
+          <p>Add Xᵢ³ selectively when process knowledge or residual curvature suggests asymmetric behavior that a quadratic cannot represent. For more complicated nonlinear structure, MARS is usually a better challenger than a high-order global polynomial.</p>
+
+          <div class="interactive" id="hierarchy-lab">
+            <div class="interactive-head">
+              <div><h3>Hierarchy challenge</h3><p>Select every lower-order term required to support the chosen higher-order term.</p></div>
+              <span class="interactive-badge">Practice</span>
+            </div>
+            <div class="interactive-body">
+              <div class="control-grid">
+                <div class="control-field">
+                  <label for="hierarchy-term">Higher-order term</label>
+                  <select id="hierarchy-term">
+                    <option value="x1x2">X₁ × X₂</option>
+                    <option value="x1sq">X₁²</option>
+                    <option value="x1cube">X₁³</option>
+                    <option value="x1sqx2">X₁² × X₂</option>
+                    <option value="x1x2x3">X₁ × X₂ × X₃</option>
+                  </select>
+                </div>
+                <div class="check-stack" id="hierarchy-options"></div>
+              </div>
+              <div class="btn-row"><button class="lesson-btn" type="button" id="check-hierarchy">Check hierarchy</button><button class="lesson-btn secondary" type="button" id="reset-hierarchy">Reset</button></div>
+              <div class="result-panel" id="hierarchy-result" aria-live="polite">Choose the necessary lower-order terms, then check your answer.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="lesson-section" id="validation">
+          <p class="lesson-kicker">Step 2</p>
+          <h2>Design validation before model selection</h2>
+          <p class="section-intro">Validation is part of the model-building design—not a final decorative statistic. Decide what constitutes an independent future prediction before opening the regression dialog.</p>
+
+          <div class="callout callout-success"><strong>Use random K-fold cross-validation only when rows are reasonably independent and exchangeable.</strong> For smaller datasets, 5-fold or 10-fold cross-validation is a practical default. For larger datasets, a separate test set may be faster and easier to audit.</div>
+
+          <h3>Prevent group leakage</h3>
+          <p>If multiple rows come from the same heat, coil, pipe, batch, customer, production campaign, or test specimen, keep that entire group in one fold. Otherwise, the validation set contains near-duplicates of information already seen during training.</p>
+
+          <div class="interactive" id="leakage-lab">
+            <div class="interactive-head">
+              <div><h3>Random rows vs grouped folds</h3><p>Toggle the split method and observe whether the same production group appears in both training and validation folds.</p></div>
+              <span class="interactive-badge">Visualize</span>
+            </div>
+            <div class="interactive-body">
+              <div class="btn-row">
+                <button class="lesson-btn" type="button" data-split="random">Random row split</button>
+                <button class="lesson-btn secondary" type="button" data-split="grouped">Grouped split</button>
+              </div>
+              <div class="fold-grid" id="fold-grid" aria-live="polite"></div>
+              <div id="leak-indicator" class="leak-indicator"></div>
+            </div>
+          </div>
+
+          <div class="callout callout-warning"><strong>Important implementation detail:</strong> prepare a fold column such as <code>CV_Fold</code> containing fold labels 1–5 or 1–10. Assign every row from the same heat or coil to the same fold label. Do not use a raw identifier with hundreds of unique values unless those values are intentionally the folds you want Minitab to use.</div>
+
+          <h3>Recommended worksheet structure</h3>
+          <div class="comparison-table-wrap">
+            <table class="comparison-table">
+              <thead><tr><th>Column</th><th>Example</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td>Response</td><td>Yield Strength</td><td>Continuous outcome to predict</td></tr>
+                <tr><td>Continuous predictors</td><td>Temperature, CE, Gauge</td><td>Numeric inputs</td></tr>
+                <tr><td>Categorical predictors</td><td>Grade, Mill, Shift</td><td>Factor levels coded by Minitab</td></tr>
+                <tr><td>Group ID</td><td>Heat_ID</td><td>Defines the unit that must stay together</td></tr>
+                <tr><td>CV fold</td><td>1, 2, 3, 4, 5</td><td>Used by Minitab’s “Assign rows of each fold by ID column” option</td></tr>
+                <tr><td>Time order</td><td>Production timestamp</td><td>Used to detect drift, cycles, and serial dependence</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="lesson-section" id="minitab-workflow">
+          <p class="lesson-kicker">Step 3</p>
+          <h2>Exact Minitab workflow: polynomial regression with validated selection</h2>
+          <p class="section-intro">The sequence below is designed for a continuous response and a mix of continuous and categorical predictors.</p>
+
+          <div class="workflow">
+            <details class="workflow-step" open>
+              <summary><span class="step-index">1</span><span class="step-summary"><strong>Define the model purpose and data boundary</strong><span>Prediction target, operating range, grouping unit, and holdout logic</span></span><span class="step-chevron">⌄</span></summary>
+              <div class="step-content">
+                <p>State what the model will predict, for which population, and within what process range. Decide whether the validation target is a new row, a new heat, a new coil, a future campaign, or a later time period.</p>
+                <ul>
+                  <li>Exclude post-outcome variables and data created after the prediction decision.</li>
+                  <li>Flag impossible values, missingness, duplicate records, and data-quality rules before fitting.</li>
+                  <li>Reserve a true future or external test set when the decision is high consequence.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="workflow-step">
+              <summary><span class="step-index">2</span><span class="step-summary"><strong>Open Fit Regression Model</strong><span>Assign the response and predictor types correctly</span></span><span class="step-chevron">⌄</span></summary>
+              <div class="step-content">
+                <div class="menu-path">Stat → Regression → Regression → Fit Regression Model</div>
+                <ul>
+                  <li>Enter the continuous outcome in <strong>Response</strong>.</li>
+                  <li>Enter numeric process inputs in <strong>Continuous predictors</strong>.</li>
+                  <li>Enter grade, mill, product family, shift, operator, or other factors in <strong>Categorical predictors</strong>.</li>
+                  <li>Verify the categorical reference level under <strong>Coding</strong> so coefficients compare against a meaningful baseline.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="workflow-step">
+              <summary><span class="step-index">3</span><span class="step-summary"><strong>Create the candidate term pool</strong><span>Main effects, squares, and two-way interactions</span></span><span class="step-chevron">⌄</span></summary>
+              <div class="step-content">
+                <div class="menu-path">Fit Regression Model → Model</div>
+                <ol>
+                  <li>Select the continuous predictors you want to expand.</li>
+                  <li>Choose <strong>Terms through order</strong>.</li>
+                  <li>Enter <strong>2</strong>.</li>
+                  <li>Click <strong>Add</strong>.</li>
+                  <li>Review the term list and remove combinations that are physically impossible, redundant, or unsupported.</li>
+                </ol>
+                <p><strong>Terms through order 2</strong> adds individual squares for continuous predictors and all interactions through order 2 among the selected predictors.</p>
+              </div>
+            </details>
+
+            <details class="workflow-step">
+              <summary><span class="step-index">4</span><span class="step-summary"><strong>Center continuous predictors</strong><span>Reduce nonessential collinearity from powers and interactions</span></span><span class="step-chevron">⌄</span></summary>
+              <div class="step-content">
+                <div class="menu-path">Fit Regression Model → Coding → Standardize continuous predictors → Subtract the mean</div>
+                <p>Centering changes each predictor from X to X − X̄. This reduces the artificial correlation between X, X², and interaction terms and makes lower-order coefficients meaningful near the center of the observed operating region.</p>
+                <div class="equation-box"><span class="equation">X<sub>centered</sub> = X − X̄</span></div>
+                <p>Do not confuse centering with dividing by the standard deviation. Scaling can be useful for coefficient comparison, but it changes the unit interpretation.</p>
+              </div>
+            </details>
+
+            <details class="workflow-step">
+              <summary><span class="step-index">5</span><span class="step-summary"><strong>Configure forward selection with validation</strong><span>Let validation choose the model size</span></span><span class="step-chevron">⌄</span></summary>
+              <div class="step-content">
+                <div class="menu-path">Fit Regression Model → Stepwise</div>
+                <ul>
+                  <li><strong>Method:</strong> Forward selection with validation</li>
+                  <li><strong>Validation:</strong> K-fold cross-validation for smaller data; test-set validation for larger data</li>
+                  <li><strong>Folds:</strong> 5 or 10 are practical starting points; Minitab’s regression default is 10</li>
+                  <li><strong>Group-aware folds:</strong> Assign rows by a prepared fold-ID column</li>
+                  <li><strong>Display:</strong> Include model-selection details</li>
+                  <li><strong>Graph:</strong> Display R² versus model-selection step</li>
+                </ul>
+                <div class="callout"><strong>How it works:</strong> within each fold, Minitab performs forward selection. It then evaluates the sequence across folds and identifies the step with the best K-fold stepwise R². Finally, it runs forward selection on the full dataset and stops at that selected step.</div>
+              </div>
+            </details>
+
+            <details class="workflow-step">
+              <summary><span class="step-index">6</span><span class="step-summary"><strong>Enforce hierarchy</strong><span>Keep higher-order terms statistically coherent</span></span><span class="step-chevron">⌄</span></summary>
+              <div class="step-content">
+                <div class="menu-path">Stepwise → Hierarchy</div>
+                <ul>
+                  <li><strong>Hierarchical model:</strong> Require a hierarchical model at each step</li>
+                  <li><strong>Require hierarchy for:</strong> All terms</li>
+                  <li><strong>Terms entering:</strong> Extra terms can enter to maintain hierarchy</li>
+                </ul>
+                <p>For X₁X₂, retain X₁ and X₂. For X₁³, retain X₁ and X₁². For X₁²X₂, retain the applicable lower-order components required by the hierarchy rule.</p>
+              </div>
+            </details>
+
+            <details class="workflow-step">
+              <summary><span class="step-index">7</span><span class="step-summary"><strong>Request diagnostics and stored statistics</strong><span>Do not stop at the selected equation</span></span><span class="step-chevron">⌄</span></summary>
+              <div class="step-content">
+                <div class="menu-path">Fit Regression Model → Graphs / Results / Storage</div>
+                <ul>
+                  <li>Display the four-in-one residual plots.</li>
+                  <li>Display VIF values and unusual observations.</li>
+                  <li>Store fits, residuals, standardized residuals, leverage, Cook’s distance, and DFITS when deeper investigation is needed.</li>
+                  <li>Plot residuals against production order or timestamp when the process is time-dependent.</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="workflow-step">
+              <summary><span class="step-index">8</span><span class="step-summary"><strong>Interpret the validation curve—not only the peak</strong><span>Prefer a stable plateau over a fragile maximum</span></span><span class="step-chevron">⌄</span></summary>
+              <div class="step-content">
+                <p>If the highest validation R² occurs at step 12 but steps 7–10 are nearly identical, prefer the simpler model unless the additional terms provide a material, repeatable improvement.</p>
+                <ul>
+                  <li>Compare training R² with validation R².</li>
+                  <li>Look for a widening training–validation gap.</li>
+                  <li>Check whether selected terms are stable under alternate fold assignments.</li>
+                  <li>Confirm coefficient directions and interactions make engineering sense.</li>
+                </ul>
+              </div>
+            </details>
+          </div>
+
+          <div class="callout callout-warning"><strong>Stepwise selection is exploratory.</strong> It cannot incorporate every practical consideration, can choose one of several correlated predictors arbitrarily, and can produce different “best” models under different criteria. Treat selected-term p-values cautiously and validate with new data whenever possible.</div>
+        </section>
+
+        <section class="lesson-section" id="mars">
+          <p class="lesson-kicker">Step 4</p>
+          <h2>Challenge the polynomial with MARS regression</h2>
+          <p class="section-intro">MARS—Multivariate Adaptive Regression Splines—fits connected piecewise functions. It is especially useful when the process has thresholds, breakpoints, or different slopes in different operating regions.</p>
+
+          <div class="mars-grid">
+            <div>
+              <div class="equation-box"><span class="equation">Ŷ = β₀ + β₁·max(0, X − c) + β₂·max(0, c − X)</span></div>
+              <p>A “knot” at c allows the slope to change. This can be more interpretable than forcing one cubic curve across the full process range.</p>
+              <div class="control-field">
+                <label for="temperature-slider">Illustrative temperature: <span id="temperature-label">850</span> °C</label>
+                <input id="temperature-slider" type="range" min="760" max="940" value="850">
+              </div>
+              <div class="result-panel">
+                <p class="result-big" id="mars-prediction">526.3 MPa</p>
+                <p class="result-label">fictional predicted response</p>
+                <p class="result-message" id="mars-interpretation"></p>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <svg id="mars-chart" viewBox="0 0 520 280" role="img" aria-label="Illustrative MARS piecewise response curve"></svg>
+            </div>
+          </div>
+
+          <h3>Minitab path and starting settings</h3>
+          <div class="menu-path">Predictive Analytics Module → MARS® Regression</div>
+          <div class="metric-grid" style="margin-top:16px;">
+            <div class="lesson-card"><h4>Validation</h4><p>Use K-fold cross-validation or a separate test set. Use a fold-ID column when groups must stay together.</p></div>
+            <div class="lesson-card"><h4>Interactions</h4><p>Start with an additive model or allow interactions up to order 2. Higher orders rapidly reduce interpretability.</p></div>
+            <div class="lesson-card"><h4>Selection criterion</h4><p>Compare maximum validation R² with minimum validation MAD. MAD is less influenced by the worst-fitting observations.</p></div>
+          </div>
+          <div class="callout"><strong>Interpretation trade-off:</strong> MARS can produce an equation-like representation and variable-importance output. However, partial dependence plots are not available in Minitab when the MARS analysis includes interactions.</div>
+        </section>
+
+        <section class="lesson-section" id="automl">
+          <p class="lesson-kicker">Step 5</p>
+          <h2>Use Discover Best Model as a challenger—not an automatic final decision</h2>
+          <p class="section-intro">With Minitab’s Predictive Analytics Module, Discover Best Model for a continuous response compares five model families: multiple regression, MARS, CART, TreeNet, and Random Forests.</p>
+          <div class="menu-path">Predictive Analytics Module → Automated Machine Learning → Discover Best Model (Continuous Response)</div>
+
+          <div class="interactive" id="model-comparison-lab">
+            <div class="interactive-head">
+              <div><h3>Model-selection decision lab</h3><p>Select a model, then apply the “simplest model within practical equivalence” rule.</p></div>
+              <span class="interactive-badge">Decide</span>
+            </div>
+            <div class="interactive-body">
+              <div class="control-grid" style="margin-bottom:16px;">
+                <div class="control-field"><label for="r2-tolerance">R² tolerance from best: <span id="r2-tolerance-label">1.0</span> percentage points</label><input id="r2-tolerance" type="range" min="0" max="4" step="0.1" value="1"></div>
+                <div class="control-field"><label for="rmse-tolerance">RMSE tolerance from best: <span id="rmse-tolerance-label">5</span>%</label><input id="rmse-tolerance" type="range" min="0" max="20" step="1" value="5"></div>
+              </div>
+              <div class="comparison-table-wrap">
+                <table class="comparison-table" id="model-table">
+                  <thead><tr><th>Model</th><th>Validation R²</th><th>Validation RMSE</th><th>MAD</th><th>Interpretability</th><th>Complexity</th></tr></thead>
+                  <tbody>
+                    <tr class="model-select" data-model="Polynomial regression" data-r2="84.6" data-rmse="11.2" data-rank="1"><td>Polynomial regression</td><td>84.6%</td><td>11.2</td><td>8.2</td><td><span class="tag tag-high">High</span></td><td>8 terms</td></tr>
+                    <tr class="model-select selected" data-model="MARS" data-r2="88.9" data-rmse="9.4" data-rank="2"><td>MARS</td><td>88.9%</td><td>9.4</td><td>6.8</td><td><span class="tag tag-high">Good</span></td><td>11 basis functions</td></tr>
+                    <tr class="model-select" data-model="CART" data-r2="82.1" data-rmse="12.1" data-rank="3"><td>CART</td><td>82.1%</td><td>12.1</td><td>8.9</td><td><span class="tag tag-medium">Medium</span></td><td>14 terminal nodes</td></tr>
+                    <tr class="model-select" data-model="TreeNet" data-r2="89.3" data-rmse="9.1" data-rank="4"><td>TreeNet</td><td>89.3%</td><td>9.1</td><td>6.6</td><td><span class="tag tag-low">Limited</span></td><td>300 trees</td></tr>
+                    <tr class="model-select" data-model="Random Forests" data-r2="88.5" data-rmse="9.6" data-rank="5"><td>Random Forests</td><td>88.5%</td><td>9.6</td><td>6.9</td><td><span class="tag tag-low">Limited</span></td><td>500 trees</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="btn-row"><button class="lesson-btn" type="button" id="apply-selection-rule">Apply selection rule</button></div>
+              <div class="result-panel" id="model-decision">Select a model row or apply the rule to see the recommended decision.</div>
+            </div>
+          </div>
+
+          <div class="callout callout-success"><strong>Recommended principle:</strong> choose the simplest interpretable model whose validation performance is practically equivalent to the strongest model. “Practically equivalent” should be defined before seeing the final ranking using engineering error tolerance—not improvised afterward.</div>
+        </section>
+
+        <section class="lesson-section" id="diagnostics">
+          <p class="lesson-kicker">Step 6</p>
+          <h2>The selected model is only a candidate until it passes diagnostics</h2>
+          <p class="section-intro">Validation performance answers “how accurately did this workflow predict held-out observations?” Diagnostics answer “is the model structurally credible, stable, and safe to use?”</p>
+
+          <div class="diagnostic-grid">
+            <div class="lesson-card diagnostic-card">
+              <svg class="mini-plot" viewBox="0 0 320 150" aria-label="Random residual scatter"><line x1="20" y1="75" x2="300" y2="75" stroke="#98a2b3"/><g fill="#0e7490"><circle cx="35" cy="62" r="4"/><circle cx="58" cy="89" r="4"/><circle cx="82" cy="69" r="4"/><circle cx="108" cy="91" r="4"/><circle cx="132" cy="55" r="4"/><circle cx="160" cy="78" r="4"/><circle cx="184" cy="96" r="4"/><circle cx="210" cy="60" r="4"/><circle cx="236" cy="82" r="4"/><circle cx="264" cy="51" r="4"/><circle cx="289" cy="91" r="4"/></g></svg>
+              <h4>Residuals versus fits</h4><p>Look for random scatter around zero. Curvature suggests missing terms; fanning suggests nonconstant variance.</p>
+            </div>
+            <div class="lesson-card diagnostic-card">
+              <svg class="mini-plot" viewBox="0 0 320 150" aria-label="Residual time trend"><line x1="20" y1="75" x2="300" y2="75" stroke="#98a2b3"/><polyline points="25,108 50,100 75,95 100,85 125,79 150,72 175,65 200,60 225,48 250,43 280,35" fill="none" stroke="#b42318" stroke-width="3"/></svg>
+              <h4>Residuals versus order</h4><p>Trends, cycles, or shifts indicate dependence, process drift, omitted time effects, or a changing measurement system.</p>
+            </div>
+            <div class="lesson-card diagnostic-card">
+              <svg class="mini-plot" viewBox="0 0 320 150" aria-label="Normal probability plot"><line x1="35" y1="120" x2="285" y2="30" stroke="#98a2b3" stroke-width="2"/><g fill="#0e7490"><circle cx="45" cy="118" r="4"/><circle cx="75" cy="104" r="4"/><circle cx="105" cy="91" r="4"/><circle cx="135" cy="80" r="4"/><circle cx="165" cy="68" r="4"/><circle cx="195" cy="57" r="4"/><circle cx="225" cy="48" r="4"/><circle cx="260" cy="37" r="4"/><circle cx="287" cy="18" r="4"/></g></svg>
+              <h4>Normal probability plot</h4><p>Strong curvature or distant points can make p-values and confidence intervals unreliable, even when point predictions remain useful.</p>
+            </div>
+            <div class="lesson-card diagnostic-card">
+              <svg class="mini-plot" viewBox="0 0 320 150" aria-label="Influential observation"><g fill="#0e7490"><circle cx="50" cy="90" r="5"/><circle cx="80" cy="84" r="5"/><circle cx="110" cy="78" r="5"/><circle cx="145" cy="72" r="5"/><circle cx="175" cy="66" r="5"/><circle cx="210" cy="59" r="5"/></g><circle cx="286" cy="25" r="10" fill="#b42318"/><line x1="35" y1="102" x2="230" y2="50" stroke="#98a2b3"/></svg>
+              <h4>Leverage and Cook’s distance</h4><p>Investigate observations with unusual predictor combinations or disproportionate influence. Never delete a valid point only because it weakens the model.</p>
+            </div>
+          </div>
+
+          <h3 style="margin-top:28px;">Required final review</h3>
+          <div class="metric-grid">
+            <div class="lesson-card"><h4>Prediction</h4><p>Validation R², RMSE, MAD, and the gap between training and validation performance.</p></div>
+            <div class="lesson-card"><h4>Complexity</h4><p>Number of retained terms or basis functions; stability across alternate folds.</p></div>
+            <div class="lesson-card"><h4>Collinearity</h4><p>VIF values, coefficient instability, and redundant predictors.</p></div>
+            <div class="lesson-card"><h4>Residual adequacy</h4><p>Linearity, constant variance, normality when inference matters, and independence.</p></div>
+            <div class="lesson-card"><h4>Influence</h4><p>Leverage, Cook’s distance, DFITS, data quality, and sensitivity analyses.</p></div>
+            <div class="lesson-card"><h4>Engineering validity</h4><p>Logical signs, plausible thresholds, operating-range coverage, and no unsafe extrapolation.</p></div>
+          </div>
+        </section>
+
+        <section class="lesson-section" id="decision">
+          <p class="lesson-kicker">Step 7</p>
+          <h2>A defensible model-selection rule</h2>
+          <p class="section-intro">Do not allow a single metric to decide. Use sequential gates so that a model cannot “win” on accuracy while failing interpretability, stability, or process logic.</p>
+
+          <div class="decision-gate">
+            <div class="gate"><strong>Gate 1: Valid design</strong><span>No leakage, correct grouping, correct prediction horizon, and no post-outcome predictors.</span></div>
+            <div class="gate"><strong>Gate 2: Competitive error</strong><span>Validation error meets the practical tolerance and is close to the best challenger.</span></div>
+            <div class="gate"><strong>Gate 3: Adequate diagnostics</strong><span>No unresolved structural residual pattern, severe instability, or dominant data defect.</span></div>
+            <div class="gate"><strong>Gate 4: Engineering utility</strong><span>Interpretation, measurement burden, deployment feasibility, and safe operating range are acceptable.</span></div>
+          </div>
+
+          <div class="callout callout-success"><strong>Recommended final decision statement:</strong> “MARS was selected because its grouped five-fold validation RMSE was within 3% of the best model, while providing substantially greater interpretability and stable predictor effects. The model passed residual, influence, and operating-range checks. TreeNet was retained as a benchmark but not selected for deployment.”</div>
+
+          <h3>When to reject the automated winner</h3>
+          <ul>
+            <li>The improvement is smaller than normal measurement or process variation.</li>
+            <li>The model relies on unavailable, delayed, expensive, or unreliable predictors.</li>
+            <li>The validation split leaked information across the same production units.</li>
+            <li>The model extrapolates beyond the observed operating region.</li>
+            <li>The predictor effects contradict known physics without a plausible explanation.</li>
+            <li>The model is unstable when folds, time windows, or influential points change.</li>
+          </ul>
+        </section>
+
+        <section class="lesson-section" id="quiz">
+          <p class="lesson-kicker">Knowledge check</p>
+          <h2>Can you run the workflow defensibly?</h2>
+          <div class="quiz" id="lesson-quiz">
+            <div class="quiz-head"><h3>8-question applied quiz</h3><p>Choose the strongest answer. Feedback is shown after submission.</p></div>
+            <div class="quiz-body">
+              <form id="quiz-form">
+                <fieldset class="quiz-question" data-answer="b" data-explanation="Terms through order 2 adds individual square terms for continuous predictors and interactions through order 2 among selected predictors.">
+                  <legend>1. What does “Terms through order 2” create?</legend>
+                  <label class="quiz-option"><input type="radio" name="q1" value="a"> Only main effects and two-way interactions</label>
+                  <label class="quiz-option"><input type="radio" name="q1" value="b"> Main effects, individual squares, and interactions through order 2</label>
+                  <label class="quiz-option"><input type="radio" name="q1" value="c"> Every possible cubic combination</label>
+                  <div class="quiz-feedback"></div>
+                </fieldset>
+
+                <fieldset class="quiz-question" data-answer="c" data-explanation="Minitab uses stepwise logic to choose candidate entries, while validation identifies the best model size or step.">
+                  <legend>2. How does forward selection with validation work?</legend>
+                  <label class="quiz-option"><input type="radio" name="q2" value="a"> It evaluates every possible model and chooses the global optimum</label>
+                  <label class="quiz-option"><input type="radio" name="q2" value="b"> It adds the term with the largest training R² increase and stops</label>
+                  <label class="quiz-option"><input type="radio" name="q2" value="c"> It performs forward selection and uses validation to select the best step</label>
+                  <div class="quiz-feedback"></div>
+                </fieldset>
+
+                <fieldset class="quiz-question" data-answer="a" data-explanation="Centering by subtracting the mean reduces nonessential multicollinearity produced by higher-order and interaction terms.">
+                  <legend>3. Why center continuous predictors?</legend>
+                  <label class="quiz-option"><input type="radio" name="q3" value="a"> To reduce artificial multicollinearity from powers and interactions</label>
+                  <label class="quiz-option"><input type="radio" name="q3" value="b"> To guarantee normally distributed residuals</label>
+                  <label class="quiz-option"><input type="radio" name="q3" value="c"> To make validation unnecessary</label>
+                  <div class="quiz-feedback"></div>
+                </fieldset>
+
+                <fieldset class="quiz-question" data-answer="b" data-explanation="Every row from the same production unit should receive the same fold label so the unit cannot leak across training and validation.">
+                  <legend>4. Several rows come from each heat. What is the strongest validation design?</legend>
+                  <label class="quiz-option"><input type="radio" name="q4" value="a"> Randomly assign every row independently</label>
+                  <label class="quiz-option"><input type="radio" name="q4" value="b"> Assign complete heats to prepared fold labels</label>
+                  <label class="quiz-option"><input type="radio" name="q4" value="c"> Fit on all data and use adjusted R²</label>
+                  <div class="quiz-feedback"></div>
+                </fieldset>
+
+                <fieldset class="quiz-question" data-answer="c" data-explanation="A hierarchical model containing X₁³ should also retain X₁ and X₁².">
+                  <legend>5. If X₁³ is retained, which lower-order terms should ordinarily remain?</legend>
+                  <label class="quiz-option"><input type="radio" name="q5" value="a"> X₂ and X₃</label>
+                  <label class="quiz-option"><input type="radio" name="q5" value="b"> Only X₁</label>
+                  <label class="quiz-option"><input type="radio" name="q5" value="c"> X₁ and X₁²</label>
+                  <div class="quiz-feedback"></div>
+                </fieldset>
+
+                <fieldset class="quiz-question" data-answer="a" data-explanation="MARS is well suited to threshold effects and slope changes because it builds piecewise basis functions with knots.">
+                  <legend>6. Which model is especially useful for interpretable thresholds?</legend>
+                  <label class="quiz-option"><input type="radio" name="q6" value="a"> MARS regression</label>
+                  <label class="quiz-option"><input type="radio" name="q6" value="b"> A constant-only model</label>
+                  <label class="quiz-option"><input type="radio" name="q6" value="c"> Ordinary R² ranking alone</label>
+                  <div class="quiz-feedback"></div>
+                </fieldset>
+
+                <fieldset class="quiz-question" data-answer="b" data-explanation="A simpler interpretable model can be preferred when its validation performance is within a pre-defined practical tolerance of the best model.">
+                  <legend>7. TreeNet has 0.4 percentage points more validation R² than MARS. What should you do?</legend>
+                  <label class="quiz-option"><input type="radio" name="q7" value="a"> Always select TreeNet because its R² is higher</label>
+                  <label class="quiz-option"><input type="radio" name="q7" value="b"> Compare the difference with the pre-defined practical tolerance and interpretability need</label>
+                  <label class="quiz-option"><input type="radio" name="q7" value="c"> Select whichever has more terms</label>
+                  <div class="quiz-feedback"></div>
+                </fieldset>
+
+                <fieldset class="quiz-question" data-answer="c" data-explanation="A time pattern in residuals indicates dependence, drift, cycles, or omitted time-related structure that must be investigated.">
+                  <legend>8. Residuals show a strong trend over production order. What does this imply?</legend>
+                  <label class="quiz-option"><input type="radio" name="q8" value="a"> The model is automatically acceptable</label>
+                  <label class="quiz-option"><input type="radio" name="q8" value="b"> The response is necessarily normally distributed</label>
+                  <label class="quiz-option"><input type="radio" name="q8" value="c"> Independence or process stability may be violated</label>
+                  <div class="quiz-feedback"></div>
+                </fieldset>
+
+                <div class="btn-row"><button class="lesson-btn" type="submit">Score quiz</button><button class="lesson-btn secondary" type="button" id="reset-quiz">Reset quiz</button></div>
+                <div id="quiz-result" aria-live="polite"></div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section class="lesson-section" id="summary">
+          <p class="lesson-kicker">Field checklist</p>
+          <h2>Your model-selection standard work</h2>
+          <p class="section-intro">Use this checklist each time you search for a predictive regression model in Minitab.</p>
+          <div class="checklist">
+            <div class="checklist-item"><span class="check-icon">✓</span><div><strong>Define the independent prediction unit.</strong><span>New row, heat, coil, customer, campaign, or future time period.</span></div></div>
+            <div class="checklist-item"><span class="check-icon">✓</span><div><strong>Audit data before modeling.</strong><span>Missing values, impossible values, duplicate records, leakage, and measurement integrity.</span></div></div>
+            <div class="checklist-item"><span class="check-icon">✓</span><div><strong>Start with a controlled second-order pool.</strong><span>Main effects, individual squares, and defensible two-way interactions.</span></div></div>
+            <div class="checklist-item"><span class="check-icon">✓</span><div><strong>Center continuous predictors.</strong><span>Use Coding → Subtract the mean when powers and interactions are present.</span></div></div>
+            <div class="checklist-item"><span class="check-icon">✓</span><div><strong>Use forward selection with validation.</strong><span>Require hierarchy and display selection details plus the validation R² curve.</span></div></div>
+            <div class="checklist-item"><span class="check-icon">✓</span><div><strong>Protect grouped observations.</strong><span>Prepare a fold-ID column that keeps each group entirely within one fold.</span></div></div>
+            <div class="checklist-item"><span class="check-icon">✓</span><div><strong>Challenge the polynomial.</strong><span>Compare MARS and, where available, Discover Best Model.</span></div></div>
+            <div class="checklist-item"><span class="check-icon">✓</span><div><strong>Review diagnostics.</strong><span>Residuals, VIF, leverage, Cook’s distance, time order, and extrapolation.</span></div></div>
+            <div class="checklist-item"><span class="check-icon">✓</span><div><strong>Select by practical equivalence.</strong><span>Prefer the simpler interpretable model when the predictive difference is immaterial.</span></div></div>
+            <div class="checklist-item"><span class="check-icon">✓</span><div><strong>Document limitations and monitor.</strong><span>State the operating range, expected error, retraining trigger, and model owner.</span></div></div>
+          </div>
+        </section>
+
+        <section class="lesson-section" id="references">
+          <p class="lesson-kicker">Verified sources</p>
+          <h2>Official Minitab documentation</h2>
+          <ol class="reference-list">
+            <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/regression/how-to/fit-regression-model/perform-the-analysis/specify-the-model-terms/" target="_blank" rel="noopener">Specify model terms for Fit Regression Model</a></li>
+            <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/regression/how-to/fit-regression-model/perform-the-analysis/specify-the-coding-scheme/" target="_blank" rel="noopener">Specify coding and standardization</a></li>
+            <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/regression/how-to/fit-regression-model/perform-the-analysis/perform-stepwise-regression/" target="_blank" rel="noopener">Perform stepwise regression</a></li>
+            <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/regression/how-to/fit-regression-model/perform-the-analysis/specify-the-validation-method/" target="_blank" rel="noopener">Specify the validation method</a></li>
+            <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/regression/supporting-topics/basics/using-stepwise-regression-and-best-subsets-regression/" target="_blank" rel="noopener">Using stepwise and best subsets regression</a></li>
+            <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/regression/how-to/fit-regression-model/interpret-the-results/all-statistics-and-graphs/residual-plots/" target="_blank" rel="noopener">Interpret residual plots</a></li>
+            <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/predictive-analytics/how-to/mars-regression/before-you-start/overview/" target="_blank" rel="noopener">Overview of MARS Regression</a></li>
+            <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/predictive-analytics/how-to/mars-regression/perform-the-analysis/specify-the-validation-method/" target="_blank" rel="noopener">MARS validation methods</a></li>
+            <li><a href="https://support.minitab.com/en-us/minitab/help-and-how-to/statistical-modeling/predictive-analytics/how-to/discover-best-model-continuous-response/before-you-start/overview/" target="_blank" rel="noopener">Discover Best Model for a continuous response</a></li>
+          </ol>
+        </section>
+      </article>
+    </div>
+
+    <div class="page lesson-footer">
+      <a href="/lessons.html#statistics" class="btn btn-outline">← Back to Statistics lessons</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p style="margin:0;color:var(--muted);font-size:13px;">UpSkill Sprint Consulting · Practical skills for data, quality, engineering, and improvement.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      function qs(selector, root) { return (root || document).querySelector(selector); }
+      function qsa(selector, root) { return Array.from((root || document).querySelectorAll(selector)); }
+      function choose2(n) { return n * (n - 1) / 2; }
+
+      // Reading progress and active section navigation.
+      var progressBar = qs('#reading-progress');
+      var navLinks = qsa('.lesson-nav a');
+      var sections = navLinks.map(function (link) { return qs(link.getAttribute('href')); }).filter(Boolean);
+
+      function updateScrollState() {
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        progressBar.style.width = (scrollable > 0 ? (scrollTop / scrollable) * 100 : 0) + '%';
+        var active = sections[0];
+        sections.forEach(function (section) {
+          if (section.getBoundingClientRect().top <= 140) active = section;
+        });
+        navLinks.forEach(function (link) {
+          link.classList.toggle('active', active && link.getAttribute('href') === '#' + active.id);
+        });
+      }
+      window.addEventListener('scroll', updateScrollState, { passive: true });
+      updateScrollState();
+
+      // Candidate term builder.
+      var predictorCount = qs('#predictor-count');
+      var predictorCountLabel = qs('#predictor-count-label');
+      var includeSquares = qs('#include-squares');
+      var includeInteractions = qs('#include-interactions');
+      var includeCubes = qs('#include-cubes');
+      var termTotal = qs('#term-total');
+      var termChipList = qs('#term-chip-list');
+      var termAdvice = qs('#term-advice');
+
+      function updateTermBuilder() {
+        var p = Number(predictorCount.value);
+        var count = p;
+        var chips = [];
+        predictorCountLabel.textContent = p;
+        for (var i = 1; i <= Math.min(p, 6); i++) chips.push('X' + i);
+        if (includeSquares.checked) {
+          count += p;
+          for (var s = 1; s <= Math.min(p, 4); s++) chips.push('X' + s + '²');
+        }
+        if (includeInteractions.checked) {
+          count += choose2(p);
+          for (var a = 1; a <= Math.min(p, 4); a++) {
+            for (var b = a + 1; b <= Math.min(p, 4); b++) chips.push('X' + a + '×X' + b);
+          }
+        }
+        if (includeCubes.checked) {
+          count += p;
+          for (var c = 1; c <= Math.min(p, 4); c++) chips.push('X' + c + '³');
+        }
+        termTotal.textContent = count + (count === 1 ? ' term' : ' terms');
+        termChipList.innerHTML = chips.slice(0, 22).map(function (term) { return '<span class="term-chip">' + term + '</span>'; }).join('') + (chips.length > 22 ? '<span class="term-chip">…</span>' : '');
+        if (count <= 20) termAdvice.textContent = 'A manageable exploratory pool, provided the sample size and process knowledge support these terms.';
+        else if (count <= 45) termAdvice.textContent = 'Moderate complexity. Review degrees of freedom, correlated predictors, and whether every interaction is physically credible.';
+        else termAdvice.textContent = 'High complexity. Reduce the pool, combine engineering knowledge with screening, or use MARS as the nonlinear challenger.';
+      }
+      [predictorCount, includeSquares, includeInteractions, includeCubes].forEach(function (el) { el.addEventListener('input', updateTermBuilder); });
+      updateTermBuilder();
+
+      // Hierarchy lab.
+      var hierarchyDefinitions = {
+        x1x2: { options: ['X₁', 'X₂', 'X₁²', 'X₂²'], required: ['X₁', 'X₂'], explanation: 'X₁×X₂ requires both main effects X₁ and X₂.' },
+        x1sq: { options: ['X₁', 'X₂', 'X₁×X₂'], required: ['X₁'], explanation: 'X₁² requires the lower-order main effect X₁.' },
+        x1cube: { options: ['X₁', 'X₁²', 'X₂', 'X₁×X₂'], required: ['X₁', 'X₁²'], explanation: 'X₁³ requires X₁ and X₁².' },
+        x1sqx2: { options: ['X₁', 'X₂', 'X₁²', 'X₁×X₂', 'X₂²'], required: ['X₁', 'X₂', 'X₁²', 'X₁×X₂'], explanation: 'For strong hierarchy, X₁²×X₂ is supported by X₁, X₂, X₁², and X₁×X₂.' },
+        x1x2x3: { options: ['X₁', 'X₂', 'X₃', 'X₁×X₂', 'X₁×X₃', 'X₂×X₃'], required: ['X₁', 'X₂', 'X₃', 'X₁×X₂', 'X₁×X₃', 'X₂×X₃'], explanation: 'A three-way interaction requires all three main effects and all three two-way interactions.' }
+      };
+      var hierarchyTerm = qs('#hierarchy-term');
+      var hierarchyOptions = qs('#hierarchy-options');
+      var hierarchyResult = qs('#hierarchy-result');
+
+      function renderHierarchyOptions() {
+        var definition = hierarchyDefinitions[hierarchyTerm.value];
+        hierarchyOptions.innerHTML = definition.options.map(function (option, index) {
+          return '<label class="check-row"><input type="checkbox" value="' + option + '" id="hopt-' + index + '"> ' + option + '</label>';
+        }).join('');
+        hierarchyResult.className = 'result-panel';
+        hierarchyResult.textContent = 'Choose the necessary lower-order terms, then check your answer.';
+      }
+      hierarchyTerm.addEventListener('change', renderHierarchyOptions);
+      qs('#check-hierarchy').addEventListener('click', function () {
+        var definition = hierarchyDefinitions[hierarchyTerm.value];
+        var selected = qsa('#hierarchy-options input:checked').map(function (el) { return el.value; }).sort();
+        var required = definition.required.slice().sort();
+        var correct = selected.length === required.length && selected.every(function (value, index) { return value === required[index]; });
+        hierarchyResult.className = 'result-panel ' + (correct ? 'leak-good' : 'leak-bad');
+        hierarchyResult.textContent = (correct ? 'Correct. ' : 'Not yet. ') + definition.explanation;
+      });
+      qs('#reset-hierarchy').addEventListener('click', renderHierarchyOptions);
+      renderHierarchyOptions();
+
+      // Group leakage visualization.
+      var groupData = {
+        random: [
+          ['A1','B1','C1'], ['A2','D1','E1'], ['B2','C2','D2'], ['A3','C3','E2'], ['B3','D3','E3']
+        ],
+        grouped: [
+          ['A1','A2','A3'], ['B1','B2','B3'], ['C1','C2','C3'], ['D1','D2','D3'], ['E1','E2','E3']
+        ]
+      };
+      var groupClasses = { A: 'g-a', B: 'g-b', C: 'g-c', D: 'g-d', E: 'g-e' };
+      var foldGrid = qs('#fold-grid');
+      var leakIndicator = qs('#leak-indicator');
+
+      function renderFolds(method) {
+        foldGrid.innerHTML = groupData[method].map(function (fold, index) {
+          return '<div class="fold"><h4>Fold ' + (index + 1) + '</h4>' + fold.map(function (item) {
+            return '<div class="group-observation ' + groupClasses[item.charAt(0)] + '">Heat ' + item.charAt(0) + ' · row ' + item.charAt(1) + '</div>';
+          }).join('') + '</div>';
+        }).join('');
+        var bad = method === 'random';
+        leakIndicator.className = 'leak-indicator ' + (bad ? 'leak-bad' : 'leak-good');
+        leakIndicator.textContent = bad ? 'Leakage risk: rows from the same heat appear in several folds, so validation can partially recognize the production unit.' : 'Grouped validation: every heat is contained in one fold, providing a more honest test of performance on a new heat.';
+        qsa('[data-split]').forEach(function (button) {
+          var active = button.getAttribute('data-split') === method;
+          button.classList.toggle('secondary', !active);
+        });
+      }
+      qsa('[data-split]').forEach(function (button) { button.addEventListener('click', function () { renderFolds(button.getAttribute('data-split')); }); });
+      renderFolds('random');
+
+      // MARS threshold explorer.
+      var temperatureSlider = qs('#temperature-slider');
+      var temperatureLabel = qs('#temperature-label');
+      var marsPrediction = qs('#mars-prediction');
+      var marsInterpretation = qs('#mars-interpretation');
+      var marsChart = qs('#mars-chart');
+
+      function marsValue(t) {
+        return 520 + 0.18 * Math.max(0, t - 820) - 0.45 * Math.max(0, t - 875);
+      }
+      function scaleX(t) { return 42 + (t - 760) / 180 * 438; }
+      function scaleY(y) { return 232 - (y - 510) / 26 * 175; }
+
+      function drawMarsChart() {
+        var t = Number(temperatureSlider.value);
+        var points = [];
+        for (var x = 760; x <= 940; x += 3) points.push(scaleX(x).toFixed(1) + ',' + scaleY(marsValue(x)).toFixed(1));
+        var y = marsValue(t);
+        marsChart.innerHTML =
+          '<line class="chart-axis" x1="42" y1="232" x2="482" y2="232"></line>' +
+          '<line class="chart-axis" x1="42" y1="25" x2="42" y2="232"></line>' +
+          [515,520,525,530,535].map(function (v) { return '<line class="chart-grid" x1="42" y1="' + scaleY(v) + '" x2="482" y2="' + scaleY(v) + '"></line><text class="chart-text" x="7" y="' + (scaleY(v)+4) + '">' + v + '</text>'; }).join('') +
+          [760,820,875,940].map(function (v) { return '<text class="chart-text" x="' + (scaleX(v)-12) + '" y="255">' + v + '</text>'; }).join('') +
+          '<line class="chart-threshold" x1="' + scaleX(820) + '" y1="25" x2="' + scaleX(820) + '" y2="232"></line>' +
+          '<line class="chart-threshold" x1="' + scaleX(875) + '" y1="25" x2="' + scaleX(875) + '" y2="232"></line>' +
+          '<polyline class="chart-line" points="' + points.join(' ') + '"></polyline>' +
+          '<circle class="chart-point" cx="' + scaleX(t) + '" cy="' + scaleY(y) + '" r="6"></circle>' +
+          '<text class="chart-text" x="185" y="276">Illustrative temperature (°C)</text>';
+        temperatureLabel.textContent = t;
+        marsPrediction.textContent = y.toFixed(1) + ' MPa';
+        if (t < 820) marsInterpretation.textContent = 'Region 1: the model is flat below the first knot; temperature has no modeled effect in this illustrative region.';
+        else if (t < 875) marsInterpretation.textContent = 'Region 2: the response increases at approximately 0.18 MPa per °C after the 820 °C knot.';
+        else marsInterpretation.textContent = 'Region 3: the second basis function changes the net slope to approximately −0.27 MPa per °C after 875 °C.';
+      }
+      temperatureSlider.addEventListener('input', drawMarsChart);
+      drawMarsChart();
+
+      // Model comparison lab.
+      var modelRows = qsa('.model-select');
+      var modelDecision = qs('#model-decision');
+      var r2Tolerance = qs('#r2-tolerance');
+      var rmseTolerance = qs('#rmse-tolerance');
+      var r2ToleranceLabel = qs('#r2-tolerance-label');
+      var rmseToleranceLabel = qs('#rmse-tolerance-label');
+      modelRows.forEach(function (row) {
+        row.addEventListener('click', function () {
+          modelRows.forEach(function (r) { r.classList.remove('selected'); });
+          row.classList.add('selected');
+          modelDecision.textContent = row.dataset.model + ' selected for review. Now compare it against the practical-equivalence rule and diagnostic gates.';
+        });
+      });
+      function updateToleranceLabels() { r2ToleranceLabel.textContent = Number(r2Tolerance.value).toFixed(1); rmseToleranceLabel.textContent = rmseTolerance.value; }
+      r2Tolerance.addEventListener('input', updateToleranceLabels);
+      rmseTolerance.addEventListener('input', updateToleranceLabels);
+      updateToleranceLabels();
+      qs('#apply-selection-rule').addEventListener('click', function () {
+        var bestR2 = Math.max.apply(null, modelRows.map(function (r) { return Number(r.dataset.r2); }));
+        var bestRmse = Math.min.apply(null, modelRows.map(function (r) { return Number(r.dataset.rmse); }));
+        var allowedR2 = Number(r2Tolerance.value);
+        var allowedRmsePct = Number(rmseTolerance.value);
+        var eligible = modelRows.filter(function (r) {
+          var r2Within = bestR2 - Number(r.dataset.r2) <= allowedR2;
+          var rmseWithin = (Number(r.dataset.rmse) - bestRmse) / bestRmse * 100 <= allowedRmsePct;
+          return r2Within && rmseWithin;
+        }).sort(function (a, b) { return Number(a.dataset.rank) - Number(b.dataset.rank); });
+        var preferred = eligible[0];
+        modelRows.forEach(function (r) { r.classList.toggle('selected', r === preferred); });
+        if (preferred) {
+          modelDecision.className = 'result-panel leak-good';
+          modelDecision.innerHTML = '<strong>Recommended candidate: ' + preferred.dataset.model + '.</strong> It is the most interpretable model within both pre-defined performance tolerances. It still must pass diagnostics and engineering review.';
+        } else {
+          modelDecision.className = 'result-panel leak-bad';
+          modelDecision.textContent = 'No model satisfies both tolerances. Revisit the tolerances, data design, or model specifications rather than choosing automatically.';
+        }
+      });
+
+      // Quiz scoring and progress event.
+      var quizForm = qs('#quiz-form');
+      var quizResult = qs('#quiz-result');
+      quizForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var questions = qsa('.quiz-question', quizForm);
+        var score = 0;
+        questions.forEach(function (question) {
+          var selected = qs('input:checked', question);
+          var correct = selected && selected.value === question.dataset.answer;
+          if (correct) score += 1;
+          var feedback = qs('.quiz-feedback', question);
+          feedback.className = 'quiz-feedback ' + (correct ? 'correct' : 'incorrect');
+          feedback.textContent = (correct ? 'Correct. ' : 'Review: ') + question.dataset.explanation;
+        });
+        var pct = Math.round(score / questions.length * 100);
+        quizResult.style.display = 'block';
+        quizResult.innerHTML = '<strong>' + score + ' out of ' + questions.length + ' (' + pct + '%)</strong><span>' + (pct >= 80 ? 'You are ready to apply the workflow. Use the field checklist during your next analysis.' : 'Review the workflow sections, then retry the quiz.') + '</span>';
+        document.dispatchEvent(new CustomEvent('upskill-quiz-result', { detail: { score: score, total: questions.length } }));
+        quizResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+      qs('#reset-quiz').addEventListener('click', function () {
+        quizForm.reset();
+        qsa('.quiz-feedback', quizForm).forEach(function (feedback) { feedback.className = 'quiz-feedback'; feedback.textContent = ''; });
+        quizResult.style.display = 'none';
+        quizResult.textContent = '';
+      });
+    }());
+  </script>
+</body>
+</html>
